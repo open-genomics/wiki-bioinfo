@@ -1,0 +1,113 @@
+:root {
+  --ifm-color-primary: #0f8b8d;
+  --ifm-color-primary-dark: #0d7d7f;
+  --ifm-color-primary-darker: #0c7677;
+  --ifm-color-primary-darkest: #0a6162;
+  --ifm-color-primary-light: #11999b;
+  --ifm-color-primary-lighter: #13a1a4;
+  --ifm-color-primary-lightest: #1bb4b7;
+  --ifm-background-surface-color: #ffffff;
+  --ifm-code-font-size: 95%;
+  --ifm-heading-font-weight: 700;
+  --ifm-global-radius: 14px;
+  --ifm-navbar-background-color: rgba(255, 255, 255, 0.92);
+  --ifm-navbar-shadow: 0 10px 30px rgba(15, 23, 42, 0.04);
+  --docusaurus-highlighted-code-line-bg: rgba(15, 139, 141, 0.08);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-feature-settings: 'liga' 1, 'calt' 1;
+}
+
+.markdown > h2,
+.markdown > h3,
+.markdown > h4 {
+  scroll-margin-top: 88px;
+}
+
+.markdown figure {
+  margin: 1.75rem 0;
+}
+
+.markdown figure img,
+.markdown img {
+  display: block;
+  max-width: 100%;
+  margin: 0 auto;
+  border-radius: 16px;
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
+}
+
+.markdown figcaption {
+  margin-top: 0.75rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+  text-align: center;
+}
+
+.markdown table {
+  display: table;
+  width: 100%;
+  margin: 1.25rem 0;
+  border-collapse: collapse;
+}
+
+.markdown table thead tr {
+  background: rgba(15, 139, 141, 0.08);
+}
+
+.markdown table th,
+.markdown table td {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  padding: 0.7rem 0.85rem;
+  vertical-align: top;
+}
+
+.markdown .theme-admonition {
+  border-radius: 18px;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+}
+
+.markdown blockquote {
+  border-left-width: 4px;
+  border-left-color: var(--ifm-color-primary);
+  background: rgba(15, 139, 141, 0.05);
+  border-radius: 0 14px 14px 0;
+}
+
+.katex-display {
+  padding: 0.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+
+.table-of-contents {
+  border-left: 1px solid var(--ifm-color-emphasis-200);
+  padding-left: 0.9rem;
+}
+
+[data-theme='dark'] {
+  --ifm-color-primary: #59d7d9;
+  --ifm-color-primary-dark: #3fd1d4;
+  --ifm-color-primary-darker: #31ced1;
+  --ifm-color-primary-darkest: #24adb0;
+  --ifm-color-primary-light: #73dddf;
+  --ifm-color-primary-lighter: #80e0e2;
+  --ifm-color-primary-lightest: #a6eaeb;
+  --ifm-background-surface-color: #121b2b;
+  --ifm-navbar-background-color: rgba(10, 16, 28, 0.88);
+  --ifm-navbar-shadow: none;
+  --docusaurus-highlighted-code-line-bg: rgba(89, 215, 217, 0.16);
+}
+
+[data-theme='dark'] .markdown blockquote {
+  background: rgba(89, 215, 217, 0.08);
+}
+
+[data-theme='dark'] .markdown table thead tr {
+  background: rgba(89, 215, 217, 0.12);
+}

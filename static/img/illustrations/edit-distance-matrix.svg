@@ -1,0 +1,35 @@
+<svg width="760" height="480" viewBox="0 0 760 480" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="760" height="480" rx="28" fill="#F5FEFE"/>
+  <text x="72" y="78" fill="#0A6162" font-size="28" font-family="Arial" font-weight="700">编辑距离 DP 矩阵示意</text>
+  <text x="72" y="112" fill="#3A5E5F" font-size="18" font-family="Arial">行表示 GATT 的前缀，列表示 GCAT 的前缀。</text>
+  <g transform="translate(110 150)">
+    <rect x="0" y="0" width="420" height="252" rx="14" fill="white" stroke="#D6F2F3" stroke-width="4"/>
+    <path d="M84 0V252M168 0V252M252 0V252M336 0V252" stroke="#C9ECED" stroke-width="2"/>
+    <path d="M0 42H420M0 84H420M0 126H420M0 168H420M0 210H420" stroke="#C9ECED" stroke-width="2"/>
+    <rect x="84" y="42" width="84" height="42" fill="#DFF8F8"/>
+    <rect x="252" y="84" width="84" height="42" fill="#DFF8F8"/>
+    <rect x="336" y="126" width="84" height="42" fill="#DFF8F8"/>
+    <text x="18" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">ε</text>
+    <text x="108" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">G</text>
+    <text x="192" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">C</text>
+    <text x="276" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">A</text>
+    <text x="360" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
+    <text x="18" y="68" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">ε</text>
+    <text x="18" y="110" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">G</text>
+    <text x="18" y="152" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">A</text>
+    <text x="18" y="194" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
+    <text x="18" y="236" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
+    <g fill="#163536" font-size="18" font-family="Arial" font-weight="700">
+      <text x="114" y="68">0</text><text x="198" y="68">1</text><text x="282" y="68">2</text><text x="366" y="68">3</text>
+      <text x="30" y="68">0</text><text x="30" y="110">1</text><text x="30" y="152">2</text><text x="30" y="194">3</text><text x="30" y="236">4</text>
+      <text x="114" y="110">0</text><text x="198" y="110">1</text><text x="282" y="110">2</text><text x="366" y="110">3</text>
+      <text x="114" y="152">1</text><text x="198" y="152">1</text><text x="282" y="152">1</text><text x="366" y="152">2</text>
+      <text x="114" y="194">2</text><text x="198" y="194">2</text><text x="282" y="194">2</text><text x="366" y="194">1</text>
+      <text x="114" y="236">3</text><text x="198" y="236">3</text><text x="282" y="236">3</text><text x="366" y="236">2</text>
+    </g>
+  </g>
+  <path d="M642 196C628 178 608 170 588 170C554 170 528 194 528 232C528 270 554 294 588 294C608 294 627 286 641 270" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round"/>
+  <path d="M604 202L642 196L634 232" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
+  <text x="558" y="334" fill="#3A5E5F" font-size="18" font-family="Arial">沿矩阵递推选择</text>
+  <text x="552" y="360" fill="#3A5E5F" font-size="18" font-family="Arial">删除 / 插入 / 匹配或替换</text>
+</svg>

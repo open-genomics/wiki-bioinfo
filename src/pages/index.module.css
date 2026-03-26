@@ -1,0 +1,126 @@
+.heroBanner {
+  padding: 5rem 0 4rem;
+  background:
+    radial-gradient(circle at top left, rgba(33, 158, 188, 0.22), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(76, 201, 240, 0.16), transparent 28%),
+    linear-gradient(180deg, rgba(232, 249, 250, 0.8), rgba(255, 255, 255, 1));
+}
+
+.heroGrid {
+  display: grid;
+  grid-template-columns: 1.15fr 0.85fr;
+  gap: 2.5rem;
+  align-items: center;
+}
+
+.heroContent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.eyebrow {
+  margin: 0;
+  color: var(--ifm-color-primary-darkest);
+  font-size: 0.9rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.heroTitle {
+  margin: 0;
+  font-size: clamp(2.4rem, 5vw, 4.2rem);
+  line-height: 1.05;
+}
+
+.heroSubtitle {
+  margin: 0;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 1.35rem;
+  font-weight: 600;
+}
+
+.heroDescription {
+  max-width: 46rem;
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  margin-top: 0.5rem;
+}
+
+.metrics {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.metricCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  padding: 1rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 18px;
+  background: rgba(255, 255, 255, 0.78);
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.05);
+}
+
+.metricCard strong {
+  color: var(--ifm-color-emphasis-900);
+}
+
+.metricCard span {
+  color: var(--ifm-color-emphasis-700);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.heroVisual {
+  display: flex;
+  justify-content: center;
+}
+
+.heroVisual img {
+  width: min(100%, 540px);
+  height: auto;
+  filter: drop-shadow(0 22px 44px rgba(15, 23, 42, 0.12));
+}
+
+[data-theme='dark'] .heroBanner {
+  background:
+    radial-gradient(circle at top left, rgba(51, 195, 240, 0.18), transparent 30%),
+    radial-gradient(circle at bottom right, rgba(0, 180, 216, 0.18), transparent 28%),
+    linear-gradient(180deg, rgba(7, 19, 31, 0.96), rgba(10, 16, 28, 1));
+}
+
+[data-theme='dark'] .metricCard {
+  background: rgba(14, 24, 38, 0.92);
+  border-color: rgba(255, 255, 255, 0.08);
+}
+
+@media screen and (max-width: 996px) {
+  .heroBanner {
+    padding: 3.5rem 0 2.5rem;
+  }
+
+  .heroGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .heroVisual {
+    order: -1;
+  }
+
+  .metrics {
+    grid-template-columns: 1fr;
+  }
+}

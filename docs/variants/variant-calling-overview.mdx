@@ -1,0 +1,144 @@
+---
+sidebar_position: 2
+---
+
+import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
+import WorkflowSteps from '@site/src/components/content/WorkflowSteps';
+import RelatedLinks from '@site/src/components/content/RelatedLinks';
+
+# DNA-seq 变异检测总览
+
+## 任务目标
+
+DNA-seq 变异检测要回答的是：样本和参考基因组相比，哪些位置发生了可信的碱基替换、插入、缺失或更复杂的结构变化。
+
+## 输入输出
+
+- 输入：FASTQ、参考基因组 FASTA、可选注释文件
+- 中间结果：SAM/BAM、coverage 统计、候选位点证据
+- 输出：VCF 及其过滤、注释结果
+
+<PrerequisitesBox
+  items={[
+    '理解 reads、coverage、错误模型与参考基因组的关系。',
+    '了解 FASTQ、BAM、VCF 这三个层次分别表示什么。',
+    '先掌握序列比对中的定位不确定性、MAPQ 与 CIGAR。',
+  ]}
+/>
+
+## 前置知识
+
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [常见文件格式概览](../formats/common-file-formats.mdx)
+- [序列比对](../alignment/index.md)
+- [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+
+## 步骤总览
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '原始数据与质控',
+      description: '从 FASTQ 出发检查 read 质量、接头污染、覆盖度与样本批次问题。',
+      hint: '低质量 reads 会直接影响后续比对和候选位点证据。',
+    },
+    {
+      title: '比对到参考基因组',
+      description: '用索引和比对算法把 reads 放到参考坐标系里，得到 BAM。',
+      hint: '错配、indel、重复区域都会影响定位稳定性。',
+    },
+    {
+      title: '候选位点生成',
+      description: '在 pileup 或局部重组视角下寻找与参考不一致的位置。',
+      hint: '这里需要区分真实变异证据与测序错误。',
+    },
+    {
+      title: '过滤与注释',
+      description: '结合质量值、深度、偏好性指标与数据库注释筛选最终结果。',
+      hint: 'VCF 不是终点，还需要结合上下文解释。',
+    },
+  ]}
+/>
+
+## 每步依赖与常见错误
+
+### 1. 原始数据与质控
+
+如果样本本身污染严重、文库质量差或覆盖度不足，后面所有统计判断都会变得不稳定。
+
+### 2. 比对到参考基因组
+
+变异检测不是孤立任务，它高度依赖比对质量：
+
+- 重复区域容易产生多重比对；
+- indel 周围的局部比对容易出现错位；
+- 参考版本选错会让“变异”其实只是坐标系差异。
+
+### 3. 候选位点生成
+
+caller 要在以下因素之间做区分：
+
+- 真正的生物学变异；
+- 测序错误；
+- PCR / 文库偏好；
+- 低复杂度区域导致的定位假象。
+
+### 4. 过滤与注释
+
+最后看到的 VCF 往往已经包含大量过滤逻辑。分析者需要知道：
+
+- 某个位点为什么被保留或剔除；
+- 质量值和深度到底反映什么；
+- 注释字段和参考数据库版本是否一致。
+
+## 对应算法模块
+
+- 比对：索引结构、seed-and-extend、动态规划
+- 候选位点生成：局部证据聚合、错误建模
+- 过滤：统计阈值、经验规则、群体频率与功能注释
+- 解释：数据库映射、转录本 / 蛋白水平影响分析
+
+## worked example
+
+一个简化 DNA-seq variant workflow 可以写成：
+
+```text
+FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annotation -> interpretation
+```
+
+如果某个候选 SNP 只被极少数 reads 支持，而且这些 reads 的位置质量较差，那么它更可能是：
+
+- 测序错误；
+- 比对错位；
+- 低复杂度区域产生的假阳性。
+
+因此变异检测的关键并不是“有差异就算变异”，而是评估证据质量。
+
+## 注意事项
+
+- 参考基因组版本和注释版本必须一致；
+- 重复区域和低复杂度区域要特别谨慎；
+- 低覆盖样本中，absence of evidence 不等于真正没有变异；
+- VCF 字段解释必须结合 caller 和过滤逻辑。
+
+## 后续阅读
+
+<RelatedLinks
+  links={[
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      description: '理解变异证据为何依赖 read 的定位稳定性。',
+    },
+    {
+      title: '常见文件格式概览',
+      to: '/docs/formats/common-file-formats',
+      description: '从 FASTQ、BAM 到 VCF，梳理每一层保存的究竟是什么。',
+    },
+    {
+      title: '数据库与资源',
+      to: '/docs/databases/',
+      description: '结果解释最终需要落回数据库对象与注释体系。',
+    },
+  ]}
+/>

@@ -1,0 +1,145 @@
+---
+sidebar_position: 2
+---
+
+import ComparisonTable from '@site/src/components/content/ComparisonTable';
+import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
+import RelatedLinks from '@site/src/components/content/RelatedLinks';
+
+# Pseudo-alignment 与表达定量
+
+## 是什么
+
+Pseudo-alignment / lightweight mapping 的核心目标不是为每个 read 找到精确的碱基级比对路径，而是更快地回答：
+
+- 这个 read 与哪些转录本兼容；
+- 这些兼容关系如何支持表达定量。
+
+换句话说，它把问题从“精确对齐”转向“候选转录本归属与丰度估计”。
+
+## 要解决什么生物信息学问题
+
+RNA-seq 中一个关键困难是：
+
+- reads 很多；
+- 转录本高度相似；
+- 同一个 read 往往能同时匹配多个 isoform。
+
+如果对每个 read 都做昂贵的碱基级比对，计算成本会很高；而如果只是为了做表达定量，我们更关心的是它支持哪些转录本，而不是每个碱基如何一一对齐。
+
+## 输入与输出
+
+- 输入：reads、转录本参考、索引结构
+- 输出：兼容转录本集合、基因或转录本层表达估计
+
+<PrerequisitesBox
+  items={[
+    '先理解 k-mer、BWT / FM-index 等索引结构如何支持快速定位。',
+    '理解 RNA-seq 中一个 read 可能对应多个转录本。',
+    '了解表达定量不是简单计数，还涉及长度与多重分配问题。',
+  ]}
+/>
+
+## 核心思想
+
+Pseudo-alignment 通常依赖：
+
+- k-mer 或类似局部片段建立索引；
+- 读入一个 read 后，快速找到与之兼容的一组转录本；
+- 再通过统计模型把 reads 的证据分配到这些转录本上。
+
+它强调的是**兼容性**，而不是完整的碱基级路径恢复。
+
+## 与传统 spliced alignment 的区别
+
+<ComparisonTable
+  leftTitle="传统比对"
+  rightTitle="Pseudo-alignment"
+  rows={[
+    {
+      aspect: '主要目标',
+      left: '精确定位 read 与参考之间的对齐关系',
+      right: '快速判断 read 与哪些转录本兼容',
+    },
+    {
+      aspect: '适合场景',
+      left: '剪接分析、定位解释、新转录本研究',
+      right: '表达定量与高通量样本处理',
+    },
+    {
+      aspect: '计算代价',
+      left: '通常更高',
+      right: '通常更低',
+    },
+  ]}
+/>
+
+## worked example
+
+假设一个 read 可以同时匹配两个共享外显子的转录本：
+
+- `tx1`
+- `tx2`
+
+Pseudo-alignment 不一定为它恢复一条精确的碱基级比对路径，而是记录：
+
+```text
+read_42 -> {tx1, tx2}
+```
+
+后续定量模型再结合更多 reads 的整体分布，判断 `tx1` 和 `tx2` 各自更可能有多少丰度。
+
+## 复杂度与适用前提
+
+这种方法之所以高效，是因为它把许多昂贵的精确对齐操作，替换成了更轻量的索引查询和兼容集合推断。
+
+但它也有适用前提：
+
+- 如果研究重点是定量，通常很合适；
+- 如果研究重点是精确剪接边界、新结构或复杂局部变异，传统 spliced alignment 往往更合适。
+
+## 与真实工具或流程的连接
+
+在真实 RNA-seq 流程中，这类方法常用于：
+
+- 快速转录本层表达定量；
+- 大样本批量处理；
+- 作为差异表达分析的前端输入。
+
+它代表的是一种“为了定量目的而重塑问题定义”的思路。
+
+## 常见误区
+
+### Pseudo-alignment 等于不需要索引或算法
+
+不是。它仍然高度依赖索引结构和高效搜索，只是目标函数不同。
+
+### 既然更快，就应该总是取代传统比对
+
+不对。是否使用 pseudo-alignment 取决于研究问题是否真正只关心定量。
+
+### read 落到多个转录本上说明结果不可靠
+
+不一定。这恰恰是 RNA-seq 定量必须面对的核心现实，重点在于如何合理建模和分配。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'RNA-seq 工作流概览',
+      to: '/docs/workflows/rna-seq',
+      description: '查看 pseudo-alignment 在完整 RNA-seq 流程中的位置。',
+    },
+    {
+      title: 'FM-index',
+      to: '/docs/sequence/fm-index',
+      description: '理解快速定位类方法背后的索引思想。',
+    },
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      description: '比较精确比对与兼容性判断各自解决的问题。',
+    },
+  ]}
+/>

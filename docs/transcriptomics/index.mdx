@@ -1,0 +1,56 @@
+---
+sidebar_position: 1
+slug: /transcriptomics
+---
+
+import RelatedLinks from '@site/src/components/content/RelatedLinks';
+
+# 转录组
+
+转录组分析关注的是：给定 RNA-seq 等数据，如何理解基因和转录本的表达、剪接、条件差异以及这些变化背后的生物学含义。
+
+## 这一部分在全站中的位置
+
+这一节位于“序列比对”“概率模型”和“工作流”之间：
+
+- 上游依赖 [序列表示与索引](../sequence/index.md) 与 [序列比对](../alignment/index.md)；
+- 中间涉及转录本归属、不确定性分配、表达定量与统计归一化；
+- 下游与 [RNA-seq 工作流概览](../workflows/rna-seq.md)、数据库注释和功能解释连接。
+
+## 为什么这一节重要
+
+RNA-seq 看起来像是“把 reads 比到转录组上再数一数”，但真正困难的地方在于：
+
+- 一个 read 可能兼容多个 isoform；
+- 基因层与转录本层的问题并不相同；
+- 定量和差异分析都依赖统计假设；
+- 注释版本变化会直接改变结果解释。
+
+## 推荐阅读顺序
+
+1. [序列表示与索引](../sequence/index.md)
+2. [序列比对](../alignment/index.md)
+3. [RNA-seq 工作流概览](../workflows/rna-seq.md)
+4. [Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: 'RNA-seq 工作流概览',
+      to: '/docs/workflows/rna-seq',
+      description: '先看整个 RNA-seq 分析链路，再回头理解定量与转录本归属的核心难点。',
+    },
+    {
+      title: 'Pseudo-alignment 与表达定量',
+      to: '/docs/transcriptomics/pseudo-alignment-and-quantification',
+      description: '理解为什么 RNA-seq 中常见的“更快路线”依赖索引和概率分配思想。',
+    },
+    {
+      title: '隐马尔可夫模型',
+      to: '/docs/models/hmm',
+      description: '从另一类序列概率模型出发，理解不确定性如何被表示和推断。',
+    },
+  ]}
+/>

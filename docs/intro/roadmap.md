@@ -4,46 +4,83 @@ sidebar_position: 3
 
 # 学习路线
 
-如果你刚开始系统学习生物信息学，建议按下面的顺序推进。
+BioInfo Wiki 的目标不是只提供零散词条，而是把**基础对象、算法模型、数据格式、数据库资源与真实工作流**连成一张可以反复回溯的知识地图。
 
-## 路线一：算法理解优先
+如果你不知道从哪里开始，可以先按下面三条主线之一推进。
 
-适合有计算机背景、想先建立理论框架的读者。
+## 路线一：初学者路线
 
-1. [基础预备](../foundations/index.md)
-2. [序列与字符串](../sequence/index.md)
-3. [序列比对](../alignment/index.md)
-4. [基因组组装](../assembly/index.md)
-5. [概率模型与模式识别](../models/index.md)
-6. [系统发育](../phylogeny/index.md)
-7. [分析流程](../workflows/index.md)
+适合刚进入生物信息学、希望先建立整体框架的读者。
 
-## 路线二：应用理解优先
+1. [项目简介](./index.md)
+2. [基础与数学](../foundations/index.md)
+3. [生物信息学中的基础对象](../foundations/biology-basics.md)
+4. [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+5. [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+6. [常见文件格式概览](../formats/common-file-formats.mdx)
+7. [NGS 流程总览](../workflows/ngs-overview.md)
+8. [数据库与资源](../databases/index.md)
 
-适合已经接触过测序数据、希望补原理的读者。
+## 路线二：算法路线
 
-1. [基础预备](../foundations/index.md)
-2. [数据库与资源](../databases/index.md)
-3. [分析流程](../workflows/index.md)
-4. [序列比对](../alignment/index.md)
-5. [基因组组装](../assembly/index.md)
-6. [概率模型与模式识别](../models/index.md)
+适合有计算机、数学或算法背景，想从教材主线切入的读者。
 
-## 第一阶段推荐页
+1. [基础与数学](../foundations/index.md)
+2. [序列表示与索引](../sequence/index.md)
+3. [k-mer 与序列表示](../sequence/kmers.md)
+4. [Suffix Array、BWT 与索引压缩](../sequence/suffix-array-bwt.md)
+5. [FM-index](../sequence/fm-index.mdx)
+6. [序列比对](../alignment/index.md)
+7. [编辑距离](../alignment/edit-distance.md)
+8. [Affine gap penalty](../alignment/affine-gap-penalty.md)
+9. [组装与图算法](../assembly/index.md)
+10. [de Bruijn graph 组装](../assembly/de-bruijn.md)
+11. [概率模型与模式识别](../models/index.md)
+12. [隐马尔可夫模型](../models/hmm.md)
+
+## 路线三：实战流程路线
+
+适合已经接触测序数据、想把工具和原理串起来的读者。
+
+1. [基础与数学](../foundations/index.md)
+2. [常见文件格式概览](../formats/common-file-formats.mdx)
+3. [数据库、注释与数据格式](../databases/index.md)
+4. [工作流与案例](../workflows/index.md)
+5. [RNA-seq 工作流概览](../workflows/rna-seq.md)
+6. [DNA-seq 变异检测总览](../variants/variant-calling-overview.mdx)
+7. [Pseudo-alignment 与表达定量](../transcriptomics/pseudo-alignment-and-quantification.mdx)
+8. [Metagenomics 流程总览](../workflows/metagenomics-overview.md)
+
+## 第一波重点专题
+
+如果你希望先快速建立“教材到实践”的骨架，可以先读下面这些页面：
 
 - [生物信息学中的基础对象](../foundations/biology-basics.md)
-- [序列、字符串与坐标系统](../foundations/sequences-and-strings.md)
+- [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+- [常见文件格式概览](../formats/common-file-formats.mdx)
 - [k-mer 与序列表示](../sequence/kmers.md)
+- [FM-index](../sequence/fm-index.mdx)
 - [编辑距离](../alignment/edit-distance.md)
-- [全局比对与局部比对](../alignment/global-local.md)
-- [de Bruijn graph 组装思路](../assembly/de-bruijn.md)
-- [隐马尔可夫模型](../models/hmm.md)
-- [常用数据库与资源](../databases/common-resources.md)
+- [Seed-and-extend](../alignment/seed-and-extend.md)
+- [de Bruijn graph 组装](../assembly/de-bruijn.md)
+- [DNA-seq 变异检测总览](../variants/variant-calling-overview.mdx)
+- [RNA-seq 工作流概览](../workflows/rna-seq.md)
 
 ## 怎样把教材与实践结合起来
 
-一个比较有效的方式是：
+推荐采用“**概念 → 模型 → 数据格式 → 工作流 → 工具解释**”的顺序：
 
-- 学一个算法主题时，同时看一个对应应用；
-- 学一个流程环节时，回头追溯它依赖的算法原理；
-- 尽量把“数据输入、建模、计算、输出解释”四步串起来理解。
+- 学一个算法主题时，同时看它对应的数据格式与输入输出；
+- 学一个流程环节时，回头追溯它依赖的索引、动态规划、图模型或概率模型；
+- 学一个工具时，先问清楚它解决的是哪一类问题，而不是只记命令；
+- 尽量把“样本设计、数据输入、建模、计算、结果解释”串成一条连续链路。
+
+## 后续扩展方向
+
+后续路线会继续补充：
+
+- 变异检测的统计建模与过滤逻辑；
+- 转录组中的 isoform 归属与定量；
+- 宏基因组中的物种分类与功能注释；
+- 概率模型在 motif、gene prediction 与 profile HMM 中的应用；
+- 更多面向真实分析任务的案例页。

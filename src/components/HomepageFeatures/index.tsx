@@ -14,9 +14,23 @@ type TopicCard = {
   title: string;
   to: string;
   description: string;
+  meta: string;
 };
 
 type PathCard = {
+  title: string;
+  to: string;
+  description: string;
+  audience: string;
+};
+
+type BridgeCard = {
+  title: string;
+  description: string;
+  bullets: string[];
+};
+
+type ContributionCard = {
   title: string;
   to: string;
   description: string;
@@ -54,57 +68,102 @@ const highlightCards: HighlightCard[] = [
 
 const topicCards: TopicCard[] = [
   {
-    title: '基础预备',
+    title: '基础与数学',
     to: '/docs/foundations/',
-    description: '理解 DNA、RNA、蛋白质、测序读段、图模型和概率概念，是后续算法学习的共同起点。',
+    meta: '对象层',
+    description: '理解序列、reads、覆盖度、参考基因组、注释、图与概率，是后续所有页面共享的语言。',
   },
   {
-    title: '序列与字符串',
+    title: '序列表示与索引',
     to: '/docs/sequence/',
-    description: '从 k-mer、最小化子到 FM-index，建立序列表示、索引和搜索的统一视角。',
+    meta: '模型层',
+    description: '从 k-mer、suffix array、BWT 到 FM-index，建立搜索、压缩与索引的统一视角。',
   },
   {
     title: '序列比对',
     to: '/docs/alignment/',
-    description: '从编辑距离和打分矩阵出发，串联全局比对、局部比对和启发式搜索。',
+    meta: '算法层',
+    description: '从编辑距离、打分矩阵与 affine gap 出发，理解比对如何从教学模型走向真实工具。',
   },
   {
-    title: '基因组组装',
+    title: '组装与图算法',
     to: '/docs/assembly/',
-    description: '理解 OLC 与 de Bruijn graph 两条主线，以及错误、重复和覆盖度带来的挑战。',
+    meta: '算法层',
+    description: '理解 OLC、de Bruijn graph、重复序列与图清理，建立从局部片段恢复整体结构的视角。',
   },
   {
-    title: '系统发育',
-    to: '/docs/phylogeny/',
-    description: '掌握距离矩阵、聚类和树构建方法，理解序列相似性如何映射到进化关系。',
-  },
-  {
-    title: '数据库与流程',
+    title: '数据库、注释与数据格式',
     to: '/docs/databases/',
-    description: '把教材中的算法视角与现代常用数据库、测序分析流程和质量控制实践连接起来。',
+    meta: '资源层',
+    description: '把 FASTA/FASTQ/BAM/VCF 等输入输出格式与 NCBI、Ensembl、UniProt 等数据对象对应起来。',
+  },
+  {
+    title: '工作流与案例',
+    to: '/docs/workflows/',
+    meta: '流程层',
+    description: '把 DNA-seq、RNA-seq、metagenomics 等流程和前面的算法模块、文件格式、数据库资源真正连起来。',
   },
 ];
 
 const pathCards: PathCard[] = [
   {
-    title: '1. 先补基础',
-    to: '/docs/foundations/biology-basics',
-    description: '先建立对生物学对象、参考基因组、读段与注释文件的基本认识。',
+    title: '初学者路线',
+    to: '/docs/intro/roadmap',
+    audience: '从整体框架开始',
+    description: '先建立对象、数据格式与流程地图，再逐步深入到索引、比对、组装与统计模型。',
   },
   {
-    title: '2. 再看序列模型',
-    to: '/docs/sequence/kmers',
-    description: '把生物序列抽象成字符串和图，再理解搜索、索引和压缩。',
-  },
-  {
-    title: '3. 进入核心算法',
+    title: '算法路线',
     to: '/docs/alignment/edit-distance',
-    description: '从动态规划到图遍历，是教材主线中最重要的一段。',
+    audience: '教材主线驱动',
+    description: '从字符串、动态规划、图和概率模型切入，再映射到 BLAST、BWA、组装器和 gene prediction。',
   },
   {
-    title: '4. 连接真实流程',
+    title: '实战流程路线',
     to: '/docs/workflows/ngs-overview',
-    description: '把算法知识映射回实际分析任务，例如比对、定量、变异检测与组装。',
+    audience: '问题驱动学习',
+    description: '围绕 DNA-seq、RNA-seq 与宏基因组任务，倒推它们分别依赖哪些算法与数据结构。',
+  },
+];
+
+const bridgeCards: BridgeCard[] = [
+  {
+    title: '字符串与动态规划',
+    description: '从编辑距离、全局/局部比对到 affine gap，理解 read mapping 背后的数学骨架。',
+    bullets: ['编辑距离', 'Needleman–Wunsch / Smith–Waterman', 'gap penalty'],
+  },
+  {
+    title: '索引与快速搜索',
+    description: '从 k-mer 与 minimizer 到 BWT / FM-index，解释为什么真实工具能在海量参考序列上快速定位。',
+    bullets: ['k-mer', 'suffix array / BWT', 'FM-index'],
+  },
+  {
+    title: '图算法与组装',
+    description: '从 overlap 到 de Bruijn graph，再到重复、错误与图清理，把局部 read 还原成整体序列。',
+    bullets: ['OLC', 'de Bruijn graph', 'graph cleaning'],
+  },
+  {
+    title: '概率模型与统计推断',
+    description: '从 HMM、PWM/PSSM 到表达定量、差异分析与 gene prediction，理解不确定性如何被建模。',
+    bullets: ['HMM', 'PWM / PSSM', 'quantification / DE'],
+  },
+];
+
+const contributionCards: ContributionCard[] = [
+  {
+    title: '编辑与补充页面',
+    to: '/docs/intro/contributing',
+    description: '补知识点、补图、补 worked example、补交叉链接，让站点结构越来越完整。',
+  },
+  {
+    title: '查看写作规范',
+    to: '/docs/intro/style-guide',
+    description: '统一使用概念页、算法页、流程页和 landing page 模板，保证整站长期可维护。',
+  },
+  {
+    title: '跟进学习路线',
+    to: '/docs/intro/roadmap',
+    description: '把新页面放进正确层级里，确保读者能按目录系统学，也能按问题跳转。',
   },
 ];
 
@@ -142,12 +201,13 @@ export default function HomepageFeatures(): ReactNode {
       <section className={clsx(styles.section, styles.topicSection)}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <Heading as="h2">第一阶段核心专题</Heading>
-            <p>先把最常用、最能串起全局认知的知识块搭起来，再逐步向更多实验流程和高级专题扩展。</p>
+            <Heading as="h2">全站知识地图</Heading>
+            <p>BioInfo Wiki 不是按工具列表堆砌内容，而是把对象、模型、算法、资源与工作流组织成可回溯的知识网络。</p>
           </div>
           <div className={styles.topicGrid}>
             {topicCards.map((item) => (
               <Link key={item.to} className={styles.topicCard} to={item.to}>
+                <span className={styles.topicMeta}>{item.meta}</span>
                 <Heading as="h3">{item.title}</Heading>
                 <p>{item.description}</p>
                 <span>进入专题</span>
@@ -160,14 +220,55 @@ export default function HomepageFeatures(): ReactNode {
       <section className={styles.section}>
         <div className="container">
           <div className={styles.sectionHeader}>
-            <Heading as="h2">推荐阅读路径</Heading>
-            <p>如果你是第一次系统学习生物信息学，可以按下面的顺序阅读。</p>
+            <Heading as="h2">推荐学习路线</Heading>
+            <p>无论你是从教材入门，还是已经在做实际分析，都可以从这里找到适合自己的阅读顺序。</p>
           </div>
           <div className={styles.pathGrid}>
             {pathCards.map((item) => (
               <Link key={item.to} className={styles.pathCard} to={item.to}>
+                <span className={styles.pathAudience}>{item.audience}</span>
                 <Heading as="h3">{item.title}</Heading>
                 <p>{item.description}</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={clsx(styles.section, styles.bridgeSection)}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <Heading as="h2">从教材到实践</Heading>
+            <p>把字符串、图和概率模型一路映射到 DNA-seq、RNA-seq、变异检测、组装和功能解释，是这个站点最核心的设计目标。</p>
+          </div>
+          <div className={styles.bridgeGrid}>
+            {bridgeCards.map((card) => (
+              <div key={card.title} className={styles.bridgeCard}>
+                <Heading as="h3">{card.title}</Heading>
+                <p>{card.description}</p>
+                <ul>
+                  {card.bullets.map((bullet) => (
+                    <li key={bullet}>{bullet}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className={styles.section}>
+        <div className="container">
+          <div className={styles.sectionHeader}>
+            <Heading as="h2">开放协作与最近更新入口</Heading>
+            <p>站点会持续扩充页面、图示与工作流。你可以从贡献入口、写作规范和学习路线开始参与这张知识图谱的建设。</p>
+          </div>
+          <div className={styles.contributionGrid}>
+            {contributionCards.map((item) => (
+              <Link key={item.to} className={styles.contributionCard} to={item.to}>
+                <Heading as="h3">{item.title}</Heading>
+                <p>{item.description}</p>
+                <span>查看入口</span>
               </Link>
             ))}
           </div>

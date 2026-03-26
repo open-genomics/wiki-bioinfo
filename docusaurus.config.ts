@@ -33,6 +33,7 @@ const config: Config = {
         docs: {
           sidebarPath: './sidebars.ts',
           editUrl: 'https://github.com/LessUp/wiki-bioinfo/tree/master/',
+          showLastUpdateTime: true,
           remarkPlugins: [remarkMath],
           rehypePlugins: [rehypeKatex],
         },
@@ -60,11 +61,21 @@ const config: Config = {
           type: 'docSidebar',
           sidebarId: 'docsSidebar',
           position: 'left',
-          label: '文档',
+          label: '知识库',
         },
         {
           to: '/docs/intro/roadmap',
           label: '学习路线',
+          position: 'left',
+        },
+        {
+          to: '/docs/formats/',
+          label: '数据格式',
+          position: 'left',
+        },
+        {
+          to: '/docs/workflows/',
+          label: '工作流',
           position: 'left',
         },
         {
@@ -83,36 +94,36 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: '文档',
+          title: '学习路径',
           items: [
             {
               label: '项目简介',
               to: '/docs/intro/',
             },
             {
-              label: '序列与字符串',
+              label: '学习路线',
+              to: '/docs/intro/roadmap',
+            },
+            {
+              label: '工作流与案例',
+              to: '/docs/workflows/',
+            },
+          ],
+        },
+        {
+          title: '核心专题',
+          items: [
+            {
+              label: '序列表示与索引',
               to: '/docs/sequence/',
             },
             {
               label: '序列比对',
               to: '/docs/alignment/',
             },
-          ],
-        },
-        {
-          title: '路线',
-          items: [
             {
-              label: '学习路线',
-              to: '/docs/intro/roadmap',
-            },
-            {
-              label: '常用数据库',
-              to: '/docs/databases/common-resources',
-            },
-            {
-              label: '流程总览',
-              to: '/docs/workflows/',
+              label: '数据库、注释与数据格式',
+              to: '/docs/databases/',
             },
           ],
         },

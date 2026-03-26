@@ -1,0 +1,58 @@
+---
+sidebar_position: 1
+slug: /variants
+---
+
+import RelatedLinks from '@site/src/components/content/RelatedLinks';
+
+# 变异检测
+
+变异检测关注的是：给定样本 reads 与参考基因组，如何识别 SNP、InDel 乃至更复杂的结构变异，并判断这些差异是否足够可信、是否具有生物学意义。
+
+## 这一部分在全站中的位置
+
+这一节位于“序列比对”和“工作流解释”之间：
+
+- 上游依赖 [序列比对](../alignment/index.md) 和 [常见文件格式概览](../formats/common-file-formats.mdx)；
+- 中间牵涉参考基因组、注释、错误模型和质量控制；
+- 下游常与 [数据库与资源](../databases/index.md) 的注释体系以及具体疾病 / 群体研究问题连接。
+
+## 为什么这一节重要
+
+很多读者会把 variant calling 理解成“跑一个 caller 然后看 VCF”。
+
+但真正关键的问题是：
+
+- 证据来自哪些 reads；
+- 比对不确定性如何影响判断；
+- 测序错误和真实变异如何区分；
+- 过滤标准和参考版本如何改变结果解释。
+
+## 推荐阅读顺序
+
+1. [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+2. [常见文件格式概览](../formats/common-file-formats.mdx)
+3. [序列比对](../alignment/index.md)
+4. [DNA-seq 变异检测总览](./variant-calling-overview.mdx)
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '测序 reads、coverage 与错误模型',
+      to: '/docs/foundations/sequencing-reads-coverage',
+      description: '理解变异检测中的观察证据为什么会受到测序误差与覆盖度影响。',
+    },
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      description: '变异检测的可信度很大程度取决于 read 被定位得是否稳定。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      description: '从 BAM、VCF 和过滤逻辑出发理解真实流程。',
+    },
+  ]}
+/>

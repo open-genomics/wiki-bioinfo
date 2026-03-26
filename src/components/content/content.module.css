@@ -1,0 +1,160 @@
+.wrapper {
+  margin: 1.75rem 0;
+}
+
+.comparisonTable {
+  width: 100%;
+  border-collapse: collapse;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 18px;
+  overflow: hidden;
+  background: var(--ifm-background-surface-color);
+}
+
+.comparisonTable thead tr {
+  background: rgba(15, 139, 141, 0.08);
+}
+
+.comparisonTable th,
+.comparisonTable td {
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  text-align: left;
+  vertical-align: top;
+}
+
+.workflowGrid,
+.relatedGrid {
+  display: grid;
+  gap: 1rem;
+  margin: 1.75rem 0;
+}
+
+.workflowGrid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.relatedGrid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.workflowCard,
+.noteCard,
+.relatedCard {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 20px;
+  background: var(--ifm-background-surface-color);
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.06);
+}
+
+.workflowCard {
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.1rem;
+}
+
+.stepIndex {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 18px;
+  background: rgba(15, 139, 141, 0.12);
+  color: var(--ifm-color-primary-darkest);
+  font-size: 1.1rem;
+  font-weight: 800;
+}
+
+.workflowContent h3,
+.relatedCard h3 {
+  margin-bottom: 0.4rem;
+}
+
+.workflowContent p,
+.relatedCard p,
+.noteCard li {
+  margin: 0;
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.75;
+}
+
+.workflowHint {
+  margin-top: 0.75rem;
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.noteCard {
+  margin: 1.75rem 0;
+  padding: 1.1rem 1.2rem;
+}
+
+.noteCard strong {
+  display: block;
+  margin-bottom: 0.7rem;
+}
+
+.noteCard ul {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.noteCard li + li {
+  margin-top: 0.45rem;
+}
+
+.relatedCard {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  padding: 1.2rem;
+  color: inherit;
+  text-decoration: none;
+  transition:
+    transform 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.relatedCard:hover {
+  color: inherit;
+  text-decoration: none;
+  transform: translateY(-4px);
+  border-color: var(--ifm-color-primary-light);
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.relatedCard span {
+  color: var(--ifm-color-primary);
+  font-weight: 700;
+}
+
+[data-theme='dark'] .comparisonTable thead tr {
+  background: rgba(89, 215, 217, 0.12);
+}
+
+[data-theme='dark'] .workflowCard,
+[data-theme='dark'] .noteCard,
+[data-theme='dark'] .relatedCard,
+[data-theme='dark'] .comparisonTable {
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+}
+
+[data-theme='dark'] .stepIndex {
+  background: rgba(89, 215, 217, 0.16);
+  color: var(--ifm-color-primary-lighter);
+}
+
+@media screen and (max-width: 996px) {
+  .workflowGrid,
+  .relatedGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .workflowCard {
+    grid-template-columns: 1fr;
+  }
+}

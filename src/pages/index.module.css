@@ -1,14 +1,17 @@
 .heroBanner {
-  padding: 5rem 0 4rem;
+  position: relative;
+  overflow: hidden;
+  padding: 5.5rem 0 4.5rem;
   background:
-    radial-gradient(circle at top left, rgba(33, 158, 188, 0.22), transparent 30%),
-    radial-gradient(circle at bottom right, rgba(76, 201, 240, 0.16), transparent 28%),
-    linear-gradient(180deg, rgba(232, 249, 250, 0.8), rgba(255, 255, 255, 1));
+    radial-gradient(circle at top left, rgba(33, 158, 188, 0.24), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(73, 160, 255, 0.16), transparent 24%),
+    radial-gradient(circle at bottom right, rgba(76, 201, 240, 0.14), transparent 28%),
+    linear-gradient(180deg, rgba(232, 249, 250, 0.92), rgba(255, 255, 255, 1));
 }
 
 .heroGrid {
   display: grid;
-  grid-template-columns: 1.15fr 0.85fr;
+  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
   gap: 2.5rem;
   align-items: center;
 }
@@ -28,10 +31,26 @@
   text-transform: uppercase;
 }
 
+.heroBadgeRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+}
+
+.heroBadge {
+  padding: 0.35rem 0.75rem;
+  border: 1px solid rgba(15, 139, 141, 0.18);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  color: var(--ifm-color-primary-darkest);
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
 .heroTitle {
   margin: 0;
-  font-size: clamp(2.4rem, 5vw, 4.2rem);
-  line-height: 1.05;
+  font-size: clamp(2.6rem, 5vw, 4.6rem);
+  line-height: 1.02;
 }
 
 .heroSubtitle {
@@ -42,11 +61,11 @@
 }
 
 .heroDescription {
-  max-width: 46rem;
+  max-width: 48rem;
   margin: 0;
   color: var(--ifm-color-emphasis-700);
   font-size: 1.05rem;
-  line-height: 1.8;
+  line-height: 1.85;
 }
 
 .buttons {
@@ -70,8 +89,9 @@
   padding: 1rem;
   border: 1px solid var(--ifm-color-emphasis-200);
   border-radius: 18px;
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.8);
   box-shadow: 0 14px 40px rgba(15, 23, 42, 0.05);
+  backdrop-filter: blur(10px);
 }
 
 .metricCard strong {
@@ -84,22 +104,65 @@
   line-height: 1.6;
 }
 
-.heroVisual {
+.heroVisualWrap {
   display: flex;
   justify-content: center;
 }
 
-.heroVisual img {
-  width: min(100%, 540px);
+.heroAtlasCard {
+  width: min(100%, 560px);
+  padding: 1.2rem;
+  border: 1px solid rgba(15, 139, 141, 0.16);
+  border-radius: 28px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(237, 251, 252, 0.88));
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
+}
+
+.heroAtlasEyebrow {
+  margin: 0 0 0.85rem;
+  color: var(--ifm-color-primary-darkest);
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.heroVisualImage {
+  display: block;
+  width: 100%;
   height: auto;
   filter: drop-shadow(0 22px 44px rgba(15, 23, 42, 0.12));
+}
+
+.heroAtlasLegend {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.heroAtlasLegend span {
+  padding: 0.6rem 0.7rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.75);
+  color: var(--ifm-color-emphasis-800);
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-align: center;
 }
 
 [data-theme='dark'] .heroBanner {
   background:
     radial-gradient(circle at top left, rgba(51, 195, 240, 0.18), transparent 30%),
+    radial-gradient(circle at 85% 20%, rgba(87, 155, 255, 0.16), transparent 24%),
     radial-gradient(circle at bottom right, rgba(0, 180, 216, 0.18), transparent 28%),
     linear-gradient(180deg, rgba(7, 19, 31, 0.96), rgba(10, 16, 28, 1));
+}
+
+[data-theme='dark'] .heroBadge {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: rgba(15, 24, 38, 0.82);
+  color: var(--ifm-color-primary-lighter);
 }
 
 [data-theme='dark'] .metricCard {
@@ -107,20 +170,32 @@
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+[data-theme='dark'] .heroAtlasCard {
+  border-color: rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, rgba(10, 20, 32, 0.98), rgba(13, 24, 39, 0.92));
+  box-shadow: none;
+}
+
+[data-theme='dark'] .heroAtlasLegend span {
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--ifm-color-emphasis-200);
+}
+
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 3.5rem 0 2.5rem;
+    padding: 3.75rem 0 2.75rem;
   }
 
   .heroGrid {
     grid-template-columns: 1fr;
   }
 
-  .heroVisual {
+  .heroVisualWrap {
     order: -1;
   }
 
-  .metrics {
+  .metrics,
+  .heroAtlasLegend {
     grid-template-columns: 1fr;
   }
 }

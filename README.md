@@ -52,6 +52,38 @@ npm run check
 
 - `url`: `https://lessup.github.io`
 - `baseUrl`: `/wiki-bioinfo/`
+- 目标地址：`https://lessup.github.io/wiki-bioinfo/`
+
+仓库已经配置了 GitHub Actions 自动部署工作流：
+
+- `/.github/workflows/deploy-pages.yml`
+- 当 `master` 分支有新的 push 时，会自动构建并发布站点
+
+### 首次启用 GitHub Pages
+
+如果仓库还没有启用 Pages，需要在 GitHub 仓库页面完成一次设置：
+
+1. 打开 **Settings → Pages**
+2. 在 **Build and deployment** 中把 **Source** 设置为 **GitHub Actions**
+3. 确认后，再向 `master` 推送一次提交，或手动触发 `Deploy GitHub Pages` workflow
+
+### 部署验证
+
+当自动部署启用后，可以通过以下方式验证：
+
+```bash
+npm run typecheck
+npm run build
+```
+
+然后在 GitHub Actions 中检查：
+
+- `CI` 工作流是否通过
+- `Deploy GitHub Pages` 工作流是否通过
+
+最后访问：
+
+- `https://lessup.github.io/wiki-bioinfo/`
 
 如果后续改为自定义域名或其他静态托管平台，可调整 `docusaurus.config.ts`。
 

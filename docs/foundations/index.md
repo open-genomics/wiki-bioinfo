@@ -46,6 +46,7 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 3. [测序 reads、coverage 与错误模型](./sequencing-reads-coverage.md)
 4. [参考基因组、坐标系统与注释](./reference-and-annotation.md)
 5. [概率、图与动态规划预备](./probability-and-graphs.md)
+6. [算法与复杂度](./algorithms-and-complexity.md)
 
 ## 子主题导航
 
@@ -85,6 +86,13 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       badge: '衔接',
       meta: '方法预备',
       description: '为后续比对、组装和概率模型页建立共通数学语言。',
+    },
+    {
+      title: '算法与复杂度',
+      to: '/docs/foundations/algorithms-and-complexity',
+      badge: '总纲',
+      meta: '方法论',
+      description: '从穷举、DP、图算法、索引到随机化方法，建立整站的算法主线。',
     },
   ]}
 />

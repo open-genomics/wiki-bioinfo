@@ -18,6 +18,7 @@ const sidebars: SidebarsConfig = {
         'foundations/sequencing-reads-coverage',
         'foundations/reference-and-annotation',
         'foundations/probability-and-graphs',
+        'foundations/algorithms-and-complexity',
       ],
     },
     {

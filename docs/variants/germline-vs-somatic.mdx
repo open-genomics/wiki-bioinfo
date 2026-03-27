@@ -1,0 +1,84 @@
+---
+sidebar_position: 5
+description: germline 与 somatic 变异检测的差异与分析思路。
+pagination_label: Germline vs Somatic
+---
+
+# Germline 与 somatic 变异
+
+## 是什么
+
+从样本来源和生物学背景看，变异大致可以分为：
+
+- **germline variants**：
+  - 生殖细胞系中的变异；
+  - 在个体的大部分体细胞中共有；
+  - 解释上常与遗传性疾病、种群变异相关。
+
+- **somatic variants**：
+  - 体细胞分裂过程中产生的变异；
+  - 只存在于部分细胞或特定组织（如肿瘤）；
+  - 解释上常与癌症、克隆进化、组织特异事件相关。
+
+## 在数据与设计上的典型差异
+
+### Germline calling
+
+- 常见设计：
+  - 单个个体的全基因组/外显子测序；
+  - 三代（trio）或家系设计；
+- 主要问题：
+  - 识别个体中相对于参考的稳定变异；
+  - 与种群数据库（如 gnomAD）对照；
+- 假设：
+  - 变异在样本中以 0/0, 0/1, 1/1 等稳定基因型形式存在；
+  - 变异频率主要由个体基因型决定，而非克隆结构。
+
+### Somatic calling
+
+- 常见设计：
+  - 肿瘤–正常对（tumor-normal pair）；
+  - 多个肿瘤区域、多时间点或单细胞数据；
+- 主要问题：
+  - 区分肿瘤特异变异与个体 germline 背景；
+  - 估计克隆频率和肿瘤纯度；
+- 假设：
+  - 变异频率受克隆组成影响，不一定是简单的 0/1/2 拷贝形式；
+  - coverage、等位基因频率和拷贝数变化之间存在耦合。
+
+## caller 和过滤逻辑上的区别
+
+- Germline caller：
+  - 更多使用种群模型、Hardy–Weinberg 等假设；
+  - 更强调基因型质量（GQ）、种群频率、家系一致性；
+
+- Somatic caller：
+  - 强调肿瘤/正常样本之间的差异信号；
+  - 更敏感于低变异等位基因频率（VAF），尤其是在肿瘤纯度不高时；
+  - 更注重背景噪声建模和 panel of normals 等策略。
+
+## 报告与解释上的差异
+
+在报告 germline 变异时，通常关注：
+
+- 是否为已知致病或可能致病变异；
+- 在人群中的频率；
+- 家系中是否以符合遗传模式的方式 segregate；
+
+在报告 somatic 变异时，通常关注：
+
+- 是否为 driver 或已知与肿瘤亚型相关的变异；
+- 在肿瘤中的克隆频率、纯度相关指标；
+- 是否具有可行动意义（drug target, trial eligibility 等）。
+
+## 注意事项
+
+- 不要把 germline caller 结果直接当作 somatic 解释，反之亦然；
+- 使用肿瘤–正常设计时，要明确哪一套 caller/过滤规则针对 somatic；
+- 在下游解释和可视化时，最好区分 germline 与 somatic 变异集合。
+
+## 相关页面
+
+- [DNA-seq 变异检测总览](./variant-calling-overview.mdx)
+- [DNA-seq 变异过滤与质量控制](./variant-filtering.mdx)
+- [结构变异（SV）概览](./small-variants-vs-sv.mdx)

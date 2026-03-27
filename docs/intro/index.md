@@ -7,10 +7,15 @@ slug: /intro
 
 BioInfo Wiki 是一个面向中文社区的开源生物信息学知识库。
 
-它参考 OI Wiki 的组织方式：
+它参考 OI Wiki 的组织方式，同时配合一套统一的配图规范：
+
+<figure>
+  <img src="/wiki-bioinfo/img/figures/wiki-knowledge-map.png" alt="BioInfo Wiki global knowledge map showing Foundations, Core Methods, Applications, Data & References, and Workflows" />
+  <figcaption>BioInfo Wiki 的知识地图：从基础对象和方法，到数据与资源，再到分析方向与完整工作流。</figcaption>
+</figure>
 
 - 用清晰的层级结构串起知识点；
-- 用统一的文档模板降低阅读和贡献门槛；
+- 用统一的文档模板和高信息密度配图降低阅读和贡献门槛；
 - 用 GitHub 协作机制持续积累内容。
 
 但它的主题聚焦于 **生物信息学**，目标是把以下几类知识连接起来：

@@ -136,6 +136,13 @@ FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annota
 
 因此变异检测的关键并不是“有差异就算变异”，而是评估证据质量。
 
+## 视觉化：DNA-seq 变异检测工作流
+
+<figure>
+  <img src="/wiki-bioinfo/img/figures/dnaseq-variant-workflow.png" alt="DNA-seq variant calling pipeline from FASTQ through QC, alignment to BAM, candidate variants, filtering, and annotated VCF/interpretation" />
+  <figcaption>DNA-seq 变异检测的典型流程：从原始 FASTQ，到比对得到 BAM，再到候选变异、过滤、注释与解释。</figcaption>
+</figure>
+
 ## 注意事项
 
 - 参考基因组版本和注释版本必须一致；

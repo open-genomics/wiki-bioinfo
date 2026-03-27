@@ -153,6 +153,13 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
 - 注释版本不匹配
 - 多重比对 read 的处理方式
 
+## 视觉化：RNA-seq 工作流一图总览
+
+<figure>
+  <img src="/wiki-bioinfo/img/figures/rnaseq-workflow.png" alt="RNA-seq workflow from reads and QC through alignment or pseudo-alignment, quantification, normalization, and differential expression" />
+  <figcaption>RNA-seq 分析主线：从 reads 与质控，到 mapping / pseudo-alignment，再到定量、归一化与差异表达。</figcaption>
+</figure>
+
 ## 注意事项
 
 - 参考基因组和注释版本必须匹配；

@@ -79,6 +79,13 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
   ]}
 />
 
+## 视觉化：alignment 方法与 mapper 技术栈
+
+<figure>
+  <img src="/wiki-bioinfo/img/figures/alignment-mapper-stack.png" alt="Layered diagram showing sequence representations, alignment models, seed-and-extend strategy, and real-world tools like BLAST, BWA, and minimap2" />
+  <figcaption>从序列表示与索引，到编辑距离与动态规划，再到 seed-and-extend 与具体工具（BLAST / BWA / minimap2）的技术栈示意。</figcaption>
+</figure>
+
 ## 与其他板块的连接
 
 <RelatedLinks

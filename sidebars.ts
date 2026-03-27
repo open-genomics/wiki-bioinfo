@@ -47,6 +47,7 @@ const sidebars: SidebarsConfig = {
             'alignment/scoring-matrices',
             'alignment/affine-gap-penalty',
             'alignment/seed-and-extend',
+            'alignment/multiple-sequence-alignment',
           ],
         },
         {
@@ -108,7 +109,12 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: '系统发育与进化',
           link: {type: 'doc', id: 'phylogeny/index'},
-          items: ['phylogeny/distance-methods'],
+          items: [
+            'phylogeny/distance-methods',
+            'phylogeny/additive-phylogeny',
+            'phylogeny/parsimony',
+            'phylogeny/maximum-likelihood',
+          ],
         },
       ],
     },

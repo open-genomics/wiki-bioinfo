@@ -26,9 +26,11 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 ## 推荐阅读顺序
 
-1. [距离方法概览](./distance-methods.md)
-2. [序列比对](../alignment/index.md)
-3. [工作流与案例](../workflows/index.md)
+1. [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)
+2. [距离方法概览](./distance-methods.md)
+3. [加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)
+4. [Parsimony](./parsimony.md)
+5. [Maximum Likelihood](./maximum-likelihood.md)
 
 ## 子主题导航
 
@@ -41,11 +43,32 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       meta: 'distance-based',
       description: '从相似性、距离矩阵和聚类视角理解树是如何被构建出来的。',
     },
+    {
+      title: '加法系统发育（Additive Phylogeny）',
+      to: '/docs/phylogeny/additive-phylogeny',
+      badge: '理论骨架',
+      meta: 'additive matrix',
+      description: '理解当距离矩阵精确来自一棵树时，树结构如何被恢复出来。',
+    },
+    {
+      title: 'Parsimony',
+      to: '/docs/phylogeny/parsimony',
+      badge: '位点方法',
+      meta: 'minimum changes',
+      description: '从位点变化次数最少的角度理解树推断。',
+    },
+    {
+      title: 'Maximum Likelihood',
+      to: '/docs/phylogeny/maximum-likelihood',
+      badge: '模型方法',
+      meta: 'likelihood',
+      description: '在演化模型下，寻找最可能产生当前观测序列的树。',
+    },
   ]}
 />
 
 ## 与其他板块的连接
 
-- 上游依赖 [序列比对](../alignment/index.md) 提供相似性基础；
+- 上游依赖 [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md) 和 [序列比对](../alignment/index.md) 提供同源位点基础；
 - 作为 [分析方向与案例](../applications/index.mdx) 中的一个专题入口；
-- 可与后续更深入的模型化进化主题继续扩展。
+- 也和概率模型页中对 HMM、profile 的理解形成方法论对照：一个是序列状态模型，一个是树结构模型。

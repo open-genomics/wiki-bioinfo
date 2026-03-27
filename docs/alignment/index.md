@@ -28,6 +28,8 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 6. [BLAST：基于 seed-and-extend 的局部搜索](./blast.md)
 7. [BWA 与 minimap2](./bwa-minimap2.md)
 8. [MAPQ、CIGAR 与多重比对](./mapping-quality-and-multi-mapping.md)
+9. [多序列比对（MSA）](./multiple-sequence-alignment.md)
+
 
 ## 子主题导航
 
@@ -75,6 +77,12 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       to: '/docs/alignment/mapping-quality-and-multi-mapping',
       badge: '结果解释',
       description: '把 mapper 输出的字段真正放回变异检测与表达定量的解释框架里。',
+    },
+    {
+      title: '多序列比对（MSA）',
+      to: '/docs/alignment/multiple-sequence-alignment',
+      badge: '进阶对齐',
+      description: '理解为什么多条序列不能简单重复 pairwise DP，以及 progressive alignment 的核心思路。',
     },
   ]}
 />

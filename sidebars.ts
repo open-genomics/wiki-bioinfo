@@ -32,7 +32,10 @@ const sidebars: SidebarsConfig = {
           items: [
             'sequence/kmers',
             'sequence/indexing',
+            'sequence/exact-string-matching',
+            'sequence/trie-and-multi-pattern-matching',
             'sequence/exact-vs-approximate',
+            'sequence/suffix-tree',
             'sequence/suffix-array-bwt',
             'sequence/fm-index',
           ],

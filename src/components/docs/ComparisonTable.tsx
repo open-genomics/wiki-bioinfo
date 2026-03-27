@@ -1,6 +1,6 @@
 import type {ReactNode} from 'react';
 import clsx from 'clsx';
-import styles from './content.module.css';
+import styles from './docs-primitives.module.css';
 
 type ComparisonRow = {
   aspect: ReactNode;
@@ -17,7 +17,7 @@ type ComparisonTableProps = {
 
 export default function ComparisonTable({leftTitle, rightTitle, rows, className}: ComparisonTableProps): ReactNode {
   return (
-    <div className={clsx(styles.wrapper, className)}>
+    <div className={clsx(styles.wrapper, styles.tableScroll, className)}>
       <table className={styles.comparisonTable}>
         <thead>
           <tr>

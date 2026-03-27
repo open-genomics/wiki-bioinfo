@@ -2,7 +2,7 @@
   padding: 4.75rem 0;
 }
 
-.topicSection {
+.softSection {
   background: linear-gradient(180deg, rgba(238, 252, 253, 0.94), rgba(255, 255, 255, 1));
 }
 
@@ -13,8 +13,23 @@
 }
 
 .sectionHeader {
-  max-width: 48rem;
+  max-width: 52rem;
   margin-bottom: 2rem;
+}
+
+.sectionLabel,
+.highlightBadge {
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  margin-bottom: 0.85rem;
+  padding: 0.35rem 0.72rem;
+  border-radius: 999px;
+  background: rgba(15, 139, 141, 0.08);
+  color: var(--ifm-color-primary-darkest);
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
 }
 
 .sectionHeader h2 {
@@ -27,8 +42,25 @@
   line-height: 1.8;
 }
 
+.sectionNext {
+  margin-top: 0.9rem;
+  color: var(--ifm-color-emphasis-800);
+  font-weight: 600;
+}
+
 .cardColumn {
   display: flex;
+}
+
+.highlightCard,
+.bridgeCard,
+.bucketCard,
+.pathCard,
+.contributionCard {
+  border: 1px solid var(--bioinfo-card-border);
+  border-radius: var(--bioinfo-card-radius);
+  background: var(--bioinfo-card-bg);
+  box-shadow: var(--bioinfo-card-shadow);
 }
 
 .highlightCard,
@@ -38,14 +70,10 @@
   gap: 1rem;
   width: 100%;
   padding: 1.5rem;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 24px;
-  background: var(--ifm-background-surface-color);
-  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
 }
 
 .highlightCard h3,
-.topicCard h3,
+.bucketCard h3,
 .pathCard h3,
 .bridgeCard h3,
 .contributionCard h3 {
@@ -53,7 +81,7 @@
 }
 
 .highlightCard p,
-.topicCard p,
+.bucketCard p,
 .pathCard p,
 .bridgeCard p,
 .contributionCard p {
@@ -67,7 +95,7 @@
   height: 180px;
 }
 
-.topicGrid,
+.bucketGrid,
 .pathGrid,
 .bridgeGrid,
 .contributionGrid {
@@ -75,7 +103,7 @@
   gap: 1rem;
 }
 
-.topicGrid {
+.bucketGrid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
@@ -91,16 +119,13 @@
   grid-template-columns: repeat(3, minmax(0, 1fr));
 }
 
-.topicCard,
+.bucketCard,
 .pathCard,
 .contributionCard {
   display: flex;
   flex-direction: column;
   gap: 0.9rem;
   padding: 1.4rem;
-  border-radius: 22px;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  background: var(--ifm-background-surface-color);
   color: inherit;
   text-decoration: none;
   transition:
@@ -109,23 +134,37 @@
     border-color 0.2s ease;
 }
 
-.topicCard:hover,
+.bucketCard:hover,
 .pathCard:hover,
 .contributionCard:hover {
   color: inherit;
   text-decoration: none;
   transform: translateY(-4px);
   border-color: var(--ifm-color-primary-light);
-  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+  box-shadow: var(--bioinfo-card-shadow-hover);
 }
 
-.topicCard span,
+.bucketCard span,
 .contributionCard span {
   color: var(--ifm-color-primary);
   font-weight: 700;
 }
 
-.topicMeta,
+.bucketCard ul,
+.pathSteps,
+.bridgeCard ul {
+  margin: 0;
+  padding-left: 1.15rem;
+  color: var(--ifm-color-emphasis-800);
+}
+
+.bucketCard li + li,
+.bridgeCard li + li,
+.pathSteps li + li {
+  margin-top: 0.35rem;
+}
+
+.bucketMeta,
 .pathAudience {
   display: inline-flex;
   align-items: center;
@@ -138,17 +177,23 @@
   font-weight: 700;
 }
 
-.bridgeCard ul {
-  margin: 0;
-  padding-left: 1.15rem;
-  color: var(--ifm-color-emphasis-800);
+.bucketFooter {
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  margin-top: auto;
 }
 
-.bridgeCard li + li {
-  margin-top: 0.45rem;
+.bucketFooter small {
+  color: var(--ifm-color-emphasis-700);
+  line-height: 1.65;
 }
 
-[data-theme='dark'] .topicSection {
+.pathSteps {
+  margin-top: auto;
+}
+
+[data-theme='dark'] .softSection {
   background: linear-gradient(180deg, rgba(9, 19, 30, 0.95), rgba(10, 16, 28, 1));
 }
 
@@ -159,15 +204,17 @@
 }
 
 [data-theme='dark'] .highlightCard,
-[data-theme='dark'] .topicCard,
+[data-theme='dark'] .bucketCard,
 [data-theme='dark'] .pathCard,
 [data-theme='dark'] .bridgeCard,
 [data-theme='dark'] .contributionCard {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--bioinfo-card-border-dark);
   box-shadow: none;
 }
 
-[data-theme='dark'] .topicMeta,
+[data-theme='dark'] .sectionLabel,
+[data-theme='dark'] .highlightBadge,
+[data-theme='dark'] .bucketMeta,
 [data-theme='dark'] .pathAudience {
   background: rgba(255, 255, 255, 0.06);
   color: var(--ifm-color-primary-lighter);
@@ -178,7 +225,7 @@
     padding: 3rem 0;
   }
 
-  .topicGrid,
+  .bucketGrid,
   .pathGrid,
   .bridgeGrid,
   .contributionGrid {

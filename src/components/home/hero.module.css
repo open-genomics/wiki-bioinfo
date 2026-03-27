@@ -39,9 +39,9 @@
 
 .heroBadge {
   padding: 0.35rem 0.75rem;
-  border: 1px solid rgba(15, 139, 141, 0.18);
+  border: 1px solid var(--bioinfo-border-strong);
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.72);
+  background: var(--bioinfo-surface-soft);
   color: var(--ifm-color-primary-darkest);
   font-size: 0.88rem;
   font-weight: 700;
@@ -87,10 +87,10 @@
   flex-direction: column;
   gap: 0.35rem;
   padding: 1rem;
-  border: 1px solid var(--ifm-color-emphasis-200);
-  border-radius: 18px;
-  background: rgba(255, 255, 255, 0.8);
-  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.05);
+  border: 1px solid var(--bioinfo-card-border);
+  border-radius: var(--bioinfo-card-radius);
+  background: var(--bioinfo-card-bg);
+  box-shadow: var(--bioinfo-card-shadow);
   backdrop-filter: blur(10px);
 }
 
@@ -112,7 +112,7 @@
 .heroAtlasCard {
   width: min(100%, 560px);
   padding: 1.2rem;
-  border: 1px solid rgba(15, 139, 141, 0.16);
+  border: 1px solid var(--bioinfo-border-strong);
   border-radius: 28px;
   background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(237, 251, 252, 0.88));
   box-shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
@@ -160,18 +160,18 @@
 }
 
 [data-theme='dark'] .heroBadge {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--bioinfo-card-border-dark);
   background: rgba(15, 24, 38, 0.82);
   color: var(--ifm-color-primary-lighter);
 }
 
 [data-theme='dark'] .metricCard {
   background: rgba(14, 24, 38, 0.92);
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--bioinfo-card-border-dark);
 }
 
 [data-theme='dark'] .heroAtlasCard {
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: var(--bioinfo-card-border-dark);
   background: linear-gradient(180deg, rgba(10, 20, 32, 0.98), rgba(13, 24, 39, 0.92));
   box-shadow: none;
 }

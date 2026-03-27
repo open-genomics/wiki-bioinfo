@@ -58,29 +58,28 @@ const config: Config = {
       },
       items: [
         {
-          type: 'docSidebar',
-          sidebarId: 'docsSidebar',
-          position: 'left',
-          label: '知识库',
-        },
-        {
-          to: '/docs/intro/roadmap',
-          label: '学习路线',
+          to: '/docs/intro/',
+          label: '开始这里',
           position: 'left',
         },
         {
-          to: '/docs/formats/',
-          label: '数据格式',
+          to: '/docs/foundations/',
+          label: '基础与数学',
           position: 'left',
         },
         {
-          to: '/docs/workflows/',
-          label: '工作流',
+          to: '/docs/core-methods/',
+          label: '核心方法',
           position: 'left',
         },
         {
-          to: '/docs/intro/contributing',
-          label: '参与贡献',
+          to: '/docs/applications/',
+          label: '分析方向',
+          position: 'left',
+        },
+        {
+          to: '/docs/data-references/',
+          label: '数据与资源',
           position: 'left',
         },
         {
@@ -94,7 +93,7 @@ const config: Config = {
       style: 'dark',
       links: [
         {
-          title: '学习路径',
+          title: '开始这里',
           items: [
             {
               label: '项目简介',
@@ -105,34 +104,34 @@ const config: Config = {
               to: '/docs/intro/roadmap',
             },
             {
-              label: '工作流与案例',
-              to: '/docs/workflows/',
-            },
-          ],
-        },
-        {
-          title: '核心专题',
-          items: [
-            {
-              label: '序列表示与索引',
-              to: '/docs/sequence/',
-            },
-            {
-              label: '序列比对',
-              to: '/docs/alignment/',
-            },
-            {
-              label: '数据库、注释与数据格式',
-              to: '/docs/databases/',
-            },
-          ],
-        },
-        {
-          title: '社区',
-          items: [
-            {
-              label: '如何贡献',
+              label: '参与贡献',
               to: '/docs/intro/contributing',
+            },
+          ],
+        },
+        {
+          title: '知识主干',
+          items: [
+            {
+              label: '基础与数学',
+              to: '/docs/foundations/',
+            },
+            {
+              label: '核心方法',
+              to: '/docs/core-methods/',
+            },
+            {
+              label: '分析方向与案例',
+              to: '/docs/applications/',
+            },
+          ],
+        },
+        {
+          title: '数据与社区',
+          items: [
+            {
+              label: '数据、注释与资源',
+              to: '/docs/data-references/',
             },
             {
               label: '写作规范',
@@ -150,7 +149,7 @@ const config: Config = {
     docs: {
       sidebar: {
         hideable: true,
-        autoCollapseCategories: false,
+        autoCollapseCategories: true,
       },
     },
     prism: {

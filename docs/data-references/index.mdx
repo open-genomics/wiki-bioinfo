@@ -1,0 +1,57 @@
+---
+sidebar_position: 1
+slug: /data-references
+---
+
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+
+# 数据、注释与资源
+
+这一部分把参考基因组、注释系统、数据库对象和常见文件格式放到同一层理解，因为它们共同决定了“输入输出到底是什么、结果最终如何解释”。
+
+## 这一部分在全站中的位置
+
+它连接对象层、方法层和应用层，是整站中最容易被低估、但最影响实际分析稳定性的板块之一。
+
+## 为什么重要
+
+很多流程问题并不是算法不会，而是：
+
+- 参考版本不一致；
+- 注释版本和坐标系统混乱；
+- 文件格式层级没分清；
+- 数据库对象无法正确映射到结果解释。
+
+## 推荐阅读顺序
+
+1. [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+2. [数据库、注释与数据格式](../databases/index.md)
+3. [常见数据格式](../formats/index.mdx)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      description: '先理解坐标系和版本体系，避免后续流程在基础层面出错。',
+    },
+    {
+      title: '数据库与资源',
+      to: '/docs/databases/',
+      description: '汇总分析中最常见的数据库入口、对象类型和版本选择问题。',
+    },
+    {
+      title: '常见数据格式',
+      to: '/docs/formats/',
+      description: '把 FASTA、FASTQ、BAM、GTF、VCF 等文件真正放回流程里理解。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+- 与 [基础与数学](../foundations/index.md) 连接：对象需要被正确编码；
+- 与 [核心方法](../core-methods/index.mdx) 连接：方法依赖合适的输入输出；
+- 与 [分析方向与案例](../applications/index.mdx) 连接：所有工作流最终都会落回这里的约束。

@@ -2,11 +2,21 @@
 sidebar_position: 2
 ---
 
-import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
-import WorkflowSteps from '@site/src/components/content/WorkflowSteps';
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import PrerequisitesBox from '@site/src/components/docs/PrerequisitesBox';
+import WorkflowSteps from '@site/src/components/docs/WorkflowSteps';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+import ToolMappingBox from '@site/src/components/docs/ToolMappingBox';
 
 # DNA-seq 变异检测总览
+
+<SummaryBox
+  summary="这是一页把 DNA-seq variant calling 放回完整分析链路的概览：你需要同时看 BAM、VCF、参考版本、过滤逻辑和证据质量，而不是把 caller 当成黑箱。"
+  bullets={[
+    '如果你刚开始接触变异检测，先把 FASTQ → BAM → VCF 的层级关系理顺。',
+    '这页重点是流程和判断逻辑，不是具体软件命令。',
+  ]}
+/>
 
 ## 任务目标
 
@@ -39,21 +49,25 @@ DNA-seq 变异检测要回答的是：样本和参考基因组相比，哪些位
   steps={[
     {
       title: '原始数据与质控',
+      badge: '输入层',
       description: '从 FASTQ 出发检查 read 质量、接头污染、覆盖度与样本批次问题。',
       hint: '低质量 reads 会直接影响后续比对和候选位点证据。',
     },
     {
       title: '比对到参考基因组',
+      badge: '定位层',
       description: '用索引和比对算法把 reads 放到参考坐标系里，得到 BAM。',
       hint: '错配、indel、重复区域都会影响定位稳定性。',
     },
     {
       title: '候选位点生成',
+      badge: '证据层',
       description: '在 pileup 或局部重组视角下寻找与参考不一致的位置。',
       hint: '这里需要区分真实变异证据与测序错误。',
     },
     {
       title: '过滤与注释',
+      badge: '解释层',
       description: '结合质量值、深度、偏好性指标与数据库注释筛选最终结果。',
       hint: 'VCF 不是终点，还需要结合上下文解释。',
     },
@@ -98,6 +112,14 @@ caller 要在以下因素之间做区分：
 - 过滤：统计阈值、经验规则、群体频率与功能注释
 - 解释：数据库映射、转录本 / 蛋白水平影响分析
 
+<ToolMappingBox
+  items={[
+    '真实 variant calling 不只是运行 caller，还依赖前面的比对质量、重复区域处理和参考版本选择。',
+    'BAM、VCF 和注释数据库是连接算法层与解释层的关键接口。',
+    '过滤逻辑常常和具体 caller、样本类型与研究设计强相关。',
+  ]}
+/>
+
 ## worked example
 
 一个简化 DNA-seq variant workflow 可以写成：
@@ -128,16 +150,19 @@ FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annota
     {
       title: '序列比对',
       to: '/docs/alignment/',
+      label: '方法背景',
       description: '理解变异证据为何依赖 read 的定位稳定性。',
     },
     {
       title: '常见文件格式概览',
       to: '/docs/formats/common-file-formats',
+      label: '输入输出',
       description: '从 FASTQ、BAM 到 VCF，梳理每一层保存的究竟是什么。',
     },
     {
       title: '数据库与资源',
       to: '/docs/databases/',
+      label: '解释层',
       description: '结果解释最终需要落回数据库对象与注释体系。',
     },
   ]}

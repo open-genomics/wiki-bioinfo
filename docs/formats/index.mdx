@@ -3,8 +3,9 @@ sidebar_position: 1
 slug: /formats
 ---
 
-import ComparisonTable from '@site/src/components/content/ComparisonTable';
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import ComparisonTable from '@site/src/components/docs/ComparisonTable';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 # 常见数据格式
 
@@ -14,11 +15,7 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
 
 ## 这一部分在全站中的位置
 
-这一节位于对象层、资源层和流程层之间：
-
-- 它连接 [基础与数学](../foundations/index.md) 中的 reads、参考基因组、注释等对象；
-- 它决定 [序列比对](../alignment/index.md)、[变异检测](../variants/index.mdx)、[转录组](../transcriptomics/index.mdx) 等流程模块如何交换数据；
-- 它也影响你如何使用 [数据库与资源](../databases/index.md) 中的参考版本和注释文件。
+这一节属于“数据、注释与资源”大板块，负责把原始观测、参考序列、比对结果、注释文件和变异结果这些不同层级的文件真正放回流程上下文中理解。
 
 ## 为什么这一节重要
 
@@ -64,12 +61,24 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
 
 ## 子主题导航
 
-<RelatedLinks
-  links={[
+<SectionNavigator
+  items={[
     {
       title: '常见文件格式概览',
       to: '/docs/formats/common-file-formats',
       description: '梳理 FASTA、FASTQ、SAM/BAM、GTF/GFF、VCF 在不同流程里的角色。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '数据、注释与资源',
+      to: '/docs/data-references/',
+      description: '先从上层入口理解格式为什么必须和参考、注释、数据库一起看。',
     },
     {
       title: '参考基因组、坐标系统与注释',
@@ -83,9 +92,3 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
     },
   ]}
 />
-
-## 与其他板块的连接
-
-- 与 [基础与数学](../foundations/index.md) 连接：格式反映对象如何被编码；
-- 与 [数据库、注释与数据格式](../databases/index.md) 连接：格式和数据资源版本必须匹配；
-- 与 [工作流与案例](../workflows/index.md) 连接：格式是每一步交接的共同语言。

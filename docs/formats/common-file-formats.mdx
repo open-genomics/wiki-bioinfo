@@ -2,9 +2,10 @@
 sidebar_position: 2
 ---
 
-import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
-import WorkflowSteps from '@site/src/components/content/WorkflowSteps';
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import PrerequisitesBox from '@site/src/components/docs/PrerequisitesBox';
+import WorkflowSteps from '@site/src/components/docs/WorkflowSteps';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+import PitfallsBox from '@site/src/components/docs/PitfallsBox';
 
 # 常见文件格式概览
 
@@ -96,19 +97,13 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
   ]}
 />
 
-## 常见误区
-
-### FASTA 和 FASTQ 只是有没有质量值的区别，所以可以随便替换
-
-不能。FASTQ 是原始 reads 的主要载体，而 FASTA 往往用于参考序列、组装结果或某些无质量分数的后续步骤。
-
-### 有了 BAM 就不需要参考序列和注释了
-
-不对。BAM 只描述比对结果；后续解释仍然需要参考序列、坐标系统和注释文件支持。
-
-### VCF 是“所有变异信息的最终真相”
-
-也不对。VCF 是候选变异及其证据的表示，结果质量高度依赖上游比对、过滤和参考版本。
+<PitfallsBox
+  items={[
+    'FASTA 和 FASTQ 不能因为都装序列就互相替换，它们承载的信息层级不同。',
+    'BAM 并不能替代参考序列和注释文件，很多解释仍然依赖后者。',
+    'VCF 只是候选变异表示，不是脱离上下文的“最终真相”。',
+  ]}
+/>
 
 ## 相关页面
 

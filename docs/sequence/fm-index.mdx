@@ -1,11 +1,22 @@
 ---
 sidebar_position: 4
+description: FM-index 概览，解释 BWT 之上的压缩全文索引如何支持高效 exact matching。
+pagination_label: FM-index
 ---
 
-import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import PrerequisitesBox from '@site/src/components/docs/PrerequisitesBox';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 
 # FM-index
+
+<SummaryBox
+  summary="FM-index 是理解‘为什么 read mapper 能在巨大参考基因组上快速查找’的关键一页：它把 BWT 的可压缩性和 backward search 的区间更新结合起来。"
+  bullets={[
+    '先理解 suffix array 和 BWT，再看 FM-index 会更自然。',
+    '这页的重点是索引骨架和搜索思路，不是完整比对算法。',
+  ]}
+/>
 
 ## 是什么
 
@@ -103,16 +114,19 @@ FM-index 特别适合：
     {
       title: 'Suffix Array、BWT 与索引压缩',
       to: '/docs/sequence/suffix-array-bwt',
+      label: '前置',
       description: '先理解 FM-index 建立在什么结构之上。',
     },
     {
       title: '精确匹配与近似匹配',
       to: '/docs/sequence/exact-vs-approximate',
+      label: '概念对照',
       description: '理解为什么 exact matching 只是 read mapping 的前半段。',
     },
     {
       title: 'Seed-and-extend',
       to: '/docs/alignment/seed-and-extend',
+      label: '方法延伸',
       description: '查看 FM-index 如何在真实比对流程中与扩展策略结合。',
     },
   ]}

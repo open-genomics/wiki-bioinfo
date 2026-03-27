@@ -1,8 +1,21 @@
 ---
 sidebar_position: 2
+description: 编辑距离概览，从动态规划视角理解序列相似性、局部精细比对与后续评分模型的起点。
+pagination_label: 编辑距离
 ---
 
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
 # 编辑距离
+
+<SummaryBox
+  summary="编辑距离是理解序列比对最短路径的一页起点：它把序列相似性问题转成一个可以用动态规划系统求解的最小代价问题。"
+  bullets={[
+    '先掌握状态定义和递推关系，再去看全局/局部比对会更顺。',
+    '它不是现代比对工具的完整算法，但几乎是所有后续打分模型的起点。',
+  ]}
+/>
 
 ## 是什么
 
@@ -25,6 +38,23 @@ sidebar_position: 2
 编辑距离把这些“相似不相似”的直觉问题，转成了一个可以计算、可以优化的问题。虽然真实的序列比对通常会使用更复杂的打分体系，但编辑距离依然是理解比对算法的最短路径。
 
 ## 数学模型
+
+<DefinitionList
+  items={[
+    {
+      term: '状态 `dp[i][j]`',
+      definition: '表示把 `x` 的前 `i` 个字符转换成 `y` 的前 `j` 个字符所需的最小代价。',
+    },
+    {
+      term: '边界条件',
+      definition: '空串到长度为 `j` 的串需要插入 `j` 次，长度为 `i` 的串到空串需要删除 `i` 次。',
+    },
+    {
+      term: '核心操作',
+      definition: '删除、插入、匹配/替换三类局部选择决定了当前状态的最优值。',
+    },
+  ]}
+/>
 
 设两个字符串分别为 `x = x_1x_2...x_m` 和 `y = y_1y_2...y_n`。
 

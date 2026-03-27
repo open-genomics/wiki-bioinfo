@@ -1,8 +1,21 @@
 ---
 sidebar_position: 2
+description: 隐马尔可夫模型概览，解释隐藏状态、转移概率与序列结构推断在生物信息学中的经典作用。
+pagination_label: 隐马尔可夫模型
 ---
 
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
 # 隐马尔可夫模型
+
+<SummaryBox
+  summary="HMM 是理解‘隐藏结构 + 不确定观测’问题的一页起点：它用状态转移和发射概率，把基因预测、序列分段和蛋白家族建模等任务放进统一框架。"
+  bullets={[
+    '先掌握状态、转移、发射三个核心概念，再去理解 Viterbi 和 decoding。',
+    '它不只是理论模型，而是很多序列结构解释任务的经典工作马。',
+  ]}
+/>
 
 ## 是什么
 
@@ -28,6 +41,23 @@ HMM 常用于这样的问题：
 换句话说，HMM 特别适合“线性序列 + 隐藏结构 + 不确定性”的场景。
 
 ## 模型组成
+
+<DefinitionList
+  items={[
+    {
+      term: '状态集合 `S`',
+      definition: '表示系统可能处于的隐藏结构类别，例如 exon / intron / intergenic。',
+    },
+    {
+      term: '转移概率 `a_{ij}`',
+      definition: '表示从状态 `i` 切换到状态 `j` 的概率。',
+    },
+    {
+      term: '发射概率 `b_j(o)`',
+      definition: '表示在状态 `j` 下观察到某个符号或信号的概率。',
+    },
+  ]}
+/>
 
 一个 HMM 通常包括：
 

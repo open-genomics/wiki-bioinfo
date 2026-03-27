@@ -1,0 +1,58 @@
+---
+sidebar_position: 1
+slug: /applications
+---
+
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+
+# 分析方向与案例
+
+这一部分承接前面的基础与方法层，把它们重新放回具体分析任务中：DNA-seq、RNA-seq、宏基因组和系统发育等问题，最终都需要通过工作流和案例来理解。
+
+## 这一部分在全站中的位置
+
+它是整站的应用层，用来回答“前面学的那些方法最后到底用在什么地方”。
+
+## 为什么重要
+
+如果只有方法页，没有应用层，读者很容易形成“知道术语，但不知道任务边界”的知识碎片化问题。
+
+## 推荐阅读顺序
+
+1. [工作流与案例](../workflows/index.md)
+2. [变异检测](../variants/index.mdx)
+3. [转录组](../transcriptomics/index.mdx)
+4. [系统发育与进化](../phylogeny/index.md)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: '工作流与案例',
+      to: '/docs/workflows/',
+      description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法放回真实分析流程。',
+    },
+    {
+      title: '变异检测',
+      to: '/docs/variants/',
+      description: '围绕 DNA-seq variant calling，理解 BAM、VCF、过滤与证据质量。',
+    },
+    {
+      title: '转录组',
+      to: '/docs/transcriptomics/',
+      description: '聚焦 RNA-seq 中的定量、isoform 归属与 pseudo-alignment。',
+    },
+    {
+      title: '系统发育与进化',
+      to: '/docs/phylogeny/',
+      description: '理解序列差异如何映射成距离、树和进化关系。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+- 上游依赖 [核心方法](../core-methods/index.mdx)；
+- 数据入口和解释依赖 [数据、注释与资源](../data-references/index.mdx)；
+- 初学者可先从 [开始这里](../intro/index.md) 的学习路线进入。

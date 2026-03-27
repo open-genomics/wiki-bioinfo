@@ -1,21 +1,27 @@
 ---
 sidebar_position: 1
 slug: /variants
+description: 变异检测板块入口，串联 reads、BAM、VCF、过滤与解释逻辑在 DNA-seq 中的位置。
+pagination_label: 变异检测
 ---
 
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import PageHeaderMeta from '@site/src/components/docs/PageHeaderMeta';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 # 变异检测
+
+<PageHeaderMeta
+  section="Applications"
+  audience="已经理解比对与参考基因组，希望把方法放回 DNA-seq 任务中的读者"
+  startWith="先看 reads/coverage、常见文件格式与序列比对，再进入 variant calling"
+/>
 
 变异检测关注的是：给定样本 reads 与参考基因组，如何识别 SNP、InDel 乃至更复杂的结构变异，并判断这些差异是否足够可信、是否具有生物学意义。
 
 ## 这一部分在全站中的位置
 
-这一节位于“序列比对”和“工作流解释”之间：
-
-- 上游依赖 [序列比对](../alignment/index.md) 和 [常见文件格式概览](../formats/common-file-formats.mdx)；
-- 中间牵涉参考基因组、注释、错误模型和质量控制；
-- 下游常与 [数据库与资源](../databases/index.md) 的注释体系以及具体疾病 / 群体研究问题连接。
+这一节位于“分析方向与案例”之下，承接序列比对、参考基因组、错误模型与文件格式，最终把这些方法放回 DNA-seq 任务中。
 
 ## 为什么这一节重要
 
@@ -34,6 +40,28 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
 2. [常见文件格式概览](../formats/common-file-formats.mdx)
 3. [序列比对](../alignment/index.md)
 4. [DNA-seq 变异检测总览](./variant-calling-overview.mdx)
+5. [DNA-seq 变异过滤与质量控制](./variant-filtering.mdx)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      badge: '起点',
+      meta: 'workflow overview',
+      description: '从 FASTQ、BAM、VCF 和过滤逻辑出发，理解 variant calling 的主流程。',
+    },
+    {
+      title: 'DNA-seq 变异过滤与质量控制',
+      to: '/docs/variants/variant-filtering',
+      badge: '过滤逻辑',
+      meta: 'filtering',
+      description: '理解 QUAL、DP、AF、FILTER 等字段如何帮助你筛选更可信的候选变异。',
+    },
+  ]}
+/>
 
 ## 与其他板块的连接
 
@@ -42,16 +70,19 @@ import RelatedLinks from '@site/src/components/content/RelatedLinks';
     {
       title: '测序 reads、coverage 与错误模型',
       to: '/docs/foundations/sequencing-reads-coverage',
+      label: '前置',
       description: '理解变异检测中的观察证据为什么会受到测序误差与覆盖度影响。',
     },
     {
       title: '序列比对',
       to: '/docs/alignment/',
+      label: '方法依赖',
       description: '变异检测的可信度很大程度取决于 read 被定位得是否稳定。',
     },
     {
       title: 'DNA-seq 变异检测总览',
       to: '/docs/variants/variant-calling-overview',
+      label: '继续阅读',
       description: '从 BAM、VCF 和过滤逻辑出发理解真实流程。',
     },
   ]}

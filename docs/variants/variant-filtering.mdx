@@ -1,0 +1,172 @@
+---
+sidebar_position: 2
+description: DNA-seq 变异过滤与质量控制概览，解释 QUAL、DP、AF、FILTER 等字段背后的直觉与常见过滤策略。
+pagination_label: 变异过滤
+---
+
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+import PitfallsBox from '@site/src/components/docs/PitfallsBox';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+
+# DNA-seq 变异过滤与质量控制
+
+<SummaryBox
+  summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成‘真变异’。"
+  bullets={[
+    '理解 QUAL、DP、AF、FILTER 等 VCF 字段的大致含义，比死记具体软件参数更重要。',
+    '过滤逻辑高度依赖 caller、样本类型和设计，下面只提供通用直觉，不是固定阈值菜单。',
+  ]}
+/>
+
+## 是什么
+
+DNA-seq 变异过滤（variant filtering）是在 caller 产生一批候选变异之后，对这些候选根据证据强度和上下文进行筛选的过程。
+
+它的目标不是“找到所有差异”，而是：
+
+- 尽量保留可信的生物学变异；
+- 尽量剔除由测序错误、比对错误或模型局限引起的假阳性；
+- 在召回率和精确率之间做合理平衡。
+
+## 常用字段直觉
+
+<DefinitionList
+  items={[
+    {
+      term: 'QUAL',
+      definition: '变异本身的质量估计，通常是该位点为假阳性的概率的 phred 标度近似（具体含义依 caller 而定）。',
+    },
+    {
+      term: 'DP (Depth)',
+      definition: '该位点的测序深度。过低的深度难以提供稳定证据，过高的深度有时也提示技术偏好或重复区域问题。',
+    },
+    {
+      term: 'AF (Allele Frequency)',
+      definition: '在样本中支持该等位基因的 reads 占比。对于二倍体 germline 数据，理想杂合位点常接近 0.5，但真实数据会有偏移。',
+    },
+    {
+      term: 'FILTER',
+      definition: '标记该变异是否通过内部过滤逻辑。常见值有 PASS 以及各种特定过滤标记（如 LowQual、QDLow 等）。',
+    },
+  ]}
+/>
+
+不同 caller 会引入更多字段（如 MQ、QD、FS、SOR 等），但大体都在描述：
+
+- 证据强度（深度、质量）；
+- 信号是否偏好某一条链或某一方向；
+- 变异是否位于已知问题区段（低复杂度、重复、黑名单区域）。
+
+## Hard filter 与模型化过滤
+
+在实践中，经常会看到两类过滤方式：
+
+### 1. Hard filter
+
+使用一组阈值对字段进行直接裁剪，例如：
+
+- `DP < 某个阈值`：深度太低，不可信；
+- `QUAL < 某个阈值`：整体质量偏低；
+- 某些 caller 还会基于 QD（QUAL/DP）、FS（strand bias）给出硬阈值建议。
+
+优点：
+
+- 简单直观；
+- 便于解释；
+
+缺点：
+
+- 对不同测序平台和实验条件不够自适应；
+- 很难兼顾边缘情况和复杂区域。
+
+### 2. 模型化过滤
+
+一些 caller 会使用更复杂的统计或机器学习模型估计“该位点是真实变异”的概率，并在 FILTER 字段中标记不同的 failure 原因。
+
+优点：
+
+- 可以结合多个特征（深度、偏好性、mapping 质量等）；
+- 更有机会适应不同数据特征；
+
+缺点：
+
+- 行为更黑箱，调参和解释难度增加；
+- 跨项目迁移时需要重新理解模型假设。
+
+## 一个简化的过滤思路示例
+
+在教学/探索阶段，可以先用一个较为保守的简化思路：
+
+- **基础要求**：
+  - 深度 `DP` 不要太低（例如 &gt;= 10，具体视实验而定）；
+  - MAPQ 过低的 reads 所支撑的变异要格外小心；
+- **看 FILTER**：
+  - 优先关注 `FILTER = PASS` 的位点；
+  - 对被特定标记剔除的位点（如 strand bias、低质量）结合字段说明与 caller 文档理解原因；
+- **看 AF 与 read 支持**：
+  - 极端 AF（过低或过高）需要结合深度与覆盖度背景解释；
+  - 小心只有少数 reads 支持、且这些 reads 自身质量或 mapping 不佳的位点。
+
+需要强调的是：
+
+> 不存在“一组对所有数据都正确”的通用阈值。
+
+过滤策略一定要结合：
+
+- 测序平台与实验设计；
+- caller 的具体假设和字段含义；
+- 下游分析（如群体分析、诊断、筛查）的容错与风险偏好。
+
+## 与重复区域和低复杂度区域的关系
+
+即使字段看起来 "不错"，在重复序列和低复杂度区域，以下风险依然存在：
+
+- 多重比对导致 reads 定位位置不稳定；
+- mapping 错位导致假阳性 indel 或 SNP；
+- coverage 异常堆积掩盖真实的变异模式。
+
+因此，variant filtering 不应脱离：
+
+- 参考基因组注释（重复、GC、黑名单区域等）；
+- mapping 质量（MAPQ、多重比对标签）；
+- 区域上下游其他变异和 coverage 模式。
+
+<PitfallsBox
+  items={[
+    '仅凭单个字段（例如 QUAL）做一刀切过滤，而不看深度、偏好性和 mapping 质量。',
+    '把某套阈值不加调整地复制到不同平台、不同实验条件甚至不同 caller 上。',
+    '忽略重复或低复杂度区域的特殊性，把这些区域的 PASS 变异与普通区域一视同仁。',
+  ]}
+/>
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      label: '流程概览',
+      description: '回顾 variant calling 全流程，把过滤放回上下游环节中理解。',
+    },
+    {
+      title: '常见文件格式概览',
+      to: '/docs/formats/common-file-formats',
+      label: 'VCF 字段',
+      description: '更系统地看 FASTQ、BAM、VCF 各层存放的信息与字段含义。',
+    },
+    {
+      title: 'MAPQ、CIGAR 与多重比对',
+      to: '/docs/alignment/mapping-quality-and-multi-mapping',
+      label: '定位不确定性',
+      description: '理解 mapping 不确定性如何影响变异证据。',
+    },
+    {
+      title: '测序 reads、coverage 与错误模型',
+      to: '/docs/foundations/sequencing-reads-coverage',
+      label: '证据来源',
+      description: '回到 reads 层，看变异证据究竟是如何被“看到”的。',
+    },
+  ]}
+/>

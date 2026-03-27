@@ -2,11 +2,21 @@
 sidebar_position: 2
 ---
 
-import ComparisonTable from '@site/src/components/content/ComparisonTable';
-import PrerequisitesBox from '@site/src/components/content/PrerequisitesBox';
-import RelatedLinks from '@site/src/components/content/RelatedLinks';
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import ComparisonTable from '@site/src/components/docs/ComparisonTable';
+import PrerequisitesBox from '@site/src/components/docs/PrerequisitesBox';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+import ToolMappingBox from '@site/src/components/docs/ToolMappingBox';
 
 # Pseudo-alignment 与表达定量
+
+<SummaryBox
+  summary="这页回答的是：当 RNA-seq 的目标是表达定量时，为什么很多方法不再追求每个 read 的精确对齐，而是转向兼容转录本集合与丰度估计。"
+  bullets={[
+    '重点不是“比对得多精确”，而是“定量问题需要什么信息”。',
+    '如果你更关心剪接边界、新结构或局部解释，就不能只停留在 pseudo-alignment。',
+  ]}
+/>
 
 ## 是什么
 
@@ -100,13 +110,13 @@ read_42 -> {tx1, tx2}
 
 ## 与真实工具或流程的连接
 
-在真实 RNA-seq 流程中，这类方法常用于：
-
-- 快速转录本层表达定量；
-- 大样本批量处理；
-- 作为差异表达分析的前端输入。
-
-它代表的是一种“为了定量目的而重塑问题定义”的思路。
+<ToolMappingBox
+  items={[
+    '这类方法常用于快速转录本层表达定量和大样本批量处理。',
+    '它们代表的是“为了定量目标而改变问题定义”，而不是传统精确定位路线的简单加速版。',
+    '如果研究重点是剪接边界或新结构解释，仍然常需要回到更精细的比对框架。',
+  ]}
+/>
 
 ## 常见误区
 
@@ -129,16 +139,19 @@ read_42 -> {tx1, tx2}
     {
       title: 'RNA-seq 工作流概览',
       to: '/docs/workflows/rna-seq',
+      label: 'workflow',
       description: '查看 pseudo-alignment 在完整 RNA-seq 流程中的位置。',
     },
     {
       title: 'FM-index',
       to: '/docs/sequence/fm-index',
+      label: '索引层',
       description: '理解快速定位类方法背后的索引思想。',
     },
     {
       title: '序列比对',
       to: '/docs/alignment/',
+      label: '对照方法',
       description: '比较精确比对与兼容性判断各自解决的问题。',
     },
   ]}

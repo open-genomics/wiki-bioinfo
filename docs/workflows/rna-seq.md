@@ -1,8 +1,20 @@
 ---
 sidebar_position: 3
+description: RNA-seq 工作流概览，串联比对或 pseudo-alignment、表达定量、归一化和差异分析。
+pagination_label: RNA-seq 工作流
 ---
 
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+
 # RNA-seq 工作流概览
+
+<SummaryBox
+  summary="这是一页把 RNA-seq 从原始 reads 一路串到定量、归一化、差异分析与功能解释的总览页面，重点是建立流程地图而不是记命令。"
+  bullets={[
+    '如果你刚开始接触 RNA-seq，先把流程中的输入输出、注释依赖和定量目标区分清楚。',
+    '如果你已经做过一些分析，这页更适合你回头定位每一步依赖的算法与统计前提。',
+  ]}
+/>
 
 ## 是什么
 

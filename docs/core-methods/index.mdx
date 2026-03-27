@@ -1,0 +1,95 @@
+---
+sidebar_position: 1
+slug: /core-methods
+description: 核心方法板块入口，串联序列表示、比对、组装与概率模型四条方法主线。
+pagination_label: 核心方法
+---
+
+import PageHeaderMeta from '@site/src/components/docs/PageHeaderMeta';
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+
+# 核心方法
+
+<PageHeaderMeta
+  section="Core Methods"
+  audience="已经建立基础对象直觉，准备系统进入算法与模型主干的读者"
+  startWith="建议先从序列表示与索引进入，再逐步过渡到比对、组装和概率模型"
+/>
+
+这一部分汇总 BioInfo Wiki 的方法主干：先理解序列如何表示、如何被索引，再进入比对、组装和概率模型。
+
+## 这一部分在全站中的位置
+
+它位于“基础与数学”和“分析方向与案例”之间，是整站最稳定的方法层。
+
+## 为什么重要
+
+如果没有这一层，工作流会只剩工具名和命令；而如果只停留在这一层，又很难理解这些方法最终如何落到 DNA-seq、RNA-seq 和宏基因组等真实任务上。
+
+## 推荐阅读顺序
+
+1. [序列表示与索引](../sequence/index.md)
+2. [序列比对](../alignment/index.md)
+3. [组装与图算法](../assembly/index.md)
+4. [概率模型与模式识别](../models/index.md)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: '序列表示与索引',
+      to: '/docs/sequence/',
+      badge: '起点',
+      meta: 'indexing',
+      description: '从 k-mer、suffix array、BWT 到 FM-index，理解海量参考上的搜索与定位。',
+    },
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      badge: '核心',
+      meta: 'alignment',
+      description: '从编辑距离、动态规划到 seed-and-extend，理解 mapping 的核心骨架。',
+    },
+    {
+      title: '组装与图算法',
+      to: '/docs/assembly/',
+      badge: '图方法',
+      meta: 'assembly',
+      description: '从 overlap 到 de Bruijn graph，再到重复、错误与图清理。',
+    },
+    {
+      title: '概率模型与模式识别',
+      to: '/docs/models/',
+      badge: '模型层',
+      meta: 'probabilistic models',
+      description: '用 HMM、PWM/PSSM 等模型理解隐藏结构、motif 和 gene prediction。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '基础与数学',
+      to: '/docs/foundations/',
+      label: '前置',
+      description: '先建立对象层直觉，再进入方法主干。',
+    },
+    {
+      title: '分析方向与案例',
+      to: '/docs/applications/',
+      label: '应用层',
+      description: '把方法重新放回真实问题、流程和场景。',
+    },
+    {
+      title: '数据、注释与资源',
+      to: '/docs/data-references/',
+      label: '输入输出',
+      description: '理解这些方法依赖的参考体系、数据格式和数据库对象。',
+    },
+  ]}
+/>

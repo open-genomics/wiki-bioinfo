@@ -1,0 +1,22 @@
+.docItemContainer header + *,
+.docItemContainer article > *:first-child {
+  margin-top: 0;
+}
+
+.docTopShell {
+  margin-bottom: 1.25rem;
+}
+
+.docLead {
+  max-width: 52rem;
+  margin: 0.75rem 0 0;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.02rem;
+  line-height: 1.85;
+}
+
+@media (min-width: 997px) {
+  .docItemCol {
+    max-width: 75% !important;
+  }
+}

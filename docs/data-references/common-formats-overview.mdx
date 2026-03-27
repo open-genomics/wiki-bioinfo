@@ -1,0 +1,106 @@
+---
+sidebar_position: 4
+description: 常见基因组数据格式（FASTA/FASTQ/BAM/GTF/VCF 等）的层级与在流程中的作用概览。
+pagination_label: 常见数据格式
+---
+
+# 常见数据格式总览
+
+## 是什么
+
+在基因组/转录组分析管线中，数据通常在多个“层级”上流动，每一层都有对应的文件格式：
+
+- 序列层：FASTA；
+- 原始观测层：FASTQ；
+- 比对结果层：SAM/BAM/CRAM；
+- 注释层：GTF/GFF/BED 等；
+- 变异层：VCF/BCF；
+- 派生指标层：表达矩阵、coverage 列表等。
+
+理解这些格式之间的层级关系，有助于弄清楚：
+
+- 当前分析处于哪一层；
+- 某个文件里到底保存了什么信息；
+- 不同工具为什么需要不同的输入输出。
+
+## 序列层：FASTA
+
+- 保存参考序列本身（基因组、转录本、蛋白等）；
+- 常见结构：
+  - `>ID 描述`
+  - 多行序列；
+- 不包含 base quality、reads 或 coverage 信息。
+
+典型用途：
+
+- 作为 mapping/assembly 的参考输入；
+- 提供给下游工具做序列提取、motif 分析等。
+
+## 原始观测层：FASTQ
+
+- 保存 sequencing reads 及其 base quality；
+- 每个 read 包含四行：
+  - `@ID`
+  - 碱基序列
+  - `+`
+  - 质量值字符串；
+- 是绝大多数 NGS 分析的起点。
+
+## 比对结果层：SAM/BAM/CRAM
+
+- **SAM**：文本格式，比对结果的明文表示；
+- **BAM**：SAM 的二进制压缩版；
+- **CRAM**：更高效的压缩格式，常结合参考序列。
+
+核心信息包括：
+
+- read ID、参考染色体、位置；
+- CIGAR、MAPQ、flag（包括多重比对信息）；
+- 可选 tag，记录各类附加信息。
+
+## 注释层：GTF/GFF/BED 等
+
+- **GTF/GFF**：
+  - 表示基因、转录本、外显子等注释的表格格式；
+  - 包含 feature 类型、坐标、strand、属性字段（ID、Parent 等）；
+- **BED**：
+  - 简洁的坐标列表，用于表示区间（promoter、peak 等）。
+
+这些文件告诉我们“参考上的哪些区间对应什么生物学对象”。
+
+## 变异层：VCF/BCF
+
+- **VCF**：文本格式，记录变异位置和注释信息；
+- **BCF**：VCF 的二进制版。
+
+核心字段包括：
+
+- `CHROM, POS, ID, REF, ALT, QUAL, FILTER, INFO`；
+- genotype（GT）、深度（DP）、等位基因频率（AF）、caller 特有信息等。
+
+## 层级关系小结
+
+可以粗略理解为：
+
+```text
+参考序列层: FASTA
+原始观测层: FASTQ
+比对结果层: SAM/BAM/CRAM
+注释与区间层: GTF/GFF/BED
+变异结果层: VCF/BCF
+派生指标层: 表达矩阵 / coverage / 统计汇总
+```
+
+每一层都是前一层进一步“解释”和“提炼”的结果。
+
+## 实践建议
+
+- 在写 pipeline 或记录分析步骤时，明确标明每一步的输入/输出格式；
+- 不要把“只给 BAM/VCF”的结果当作完全独立的对象，总是记住它们依赖的 FASTQ 和 FASTA；
+- 在版本控制和数据管理上，为不同层次数据采用不同的保存策略（例如：原始 FASTQ/FASTA 长期保存，BAM/VCF 取决于重算成本）。
+
+## 相关页面
+
+- [常见文件格式概览](../formats/common-file-formats.mdx)
+- [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+- [数据、注释与资源](./index.mdx)

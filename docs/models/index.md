@@ -16,33 +16,65 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 
 ## 推荐阅读顺序
 
-1. [隐马尔可夫模型](./hmm.md)
-2. [Motif 寻找](./motif-finding.md)
+1. [Motif 寻找](./motif-finding.md)
+2. [Motif discovery 的算法路线](./motif-discovery-algorithms.md)
 3. [PWM 与 PSSM](./pwm-pssm.md)
-4. [Gene prediction](./gene-prediction.md)
+4. [隐马尔可夫模型](./hmm.md)
+5. [Viterbi、Forward 与 Backward](./viterbi-forward-backward.md)
+6. [Profile HMM](./profile-hmm.md)
+7. [Gene prediction](./gene-prediction.md)
 
 ## 子主题导航
 
 <SectionNavigator
   items={[
     {
-      title: '隐马尔可夫模型',
-      to: '/docs/models/hmm',
-      description: '理解隐藏状态、观测序列与 Viterbi 等推断框架。',
-    },
-    {
       title: 'Motif 寻找',
       to: '/docs/models/motif-finding',
+      badge: '概念入口',
+      meta: 'motif',
       description: '把模式发现问题放回生物序列分析的真实上下文。',
+    },
+    {
+      title: 'Motif discovery 的算法路线',
+      to: '/docs/models/motif-discovery-algorithms',
+      badge: '算法桥梁',
+      meta: 'search & randomization',
+      description: '从穷举、贪心到 randomized search 与 Gibbs sampling，理解 motif discovery 的算法族。',
     },
     {
       title: 'PWM 与 PSSM',
       to: '/docs/models/pwm-pssm',
+      badge: '矩阵表示',
+      meta: 'profile scoring',
       description: '理解位置相关的 motif 表示为什么比固定字符串更接近现实。',
+    },
+    {
+      title: '隐马尔可夫模型',
+      to: '/docs/models/hmm',
+      badge: '概率模型',
+      meta: 'hidden states',
+      description: '理解隐藏状态、观测序列与 Viterbi 等推断框架。',
+    },
+    {
+      title: 'Viterbi、Forward 与 Backward',
+      to: '/docs/models/viterbi-forward-backward',
+      badge: '推断算法',
+      meta: 'decoding & evaluation',
+      description: '区分 HMM 中最可能路径、观测概率和位点 posterior 的三类核心问题。',
+    },
+    {
+      title: 'Profile HMM',
+      to: '/docs/models/profile-hmm',
+      badge: '家族模型',
+      meta: 'match/insert/delete',
+      description: '用 HMM 扩展 PWM/PSSM，表示带插入缺失的序列家族模式。',
     },
     {
       title: 'Gene prediction',
       to: '/docs/models/gene-prediction',
+      badge: '应用落地',
+      meta: 'annotation',
       description: '把序列分段、概率模型和注释生成联系起来。',
     },
   ]}

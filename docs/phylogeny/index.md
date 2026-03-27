@@ -11,14 +11,14 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 <PageHeaderMeta
   section="Applications"
   audience="已经理解比对与距离概念，希望进一步理解树结构与进化关系解释的读者"
-  startWith="先从距离方法概览切入，再回头联系比对和 workflow 背景"
+  startWith="先从层次聚类和 k-means 建立数据分群直觉，再进入 MSA 与系统发育方法。"
 />
 
 系统发育分析试图根据序列或特征差异重建物种、基因或样本之间的进化关系。
 
 ## 这一部分在全站中的位置
 
-它位于“分析方向与案例”之下，承担的是应用层中的一个经典方向：把序列相似性和距离方法重新组织成树结构与进化解释。
+它位于“分析方向与案例”之下，承担的是应用层中的一个经典方向：把序列相似性、表达模式相似性与树方法重新组织成结构解释。
 
 ## 为什么这一节重要
 
@@ -26,16 +26,32 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 ## 推荐阅读顺序
 
-1. [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)
-2. [距离方法概览](./distance-methods.md)
-3. [加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)
-4. [Parsimony](./parsimony.md)
-5. [Maximum Likelihood](./maximum-likelihood.md)
+1. [层次聚类](./hierarchical-clustering.md)
+2. [k-means 在生物信息学中的应用](./k-means-bioinformatics.md)
+3. [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)
+4. [距离方法概览](./distance-methods.md)
+5. [加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)
+6. [Parsimony](./parsimony.md)
+7. [Maximum Likelihood](./maximum-likelihood.md)
 
 ## 子主题导航
 
 <SectionNavigator
   items={[
+    {
+      title: '层次聚类',
+      to: '/docs/phylogeny/hierarchical-clustering',
+      badge: '表达数据',
+      meta: 'dendrogram',
+      description: '从 gene/sample expression matrix 出发，理解 dendrogram 和树状结构的直觉。',
+    },
+    {
+      title: 'k-means 在生物信息学中的应用',
+      to: '/docs/phylogeny/k-means-bioinformatics',
+      badge: '表达数据',
+      meta: 'partition clustering',
+      description: '理解基因表达聚类与样本分群中的 k-means 目标函数和局限。',
+    },
     {
       title: '距离方法概览',
       to: '/docs/phylogeny/distance-methods',
@@ -66,6 +82,12 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
     },
   ]}
 />
+
+## 与表达数据分析的连接
+
+- [RNA-seq 工作流概览](../workflows/rna-seq.md) 中的表达矩阵常用层次聚类或 k-means 做初步模式探索；
+- [TPM、FPKM、CPM 与有效长度](../transcriptomics/tpm-fpkm-cpm.mdx) 提供 expression matrix 的输入背景；
+- 树状图在 expression analysis 中更偏相似性可视化，不应直接等同于真实进化树。
 
 ## 与其他板块的连接
 

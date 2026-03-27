@@ -114,6 +114,8 @@ const sidebars: SidebarsConfig = {
           label: '系统发育与进化',
           link: {type: 'doc', id: 'phylogeny/index'},
           items: [
+            'phylogeny/hierarchical-clustering',
+            'phylogeny/k-means-bioinformatics',
             'phylogeny/distance-methods',
             'phylogeny/additive-phylogeny',
             'phylogeny/parsimony',

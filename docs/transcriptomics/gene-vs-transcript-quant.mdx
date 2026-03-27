@@ -1,0 +1,84 @@
+---
+sidebar_position: 3
+description: gene-level 与 transcript-level 表达量的区别与转换关系。
+pagination_label: 基因 vs 转录本定量
+---
+
+# 基因层与转录本层表达定量
+
+## 是什么
+
+在 RNA-seq 中，我们常同时看到两种表达矩阵：
+
+- **gene-level**：行为基因的表达矩阵；
+- **transcript-level**：行为转录本（isoform）的表达矩阵。
+
+它们不是简单“两个视角”那么轻松：
+
+- gene-level 更适合很多经典差异表达工具和通路分析；
+- transcript-level 更适合研究剪接、isoform 特异调控等问题；
+- 二者之间的转换涉及信息损失和不同的统计假设。
+
+## transcript-level 定量
+
+在 transcript-level 中，我们关心的是每个 isoform 的丰度：
+
+- 每个转录本有自己的长度、结构和注释；
+- 多个转录本可能共享大量外显子和序列片段；
+- 多重比对 reads（同时兼容多个转录本）需要模型来分配。
+
+常见的输出包括：
+
+- 转录本层 counts；
+- TPM/FPKM 等单位；
+- 每个 isoform 在样本中的相对表达份额。
+
+## gene-level 聚合
+
+gene-level 表达量通常是由 transcript-level 聚合得到的：
+
+- 对属于同一个基因的所有转录本表达量做求和或加权求和；
+- 得到一个“基因总表达”的估计。
+
+聚合过程会抹掉 isoform 之间的差异，但换来：
+
+- 更稳定的信号（小转录本的波动被平均掉）；
+- 更容易与基因集、通路等注释融合。
+
+## 何时用 gene-level，何时用 transcript-level
+
+### 更适合 gene-level 的情况
+
+- 经典差异表达分析（大多数工具默认在基因层工作）；
+- 通路富集分析、GO 分析；
+- 需要与已有基因级结果对接时。
+
+### 更适合 transcript-level 的情况
+
+- 关心剪接变体、alternative promoters、3' UTR 变化等；
+- 研究 isoform 特异的调控或功能；
+- 要验证特定转录本的存在与否。
+
+## 模型和不确定性的差异
+
+在 transcript-level：
+
+- 模型需要处理多重比对和等价类（equivalence classes）；
+- 有效长度、GC 校正、bias 模型等会显著影响估计；
+
+在 gene-level：
+
+- 模型多用于差异分析层面（例如负二项分布的 count 模型）；
+- 对 isoform 之间的结构差异不敏感。
+
+## 实践建议
+
+- 如果你的主要问题是“哪些基因差异表达”，先从 gene-level 矩阵开始；
+- 如果你关心剪接或 isoform 结构，保留 transcript-level 矩阵并采用专门工具；
+- 报告结果时，要清楚区分“基因表达变化”和“转录本构成变化”。
+
+## 相关页面
+
+- [RNA-seq 工作流概览](../workflows/rna-seq.md)
+- [Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)
+- [TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)

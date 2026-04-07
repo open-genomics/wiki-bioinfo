@@ -284,7 +284,93 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
   - $f(n) = O(1) = O(n^0)$，符合情况 2（$k=0$）
   - $T(n) = \Theta(\log n)$
 
-## 5. 在生物信息学中的扩展应用
+## 5. 空间高效序列比对
+
+### Hirschberg 算法
+
+动态规划序列比对需要 O(nm) 空间存储 DP 表。当序列很长时（如全基因组比对），这会消耗大量内存。
+
+Hirschberg 算法使用分治策略将空间复杂度降到 O(min(n,m))。
+
+<DefinitionList
+  items={[
+    {
+      term: '核心思想',
+      definition: '递归地将序列分成两半，分别计算前缀和后缀的最优路径，在分割点合并。',
+    },
+    {
+      term: '空间复杂度',
+      definition: 'O(min(n,m))，只需存储当前列和前一列。',
+    },
+    {
+      term: '时间复杂度',
+      definition: '仍然是 O(nm)，但常数因子略高。',
+    },
+  ]}
+/>
+
+### 算法步骤
+
+1. **分割序列**：将序列 A 分成 A₁ 和 A₂
+2. **前向 DP**：从左上角计算到分割线，存储最后一列
+3. **反向 DP**：从右下角反向计算到分割线，存储最后一列
+4. **找分割点**：使前向和反向得分之和最大的点
+5. **递归**：对左右两部分递归求解
+
+### worked example
+
+序列 A = "AGTAC"，B = "ACAT"
+
+1. 将 A 分成 "AG" 和 "TAC"
+2. 前向 DP 计算 "AG" vs "ACAT" 的最后一列
+3. 反向 DP 计算 "TAC" vs "ACAT" 的最后一列
+4. 找到最优分割点
+5. 递归求解子问题
+
+### 在生物信息学中的应用
+
+- **全基因组比对**：比对大型基因组时节省内存
+- **长 read 比对**：处理第三代测序的长 reads
+- **多序列比对扩展**：某些 MSA 算法的空间优化版本
+
+## 6. Four Russians 加速
+
+### 基本思想
+
+Four Russians 方法（也称为 Four Russians' trick 或 block alignment）通过预计算小方块的最优解来加速 DP。
+
+<DefinitionList
+  items={[
+    {
+      term: '分块策略',
+      definition: '将 DP 表分成 k×k 的小块。',
+    },
+    {
+      term: '预计算',
+      definition: '预先计算所有可能的边界条件下小块的最优路径。',
+    },
+    {
+      term: '查表',
+      definition: '实际计算时，查表而非逐个计算。',
+    },
+    {
+      term: '时间复杂度',
+      definition: '可以降到 O(nm/log n)。',
+    },
+  ]}
+/>
+
+### 为什么叫 "Four Russians"
+
+这个方法由四位苏联科学家（V. L. Arlazarov, E. A. Dinic, M. A. Kronrod, I. A. Faradzev）在 1970 年提出。
+
+### 在生物信息学中的应用
+
+- **大规模序列比对**：加速基因组比对
+- **编辑距离计算**：快速计算大量序列对的编辑距离
+- **需要权衡**：预计算需要额外空间，适合重复计算相同大小方块的场景
+
+## 7. 在生物信息学中的扩展应用
 
 ### 系统发育树构建：UPGMA
 

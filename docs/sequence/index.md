@@ -21,11 +21,13 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 1. [k-mer 与序列表示](./kmers.md)
 2. [索引结构概览](./indexing.md)
 3. [精确字符串匹配](./exact-string-matching.md)
-4. [Trie 与多模式匹配](./trie-and-multi-pattern-matching.md)
-5. [精确匹配与近似匹配](./exact-vs-approximate.md)
-6. [Suffix Tree](./suffix-tree.md)
-7. [Suffix Array、BWT 与索引压缩](./suffix-array-bwt.md)
-8. [FM-index](./fm-index.mdx)
+4. [KMP算法](./kmp-algorithm.md)
+5. [Boyer-Moore算法](./boyer-moore-algorithm.md)
+6. [Trie 与多模式匹配](./trie-and-multi-pattern-matching.md)
+7. [精确匹配与近似匹配](./exact-vs-approximate.md)
+8. [Suffix Tree](./suffix-tree.md)
+9. [Suffix Array、BWT 与索引压缩](./suffix-array-bwt.md)
+10. [FM-index](./fm-index.mdx)
 
 ## 子主题导航
 
@@ -46,6 +48,18 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       to: '/docs/sequence/exact-string-matching',
       badge: '算法起点',
       description: '从最基础的模式串查找问题出发，理解为什么需要更聪明的字符串算法。',
+    },
+    {
+      title: 'KMP算法',
+      to: '/docs/sequence/kmp-algorithm',
+      badge: '经典算法',
+      description: '通过failure function实现线性时间字符串匹配，理解避免重复计算的核心思想。',
+    },
+    {
+      title: 'Boyer-Moore算法',
+      to: '/docs/sequence/boyer-moore-algorithm',
+      badge: '经典算法',
+      description: '通过bad character和good suffix规则实现高效跳跃，理解实际应用中最快的字符串匹配算法。',
     },
     {
       title: 'Trie 与多模式匹配',

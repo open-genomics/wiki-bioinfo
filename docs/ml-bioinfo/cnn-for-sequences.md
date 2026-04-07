@@ -1,0 +1,340 @@
+---
+sidebar_position: 4
+description: 卷积神经网络在生物序列中的应用，包括卷积操作、池化、完整算法步骤和 worked example。
+pagination_label: CNN for Sequences
+---
+
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
+# 卷积神经网络（CNN）在序列中的应用
+
+<SummaryBox
+  summary="卷积神经网络通过局部卷积核在序列上滑动，自动识别局部 motif 和模式，是生物序列建模中最基础且有效的深度学习架构。"
+  bullets={[
+    '卷积核可以学习到位置无关的 motif',
+    '池化层实现位置不变性',
+    '计算效率高，适合大规模数据',
+  ]}
+/>
+
+## 是什么
+
+卷积神经网络（Convolutional Neural Network, CNN）是一种专门用于处理网格状数据的神经网络架构。在生物序列中，序列可以视为一维网格（每个位置是一个碱基或氨基酸），CNN 通过卷积核在序列上滑动来检测局部模式。
+
+> 给定一条序列和一个卷积核，CNN 通过卷积操作提取局部特征，再通过池化和全连接层进行预测。
+
+## 要解决什么生物信息学问题
+
+在实际生物信息学应用中，CNN 适合的场景包括：
+
+- **转录因子结合位点预测**：识别 DNA 序列中的 protein-binding motifs
+- **启动子/增强子识别**：分类序列是否为调控元件
+- **剪接位点预测**：识别内含子-外显子边界
+- **变异效应预测**：预测 SNP 对结合或功能的影响
+- **蛋白质功能位点预测**：识别活性位点、修饰位点
+
+## 数学模型
+
+### 输入表示
+
+给定一条长度为 L 的序列 S = s₁s₂...s_L，首先将其编码为矩阵 X ∈ ℝ^(L×K)，其中 K 是字符表大小（DNA: K=4, 蛋白: K=20）。
+
+最常用的是 one-hot 编码：
+- DNA: A=[1,0,0,0], C=[0,1,0,0], G=[0,0,1,0], T=[0,0,0,1]
+- 蛋白: 每个氨基酸对应一个 20 维向量
+
+### 卷积操作
+
+定义一个卷积核（滤波器）W ∈ ℝ^(k×K)，其中 k 是卷积核长度（窗口大小）。
+
+在位置 i 处的卷积操作为：
+
+$$
+h_i = \sigma \left( \sum_{j=0}^{k-1} X_{i+j} \cdot W_j + b \right)
+$$
+
+其中：
+- X_{i+j} 是位置 i+j 处的 one-hot 向量
+- W_j 是卷积核的第 j 行
+- b 是偏置项
+- σ 是激活函数（常用 ReLU）
+
+对整条序列，得到特征图 h = [h₁, h₂, ..., h_{L-k+1}]
+
+### 多通道卷积
+
+通常使用多个卷积核（n 个）来检测不同的 motif：
+
+$$
+H = [h^{(1)}, h^{(2)}, ..., h^{(n)}]
+$$
+
+其中 H ∈ ℝ^(n×(L-k+1))，每个 h^{(j)} 对应一个卷积核的特征图。
+
+### 池化操作
+
+池化层用于降维和实现位置不变性。常用最大池化：
+
+$$
+p_j = \max_{i} h^{(j)}_i
+$$
+
+对每个特征图取最大值，得到固定长度的表示 p = [p₁, p₂, ..., p_n]
+
+### 全连接层
+
+将池化后的特征输入全连接层进行预测：
+
+$$
+y = \sigma_2 (W_2 \cdot p + b_2)
+$$
+
+对于分类任务，y 是类别概率；对于回归任务，y 是连续值。
+
+## 算法步骤
+
+### 步骤 1：输入编码
+
+将序列编码为 one-hot 矩阵 X ∈ ℝ^(L×K)
+
+### 步骤 2：卷积层
+
+1. 初始化 n 个卷积核 W^(1), W^(2), ..., W^(n)，每个大小为 k×K
+2. 对每个卷积核，在序列上滑动计算卷积
+3. 应用激活函数得到特征图
+
+### 步骤 3：池化层
+
+对每个特征图应用最大池化（或平均池化），得到固定长度表示
+
+### 步骤 4：全连接层
+
+将池化后的特征展平，输入全连接层
+
+### 步骤 5：输出层
+
+根据任务类型，使用适当的输出层：
+- 二分类：sigmoid + 二元交叉熵
+- 多分类：softmax + 交叉熵
+- 回归：线性激活 + MSE
+
+### 步骤 6：反向传播
+
+使用梯度下降（SGD、Adam 等）更新所有参数
+
+## Worked Example
+
+考虑一个简化的 DNA 序列分类任务：预测序列是否包含 TATA box motif。
+
+序列：S = "ATATATATA"（长度 L = 8）
+
+### 步骤 1：输入编码
+
+One-hot 编码（A=[1,0,0,0], T=[0,0,0,1]）：
+
+```
+X = [
+  [1,0,0,0],  # A
+  [0,0,0,1],  # T
+  [1,0,0,0],  # A
+  [0,0,0,1],  # T
+  [1,0,0,0],  # A
+  [0,0,0,1],  # T
+  [1,0,0,0],  # A
+  [0,0,0,1],  # T
+]
+```
+
+### 步骤 2：卷积
+
+假设使用一个卷积核，长度 k=4，学习到的 TATA motif 权重：
+
+```
+W = [
+  [0,0,0,1],  # T
+  [1,0,0,0],  # A
+  [0,0,0,1],  # T
+  [1,0,0,0],  # A
+]
+b = 0
+```
+
+在位置 i=0 处（子序列 "ATAT"）：
+
+$$
+h_0 = \text{ReLU}(X_0 \cdot W_0 + X_1 \cdot W_1 + X_2 \cdot W_2 + X_3 \cdot W_3 + b)
+$$
+
+计算：
+- X_0 · W_0 = [1,0,0,0] · [0,0,0,1] = 0
+- X_1 · W_1 = [0,0,0,1] · [1,0,0,0] = 0
+- X_2 · W_2 = [1,0,0,0] · [0,0,0,1] = 0
+- X_3 · W_3 = [0,0,0,1] · [1,0,0,0] = 0
+- 总和 = 0
+
+h_0 = ReLU(0) = 0
+
+在位置 i=1 处（子序列 "TATA"）：
+
+- X_1 · W_0 = [0,0,0,1] · [0,0,0,1] = 1
+- X_2 · W_1 = [1,0,0,0] · [1,0,0,0] = 1
+- X_3 · W_2 = [0,0,0,1] · [0,0,0,1] = 1
+- X_4 · W_3 = [1,0,0,0] · [1,0,0,0] = 1
+- 总和 = 4
+
+h_1 = ReLU(4) = 4
+
+继续计算其他位置，得到特征图：
+
+```
+h = [0, 4, 0, 4, 0]
+```
+
+### 步骤 3：池化
+
+最大池化：
+
+```
+p = max(h) = 4
+```
+
+### 步骤 4：全连接
+
+假设全连接层权重 w = 1，偏置 b = -2：
+
+$$
+y = \text{sigmoid}(w \cdot p + b) = \text{sigmoid}(1 \cdot 4 - 2) = \text{sigmoid}(2) ≈ 0.88
+$$
+
+由于 y > 0.5，预测该序列包含 TATA box motif。
+
+这个简化的例子展示了 CNN 如何通过卷积核检测特定模式，并通过池化实现位置不变性。
+
+## 复杂度分析
+
+### 时间复杂度
+
+- 卷积操作：O(n × k × K × L)，其中 n 是卷积核数量
+- 池化操作：O(n × L)
+- 全连接层：O(n × m)，其中 m 是输出维度
+- 总时间复杂度：O(n × k × K × L)
+
+与序列长度 L 线性相关，适合长序列。
+
+### 空间复杂度
+
+- 存储输入：O(L × K)
+- 存储特征图：O(n × L)
+- 存储参数：O(n × k × K)
+- 总空间复杂度：O(n × L + n × k × K)
+
+## 与真实工具或流程的连接
+
+CNN 在生物信息学中的代表性应用：
+
+- **DeepBind**（2015）：预测 RNA-binding protein 结合位点
+- **DeepSEA**（2015）：预测染色质效应
+- **Basset**（2016）：预测染色质可及性
+- **DanQ**（2016）：结合 CNN 和 RNN 预测调控功能
+- **BPNet**（2020）：可解释的 TF binding 预测
+
+这些工具的共同特点：
+- 使用多个卷积核检测不同 motif
+- 结合池化实现位置不变性
+- 输出层设计根据具体任务调整
+
+## 常见误区
+
+### CNN 只能检测局部模式
+
+不是。通过多层堆叠，CNN 可以学习到层次化的特征，从局部 motif 到组合模式。
+
+### 卷积核越大越好
+
+不是。过大的卷积核会增加参数数量，可能导致过拟合。通常使用多个小卷积核（如 3-8 个碱基）。
+
+### CNN 不考虑序列顺序
+
+不是。卷积操作保留了局部顺序信息，只是对位置偏移具有不变性。
+
+### CNN 完全不可解释
+
+不是。通过可视化卷积核权重或使用 attribution methods（如 DeepLIFT、saliency maps），可以解释 CNN 学到的 motif。
+
+## 算法变体与优化
+
+### 多层 CNN
+
+堆叠多个卷积层，学习更复杂的特征：
+
+$$
+H^{(l)} = \text{ReLU}(W^{(l)} * H^{(l-1)} + b^{(l)})
+$$
+
+### Dilated Convolution（空洞卷积）
+
+使用空洞卷积扩大感受野，不增加参数量：
+
+$$
+h_i = \sigma \left( \sum_{j=0}^{k-1} X_{i+j \cdot d} \cdot W_j + b \right)
+$$
+
+其中 d 是空洞率（dilation rate）。
+
+### Residual Connections
+
+添加残差连接，缓解梯度消失问题：
+
+$$
+H = \text{ReLU}(W * X + X)
+$$
+
+### Attention Pooling
+
+使用注意力机制替代最大池化，加权汇总特征：
+
+$$
+p_j = \sum_{i} \alpha_i \cdot h^{(j)}_i
+$$
+
+其中 α_i 是注意力权重。
+
+## 超参数选择
+
+### 卷积核长度（k）
+
+- DNA：常用 4-20（对应 motif 长度）
+- 蛋白：常用 3-30（对应二级结构或功能域）
+
+### 卷积核数量（n）
+
+- 小数据集：16-128
+- 大数据集：128-512
+
+### 池化类型
+
+- 最大池化：适合检测 motif 是否出现
+- 平均池化：适合检测整体信号强度
+- 注意力池化：可学习的重要性权重
+
+### 正则化
+
+- Dropout：防止过拟合
+- L2 正则化：约束权重范数
+- Batch Normalization：加速训练
+
+## 参考资料
+
+- Alipanahi, B., et al. (2015). Predicting the sequence specificities of DNA- and RNA-binding proteins by deep learning. *Nature biotechnology*, 33(8), 831-838.
+- Zhou, J., & Troyanskaya, O. G. (2015). DeepSEA: Predicting non-coding variant effects using deep sequence-based convolutional neural networks. *Nature methods*, 12(10), 931-934.
+- Kelley, D. R., et al. (2016). Basset: Learning the regulatory code of the accessible genome with deep convolutional neural networks. *Genome research*, 26(7), 990-999.
+- Quang, D., & Xie, X. (2016). DanQ: a hybrid convolutional and recurrent deep neural network for quantifying the function of DNA sequences. *Nucleic acids research*, 44(11), e107.
+
+## 相关页面
+
+- [序列深度学习](./deep-learning-for-sequences.md)
+- [嵌入与语言模型](./embeddings-and-language-models.md)
+- [RNN/LSTM for Sequences](./rnn-lstm-for-sequences.md)
+- [Transformer for Sequences](./transformer-for-sequences.md)
+- [PWM / PSSM](../models/pwm-pssm.md)

@@ -11,9 +11,12 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 ## 这一部分讲什么
 
-本章聚焦两个入口：
+本章聚焦三个核心算法架构：
 
-- **序列深度学习**：CNN、Transformer、结构化输入；
+- **序列深度学习概览**：CNN、Transformer、RNN 的基本概念；
+- **CNN for Sequences**：卷积神经网络在序列中的详细算法实现；
+- **RNN/LSTM for Sequences**：循环神经网络和长短期记忆网络的详细算法实现；
+- **Transformer for Sequences**：自注意力机制和 Transformer 的详细算法实现；
 - **生物序列嵌入与语言模型**：DNA/RNA/protein foundation models。
 
 ## 为什么重要
@@ -25,7 +28,10 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 ## 推荐阅读顺序
 
 1. [序列深度学习](./deep-learning-for-sequences.md)
-2. [嵌入与语言模型](./embeddings-and-language-models.md)
+2. [CNN for Sequences](./cnn-for-sequences.md)
+3. [RNN/LSTM for Sequences](./rnn-lstm-for-sequences.md)
+4. [Transformer for Sequences](./transformer-for-sequences.md)
+5. [嵌入与语言模型](./embeddings-and-language-models.md)
 
 ## 子主题导航
 
@@ -35,6 +41,21 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       title: '序列深度学习',
       to: '/docs/ml-bioinfo/deep-learning-for-sequences',
       description: '从 one-hot 编码到 CNN、Transformer 和下游监督任务。',
+    },
+    {
+      title: 'CNN for Sequences',
+      to: '/docs/ml-bioinfo/cnn-for-sequences',
+      description: '卷积神经网络在序列中的详细算法实现，包括卷积操作、池化和 worked example。',
+    },
+    {
+      title: 'RNN/LSTM for Sequences',
+      to: '/docs/ml-bioinfo/rnn-lstm-for-sequences',
+      description: '循环神经网络和长短期记忆网络的详细算法实现，包括门控机制和 worked example。',
+    },
+    {
+      title: 'Transformer for Sequences',
+      to: '/docs/ml-bioinfo/transformer-for-sequences',
+      description: '自注意力机制和 Transformer 的详细算法实现，包括位置编码和 worked example。',
     },
     {
       title: '嵌入与语言模型',

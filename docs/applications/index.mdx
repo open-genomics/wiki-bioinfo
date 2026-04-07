@@ -35,19 +35,24 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 ## 推荐阅读顺序
 
 1. [工作流与案例](../workflows/index.md)
-2. [变异检测](../variants/index.mdx)
-3. [转录组](../transcriptomics/index.mdx)
-4. [单细胞组学](../single-cell/index.md)
-5. [表观基因组学](../epigenomics/index.md)
-6. [群体遗传学](../population/index.md)
-7. [长读长测序](../long-read/index.md)
-8. [空间转录组](../spatial/index.md)
-9. [蛋白质组学](../proteomics/index.md)
-10. [临床变异解释](../clinical-variants/index.md)
-11. [结构生物信息学](../structure-bioinfo/index.md)
-12. [多组学整合](../multi-omics/index.md)
-13. [系统发育与进化](../phylogeny/index.md)
-14. [机器学习与基础模型](../ml-bioinfo/index.md)
+2. [算法总览](./algorithms-overview.md)
+3. [动态规划算法](./dynamic-programming.md)
+4. [图算法](./graph-algorithms.md)
+5. [字符串算法与索引](./string-algorithms.md)
+6. [概率算法](./probabilistic-algorithms.md)
+7. [变异检测](../variants/index.mdx)
+8. [转录组](../transcriptomics/index.mdx)
+9. [单细胞组学](../single-cell/index.md)
+10. [表观基因组学](../epigenomics/index.md)
+11. [群体遗传学](../population/index.md)
+12. [长读长测序](../long-read/index.md)
+13. [空间转录组](../spatial/index.md)
+14. [蛋白质组学](../proteomics/index.md)
+15. [临床变异解释](../clinical-variants/index.md)
+16. [结构生物信息学](../structure-bioinfo/index.md)
+17. [多组学整合](../multi-omics/index.md)
+18. [系统发育与进化](../phylogeny/index.md)
+19. [机器学习与基础模型](../ml-bioinfo/index.md)
 
 ## 子主题导航
 
@@ -59,6 +64,41 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       badge: '起点',
       meta: 'workflow overview',
       description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法重新放回真实分析流程。',
+    },
+    {
+      title: '算法总览',
+      to: '/docs/applications/algorithms-overview',
+      badge: '算法',
+      meta: 'algorithms overview',
+      description: '系统梳理生物信息学中的核心算法范式：动态规划、图算法、字符串索引与概率模型。',
+    },
+    {
+      title: '动态规划算法',
+      to: '/docs/applications/dynamic-programming',
+      badge: 'DP',
+      meta: 'dynamic programming',
+      description: '从序列比对、编辑距离到 HMM 推断算法的完整推导与 worked examples。',
+    },
+    {
+      title: '图算法',
+      to: '/docs/applications/graph-algorithms',
+      badge: '图算法',
+      meta: 'graph algorithms',
+      description: '从基因组组装的 de Bruijn graph 到系统发育树构建的完整图论视角。',
+    },
+    {
+      title: '字符串算法与索引',
+      to: '/docs/applications/string-algorithms',
+      badge: '索引',
+      meta: 'string algorithms',
+      description: '从 Trie、Suffix Array 到 FM-index，理解大规模序列搜索与映射的基础设施。',
+    },
+    {
+      title: '概率算法',
+      to: '/docs/applications/probabilistic-algorithms',
+      badge: '概率',
+      meta: 'probabilistic algorithms',
+      description: '从 HMM、贝叶斯方法到 MCMC 采样，理解处理噪声与不确定性的核心方法。',
     },
     {
       title: '变异检测',

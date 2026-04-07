@@ -47,6 +47,10 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 4. [参考基因组、坐标系统与注释](./reference-and-annotation.md)
 5. [概率、图与动态规划预备](./probability-and-graphs.md)
 6. [算法与复杂度](./algorithms-and-complexity.md)
+7. [图算法基础](./graph-algorithms.md)
+8. [字符串模式匹配](./string-pattern-matching.md)
+9. [分治算法基础](./divide-and-conquer.md)
+10. [近似算法](./approximation-algorithms.md)
 
 ## 子主题导航
 
@@ -93,6 +97,34 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       badge: '总纲',
       meta: '方法论',
       description: '从穷举、DP、图算法、索引到随机化方法，建立整站的算法主线。',
+    },
+    {
+      title: '图算法基础',
+      to: '/docs/foundations/graph-algorithms',
+      badge: '算法',
+      meta: '图方法',
+      description: 'BFS、DFS、最短路径与连通性，在组装、系统发育树和序列比对中的应用。',
+    },
+    {
+      title: '字符串模式匹配',
+      to: '/docs/foundations/string-pattern-matching',
+      badge: '算法',
+      meta: '字符串',
+      description: 'KMP、Boyer-Moore、Rabin-Karp，在序列比对、motif 搜索和数据库检索中的应用。',
+    },
+    {
+      title: '分治算法基础',
+      to: '/docs/foundations/divide-and-conquer',
+      badge: '算法',
+      meta: '分治',
+      description: '归并排序、快速排序、最近点对，在序列排序、树构建和距离计算中的应用。',
+    },
+    {
+      title: '近似算法',
+      to: '/docs/foundations/approximation-algorithms',
+      badge: '算法',
+      meta: '近似',
+      description: '处理 NP-hard 问题的实用策略，在系统发育树、Motif 发现和序列比对中的应用。',
     },
   ]}
 />

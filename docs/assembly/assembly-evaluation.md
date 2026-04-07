@@ -129,6 +129,216 @@ N50 很容易被误用。它能反映片段长度分布，但不能保证：
 
 很多组装工作流实际上是“建图 / 拼接”和“评估 / 迭代修正”交替进行，而不是只跑一次组装就结束。
 
+## 算法细节
+
+### 连续性指标计算
+
+#### N50 与 L50
+
+**定义**：
+- N50：将 contig 按长度从长到短排序后，使得累计长度达到总长度 50% 的最短 contig 长度
+- L50：达到 N50 所需的 contig 数量
+
+**算法 1：N50 和 L50 计算**
+
+```
+输入：contig 长度数组 L = [l₁, l₂, ..., l_n]
+输出：N50, L50
+
+1. 将 L 按降序排序：L_sorted = sort_desc(L)
+2. 计算总长度：total = Σ L_sorted[i]
+3. target = 0.5 × total
+4. cumulative = 0
+5. 对于 i = 1 到 n：
+   a. cumulative += L_sorted[i]
+   b. 如果 cumulative ≥ target：
+      - N50 = L_sorted[i]
+      - L50 = i
+      - break
+6. 返回 N50, L50
+```
+
+**时间复杂度**：$O(n \log n)$，主要来自排序
+
+**空间复杂度**：$O(n)$，存储排序后的数组
+
+#### 推广：N75, N90, L75, L90
+
+同样的算法可以计算 Nx 和 Lx，只需将 target 改为 $x \times total$。
+
+#### NG50 与 LG50（针对参考基因组）
+
+当有参考基因组时，使用参考基因组长度作为分母：
+
+**算法 2：NG50 和 LG50 计算**
+
+```
+输入：contig 长度数组 L，参考基因组长度 G_ref
+输出：NG50, LG50
+
+1. 将 L 按降序排序：L_sorted = sort_desc(L)
+2. target = 0.5 × G_ref
+3. cumulative = 0
+4. 对于 i = 1 到 n：
+   a. cumulative += L_sorted[i]
+   b. 如果 cumulative ≥ target：
+      - NG50 = L_sorted[i]
+      - LG50 = i
+      - break
+5. 如果累计长度始终 < target：
+   - NG50 = 0（未达到 50% 覆盖）
+   - LG50 = n（需要所有 contig）
+6. 返回 NG50, LG50
+```
+
+### 完整性评估算法
+
+#### 基于 Read Mapping 的完整性
+
+**算法 3：Read Mapping 覆盖率评估**
+
+```
+输入：contig 集合 C，read 集合 R
+输出：映射覆盖率，未映射 read 比例
+
+1. 将所有 contig 拼接为参考序列 Ref
+2. 使用 read mapper 将 R 映射到 Ref
+3. mapped_reads = {r ∈ R | r 成功映射到 Ref}
+4. coverage_rate = |mapped_reads| / |R|
+5. 对于每个 contig c ∈ C：
+   a. 计算覆盖 c 的 read 数
+   b. 如果 coverage < 阈值（如 5×），标记为低覆盖
+6. 返回 coverage_rate，低覆盖 contig 列表
+```
+
+**时间复杂度**：取决于使用的 read mapper，通常为 $O(|R| \cdot \log |Ref|)$
+
+#### 基于保守基因的完整性
+
+**算法 4：单拷贝直系同源基因（SCO）评估**
+
+```
+输入：contig 集合 C，保守基因集 G = {g₁, g₂, ..., g_m}
+输出：完整性分数，缺失基因列表
+
+1. 对于每个基因 g ∈ G：
+   a. 在 C 中搜索 g 的同源序列（使用 BLAST 或 HMM）
+   b. 如果找到匹配且 E-value < 阈值：
+      - 标记 g 为存在
+   c. 否则：
+      - 标记 g 为缺失
+2. completeness = |存在基因| / |G|
+3. 返回 completeness，缺失基因列表
+```
+
+**常用基因集**：
+- 细菌：单拷贝直系同源基因（如 BUSCO 数据库）
+- 真核生物：核心基因集（如 CEGMA）
+
+**时间复杂度**：$O(|C| \cdot |G| \cdot L_{avg})$，其中 $L_{avg}$ 为平均序列长度
+
+### 正确性评估算法
+
+#### 基于 Read Consistency 的错误检测
+
+**算法 5：Read Consistency 检查**
+
+```
+输入：contig 集合 C，read 集合 R，映射结果 M
+输出：错误位点列表
+
+1. errors = ∅
+2. 对于每个 contig c ∈ C：
+   a. 对于位置 p = 1 到 |c|：
+      - 收集覆盖位置 p 的所有 reads
+      - 统计各碱基计数：count[A], count[C], count[G], count[T]
+      - 计算一致性分数：
+        consistency = max(count) / Σ count
+      - 如果 consistency < 阈值（如 0.8）：
+         * 将 (c, p, 碱基分布) 加入 errors
+3. 返回 errors
+```
+
+**时间复杂度**：$O(|C| \cdot \text{avg_coverage})$
+
+#### 基于 k-mer 频率的错误检测
+
+**算法 6：k-mer 频率异常检测**
+
+```
+输入：contig 集合 C，k-mer 频率表 F（从 reads 构建）
+      k-mer 长度 k，频率阈值 f_min
+输出：异常区域列表
+
+1. abnormal_regions = ∅
+2. 对于每个 contig c ∈ C：
+   a. 对于每个 k-mer k' ∈ extract_kmers(c, k)：
+      - 如果 F[k'] < f_min 或 F[k'] = 0：
+         * 标记 k' 为异常
+   b. 合并连续的异常 k-mer 为区域
+   c. 将区域加入 abnormal_regions
+3. 返回 abnormal_regions
+```
+
+**时间复杂度**：$O(\Sigma |c|)$，遍历所有 contig 的 k-mer
+
+### 结构正确性评估
+
+#### 基于 Paired-end 的插入大小检查
+
+**算法 7：Paired-end 一致性检查**
+
+```
+输入：contig 集合 C，paired-end reads P = {(r₁, r₂, d)}
+      其中 d 为期望插入大小
+输出：不一致的 paired-end 对
+
+1. inconsistent_pairs = ∅
+2. 对于每个 paired-end (r₁, r₂, d) ∈ P：
+   a. 将 r₁ 和 r₂ 分别映射到 C
+   b. 如果都成功映射：
+      - 计算实际距离 d_actual
+      - 如果 |d_actual - d| > 阈值（如 3σ）：
+         * 将 (r₁, r₂, d, d_actual) 加入 inconsistent_pairs
+      - 如果方向不正确（如应为 inward 但为 outward）：
+         * 标记为方向错误
+3. 返回 inconsistent_pairs
+```
+
+**时间复杂度**：$O(|P|)$，假设映射已经完成
+
+### 复杂度总结
+
+| 评估类型 | 主要算法 | 时间复杂度 | 空间复杂度 |
+|---------|---------|-----------|-----------|
+| 连续性 | N50 计算 | $O(n \log n)$ | $O(n)$ |
+| Read 覆盖率 | Mapping 统计 | $O(|R| \log |C|)$ | $O(|C|)$ |
+| 保守基因 | 基因搜索 | $O(|C| \cdot |G|)$ | $O(|G|)$ |
+| Read 一致性 | 位点统计 | $O(|C| \cdot \text{cov})$ | $O(|C|)$ |
+| k-mer 频率 | k-mer 查找 | $O(\Sigma |c|)$ | $O(|F|)$ |
+| Paired-end | 距离统计 | $O(|P|)$ | $O(1)$ |
+
+其中 $n$ 为 contig 数量，$|R|$ 为 read 数量，$|C|$ 为 contig 总长度，$|G|$ 为基因集大小，$|P|$ 为 paired-end 对数量，$|F|$ 为 k-mer 频率表大小。
+
+### 综合评分框架
+
+**算法 8：多维度综合评分**
+
+```
+输入：连续性分数 S_contig，完整性分数 S_comp，正确性分数 S_corr
+      权重 w_contig, w_comp, w_corr（满足 w_contig + w_comp + w_corr = 1）
+输出：综合分数 S_total
+
+1. 归一化各分数到 [0, 1] 区间
+2. S_total = w_contig × S_contig + w_comp × S_comp + w_corr × S_corr
+3. 返回 S_total
+```
+
+**权重选择建议**：
+- de novo 组装：$w_{contig} = 0.4$, $w_{comp} = 0.4$, $w_{corr} = 0.2$
+- 变异检测：$w_{contig} = 0.2$, $w_{comp} = 0.3$, $w_{corr} = 0.5$
+- 功能注释：$w_{contig} = 0.3$, $w_{comp} = 0.5$, $w_{corr} = 0.2$
+
 ## 常见误区
 
 ### N50 越大，组装一定越好

@@ -45,6 +45,11 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       to: '/docs/databases/common-resources',
       description: '按真实分析任务理解 NCBI、Ensembl、UniProt、PDB、KEGG、GEO / SRA 等资源分别适合回答什么问题。',
     },
+    {
+      title: '数据库搜索与索引算法',
+      to: '/docs/databases/database-algorithms',
+      description: '理解 BLAST、BWA 等工具背后的 k-mer 索引、seed-and-extend、FM-index 等核心算法原理。',
+    },
   ]}
 />
 

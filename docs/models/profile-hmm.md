@@ -1,10 +1,22 @@
 ---
 sidebar_position: 7
-description: Profile HMM 如何扩展 PWM/PSSM，用于表示带插入缺失的序列家族模式。
+description: Profile HMM 的详细实现：理解如何用 HMM 扩展 PWM/PSSM 来表示带插入缺失的序列家族模式，包括 Match/Insert/Delete 状态和 Viterbi 算法。
 pagination_label: Profile HMM
 ---
 
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
 # Profile HMM
+
+<SummaryBox
+  summary="Profile HMM 是 PWM/PSSM 的强大扩展：它通过 Match、Insert、Delete 三类状态，能够显式建模序列家族中的插入和缺失，适用于蛋白家族和结构域分析。"
+  bullets={[
+    '核心是 M/I/D 三类状态组成的线性结构',
+    '用 Viterbi 算法找最优比对路径，用 Forward 算法评估匹配程度',
+    '它是蛋白家族数据库（如 Pfam）的核心建模方法'
+  ]}
+/>
 
 ## 是什么
 
@@ -18,6 +30,66 @@ PWM/PSSM 很适合描述一个**固定长度**的 motif：
 
 > 如果一个序列家族在不同成员之间存在插入、缺失和长度变化，如何仍然用概率模型刻画它的“家族结构”？
 
+## 数学模型
+
+### 状态定义
+
+Profile HMM 由三类状态组成：
+
+<DefinitionList
+  items={[
+    {
+      term: 'Match 状态 (M_i)',
+      definition: '表示家族中的保守位置 i，发射一个字符。',
+    },
+    {
+      term: 'Insert 状态 (I_i)',
+      definition: '表示在位置 i 之后插入额外字符，可以循环发射多个字符。',
+    },
+    {
+      term: 'Delete 状态 (D_i)',
+      definition: '表示跳过保守位置 i，不发射字符。',
+    },
+  ]}
+/>
+
+### 状态转移结构
+
+对于长度为 L 的 motif，Profile HMM 的状态序列为：
+
+```
+M_0 → M_1 → M_2 → ... → M_L → M_{L+1}
+  ↓     ↓     ↓           ↓     ↓
+  I_0   I_1   I_2         I_L   I_{L+1}
+        ↓     ↓           ↓
+        D_2   D_3         D_{L+1}
+```
+
+其中：
+- M_0 和 M_{L+1} 是开始和结束状态
+- 每个 M_i 可以转移到 M_{i+1}、I_i 或 D_{i+1}
+- 每个 I_i 可以转移到 M_{i+1} 或 I_i（自身循环）
+- 每个 D_i 可以转移到 M_{i+1} 或 D_{i+1}
+
+### 概率参数
+
+- **转移概率** $a_{uv}$：从状态 u 转移到状态 v 的概率
+- **发射概率** $e_i(c)$：Match 或 Insert 状态 i 发射字符 c 的概率
+
+### Viterbi 算法
+
+定义 $V_t(i)$ 为时刻 t 到达状态 i 的最优路径概率：
+
+$$
+V_t(j) = \max_{i} \left[ V_{t-1}(i) \cdot a_{ij} \cdot e_j(o_t) \right]
+$$
+
+对于 Delete 状态（不发射字符）：
+
+$$
+V_t(D_j) = \max_{i} \left[ V_t(i) \cdot a_{i,D_j} \right]
+$$
+
 ## 为什么 PWM 不够用
 
 对于简单 DNA motif，PWM 已经足够强大。
@@ -30,6 +102,115 @@ PWM/PSSM 很适合描述一个**固定长度**的 motif：
 - 只靠固定长度窗口会把这些变化都当成“糟糕匹配”。
 
 这时，需要一个能显式表示“匹配 / 插入 / 缺失”的模型。
+
+## 算法步骤
+
+### 构建 Profile HMM
+
+**算法1：从多序列比对构建 Profile HMM**
+
+```
+输入：多序列比对 MSA，motif 长度 L
+输出：Profile HMM 参数
+
+1. 初始化转移和发射计数矩阵
+2. for each 序列 in MSA:
+     确定状态路径（M/I/D）
+     更新转移计数
+     更新发射计数（M 和 I 状态）
+3. 添加伪计数避免零概率
+4. 归一化得到概率
+5. return 转移概率 a_ij 和发射概率 e_i(c)
+```
+
+**时间复杂度**：O(N · L)，N 是序列数量
+
+### Viterbi 对齐
+
+**算法2：使用 Viterbi 算法寻找最优状态路径**
+
+```
+输入：序列 s，Profile HMM 参数
+输出：最优状态路径和得分
+
+1. 初始化：V_0(M_0) = 1, 其他状态 = -∞
+2. for t = 1 to |s|:
+     for each 状态 j:
+        if j 是 M 或 I 状态:
+           V_t(j) = max_i [V_{t-1}(i) · a_ij · e_j(s_t)]
+           记录回溯指针
+        else if j 是 D 状态:
+           V_t(j) = max_i [V_t(i) · a_ij]  // 不发射字符
+           记录回溯指针
+3. 回溯得到最优状态路径
+4. return 路径和得分
+```
+
+**时间复杂度**：O(|s| · L · K)，K 是状态数（通常为 3L）
+
+## Worked Example
+
+### 示例：简单蛋白家族
+
+假设我们有一个简单的蛋白家族，保守骨架为 3 个位置：
+
+```
+序列 1: A G T
+序列 2: A Q G R T  (在 G 和 T 之间插入了 R)
+序列 3: A T         (跳过了 G)
+```
+
+### 步骤 1：构建状态结构
+
+```
+M_0 → M_1 → M_2 → M_3 → M_4
+  ↓     ↓     ↓     ↓     ↓
+  I_0   I_1   I_2   I_3   I_4
+        ↓     ↓     ↓
+        D_2   D_3   D_4
+```
+
+### 步骤 2：估计参数
+
+从对齐中统计：
+
+- **发射概率**（简化示例）：
+  - M_1: A=1.0 (非常保守)
+  - M_2: G=0.67, T=0.33
+  - M_3: T=1.0
+  - I_2: R=1.0 (插入位置偏好 R)
+
+- **转移概率**（简化）：
+  - M_1 → M_2: 0.67, M_1 → D_2: 0.33
+  - M_2 → M_3: 0.67, M_2 → I_2: 0.33
+  - I_2 → M_3: 1.0
+
+### 步骤 3：对新序列评分
+
+序列：`A G R T`
+
+可能路径 1：M_1 → M_2 → I_2 → M_3
+- 得分 = P(M_1→M_2) · P(A|M_1) · P(M_2→I_2) · P(G|M_2) · P(I_2→M_3) · P(R|I_2) · P(T|M_3)
+- = 0.67 · 1.0 · 0.33 · 0.67 · 1.0 · 1.0 · 1.0 = 0.148
+
+可能路径 2：M_1 → M_2 → M_3
+- 得分 = 0.67 · 1.0 · 0.67 · 0.67 · 1.0 = 0.301
+
+路径 2 得分更高，说明 `A G R T` 更可能通过匹配 G 和 T 来对齐，而 R 被视为错配。
+
+## 复杂度分析
+
+### 时间复杂度
+
+- **构建 Profile HMM**：O(N · L)，N 是序列数量，L 是 motif 长度
+- **Viterbi 对齐**：O(|s| · L · K)，其中 K ≈ 3 是每个位置的状态数
+- **Forward/Backward 评估**：O(|s| · L · K)
+
+### 空间复杂度
+
+- **存储参数**：O(L · K · |Σ|)，|Σ| 是字母表大小（如 20 个氨基酸）
+- **Viterbi 矩阵**：O(|s| · L · K)
+- **可优化到**：O(L · K)（只保留当前行）
 
 ## Profile HMM 的核心结构
 

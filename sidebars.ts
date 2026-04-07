@@ -1,17 +1,17 @@
-import type {SidebarsConfig} from '@docusaurus/plugin-content-docs';
+import type { SidebarsConfig } from '@docusaurus/plugin-content-docs';
 
 const sidebars: SidebarsConfig = {
   docsSidebar: [
     {
       type: 'category',
       label: '开始这里',
-      link: {type: 'doc', id: 'intro/index'},
+      link: { type: 'doc', id: 'intro/index' },
       items: ['intro/about', 'intro/roadmap', 'intro/contributing', 'intro/style-guide'],
     },
     {
       type: 'category',
       label: '基础与数学',
-      link: {type: 'doc', id: 'foundations/index'},
+      link: { type: 'doc', id: 'foundations/index' },
       items: [
         'foundations/biology-basics',
         'foundations/sequences-and-strings',
@@ -24,16 +24,18 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '核心方法',
-      link: {type: 'doc', id: 'core-methods/index'},
+      link: { type: 'doc', id: 'core-methods/index' },
       items: [
         {
           type: 'category',
           label: '序列表示与索引',
-          link: {type: 'doc', id: 'sequence/index'},
+          link: { type: 'doc', id: 'sequence/index' },
           items: [
             'sequence/kmers',
             'sequence/indexing',
             'sequence/exact-string-matching',
+            'sequence/kmp-algorithm',
+            'sequence/boyer-moore-algorithm',
             'sequence/trie-and-multi-pattern-matching',
             'sequence/exact-vs-approximate',
             'sequence/suffix-tree',
@@ -44,11 +46,12 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '序列比对',
-          link: {type: 'doc', id: 'alignment/index'},
+          link: { type: 'doc', id: 'alignment/index' },
           items: [
             'alignment/edit-distance',
             'alignment/global-local',
             'alignment/scoring-matrices',
+            'alignment/semi-global-alignment',
             'alignment/affine-gap-penalty',
             'alignment/seed-and-extend',
             'alignment/multiple-sequence-alignment',
@@ -57,10 +60,11 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '组装与图算法',
-          link: {type: 'doc', id: 'assembly/index'},
+          link: { type: 'doc', id: 'assembly/index' },
           items: [
             'assembly/olc',
             'assembly/de-bruijn',
+            'assembly/graph-traversal-algorithms',
             'assembly/repeats-and-graph-cleaning',
             'assembly/assembly-evaluation',
           ],
@@ -68,7 +72,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '概率模型与模式识别',
-          link: {type: 'doc', id: 'models/index'},
+          link: { type: 'doc', id: 'models/index' },
           items: [
             'models/motif-finding',
             'models/motif-discovery-algorithms',
@@ -76,6 +80,8 @@ const sidebars: SidebarsConfig = {
             'models/hmm',
             'models/viterbi-forward-backward',
             'models/profile-hmm',
+            'models/em-algorithm',
+            'models/bayesian-inference',
             'models/gene-prediction',
           ],
         },
@@ -84,12 +90,12 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '分析方向与案例',
-      link: {type: 'doc', id: 'applications/index'},
+      link: { type: 'doc', id: 'applications/index' },
       items: [
         {
           type: 'category',
           label: '工作流与案例',
-          link: {type: 'doc', id: 'workflows/index'},
+          link: { type: 'doc', id: 'workflows/index' },
           items: [
             'workflows/ngs-overview',
             'workflows/qc-overview',
@@ -101,7 +107,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '变异检测',
-          link: {type: 'doc', id: 'variants/index'},
+          link: { type: 'doc', id: 'variants/index' },
           items: [
             'variants/variant-calling-overview',
             'variants/variant-filtering',
@@ -113,7 +119,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '转录组',
-          link: {type: 'doc', id: 'transcriptomics/index'},
+          link: { type: 'doc', id: 'transcriptomics/index' },
           items: [
             'transcriptomics/pseudo-alignment-and-quantification',
             'transcriptomics/tpm-fpkm-cpm',
@@ -124,7 +130,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '单细胞组学',
-          link: {type: 'doc', id: 'single-cell/index'},
+          link: { type: 'doc', id: 'single-cell/index' },
           items: [
             'single-cell/scrna-seq-overview',
             'single-cell/cell-barcode-umi',
@@ -136,7 +142,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '表观基因组学',
-          link: {type: 'doc', id: 'epigenomics/index'},
+          link: { type: 'doc', id: 'epigenomics/index' },
           items: [
             'epigenomics/chip-seq-overview',
             'epigenomics/atac-seq',
@@ -146,7 +152,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '群体遗传学',
-          link: {type: 'doc', id: 'population/index'},
+          link: { type: 'doc', id: 'population/index' },
           items: [
             'population/hardy-weinberg',
             'population/linkage-disequilibrium',
@@ -157,7 +163,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '长读长测序',
-          link: {type: 'doc', id: 'long-read/index'},
+          link: { type: 'doc', id: 'long-read/index' },
           items: [
             'long-read/pacbio-nanopore',
             'long-read/long-read-assembly',
@@ -167,7 +173,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '空间转录组',
-          link: {type: 'doc', id: 'spatial/index'},
+          link: { type: 'doc', id: 'spatial/index' },
           items: [
             'spatial/spatial-transcriptomics-overview',
             'spatial/spot-vs-single-cell',
@@ -177,7 +183,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '蛋白质组学',
-          link: {type: 'doc', id: 'proteomics/index'},
+          link: { type: 'doc', id: 'proteomics/index' },
           items: [
             'proteomics/mass-spectrometry-basics',
             'proteomics/database-search-and-fdr',
@@ -187,7 +193,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '临床变异解释',
-          link: {type: 'doc', id: 'clinical-variants/index'},
+          link: { type: 'doc', id: 'clinical-variants/index' },
           items: [
             'clinical-variants/variant-annotation-and-prioritization',
             'clinical-variants/acmg-guidelines',
@@ -197,7 +203,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '结构生物信息学',
-          link: {type: 'doc', id: 'structure-bioinfo/index'},
+          link: { type: 'doc', id: 'structure-bioinfo/index' },
           items: [
             'structure-bioinfo/protein-structure-basics',
             'structure-bioinfo/alphafold-and-structure-prediction',
@@ -207,7 +213,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '多组学整合',
-          link: {type: 'doc', id: 'multi-omics/index'},
+          link: { type: 'doc', id: 'multi-omics/index' },
           items: [
             'multi-omics/integration-strategies',
             'multi-omics/batch-effect-and-harmonization',
@@ -217,7 +223,7 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '系统发育与进化',
-          link: {type: 'doc', id: 'phylogeny/index'},
+          link: { type: 'doc', id: 'phylogeny/index' },
           items: [
             'phylogeny/hierarchical-clustering',
             'phylogeny/k-means-bioinformatics',
@@ -230,9 +236,12 @@ const sidebars: SidebarsConfig = {
         {
           type: 'category',
           label: '机器学习与基础模型',
-          link: {type: 'doc', id: 'ml-bioinfo/index'},
+          link: { type: 'doc', id: 'ml-bioinfo/index' },
           items: [
             'ml-bioinfo/deep-learning-for-sequences',
+            'ml-bioinfo/cnn-for-sequences',
+            'ml-bioinfo/rnn-lstm-for-sequences',
+            'ml-bioinfo/transformer-for-sequences',
             'ml-bioinfo/embeddings-and-language-models',
           ],
         },
@@ -241,19 +250,19 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '数据、注释与资源',
-      link: {type: 'doc', id: 'data-references/index'},
+      link: { type: 'doc', id: 'data-references/index' },
       items: [
         'foundations/reference-and-annotation',
         {
           type: 'category',
           label: '数据库与资源',
-          link: {type: 'doc', id: 'databases/index'},
-          items: ['databases/common-resources'],
+          link: { type: 'doc', id: 'databases/index' },
+          items: ['databases/common-resources', 'databases/database-algorithms'],
         },
         {
           type: 'category',
           label: '常见数据格式',
-          link: {type: 'doc', id: 'formats/index'},
+          link: { type: 'doc', id: 'formats/index' },
           items: ['formats/common-file-formats'],
         },
       ],
@@ -261,7 +270,7 @@ const sidebars: SidebarsConfig = {
     {
       type: 'category',
       label: '附录',
-      link: {type: 'doc', id: 'appendix/index'},
+      link: { type: 'doc', id: 'appendix/index' },
       items: ['appendix/glossary', 'appendix/references'],
     },
   ],

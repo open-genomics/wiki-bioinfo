@@ -22,7 +22,9 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 4. [隐马尔可夫模型](./hmm.md)
 5. [Viterbi、Forward 与 Backward](./viterbi-forward-backward.md)
 6. [Profile HMM](./profile-hmm.md)
-7. [Gene prediction](./gene-prediction.md)
+7. [EM算法](./em-algorithm.md)
+8. [贝叶斯推断基础](./bayesian-inference.md)
+9. [Gene prediction](./gene-prediction.md)
 
 ## 子主题导航
 
@@ -69,6 +71,20 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       badge: '家族模型',
       meta: 'match/insert/delete',
       description: '用 HMM 扩展 PWM/PSSM，表示带插入缺失的序列家族模式。',
+    },
+    {
+      title: 'EM算法',
+      to: '/docs/models/em-algorithm',
+      badge: '参数估计',
+      meta: 'expectation-maximization',
+      description: '理解如何处理含隐变量的概率模型参数估计，是motif discovery和聚类等任务的核心算法。',
+    },
+    {
+      title: '贝叶斯推断基础',
+      to: '/docs/models/bayesian-inference',
+      badge: '统计推断',
+      meta: 'bayesian',
+      description: '理解先验、似然和后验的关系，以及如何用贝叶斯方法处理生物信息学中的不确定性。',
     },
     {
       title: 'Gene prediction',

@@ -28,6 +28,7 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 1. [变异注释与优先级排序](./variant-annotation-and-prioritization.md)
 2. [ACMG 指南](./acmg-guidelines.md)
 3. [CNV 与 SV 解释](./cnv-and-sv-interpretation.md)
+4. [临床变异解释算法](./algorithms.md)
 
 ## 与其他板块的连接
 
@@ -53,6 +54,11 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       title: 'CNV 与 SV 解释',
       to: '/docs/clinical-variants/cnv-and-sv-interpretation',
       description: '理解拷贝数和结构变异在临床解释中的特殊挑战。',
+    },
+    {
+      title: '临床变异解释算法',
+      to: '/docs/clinical-variants/algorithms',
+      description: '从优先级排序、ACMG 分类到致病性预测与 CNV 检测的核心算法。',
     },
   ]}
 />

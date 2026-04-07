@@ -15,7 +15,8 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 - 多组学整合的基本策略；
 - 批次效应与 harmonization；
-- 单细胞 multiome。
+- 单细胞 multiome；
+- 整合算法：矩阵分解、图方法与深度学习。
 
 ## 为什么重要
 
@@ -28,6 +29,8 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 1. [整合策略](./integration-strategies.md)
 2. [批次效应与 harmonization](./batch-effect-and-harmonization.md)
 3. [单细胞 multiome](./single-cell-multiome.md)
+4. [整合算法概览](./integration-algorithms.md)
+5. [详细算法](#详细算法)
 
 ## 子主题导航
 
@@ -48,5 +51,19 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       to: '/docs/multi-omics/single-cell-multiome',
       description: '理解同一细胞中联合测 RNA 与 ATAC 等多模态数据。',
     },
-  ]}
+    {概览
+      title: '整合算法',
+      to: '/docs/multi-omics/integration-algorithms',
+      description: '矩阵分解、图方法与深度学习等多组学整合核心算法。',
+    },
+  
+
+## 详细算法
+
+以下页面提供多组学整合核心算法的详细教材式讲解：
+
+- [联合非负矩阵分解（Joint NMF）](./joint-nmf.md)：通过共享基矩阵实现多组学数据的低维对齐
+- [典型相关分析（CCA）](./canonical-correlation-analysis.md)：寻找两组变量间的最大相关性
+- [MOFA+](./mofa-plus.md)：基于贝叶斯因子分析的多组学整合方法，可处理缺失数据
+- [相似性网络融合（SNF）](./similarity-network-fusion.md)：通过迭代融合多组学相似性网络]}
 />

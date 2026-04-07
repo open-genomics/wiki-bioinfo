@@ -23,12 +23,18 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 1. [编辑距离](./edit-distance.md)
 2. [全局比对与局部比对](./global-local.md)
 3. [打分矩阵与 gap 罚分](./scoring-matrices.md)
-4. [Affine gap penalty](./affine-gap-penalty.md)
-5. [Seed-and-extend](./seed-and-extend.md)
-6. [BLAST：基于 seed-and-extend 的局部搜索](./blast.md)
-7. [BWA 与 minimap2](./bwa-minimap2.md)
-8. [MAPQ、CIGAR 与多重比对](./mapping-quality-and-multi-mapping.md)
-9. [多序列比对（MSA）](./multiple-sequence-alignment.md)
+4. [半全局比对](./semi-global-alignment.md)
+5. [Affine gap penalty](./affine-gap-penalty.md)
+6. [Needleman-Wunsch 算法](./needleman-wunsch.md)
+7. [Smith-Waterman 算法](./smith-waterman.md)
+8. [Gotoh 算法](./gotoh.md)
+9. [Hirschberg 算法](./hirschberg.md)
+10. [带状动态规划](./banded-dp.md)
+11. [Seed-and-extend](./seed-and-extend.md)
+12. [BLAST：基于 seed-and-extend 的局部搜索](./blast.md)
+13. [BWA 与 minimap2](./bwa-minimap2.md)
+14. [MAPQ、CIGAR 与多重比对](./mapping-quality-and-multi-mapping.md)
+15. [多序列比对（MSA）](./multiple-sequence-alignment.md)
 
 
 ## 子主题导航
@@ -51,9 +57,45 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       description: '把字符替换和 gap 代价引入更真实的模型。',
     },
     {
+      title: '半全局比对',
+      to: '/docs/alignment/semi-global-alignment',
+      badge: '比对变体',
+      description: '理解如何处理序列端部的gap，适用于read mapping和重叠检测等场景。',
+    },
+    {
       title: 'Affine gap penalty',
       to: '/docs/alignment/affine-gap-penalty',
       description: '理解为什么连续 gap 和碎片 gap 不该被同样对待。',
+    },
+    {
+      title: 'Needleman-Wunsch 算法',
+      to: '/docs/alignment/needleman-wunsch',
+      badge: '经典算法',
+      description: '全局比对的标准动态规划算法，包括完整递推公式与回溯过程。',
+    },
+    {
+      title: 'Smith-Waterman 算法',
+      to: '/docs/alignment/smith-waterman',
+      badge: '经典算法',
+      description: '局部比对的标准动态规划算法，理解如何寻找最优局部相似片段。',
+    },
+    {
+      title: 'Gotoh 算法',
+      to: '/docs/alignment/gotoh',
+      badge: '算法优化',
+      description: '处理 affine gap penalty 的三状态动态规划算法。',
+    },
+    {
+      title: 'Hirschberg 算法',
+      to: '/docs/alignment/hirschberg',
+      badge: '算法优化',
+      description: '线性空间全局比对算法，通过分治策略优化空间复杂度。',
+    },
+    {
+      title: '带状动态规划',
+      to: '/docs/alignment/banded-dp',
+      badge: '算法优化',
+      description: '限制搜索范围的加速技术，适用于高相似度序列比对。',
     },
     {
       title: 'Seed-and-extend',

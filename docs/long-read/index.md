@@ -28,7 +28,11 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 1. [PacBio 与 Nanopore](./pacbio-nanopore.md)
 2. [长读长组装](./long-read-assembly.md)
-3. [结构变异检测](./sv-detection.md)
+3. [重叠检测算法](./overlap-detection.md)
+4. [Consensus 算法](./consensus-algorithm.md)
+5. [Minimap2 比对算法](./minimap2-alignment.md)
+6. [Basecalling 算法](./basecalling-algorithm.md)
+7. [结构变异检测](./sv-detection.md)
 
 ## 与其他板块的连接
 
@@ -49,6 +53,26 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
       title: '长读长组装',
       to: '/docs/long-read/long-read-assembly',
       description: '从 overlap 到 contig，再到 polishing 和评估。',
+    },
+    {
+      title: '重叠检测算法',
+      to: '/docs/long-read/overlap-detection',
+      description: 'Minimap 的 minimizer 采样和 MHAP 的 MinHash 算法。',
+    },
+    {
+      title: 'Consensus 算法',
+      to: '/docs/long-read/consensus-algorithm',
+      description: 'Racon 的 POA 动态规划和 Medaka 的神经网络模型。',
+    },
+    {
+      title: 'Minimap2 比对算法',
+      to: '/docs/long-read/minimap2-alignment',
+      description: 'Seed-chain-align 流程与带状动态规划实现。',
+    },
+    {
+      title: 'Basecalling 算法',
+      to: '/docs/long-read/basecalling-algorithm',
+      description: 'Nanopore 信号处理的 HMM 模型与神经网络架构。',
     },
     {
       title: '结构变异检测',

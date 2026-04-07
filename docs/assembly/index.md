@@ -20,8 +20,9 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 
 1. [OLC：Overlap-Layout-Consensus](./olc.md)
 2. [de Bruijn graph 组装](./de-bruijn.md)
-3. [重复序列、分叉与图清理](./repeats-and-graph-cleaning.md)
-4. [组装评估](./assembly-evaluation.md)
+3. [图遍历算法](./graph-traversal-algorithms.md)
+4. [重复序列、分叉与图清理](./repeats-and-graph-cleaning.md)
+5. [组装评估](./assembly-evaluation.md)
 
 ## 子主题导航
 
@@ -36,6 +37,12 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       title: 'de Bruijn graph 组装',
       to: '/docs/assembly/de-bruijn',
       description: '通过 k-mer 建图，把序列恢复问题转成图上的路径问题。',
+    },
+    {
+      title: '图遍历算法',
+      to: '/docs/assembly/graph-traversal-algorithms',
+      badge: '图算法',
+      description: '从DFS、BFS到Hamiltonian path，理解组装中的图搜索问题。',
     },
     {
       title: '重复序列、分叉与图清理',

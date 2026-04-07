@@ -195,18 +195,13 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
     },
     {
       title: 'ATAC-seq 总览',
-      to: '/docs/epigenomics/atac-seq-overview',
+      to: '/docs/epigenomics/atac-seq',
       description: '开放染色质区域识别与染色质状态推断。',
     },
     {
       title: 'DNA 甲基化',
       to: '/docs/epigenomics/dna-methylation',
       description: 'WGBS、RRBS 与甲基化水平量化。',
-    },
-    {
-      title: 'Hi-C 与三维基因组',
-      to: '/docs/epigenomics/3d-genomics',
-      description: '染色质相互作用、TAD 与 loop 结构。',
     },
     {
       title: 'DMR 检测算法',

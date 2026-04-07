@@ -1,5 +1,5 @@
-import {themes as prismThemes} from 'prism-react-renderer';
-import type {Config} from '@docusaurus/types';
+import { themes as prismThemes } from 'prism-react-renderer';
+import type { Config } from '@docusaurus/types';
 import type * as Preset from '@docusaurus/preset-classic';
 import rehypeKatex from 'rehype-katex';
 import remarkMath from 'remark-math';
@@ -44,6 +44,21 @@ const config: Config = {
       } satisfies Preset.Options,
     ],
   ],
+  themes: [
+    [
+      '@easyops-cn/docusaurus-search-local',
+      {
+        hashed: true,
+        language: ['en', 'zh'],
+        indexBlog: false,
+        docsRouteBasePath: '/docs',
+        highlightSearchTermsOnTargetPage: true,
+        searchResultLimits: 8,
+        searchBarShortcutHint: true,
+        searchBarPosition: 'right',
+      },
+    ],
+  ],
   stylesheets: ['https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css'],
   themeConfig: {
     image: 'img/illustrations/home-hero.svg',
@@ -51,6 +66,7 @@ const config: Config = {
       respectPrefersColorScheme: true,
     },
     navbar: {
+      hideOnScroll: true,
       title: 'BioInfo Wiki',
       logo: {
         alt: 'BioInfo Wiki Logo',
@@ -74,12 +90,12 @@ const config: Config = {
         },
         {
           to: '/docs/applications/',
-          label: '分析方向与案例',
+          label: '分析方向',
           position: 'left',
         },
         {
           to: '/docs/data-references/',
-          label: '数据、注释与资源',
+          label: '数据与资源',
           position: 'left',
         },
         {
@@ -89,71 +105,52 @@ const config: Config = {
         },
         {
           href: 'https://github.com/LessUp/wiki-bioinfo',
-          label: 'GitHub',
           position: 'right',
-        }
+          className: 'header-github-link',
+          'aria-label': 'GitHub repository',
+        },
       ],
     },
     footer: {
       style: 'dark',
       links: [
         {
-          title: '开始这里',
+          title: '入门',
           items: [
-            {
-              label: '项目简介',
-              to: '/docs/intro/',
-            },
-            {
-              label: '学习路线',
-              to: '/docs/intro/roadmap',
-            },
-            {
-              label: '参与贡献',
-              to: '/docs/intro/contributing',
-            },
+            { label: '项目简介', to: '/docs/intro/' },
+            { label: '学习路线', to: '/docs/intro/roadmap' },
+            { label: '写作规范', to: '/docs/intro/style-guide' },
+            { label: '参与贡献', to: '/docs/intro/contributing' },
           ],
         },
         {
           title: '知识主干',
           items: [
-            {
-              label: '基础与数学',
-              to: '/docs/foundations/',
-            },
-            {
-              label: '核心方法',
-              to: '/docs/core-methods/',
-            },
-            {
-              label: '分析方向与案例',
-              to: '/docs/applications/',
-            },
+            { label: '基础与数学', to: '/docs/foundations/' },
+            { label: '核心方法', to: '/docs/core-methods/' },
+            { label: '分析方向与案例', to: '/docs/applications/' },
+            { label: '数据与资源', to: '/docs/data-references/' },
           ],
         },
         {
-          title: '数据与附录',
+          title: '核心方法',
           items: [
-            {
-              label: '数据、注释与资源',
-              to: '/docs/data-references/',
-            },
-            {
-              label: '附录',
-              to: '/docs/appendix/',
-            },
-            {
-              label: '写作规范',
-              to: '/docs/intro/style-guide',
-            },
-            {
-              label: 'GitHub',
-              href: 'https://github.com/LessUp/wiki-bioinfo',
-            },
+            { label: '序列索引', to: '/docs/sequence/' },
+            { label: '序列比对', to: '/docs/alignment/' },
+            { label: '组装与图算法', to: '/docs/assembly/' },
+            { label: '概率模型', to: '/docs/models/' },
+          ],
+        },
+        {
+          title: '社区',
+          items: [
+            { label: 'GitHub', href: 'https://github.com/LessUp/wiki-bioinfo' },
+            { label: 'Issues', href: 'https://github.com/LessUp/wiki-bioinfo/issues' },
+            { label: '附录与术语表', to: '/docs/appendix/' },
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} BioInfo Wiki Contributors. Built with Docusaurus.`,
+      copyright: `Copyright © ${new Date().getFullYear()} BioInfo Wiki Contributors · Open Source · Built with Docusaurus`,
     },
     docs: {
       sidebar: {

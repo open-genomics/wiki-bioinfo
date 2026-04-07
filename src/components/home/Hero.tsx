@@ -1,70 +1,82 @@
-import type {ReactNode} from 'react';
+import { type ReactNode, useState, useCallback } from 'react';
 import clsx from 'clsx';
 import Link from '@docusaurus/Link';
-import useBaseUrl from '@docusaurus/useBaseUrl';
+import { useHistory } from '@docusaurus/router';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Heading from '@theme/Heading';
-import {homeStats} from './data';
+import { homeStats } from './data';
 import styles from './hero.module.css';
 
 type HeroProps = {
   className?: string;
 };
 
-export default function Hero({className}: HeroProps): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
-  const heroImage = useBaseUrl('/img/illustrations/home-hero.svg');
+export default function Hero({ className }: HeroProps): ReactNode {
+  const { siteConfig } = useDocusaurusContext();
+  const history = useHistory();
+  const [query, setQuery] = useState('');
+
+  const handleSearch = useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      const q = query.trim();
+      if (q) {
+        history.push(`/wiki-bioinfo/search?q=${encodeURIComponent(q)}`);
+      }
+    },
+    [query, history],
+  );
 
   return (
     <header className={clsx(styles.heroBanner, className)}>
+      <div className={styles.heroGlow} />
       <div className="container">
-        <div className={styles.heroGrid}>
-          <div className={styles.heroContent}>
-            <p className={styles.eyebrow}>Open-source · Chinese-first · Bioinformatics</p>
-            <div className={styles.heroBadgeRow}>
-              <span className={styles.heroBadge}>结构优先</span>
-              <span className={styles.heroBadge}>知识地图</span>
-              <span className={styles.heroBadge}>长期演进</span>
-            </div>
-            <Heading as="h1" className={styles.heroTitle}>
-              {siteConfig.title}
-            </Heading>
-            <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
-            <p className={styles.heroDescription}>
-              参考 OI Wiki 的组织方式，但先收敛成更稳定的六个入口：开始这里、基础与数学、核心方法、分析方向与案例、数据、注释与资源、附录。
-              让内容增长时，导航和源码结构也一起成熟。
-            </p>
-            <div className={styles.buttons}>
-              <Link className="button button--primary button--lg" to="/docs/intro/">
-                开始阅读
-              </Link>
-              <Link className="button button--secondary button--lg" to="/docs/core-methods/">
-                查看核心方法
-              </Link>
-              <Link className="button button--secondary button--lg" to="/docs/intro/contributing">
-                参与贡献
-              </Link>
-            </div>
-            <div className={styles.metrics}>
-              {homeStats.map((item) => (
-                <div key={item.label} className={styles.metricCard}>
-                  <strong>{item.label}</strong>
-                  <span>{item.detail}</span>
-                </div>
-              ))}
-            </div>
+        <div className={styles.heroInner}>
+          <div className={styles.heroBadgeRow}>
+            <span className={styles.heroBadge}>Open Source</span>
+            <span className={styles.heroBadge}>中文优先</span>
+            <span className={styles.heroBadge}>Bioinformatics</span>
           </div>
-          <div className={styles.heroVisualWrap}>
-            <div className={styles.heroAtlasCard}>
-              <p className={styles.heroAtlasEyebrow}>Knowledge Atlas</p>
-              <img src={heroImage} alt="BioInfo Wiki 首页知识图谱示意图" className={styles.heroVisualImage} />
-              <div className={styles.heroAtlasLegend}>
-                <span>对象</span>
-                <span>方法</span>
-                <span>应用</span>
-                <span>资源</span>
+
+          <Heading as="h1" className={styles.heroTitle}>
+            {siteConfig.title}
+          </Heading>
+
+          <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
+
+          <form className={styles.searchBox} onSubmit={handleSearch}>
+            <span className={styles.searchIcon}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="11" cy="11" r="8" /><path d="m21 21-4.3-4.3" /></svg>
+            </span>
+            <input
+              className={styles.searchInput}
+              type="search"
+              placeholder="搜索知识页面… 例如 BWT、RNA-seq、de Bruijn"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <button type="submit" className={styles.searchBtn}>搜索</button>
+          </form>
+
+          <div className={styles.buttons}>
+            <Link className={clsx('button button--primary button--lg', styles.btnPrimary)} to="/docs/intro/">
+              开始阅读
+            </Link>
+            <Link className={clsx('button button--outline button--lg', styles.btnOutline)} to="/docs/core-methods/">
+              核心方法
+            </Link>
+            <Link className={clsx('button button--outline button--lg', styles.btnOutline)} href="https://github.com/LessUp/wiki-bioinfo">
+              GitHub
+            </Link>
+          </div>
+
+          <div className={styles.stats}>
+            {homeStats.map((item) => (
+              <div key={item.label} className={styles.statItem}>
+                <strong className={styles.statValue}>{item.value}</strong>
+                <span className={styles.statLabel}>{item.label}</span>
               </div>
-            </div>
+            ))}
           </div>
         </div>
       </div>

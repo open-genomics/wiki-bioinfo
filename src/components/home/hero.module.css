@@ -1,201 +1,261 @@
 .heroBanner {
   position: relative;
   overflow: hidden;
-  padding: 5.5rem 0 4.5rem;
+  padding: 6rem 0 4rem;
+  text-align: center;
+  background: linear-gradient(180deg, #f0fdfa 0%, #ffffff 100%);
+}
+
+.heroGlow {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   background:
-    radial-gradient(circle at top left, rgba(33, 158, 188, 0.24), transparent 30%),
-    radial-gradient(circle at 85% 20%, rgba(73, 160, 255, 0.16), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(76, 201, 240, 0.14), transparent 28%),
-    linear-gradient(180deg, rgba(232, 249, 250, 0.92), rgba(255, 255, 255, 1));
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(15, 139, 141, 0.15), transparent),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(99, 102, 241, 0.1), transparent),
+    radial-gradient(ellipse 40% 40% at 20% 30%, rgba(14, 165, 233, 0.08), transparent);
 }
 
-.heroGrid {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-  gap: 2.5rem;
-  align-items: center;
-}
-
-.heroContent {
+.heroInner {
+  position: relative;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
-}
-
-.eyebrow {
-  margin: 0;
-  color: var(--ifm-color-primary-darkest);
-  font-size: 0.9rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 52rem;
+  margin: 0 auto;
 }
 
 .heroBadgeRow {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.65rem;
+  justify-content: center;
+  gap: 0.5rem;
 }
 
 .heroBadge {
-  padding: 0.35rem 0.75rem;
-  border: 1px solid var(--bioinfo-border-strong);
+  padding: 0.3rem 0.85rem;
+  border: 1px solid rgba(15, 139, 141, 0.2);
   border-radius: 999px;
-  background: var(--bioinfo-surface-soft);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(8px);
   color: var(--ifm-color-primary-darkest);
-  font-size: 0.88rem;
+  font-size: 0.82rem;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
 
 .heroTitle {
   margin: 0;
-  font-size: clamp(2.6rem, 5vw, 4.6rem);
-  line-height: 1.02;
+  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  background: linear-gradient(135deg, #0a6162 0%, #0f8b8d 40%, #0ea5e9 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .heroSubtitle {
   margin: 0;
-  color: var(--ifm-color-emphasis-800);
-  font-size: 1.35rem;
-  font-weight: 600;
+  max-width: 40rem;
+  color: var(--ifm-color-emphasis-700);
+  font-size: 1.25rem;
+  font-weight: 500;
+  line-height: 1.7;
 }
 
-.heroDescription {
-  max-width: 48rem;
-  margin: 0;
-  color: var(--ifm-color-emphasis-700);
-  font-size: 1.05rem;
-  line-height: 1.85;
+.searchBox {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 36rem;
+  margin-top: 0.5rem;
+  padding: 0.4rem 0.5rem 0.4rem 1rem;
+  border: 2px solid var(--ifm-color-emphasis-200);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.searchBox:focus-within {
+  border-color: var(--ifm-color-primary);
+  box-shadow: 0 4px 24px rgba(15, 139, 141, 0.15);
+}
+
+.searchIcon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  color: var(--ifm-color-emphasis-500);
+}
+
+.searchInput {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 0.55rem 0.75rem;
+  font-size: 1rem;
+  color: var(--ifm-font-color-base);
+  outline: none;
+}
+
+.searchInput::placeholder {
+  color: var(--ifm-color-emphasis-400);
+}
+
+.searchBtn {
+  flex-shrink: 0;
+  padding: 0.5rem 1.25rem;
+  border: none;
+  border-radius: 999px;
+  background: var(--ifm-color-primary);
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+
+.searchBtn:hover {
+  background: var(--ifm-color-primary-dark);
+  transform: scale(1.02);
 }
 
 .buttons {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.9rem;
-  margin-top: 0.5rem;
+  justify-content: center;
+  gap: 0.75rem;
 }
 
-.metrics {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1rem;
+.btnPrimary {
+  border-radius: 999px !important;
+  padding: 0.7rem 2rem !important;
+  font-weight: 700 !important;
+  box-shadow: 0 4px 16px rgba(15, 139, 141, 0.25);
+  transition: transform 0.15s, box-shadow 0.2s !important;
+}
+
+.btnPrimary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 24px rgba(15, 139, 141, 0.35);
+}
+
+.btnOutline {
+  border-radius: 999px !important;
+  padding: 0.7rem 1.75rem !important;
+  font-weight: 700 !important;
+  border: 2px solid var(--ifm-color-emphasis-300) !important;
+  color: var(--ifm-color-emphasis-800) !important;
+  background: rgba(255, 255, 255, 0.6) !important;
+  backdrop-filter: blur(8px);
+  transition: transform 0.15s, border-color 0.2s !important;
+}
+
+.btnOutline:hover {
+  transform: translateY(-2px);
+  border-color: var(--ifm-color-primary) !important;
+  color: var(--ifm-color-primary) !important;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 2rem;
   margin-top: 1rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
 }
 
-.metricCard {
+.statItem {
   display: flex;
   flex-direction: column;
-  gap: 0.35rem;
-  padding: 1rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  box-shadow: var(--bioinfo-card-shadow);
-  backdrop-filter: blur(10px);
+  align-items: center;
+  gap: 0.15rem;
+  min-width: 80px;
 }
 
-.metricCard strong {
-  color: var(--ifm-color-emphasis-900);
+.statValue {
+  font-size: 1.75rem;
+  font-weight: 900;
+  color: var(--ifm-color-primary);
+  line-height: 1.1;
 }
 
-.metricCard span {
-  color: var(--ifm-color-emphasis-700);
-  font-size: 0.95rem;
-  line-height: 1.6;
+.statLabel {
+  font-size: 0.85rem;
+  color: var(--ifm-color-emphasis-600);
+  font-weight: 600;
 }
 
-.heroVisualWrap {
-  display: flex;
-  justify-content: center;
-}
-
-.heroAtlasCard {
-  width: min(100%, 560px);
-  padding: 1.2rem;
-  border: 1px solid var(--bioinfo-border-strong);
-  border-radius: 28px;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.9), rgba(237, 251, 252, 0.88));
-  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.1);
-}
-
-.heroAtlasEyebrow {
-  margin: 0 0 0.85rem;
-  color: var(--ifm-color-primary-darkest);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-}
-
-.heroVisualImage {
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 22px 44px rgba(15, 23, 42, 0.12));
-}
-
-.heroAtlasLegend {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.heroAtlasLegend span {
-  padding: 0.6rem 0.7rem;
-  border-radius: 14px;
-  background: rgba(255, 255, 255, 0.75);
-  color: var(--ifm-color-emphasis-800);
-  font-size: 0.9rem;
-  font-weight: 700;
-  text-align: center;
-}
-
+/* Dark mode */
 [data-theme='dark'] .heroBanner {
+  background: linear-gradient(180deg, #0a1628 0%, #0f172a 100%);
+}
+
+[data-theme='dark'] .heroGlow {
   background:
-    radial-gradient(circle at top left, rgba(51, 195, 240, 0.18), transparent 30%),
-    radial-gradient(circle at 85% 20%, rgba(87, 155, 255, 0.16), transparent 24%),
-    radial-gradient(circle at bottom right, rgba(0, 180, 216, 0.18), transparent 28%),
-    linear-gradient(180deg, rgba(7, 19, 31, 0.96), rgba(10, 16, 28, 1));
+    radial-gradient(ellipse 60% 50% at 50% 0%, rgba(89, 215, 217, 0.12), transparent),
+    radial-gradient(ellipse 40% 40% at 80% 20%, rgba(99, 102, 241, 0.08), transparent),
+    radial-gradient(ellipse 40% 40% at 20% 30%, rgba(14, 165, 233, 0.06), transparent);
 }
 
 [data-theme='dark'] .heroBadge {
-  border-color: var(--bioinfo-card-border-dark);
-  background: rgba(15, 24, 38, 0.82);
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.05);
   color: var(--ifm-color-primary-lighter);
 }
 
-[data-theme='dark'] .metricCard {
-  background: rgba(14, 24, 38, 0.92);
-  border-color: var(--bioinfo-card-border-dark);
+[data-theme='dark'] .heroTitle {
+  background: linear-gradient(135deg, #59d7d9 0%, #80e0e2 40%, #60a5fa 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
 }
 
-[data-theme='dark'] .heroAtlasCard {
-  border-color: var(--bioinfo-card-border-dark);
-  background: linear-gradient(180deg, rgba(10, 20, 32, 0.98), rgba(13, 24, 39, 0.92));
-  box-shadow: none;
+[data-theme='dark'] .searchBox {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(15, 23, 42, 0.6);
 }
 
-[data-theme='dark'] .heroAtlasLegend span {
-  background: rgba(255, 255, 255, 0.04);
-  color: var(--ifm-color-emphasis-200);
+[data-theme='dark'] .searchBox:focus-within {
+  border-color: var(--ifm-color-primary);
 }
 
+[data-theme='dark'] .searchBtn {
+  background: var(--ifm-color-primary-dark);
+}
+
+[data-theme='dark'] .btnOutline {
+  border-color: rgba(255, 255, 255, 0.12) !important;
+  color: var(--ifm-color-emphasis-300) !important;
+  background: rgba(255, 255, 255, 0.04) !important;
+}
+
+[data-theme='dark'] .btnOutline:hover {
+  border-color: var(--ifm-color-primary) !important;
+  color: var(--ifm-color-primary) !important;
+}
+
+[data-theme='dark'] .stats {
+  border-top-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile */
 @media screen and (max-width: 996px) {
   .heroBanner {
-    padding: 3.75rem 0 2.75rem;
+    padding: 4rem 0 3rem;
   }
 
-  .heroGrid {
-    grid-template-columns: 1fr;
+  .stats {
+    gap: 1.25rem;
   }
 
-  .heroVisualWrap {
-    order: -1;
-  }
-
-  .metrics,
-  .heroAtlasLegend {
-    grid-template-columns: 1fr;
+  .statValue {
+    font-size: 1.4rem;
   }
 }

@@ -1,9 +1,9 @@
-import type {ReactNode} from 'react';
+import type { ReactNode } from 'react';
 import Layout from '@theme/Layout';
 import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
 import Hero from '@site/src/components/home/Hero';
 import {
-  HighlightsSection,
+  FeaturesSection,
   KnowledgeMapSection,
   LearningPathsSection,
   BridgeSection,
@@ -11,13 +11,13 @@ import {
 } from '@site/src/components/home/Sections';
 
 export default function Home(): ReactNode {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
 
   return (
     <Layout title={siteConfig.title} description="BioInfo Wiki 首页">
       <Hero />
       <main>
-        <HighlightsSection />
+        <FeaturesSection />
         <KnowledgeMapSection />
         <LearningPathsSection />
         <BridgeSection />

@@ -1,25 +1,26 @@
 export type HomeStat = {
+  value: string;
   label: string;
-  detail: string;
 };
 
-export type HighlightCard = {
+export type FeatureCard = {
+  icon: string;
   title: string;
-  illustration: 'knowledge-map' | 'alignment-grid' | 'community-workflow';
   description: string;
-  badge: string;
 };
 
 export type KnowledgeBucket = {
+  icon: string;
   title: string;
   to: string;
   meta: string;
   description: string;
   children: string[];
-  nextStep: string;
+  color: string;
 };
 
 export type LearningPath = {
+  icon: string;
   title: string;
   to: string;
   audience: string;
@@ -28,168 +29,182 @@ export type LearningPath = {
 };
 
 export type BridgeCard = {
+  icon: string;
   title: string;
+  to: string;
   description: string;
-  bullets: string[];
+  tags: string[];
 };
 
 export type ContributionCard = {
+  icon: string;
   title: string;
   to: string;
   description: string;
 };
 
 export const homeStats: HomeStat[] = [
-  {
-    label: '6 个主入口',
-    detail: '首页、navbar、footer 和 sidebar 围绕同一套顶层结构组织。',
-  },
-  {
-    label: '方法到应用',
-    detail: '从字符串、图、概率模型一路连到 DNA-seq、RNA-seq 与更多分析方向。',
-  },
-  {
-    label: '开放协作',
-    detail: '通过 GitHub、编辑链接和统一模板持续完善内容。',
-  },
+  { value: '80+', label: '知识页面' },
+  { value: '6', label: '主入口板块' },
+  { value: '14', label: '子专题' },
+  { value: '∞', label: '持续演进' },
 ];
 
-export const highlightCards: HighlightCard[] = [
+export const featureCards: FeatureCard[] = [
   {
-    title: '稳定的信息架构',
-    illustration: 'knowledge-map',
-    badge: '导航主干',
-    description:
-      '先建立耐用的顶层分类，再把细分主题逐步纳入二三级结构，避免目录过早膨胀。',
+    icon: '🧬',
+    title: '结构优先',
+    description: '从序列、比对、组装到 HMM，围绕稳定的知识主干组织内容，而非罗列工具命令。',
   },
   {
-    title: '算法、数据与流程联动',
-    illustration: 'alignment-grid',
-    badge: '方法到任务',
-    description:
-      '不把算法、数据格式、数据库和工作流割裂开来，而是把它们组织成可回溯的知识链路。',
+    icon: '🔗',
+    title: '方法到应用',
+    description: '算法、数据格式、数据库和工作流联动：从教材公式到真实分析流程一线贯通。',
   },
   {
-    title: '像 Wiki 一样持续演进',
-    illustration: 'community-workflow',
-    badge: '开放协作',
-    description:
-      '页面、图示、组件和导航一起演进，让内容增长时结构也同步成熟。',
+    icon: '🌏',
+    title: '中文优先',
+    description: '面向中文社区的系统性生物信息学知识库，术语首次出现附英文与缩写。',
+  },
+  {
+    icon: '📖',
+    title: '开放协作',
+    description: '通过 GitHub 和统一模板持续完善，像 Wiki 一样让内容和结构同步成熟。',
   },
 ];
 
 export const knowledgeBuckets: KnowledgeBucket[] = [
   {
+    icon: '🚀',
     title: '开始这里',
     to: '/docs/intro/',
     meta: 'Start Here',
-    description: '项目简介、学习路线、贡献方式与写作规范，帮助读者快速建立全站心智模型。',
+    description: '项目简介、学习路线、贡献方式与写作规范。',
     children: ['项目简介', '学习路线', '如何贡献', '写作规范'],
-    nextStep: '先看学习路线，再进入 Foundations 或 Core Methods。',
+    color: '#10b981',
   },
   {
+    icon: '🧮',
     title: '基础与数学',
     to: '/docs/foundations/',
     meta: 'Foundations',
-    description: '先理解序列、reads、coverage、坐标系统、图与概率，这些是后续算法和流程的共同语言。',
-    children: ['基础对象', 'reads/coverage', '坐标与注释', '图与概率'],
-    nextStep: '读完这层后进入 Core Methods 更顺滑。',
+    description: '序列、reads、coverage、坐标系统与概率——后续一切的基石。',
+    children: ['生物学基础', 'reads/coverage', '参考与注释', '图与概率'],
+    color: '#6366f1',
   },
   {
+    icon: '⚙️',
     title: '核心方法',
     to: '/docs/core-methods/',
     meta: 'Core Methods',
-    description: '把序列表示、索引、比对、组装与概率模型收敛到同一个方法主轴下。',
-    children: ['序列表示与索引', '序列比对', '组装与图算法', '概率模型与模式识别'],
-    nextStep: '方法层是通往 Applications 的主干桥梁。',
+    description: '索引、比对、组装与概率模型，收敛到同一个方法主轴。',
+    children: ['序列索引', '序列比对', '组装与图算法', '概率模型'],
+    color: '#0ea5e9',
   },
   {
+    icon: '🔬',
     title: '分析方向与案例',
     to: '/docs/applications/',
     meta: 'Applications',
-    description: '围绕 DNA-seq、RNA-seq、单细胞、表观组、长读长、空间组学等任务，组织应用层入口与案例。',
-    children: ['工作流与案例', '变异检测', '转录组 / 单细胞', '多组学与临床解释'],
-    nextStep: '如果你是问题驱动学习者，可以直接从这里切入，再回看方法层。',
+    description: 'DNA-seq、RNA-seq、单细胞、长读长、空间组学等分析入口。',
+    children: ['变异检测', '转录组', '单细胞', '多组学'],
+    color: '#f59e0b',
   },
   {
+    icon: '📚',
     title: '数据、注释与资源',
     to: '/docs/data-references/',
     meta: 'Data & References',
-    description: '把参考基因组、注释系统、文件格式和数据库入口放到同一层次理解。',
-    children: ['参考与注释', '数据库资源', '常见数据格式'],
-    nextStep: '这层是连接方法页和真实分析稳定性的关键。',
+    description: '参考基因组、注释系统、文件格式和数据库入口。',
+    children: ['参考与注释', '数据库资源', '数据格式'],
+    color: '#ec4899',
   },
   {
+    icon: '📝',
     title: '附录',
     to: '/docs/appendix/',
     meta: 'Appendix',
-    description: '术语、参考资料和后续可扩展的索引型内容，承担 wiki 的收束与查阅功能。',
+    description: '术语表、参考资料与索引，承担 Wiki 的查阅收束功能。',
     children: ['术语表', '参考资料'],
-    nextStep: '适合查词、补索引和统一引用。',
+    color: '#8b5cf6',
   },
 ];
 
 export const learningPaths: LearningPath[] = [
   {
+    icon: '🎯',
     title: '初学者路线',
     to: '/docs/intro/roadmap',
-    audience: '先建立整站地图',
-    description: '先理解对象、数据格式与流程地图，再进入索引、比对、组装和应用案例。',
+    audience: '零基础入门',
+    description: '先理解对象与流程地图，再进入索引、比对、组装和应用案例。',
     steps: ['开始这里', '基础与数学', '数据、注释与资源', '分析方向与案例'],
   },
   {
+    icon: '🧠',
     title: '算法路线',
     to: '/docs/core-methods/',
-    audience: '围绕教材主线',
-    description: '从字符串、动态规划、图和概率模型切入，再反推这些方法在真实工具里的位置。',
+    audience: '理论驱动',
+    description: '从字符串、DP、图和概率模型切入，再看它们在真实工具里的位置。',
     steps: ['基础与数学', '核心方法', '应用案例'],
   },
   {
+    icon: '🛠️',
     title: '实战路线',
     to: '/docs/applications/',
-    audience: '围绕分析任务',
-    description: '从 DNA-seq、RNA-seq、单细胞和其他应用问题出发，再回头追溯其依赖的方法和数据结构。',
-    steps: ['数据、注释与资源', '分析方向与案例', '回看核心方法'],
-  }
+    audience: '任务驱动',
+    description: '从 DNA-seq、RNA-seq、单细胞出发，回溯其依赖的方法和数据结构。',
+    steps: ['数据与资源', '分析方向与案例', '回看核心方法'],
+  },
 ];
 
 export const bridgeCards: BridgeCard[] = [
   {
+    icon: '📐',
     title: '字符串与动态规划',
-    description: '从编辑距离、全局/局部比对到 affine gap，理解 read mapping 与局部精细比对背后的数学骨架。',
-    bullets: ['编辑距离', 'Needleman–Wunsch / Smith–Waterman', 'affine gap'],
+    to: '/docs/alignment/',
+    description: '编辑距离、全局/局部比对到 affine gap，read mapping 背后的数学骨架。',
+    tags: ['编辑距离', 'NW / SW', 'affine gap'],
   },
   {
+    icon: '🔍',
     title: '索引与快速搜索',
-    description: '从 k-mer、suffix array、BWT 到 FM-index，理解为什么真实工具能在巨大参考序列上快速定位。',
-    bullets: ['k-mer', 'BWT / FM-index', 'seeding'],
+    to: '/docs/sequence/',
+    description: 'k-mer、suffix array、BWT 到 FM-index——巨大参考序列上的快速定位。',
+    tags: ['k-mer', 'BWT / FM-index', 'seeding'],
   },
   {
+    icon: '🕸️',
     title: '图算法与组装',
-    description: '从 overlap 到 de Bruijn graph，再到重复、错误与图清理，把局部片段恢复成整体结构。',
-    bullets: ['OLC', 'de Bruijn graph', 'graph cleaning'],
+    to: '/docs/assembly/',
+    description: 'OLC 到 de Bruijn graph，重复与错误处理，把片段恢复成整体。',
+    tags: ['OLC', 'de Bruijn', 'graph cleaning'],
   },
   {
-    title: '概率模型与统计推断',
-    description: '从 HMM、PWM/PSSM 到表达定量和 gene prediction，理解不确定性如何被形式化。',
-    bullets: ['HMM', 'PWM / PSSM', 'quantification / DE'],
+    icon: '🎲',
+    title: '概率模型与推断',
+    to: '/docs/models/',
+    description: 'HMM、PWM/PSSM 到 gene prediction，不确定性如何被形式化。',
+    tags: ['HMM', 'PWM / PSSM', 'EM'],
   },
 ];
 
 export const contributionCards: ContributionCard[] = [
   {
+    icon: '🗺️',
     title: '查看学习路线',
     to: '/docs/intro/roadmap',
-    description: '先理解全站知识地图，再决定新内容应该放在哪个层级与板块。',
+    description: '理解全站知识地图，确定新内容的层级与位置。',
   },
   {
+    icon: '📋',
     title: '阅读写作规范',
     to: '/docs/intro/style-guide',
-    description: '统一使用概念页、算法页、流程页与二级目录页模板，保证长期可维护。',
+    description: '统一使用概念页、算法页、流程页模板，保证长期可维护。',
   },
   {
+    icon: '🤝',
     title: '参与贡献',
     to: '/docs/intro/contributing',
-    description: '通过 Issue 和 Pull Request 逐步补齐页面、图示、索引结构与工作流案例。',
+    description: 'Issue + Pull Request，逐步补齐页面、图示与工作流案例。',
   },
 ];

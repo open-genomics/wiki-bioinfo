@@ -175,9 +175,9 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 ## 推荐阅读顺序
 
 1. [ChIP-seq 总览](./chip-seq-overview.md)
-2. [ATAC-seq 总览](./atac-seq-overview.md)
+2. [ATAC-seq](./atac-seq.md)
 3. [DNA 甲基化](./dna-methylation.md)
-4. [Hi-C 与三维基因组](./3d-genomics.md)
+4. [Footprinting 算法](./footprinting-algorithms.md)
 
 ## 子主题导航
 

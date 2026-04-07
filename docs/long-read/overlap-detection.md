@@ -38,9 +38,9 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
 
 ### 问题形式化
 
-设 reads 集合为 R = {r₁, r₂, ..., rₙ}，每条 read rᵢ 是长度为 Lᵢ 的字符串。
+设 reads 集合为 $R = \{r_1, r_2, \ldots, r_n\}$，每条 read $r_i$ 是长度为 $L_i$ 的字符串。
 
-定义 read rᵢ 和 read rⱼ 的重叠满足：
+定义 read $r_i$ 和 read $r_j$ 的重叠满足：
 
 1. **重叠长度** ≥ L_min（如 1 kb）
 2. **相似度** ≥ S_min（如 90%）
@@ -48,7 +48,7 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
 
 ### 目标
 
-找到所有满足条件的 read 对 (i, j)，使得 overlap(rᵢ, rⱼ) 为真。
+找到所有满足条件的 read 对 $(i, j)$，使得 $overlap(r_i, r_j)$ 为真。
 
 ## Minimap 算法
 
@@ -237,7 +237,7 @@ r₂:  CGTACGTACGTA
 
 总时间复杂度：O(N · L + C · L)
 
-在实际情况中，C << N²，因此接近线性。
+在实际情况中，$C \ll N^2$，因此接近线性。
 
 #### 空间复杂度
 

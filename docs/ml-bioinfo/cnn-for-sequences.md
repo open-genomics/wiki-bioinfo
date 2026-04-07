@@ -38,7 +38,7 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
 
 ### 输入表示
 
-给定一条长度为 L 的序列 S = s₁s₂...s_L，首先将其编码为矩阵 X ∈ ℝ^(L×K)，其中 K 是字符表大小（DNA: K=4, 蛋白: K=20）。
+给定一条长度为 `L` 的序列 `S = s₁s₂...s_L`，首先将其编码为矩阵 `$X \in \mathbb{R}^{L\times K}$`，其中 `K` 是字符表大小（DNA: `K=4`，蛋白: `K=20`）。
 
 最常用的是 one-hot 编码：
 - DNA: A=[1,0,0,0], C=[0,1,0,0], G=[0,0,1,0], T=[0,0,0,1]
@@ -48,19 +48,19 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
 
 定义一个卷积核（滤波器）W ∈ ℝ^(k×K)，其中 k 是卷积核长度（窗口大小）。
 
-在位置 i 处的卷积操作为：
+在位置 `i` 处的卷积操作为：
 
 $$
 h_i = \sigma \left( \sum_{j=0}^{k-1} X_{i+j} \cdot W_j + b \right)
 $$
 
 其中：
-- X_{i+j} 是位置 i+j 处的 one-hot 向量
+- `$X_{i+j}$` 是位置 `i+j` 处的 one-hot 向量
 - W_j 是卷积核的第 j 行
 - b 是偏置项
 - σ 是激活函数（常用 ReLU）
 
-对整条序列，得到特征图 h = [h₁, h₂, ..., h_{L-k+1}]
+对整条序列，得到特征图 `h = [h₁, h₂, ..., h_{L-k+1}]`
 
 ### 多通道卷积
 
@@ -70,7 +70,7 @@ $$
 H = [h^{(1)}, h^{(2)}, ..., h^{(n)}]
 $$
 
-其中 H ∈ ℝ^(n×(L-k+1))，每个 h^{(j)} 对应一个卷积核的特征图。
+其中 `$H \in \mathbb{R}^{n\times(L-k+1)}$`，每个 `$h^{(j)}$` 对应一个卷积核的特征图。
 
 ### 池化操作
 
@@ -96,7 +96,7 @@ $$
 
 ### 步骤 1：输入编码
 
-将序列编码为 one-hot 矩阵 X ∈ ℝ^(L×K)
+将序列编码为 one-hot 矩阵 `$X \in \mathbb{R}^{L\times K}$`
 
 ### 步骤 2：卷积层
 
@@ -127,7 +127,7 @@ $$
 
 考虑一个简化的 DNA 序列分类任务：预测序列是否包含 TATA box motif。
 
-序列：S = "ATATATATA"（长度 L = 8）
+序列：`S = "ATATATATA"`（长度 `L = 8`）
 
 ### 步骤 1：输入编码
 
@@ -160,7 +160,7 @@ W = [
 b = 0
 ```
 
-在位置 i=0 处（子序列 "ATAT"）：
+在位置 `i = 0` 处（子序列 "ATAT"）：
 
 $$
 h_0 = \text{ReLU}(X_0 \cdot W_0 + X_1 \cdot W_1 + X_2 \cdot W_2 + X_3 \cdot W_3 + b)
@@ -175,7 +175,7 @@ $$
 
 h_0 = ReLU(0) = 0
 
-在位置 i=1 处（子序列 "TATA"）：
+在位置 `i = 1` 处（子序列 "TATA"）：
 
 - X_1 · W_0 = [0,0,0,1] · [0,0,0,1] = 1
 - X_2 · W_1 = [1,0,0,0] · [1,0,0,0] = 1

@@ -172,50 +172,50 @@ A   A  G   G
 ### 后序遍历计算
 
 **节点A（叶子）**：
-- S(A) = {A}
-- cost(A) = 0
+- `S(A) = {A}`
+- `cost(A) = 0`
 
 **节点A（叶子）**：
-- S(A) = {A}
-- cost(A) = 0
+- `S(A) = {A}`
+- `cost(A) = 0`
 
 **节点G（叶子）**：
-- S(G) = {G}
-- cost(G) = 0
+- `S(G) = {G}`
+- `cost(G) = 0`
 
 **节点G（叶子）**：
-- S(G) = {G}
-- cost(G) = 0
+- `S(G) = {G}`
+- `cost(G) = 0`
 
 **节点n1**：
-- S(left) = {A}, S(right) = {A}
-- S(left) ∩ S(right) = {A} ≠ ∅
-- S(n1) = {A}
-- cost(n1) = 0 + 0 = 0
+- `S(left) = {A}, S(right) = {A}`
+- `S(left) ∩ S(right) = {A} ≠ ∅`
+- `S(n1) = {A}`
+- `cost(n1) = 0 + 0 = 0`
 
 **节点n2**：
-- S(left) = {G}, S(right) = {G}
-- S(left) ∩ S(right) = {G} ≠ ∅
-- S(n2) = {G}
-- cost(n2) = 0 + 0 = 0
+- `S(left) = {G}, S(right) = {G}`
+- `S(left) ∩ S(right) = {G} ≠ ∅`
+- `S(n2) = {G}`
+- `cost(n2) = 0 + 0 = 0`
 
 **节点root**：
-- S(left) = {A}, S(right) = {G}
-- S(left) ∩ S(right) = ∅
-- S(root) = {A, G}
-- cost(root) = 0 + 0 + 1 = 1
+- `S(left) = {A}, S(right) = {G}`
+- `S(left) ∩ S(right) = ∅`
+- `S(root) = {A, G}`
+- `cost(root) = 0 + 0 + 1 = 1`
 
 该位点的简约得分为1，需要1次变化。
 
 ### 状态赋值
 
-**root**：选择A（从{A, G}中任意选择）
+**root**：选择 A（从 `{A, G}` 中任意选择）
 
-**n1**：state(root) = A ∈ S(n1) = {A}
-- state(n1) = A
+**n1**：`state(root) = A ∈ S(n1) = {A}`
+- `state(n1) = A`
 
-**n2**：state(root) = A ∉ S(n2) = {G}
-- state(n2) = G
+**n2**：`state(root) = A ∉ S(n2) = {G}`
+- `state(n2) = G`
 
 最终内节点状态：n1 = A, n2 = G, root = A
 

@@ -8,6 +8,7 @@ pagination_label: 群体遗传学
 import PageHeaderMeta from '@site/src/components/docs/PageHeaderMeta';
 import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+import SummaryBox from '@site/src/components/docs/SummaryBox';
 
 # 群体遗传学
 

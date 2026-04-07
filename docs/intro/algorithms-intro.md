@@ -254,7 +254,7 @@ import SummaryBox from '@site/src/components/docs/SummaryBox';
 
 | 问题特征 | 推荐算法范式 | 典型工具 |
 |---------|------------|---------|
-| 两条短序列（<1000bp）精确比对 | 动态规划 | Needleman-Wunsch, Smith-Waterman |
+| 两条短序列（如长度小于 1000 bp）精确比对 | 动态规划 | Needleman-Wunsch, Smith-Waterman |
 | 大规模 reads mapping | 索引 + seed-and-extend | BWA, minimap2 |
 | 短读长组装 | 图算法 + 启发式 | de Bruijn graph (Velvet, SPAdes) |
 | motif 发现 | 概率模型 + 随机化 | MEME, Gibbs sampling |
@@ -268,10 +268,10 @@ import SummaryBox from '@site/src/components/docs/SummaryBox';
 
 | 复杂度 | 适用规模 | 示例 |
 |-------|---------|------|
-| O(n!) 或 O(2^n) | 极小规模（<20） | 穷举所有系统发育树 |
-| O(n³) | 小规模（<1000） | RNA 二级结构预测 |
-| O(n²) | 中小规模（<10,000） | 动态规划序列比对 |
-| O(n log n) | 大规模（>10,000） | 排序、某些图算法 |
+| O(n!) 或 O(2^n) | 极小规模（如小于 20） | 穷举所有系统发育树 |
+| O(n³) | 小规模（如小于 1000） | RNA 二级结构预测 |
+| O(n²) | 中小规模（如小于 10,000） | 动态规划序列比对 |
+| O(n log n) | 大规模（如大于 10,000） | 排序、某些图算法 |
 | O(log n) 或 O(1) | 超大规模 | 索引查询 |
 
 ### 空间复杂度考量

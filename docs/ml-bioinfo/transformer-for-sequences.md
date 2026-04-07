@@ -430,7 +430,7 @@ $$
 e_{ij} = \frac{(x_i W_Q)(x_j W_K + r_{i-j})^T}{\sqrt{d_k}}
 $$
 
-其中 r_{i-j} 是相对位置嵌入。
+其中 `$r_{i-j}$` 是相对位置嵌入。
 
 ### Rotary Position Embedding（RoPE）
 
@@ -440,7 +440,7 @@ $$
 f(x, m) = R_{\Theta,m} x
 $$
 
-其中 R_{\Theta,m} 是旋转矩阵。
+其中 $R_{\Theta,m}$ 是旋转矩阵。
 
 ### Flash Attention
 

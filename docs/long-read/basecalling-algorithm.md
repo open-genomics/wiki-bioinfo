@@ -46,8 +46,8 @@ I(t) = f(k(t)) + \epsilon(t)
 $$
 
 其中：
-- I(t) 是时刻 t 的电流信号
-- k(t) 是时刻 t 位于孔内的 k-mer
+- `I(t)` 是时刻 `t` 的电流信号
+- `k(t)` 是时刻 `t` 位于孔内的 k-mer
 - f(·) 是 k-mer 到电流的映射函数
 - ε(t) 是噪声（包括热噪声、电子噪声、分子动力学噪声）
 
@@ -86,16 +86,16 @@ HMM 将 basecalling 建模为隐马尔可夫模型：
 
 由于 DNA 序列是连续的，转移具有约束：
 
-- 从 k-mer x₁x₂...xₖ 只能转移到 x₂...xₖy，其中 y ∈ {A, C, G, T}
+- 从 k-mer `x₁x₂...xₖ` 只能转移到 `x₂...xₖy`，其中 `y ∈ {A, C, G, T}`
 - 因此每个状态最多有 4 个可能的转移
 
-转移概率矩阵 A：
+转移概率矩阵 `A`：
 
 $$
 A_{ij} = P(q_{t+1} = j | q_t = i)
 $$
 
-其中 q_t 是时刻 t 的隐状态。
+其中 `q_t` 是时刻 `t` 的隐状态。
 
 ### 发射概率
 
@@ -111,13 +111,13 @@ $$
 b_i(s) = \frac{1}{\sqrt{2\pi\sigma_i^2}} \exp\left(-\frac{(s - \mu_i)^2}{2\sigma_i^2}\right)
 $$
 
-其中 μᵢ 和 σᵢ 是状态 i 的均值和标准差。
+其中 `μᵢ` 和 `σᵢ` 是状态 `i` 的均值和标准差。
 
 ### Viterbi 算法
 
 使用 Viterbi 算法找到最可能的隐状态序列：
 
-定义 δₜ(i) 为：时刻 t 处于状态 i 的最优路径得分。
+定义 `δₜ(i)` 为：时刻 `t` 处于状态 `i` 的最优路径得分。
 
 递推公式：
 
@@ -190,7 +190,7 @@ $$
 L = -\sum_{t=1}^{T} \sum_{b \in \{A,C,G,T\}} y_{t,b} \log(\hat{p}_{t,b})
 $$
 
-其中 y_{t,b} 是真实标签的 one-hot 编码，\hat{p}_{t,b} 是预测概率。
+其中 `$y_{t,b}$` 是真实标签的 one-hot 编码，`$\hat{p}_{t,b}$` 是预测概率。
 
 ## 信号处理
 
@@ -358,8 +358,8 @@ def basecall_signal(model, signal_chunks):
 - δ₁(AT) = 0.04
 
 递推（简化）：
-- δ₂(AC) = max(δ₁·A) · P(12.3|AC) ≈ 0.88 · 0.04 = 0.04
-- δ₂(AG) = max(δ₁·A) · P(12.3|AG) ≈ 0.88 · 0.88 = 0.77
+- `δ₂(AC) = max(δ₁·A) · P(12.3|AC) ≈ 0.88 · 0.04 = 0.04`
+- `δ₂(AG) = max(δ₁·A) · P(12.3|AG) ≈ 0.88 · 0.88 = 0.77`
 - ...
 
 #### 步骤 3：回溯
@@ -368,7 +368,7 @@ def basecall_signal(model, signal_chunks):
 
 #### 步骤 4：转换为碱基
 
-取每个 k-mer 的第一个碱基：A → A → A → A
+取每个 k-mer 的第一个碱基：`A → A → A → A`
 
 最终序列：AAAA
 
@@ -482,4 +482,4 @@ Oxford Nanopore 的官方 basecaller：
 - [PacBio 与 Nanopore](./pacbio-nanopore.md)
 - [Consensus 算法](./consensus-algorithm.md)
 - [结构变异检测](./sv-detection.md)
-- [信号处理基础](../foundations/signal-processing.md)
+- [概率、图与动态规划预备](../foundations/probability-and-graphs.md)

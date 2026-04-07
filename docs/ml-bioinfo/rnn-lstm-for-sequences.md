@@ -41,7 +41,7 @@ import DefinitionList from '@site/src/components/docs/DefinitionList';
 
 ### 标准 RNN
 
-给定序列 X = [x₁, x₂, ..., x_T]，每个 x_t ∈ ℝ^K。
+给定序列 `X = [x₁, x₂, ..., x_T]`，每个 `$x_t \in \mathbb{R}^{K}$`。
 
 隐状态更新公式：
 
@@ -56,10 +56,10 @@ y_t = \sigma'(W_{hy} h_t + b_y)
 $$
 
 其中：
-- h_t ∈ ℝ^H 是时间步 t 的隐状态
-- W_{hh} ∈ ℝ^(H×H) 是隐状态到隐状态的权重
-- W_{xh} ∈ ℝ^(H×K) 是输入到隐状态的权重
-- W_{hy} ∈ ℝ^(O×H) 是隐状态到输出的权重
+- `$h_t \in \mathbb{R}^{H}$` 是时间步 `t` 的隐状态
+- `$W_{hh} \in \mathbb{R}^{H\times H}$` 是隐状态到隐状态的权重
+- `$W_{xh} \in \mathbb{R}^{H\times K}$` 是输入到隐状态的权重
+- `$W_{hy} \in \mathbb{R}^{O\times H}$` 是隐状态到输出的权重
 - σ 和 σ' 是激活函数
 
 ### LSTM
@@ -143,8 +143,8 @@ $$
 ### 步骤 2：前向传播
 
 对每个时间步 t = 1, 2, ..., T：
-1. 计算 h_t = σ(W_{hh} h_{t-1} + W_{xh} x_t + b_h)
-2. 计算 y_t = σ'(W_{hy} h_t + b_y)
+1. 计算 `$h_t = \sigma(W_{hh} h_{t-1} + W_{xh} x_t + b_h)$`
+2. 计算 `$y_t = \sigma'(W_{hy} h_t + b_y)$`
 
 ### 步骤 3：损失计算
 
@@ -235,13 +235,13 @@ $$
 
 ### 步骤 4：最终预测
 
-使用最后一个隐状态 h₆ 进行预测：
+使用最后一个隐状态 `h₆` 进行预测：
 
 $$
 y = \sigma(W_{hy} \cdot h_6 + b_y)
 $$
 
-假设 h₆ = [0.8, 0.6, -0.3, 0.4]，W_{hy} = [0.5, 0.3, -0.2, 0.4]，b_y = -0.3：
+假设 `h₆ = [0.8, 0.6, -0.3, 0.4]`，`W_{hy} = [0.5, 0.3, -0.2, 0.4]`，`b_y = -0.3`：
 
 $$
 y = \sigma(0.5 \times 0.8 + 0.3 \times 0.6 - 0.2 \times (-0.3) + 0.4 \times 0.4 - 0.3)

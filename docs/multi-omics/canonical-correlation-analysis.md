@@ -616,4 +616,4 @@ Deep CCA 是多模态深度学习的早期方法，影响了后续的：
 - [联合NMF](./joint-nmf.md)
 - [MOFA+](./mofa-plus.md)
 - [机器学习基础](../ml-bioinfo/index.md)
-- [统计方法](../ml-bioinfo/statistical-methods.md)
+- [机器学习与基础模型](../ml-bioinfo/index.md)

@@ -96,14 +96,14 @@ Minimap2 使用窗口化 minimizer：
 
 ### 问题定义
 
-给定 seeds 集合 S = {s₁, s₂, ..., sₙ}，每个 seed sᵢ 有：
+给定 seeds 集合 $S = \{s_1, s_2, \ldots, s_n\}$，每个 seed $s_i$ 有：
 - read 位置 xᵢ
 - 参考位置 yᵢ
 - 长度 lᵢ
 
-目标是找到种子子集 C ⊆ S，使得：
+目标是找到种子子集 $C \subseteq S$，使得：
 
-1. 种子按顺序排列：x₁ < x₂ < ... < xₖ 且 y₁ < y₂ < ... < yₖ
+1. 种子按顺序排列：$x_1 < x_2 < \ldots < x_k$ 且 $y_1 < y_2 < \ldots < y_k$
 2. 最大化总得分
 
 ### 动态规划公式
@@ -120,7 +120,7 @@ $$
 - α 是匹配奖励系数
 - β 是距离惩罚系数（惩罚非线性）
 
-边界条件：DP[i] ≥ lᵢ（单个 seed 的得分）
+边界条件：$DP[i] \ge l_i$（单个 seed 的得分）
 
 ### 链得分解释
 
@@ -349,7 +349,7 @@ Ref:   C G T A C G T
 - 时间：O(L/w + m·d + m² + b·L)
 - 空间：O(N/w + m + b·L)
 
-在实际情况中，m << L，d << N，因此接近线性。
+在实际情况中，$m \ll L$，$d \ll N$，因此接近线性。
 
 ## 与真实工具或流程的连接
 
@@ -433,4 +433,4 @@ Minimap2 支持多种模式：
 - [Consensus 算法](./consensus-algorithm.md)
 - [PacBio 与 Nanopore](./pacbio-nanopore.md)
 - [序列比对基础](../alignment/index.md)
-- [BWA-MEM 算法](../alignment/bwa-mem.md)
+- [序列比对](../alignment/index.md)

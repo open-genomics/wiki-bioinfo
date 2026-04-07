@@ -1,0 +1,58 @@
+---
+sidebar_position: 1
+slug: /clinical-variants
+---
+
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+
+# 临床变异解释
+
+临床变异解释关注的不是“这个位点和参考不同”这么简单，而是：这个变异是否可能与疾病相关、证据强不强、以及是否能支持临床决策。
+
+## 这一部分讲什么
+
+本章聚焦：
+
+- 变异注释与优先级排序；
+- ACMG/AMP 框架；
+- CNV / SV 的临床解释。
+
+## 为什么重要
+
+- 临床场景中的变异解释要求证据链清晰、可追溯；
+- 仅靠频率或功能预测通常不足以得出结论；
+- 结果需要在数据库、文献、家系和表型背景中综合判断。
+
+## 推荐阅读顺序
+
+1. [变异注释与优先级排序](./variant-annotation-and-prioritization.md)
+2. [ACMG 指南](./acmg-guidelines.md)
+3. [CNV 与 SV 解释](./cnv-and-sv-interpretation.md)
+
+## 与其他板块的连接
+
+- 原始检测流程见 [变异检测](../variants/index.mdx)；
+- 大型重排证据可参考 [长读长测序](../long-read/index.md)；
+- 人群频率与祖源背景可参考 [群体遗传学](../population/index.md)。
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: '变异注释与优先级排序',
+      to: '/docs/clinical-variants/variant-annotation-and-prioritization',
+      description: '从频率、功能影响到表型一致性，理解变异筛选逻辑。',
+    },
+    {
+      title: 'ACMG 指南',
+      to: '/docs/clinical-variants/acmg-guidelines',
+      description: '理解 pathogenic / likely pathogenic / VUS 等分类框架。',
+    },
+    {
+      title: 'CNV 与 SV 解释',
+      to: '/docs/clinical-variants/cnv-and-sv-interpretation',
+      description: '理解拷贝数和结构变异在临床解释中的特殊挑战。',
+    },
+  ]}
+/>

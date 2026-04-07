@@ -41,12 +41,12 @@ export type ContributionCard = {
 
 export const homeStats: HomeStat[] = [
   {
-    label: '6 个稳定入口',
-    detail: '先收敛顶层结构，再逐步把子专题做深做厚。',
+    label: '6 个主入口',
+    detail: '首页、navbar、footer 和 sidebar 围绕同一套顶层结构组织。',
   },
   {
-    label: '教材到实践',
-    detail: '从字符串、图、概率模型一路连到真实分析流程。',
+    label: '方法到应用',
+    detail: '从字符串、图、概率模型一路连到 DNA-seq、RNA-seq 与更多分析方向。',
   },
   {
     label: '开放协作',
@@ -107,9 +107,9 @@ export const knowledgeBuckets: KnowledgeBucket[] = [
     title: '分析方向与案例',
     to: '/docs/applications/',
     meta: 'Applications',
-    description: '围绕 DNA-seq、RNA-seq、宏基因组和系统发育等任务，组织应用层入口和案例。',
-    children: ['工作流与案例', '变异检测', '转录组', '系统发育与进化'],
-    nextStep: '如果你是问题驱动学习者，可以直接从这里切入。',
+    description: '围绕 DNA-seq、RNA-seq、单细胞、表观组、长读长、空间组学等任务，组织应用层入口与案例。',
+    children: ['工作流与案例', '变异检测', '转录组 / 单细胞', '多组学与临床解释'],
+    nextStep: '如果你是问题驱动学习者，可以直接从这里切入，再回看方法层。',
   },
   {
     title: '数据、注释与资源',
@@ -134,8 +134,8 @@ export const learningPaths: LearningPath[] = [
     title: '初学者路线',
     to: '/docs/intro/roadmap',
     audience: '先建立整站地图',
-    description: '先理解对象、数据格式与流程地图，再进入索引、比对、组装和统计模型。',
-    steps: ['开始这里', '基础与数学', '数据与资源', '分析方向'],
+    description: '先理解对象、数据格式与流程地图，再进入索引、比对、组装和应用案例。',
+    steps: ['开始这里', '基础与数学', '数据、注释与资源', '分析方向与案例'],
   },
   {
     title: '算法路线',
@@ -148,9 +148,9 @@ export const learningPaths: LearningPath[] = [
     title: '实战路线',
     to: '/docs/applications/',
     audience: '围绕分析任务',
-    description: '从 DNA-seq、RNA-seq 和宏基因组问题出发，再回头追溯其依赖的方法和数据结构。',
-    steps: ['数据与资源', '分析方向', '回看核心方法'],
-  },
+    description: '从 DNA-seq、RNA-seq、单细胞和其他应用问题出发，再回头追溯其依赖的方法和数据结构。',
+    steps: ['数据、注释与资源', '分析方向与案例', '回看核心方法'],
+  }
 ];
 
 export const bridgeCards: BridgeCard[] = [

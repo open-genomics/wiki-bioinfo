@@ -92,6 +92,7 @@ const sidebars: SidebarsConfig = {
           link: {type: 'doc', id: 'workflows/index'},
           items: [
             'workflows/ngs-overview',
+            'workflows/qc-overview',
             'workflows/rna-seq',
             'workflows/metagenomics-overview',
             'workflows/choosing-alignment-assembly',
@@ -101,13 +102,117 @@ const sidebars: SidebarsConfig = {
           type: 'category',
           label: '变异检测',
           link: {type: 'doc', id: 'variants/index'},
-          items: ['variants/variant-calling-overview', 'variants/variant-filtering'],
+          items: [
+            'variants/variant-calling-overview',
+            'variants/variant-filtering',
+            'variants/small-variants-vs-sv',
+            'variants/repeats-and-low-complexity',
+            'variants/germline-vs-somatic',
+          ],
         },
         {
           type: 'category',
           label: '转录组',
           link: {type: 'doc', id: 'transcriptomics/index'},
-          items: ['transcriptomics/pseudo-alignment-and-quantification'],
+          items: [
+            'transcriptomics/pseudo-alignment-and-quantification',
+            'transcriptomics/tpm-fpkm-cpm',
+            'transcriptomics/gene-vs-transcript-quant',
+            'transcriptomics/differential-expression',
+          ],
+        },
+        {
+          type: 'category',
+          label: '单细胞组学',
+          link: {type: 'doc', id: 'single-cell/index'},
+          items: [
+            'single-cell/scrna-seq-overview',
+            'single-cell/cell-barcode-umi',
+            'single-cell/clustering-and-umap',
+            'single-cell/trajectory-analysis',
+            'single-cell/doublet-detection',
+          ],
+        },
+        {
+          type: 'category',
+          label: '表观基因组学',
+          link: {type: 'doc', id: 'epigenomics/index'},
+          items: [
+            'epigenomics/chip-seq-overview',
+            'epigenomics/atac-seq',
+            'epigenomics/dna-methylation',
+          ],
+        },
+        {
+          type: 'category',
+          label: '群体遗传学',
+          link: {type: 'doc', id: 'population/index'},
+          items: [
+            'population/hardy-weinberg',
+            'population/linkage-disequilibrium',
+            'population/gwas',
+            'population/population-structure',
+          ],
+        },
+        {
+          type: 'category',
+          label: '长读长测序',
+          link: {type: 'doc', id: 'long-read/index'},
+          items: [
+            'long-read/pacbio-nanopore',
+            'long-read/long-read-assembly',
+            'long-read/sv-detection',
+          ],
+        },
+        {
+          type: 'category',
+          label: '空间转录组',
+          link: {type: 'doc', id: 'spatial/index'},
+          items: [
+            'spatial/spatial-transcriptomics-overview',
+            'spatial/spot-vs-single-cell',
+            'spatial/deconvolution-and-mapping',
+          ],
+        },
+        {
+          type: 'category',
+          label: '蛋白质组学',
+          link: {type: 'doc', id: 'proteomics/index'},
+          items: [
+            'proteomics/mass-spectrometry-basics',
+            'proteomics/database-search-and-fdr',
+            'proteomics/quantitative-proteomics',
+          ],
+        },
+        {
+          type: 'category',
+          label: '临床变异解释',
+          link: {type: 'doc', id: 'clinical-variants/index'},
+          items: [
+            'clinical-variants/variant-annotation-and-prioritization',
+            'clinical-variants/acmg-guidelines',
+            'clinical-variants/cnv-and-sv-interpretation',
+          ],
+        },
+        {
+          type: 'category',
+          label: '结构生物信息学',
+          link: {type: 'doc', id: 'structure-bioinfo/index'},
+          items: [
+            'structure-bioinfo/protein-structure-basics',
+            'structure-bioinfo/alphafold-and-structure-prediction',
+            'structure-bioinfo/structure-alignment-and-fold',
+          ],
+        },
+        {
+          type: 'category',
+          label: '多组学整合',
+          link: {type: 'doc', id: 'multi-omics/index'},
+          items: [
+            'multi-omics/integration-strategies',
+            'multi-omics/batch-effect-and-harmonization',
+            'multi-omics/single-cell-multiome',
+          ],
         },
         {
           type: 'category',
@@ -120,6 +225,15 @@ const sidebars: SidebarsConfig = {
             'phylogeny/additive-phylogeny',
             'phylogeny/parsimony',
             'phylogeny/maximum-likelihood',
+          ],
+        },
+        {
+          type: 'category',
+          label: '机器学习与基础模型',
+          link: {type: 'doc', id: 'ml-bioinfo/index'},
+          items: [
+            'ml-bioinfo/deep-learning-for-sequences',
+            'ml-bioinfo/embeddings-and-language-models',
           ],
         },
       ],

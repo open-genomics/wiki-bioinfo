@@ -4,6 +4,11 @@ sidebar_position: 3
 
 # 测序 reads、coverage 与错误模型
 
+<figure>
+  <img src="/wiki-bioinfo/img/illustrations/sequencing-by-synthesis.svg" alt="测序合成法示意图" />
+  <figcaption>短读长测序常以 sequencing-by-synthesis 为基础：逐轮掺入核苷酸并成像，从而把化学反应转成序列信号。</figcaption>
+</figure>
+
 ## 是什么
 
 测序分析最原始的观察对象不是基因、转录本或变异，而是大量短小或较长的 reads。
@@ -35,36 +40,31 @@ coverage 可以粗略理解为：某个位置平均被多少条 reads 覆盖。
 
 错误模型描述的是：read 中出现错误碱基、插入缺失、末端质量下降、平台偏好等现象的规律。
 
-## 应用场景
+## worked example
+
+假设某个位点上只有 1 条 read 支持替换，而其他 reads 都支持参考碱基，那么这个差异更可能来自：
+
+- 测序错误；
+- 比对错位；
+- 局部低质量碱基。
+
+但如果有大量高质量 reads 独立支持同一个差异，并且覆盖分布合理，那么它更可能是真实变异。
+
+这说明变异证据不是“看见差异就算数”，而是依赖 coverage 和错误背景来解释。
+
+## 与真实工具或流程的连接
 
 - 在 [序列比对](../alignment/index.md) 中，coverage 和错误模式决定一个 read 是否容易被正确定位；
 - 在 [组装与图算法](../assembly/index.md) 中，错误 read 会制造伪 k-mer 和异常图结构；
 - 在 [变异检测](../variants/index.mdx) 中，区分测序错误与真实变异是核心问题；
 - 在 [转录组](../transcriptomics/index.mdx) 中，coverage 不均匀会直接影响表达定量。
 
-## 一个常见的直觉误区
-
-很多人会把 coverage 理解成“越高越好”。
-
-其实更准确的说法是：
-
-- coverage 太低时，证据不足；
-- coverage 很高但分布极不均匀时，仍然可能导致偏差；
-- 不同任务对 coverage 的需求并不相同。
-
 ## 常见误区
 
-### 有 read 就说明对应区域一定存在真实信号
-
-不一定。单条或少量 reads 可能只是噪声、污染或比对假象。
-
-### coverage 足够高就不会出错
-
-也不对。系统性偏差、重复区域和参考版本问题不会因为 coverage 高就自动消失。
-
-### 错误模型只是测序平台层面的细节
-
-不是。错误模型会渗透到比对、组装、变异检测和定量的每一层。
+- 有 read 就说明对应区域一定存在真实信号；
+- coverage 足够高就不会出错；
+- 错误模型只是测序平台层面的细节；
+- coverage 越高越好，且不同任务对 coverage 的要求都一样。
 
 ## 相关页面
 

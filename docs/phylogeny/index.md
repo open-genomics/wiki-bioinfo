@@ -16,6 +16,11 @@ import SectionNavigator from '@site/src/components/docs/SectionNavigator';
 
 系统发育分析试图根据序列或特征差异重建物种、基因或样本之间的进化关系。
 
+<figure>
+  <img src="/wiki-bioinfo/img/illustrations/phylogeny-tree.svg" alt="phylogeny tree concepts" />
+  <figcaption>系统发育树用叶节点、内部节点和分支结构来表达样本之间的关系；但不同建树方法对应的统计假设并不相同。</figcaption>
+</figure>
+
 ## 这一部分在全站中的位置
 
 它位于“分析方向与案例”之下，承担的是应用层中的一个经典方向：把序列相似性、表达模式相似性与树方法重新组织成结构解释。

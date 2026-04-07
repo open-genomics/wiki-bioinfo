@@ -19,9 +19,10 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 ## 推荐阅读顺序
 
 1. [NGS 流程总览](./ngs-overview.md)
-2. [RNA-seq 工作流概览](./rna-seq.md)
-3. [Metagenomics 流程总览](./metagenomics-overview.md)
-4. [如何选择 alignment、assembly 或 pseudo-alignment](./choosing-alignment-assembly.md)
+2. [质量控制（QC）总览](./qc-overview.md)
+3. [RNA-seq 工作流概览](./rna-seq.md)
+4. [Metagenomics 流程总览](./metagenomics-overview.md)
+5. [如何选择 alignment、assembly 或 pseudo-alignment](./choosing-alignment-assembly.md)
 
 ## 子主题导航
 
@@ -31,6 +32,11 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
       title: 'NGS 流程总览',
       to: '/docs/workflows/ngs-overview',
       description: '先建立二代测序分析的总体地图，再向 DNA-seq、RNA-seq 和宏基因组分支展开。',
+    },
+    {
+      title: '质量控制（QC）总览',
+      to: '/docs/workflows/qc-overview',
+      description: '理解 raw reads 进入下游分析前，哪些质量问题需要先识别、解释和处理。',
     },
     {
       title: 'RNA-seq 工作流概览',

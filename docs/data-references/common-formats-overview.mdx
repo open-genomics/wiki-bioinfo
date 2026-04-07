@@ -1,106 +1,232 @@
 ---
 sidebar_position: 4
-description: 常见基因组数据格式（FASTA/FASTQ/BAM/GTF/VCF 等）的层级与在流程中的作用概览。
+description: 常见基因组数据格式（FASTA/FASTQ/BAM/GTF/VCF 等）的层级、交接边界与在流程中的作用概览。
 pagination_label: 常见数据格式
 ---
 
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import PrerequisitesBox from '@site/src/components/docs/PrerequisitesBox';
+import ComparisonTable from '@site/src/components/docs/ComparisonTable';
+import WorkflowSteps from '@site/src/components/docs/WorkflowSteps';
+import ToolMappingBox from '@site/src/components/docs/ToolMappingBox';
+import PitfallsBox from '@site/src/components/docs/PitfallsBox';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+
 # 常见数据格式总览
+
+<SummaryBox
+  summary="这页关注的是‘格式在整条流程里处在哪一层’：从参考序列、原始观测、定位结果，到注释对象、变异结果和派生指标，每一层解决的问题都不同。"
+  bullets={[
+    '先分清层级，再去看具体文件细节，通常能更快理解一个工作流为什么需要这些输入输出。',
+    '很多格式误用，本质上是把上一层的对象错当成了下一层的结论。',
+  ]}
+/>
 
 ## 是什么
 
-在基因组/转录组分析管线中，数据通常在多个“层级”上流动，每一层都有对应的文件格式：
+在基因组或转录组分析中，数据通常不会直接从“原始实验”跳到“最终结论”。它会在多个层级上逐步流动，每一层都对应不同的文件格式：
 
-- 序列层：FASTA；
-- 原始观测层：FASTQ；
-- 比对结果层：SAM/BAM/CRAM；
-- 注释层：GTF/GFF/BED 等；
-- 变异层：VCF/BCF；
-- 派生指标层：表达矩阵、coverage 列表等。
+- **序列层**：FASTA；
+- **原始观测层**：FASTQ；
+- **定位结果层**：SAM/BAM/CRAM；
+- **注释与区间层**：GTF/GFF/BED；
+- **变异结果层**：VCF/BCF；
+- **派生指标层**：表达矩阵、coverage、统计汇总等。
 
-理解这些格式之间的层级关系，有助于弄清楚：
+这页的重点不是逐个拆字段，而是先回答：**一个格式处在哪一层、它回答什么问题、它和上下游怎么交接。**
 
-- 当前分析处于哪一层；
-- 某个文件里到底保存了什么信息；
-- 不同工具为什么需要不同的输入输出。
+## 为什么重要
 
-## 序列层：FASTA
+很多流程问题表面上像工具问题，实际却是层级没分清：
 
-- 保存参考序列本身（基因组、转录本、蛋白等）；
-- 常见结构：
-  - `>ID 描述`
-  - 多行序列；
-- 不包含 base quality、reads 或 coverage 信息。
+- 把原始 reads 当成已经有坐标背景的数据；
+- 把 BAM 当成可以独立解释的最终结果；
+- 把 GTF/GFF 当成样本证据，而不是参考背景；
+- 把 VCF 当成脱离 caller、参考版本和过滤逻辑的“最终真相”。
 
-典型用途：
+理解格式层级关系，有助于快速弄清：
 
-- 作为 mapping/assembly 的参考输入；
-- 提供给下游工具做序列提取、motif 分析等。
+- 当前分析停留在哪一层；
+- 某个文件能回答什么问题；
+- 某个结果为什么仍然依赖前一层的对象和背景。
 
-## 原始观测层：FASTQ
+<PrerequisitesBox
+  items={[
+    '先理解参考基因组、坐标系统与注释，因为很多格式的意义都依赖参考背景。',
+    '理解不同任务的“结果文件”并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
+    '如果你更想看具体格式保存什么和不保存什么，再去读常见文件格式概览。',
+  ]}
+/>
 
-- 保存 sequencing reads 及其 base quality；
-- 每个 read 包含四行：
-  - `@ID`
-  - 碱基序列
-  - `+`
-  - 质量值字符串；
-- 是绝大多数 NGS 分析的起点。
+## 一眼看清各层在解决什么问题
 
-## 比对结果层：SAM/BAM/CRAM
+<ComparisonTable
+  leftTitle="这一层回答什么问题"
+  rightTitle="典型格式"
+  rows={[
+    {
+      aspect: '序列层',
+      left: '参考序列或组装序列本身是什么？',
+      right: 'FASTA',
+    },
+    {
+      aspect: '原始观测层',
+      left: '实验直接产生了哪些 reads，以及它们的 base quality 如何？',
+      right: 'FASTQ',
+    },
+    {
+      aspect: '定位结果层',
+      left: '这些 reads 被放到了参考坐标系的哪里？',
+      right: 'SAM / BAM / CRAM',
+    },
+    {
+      aspect: '注释与区间层',
+      left: '参考上的哪些区间对应 gene / transcript / feature / region？',
+      right: 'GTF / GFF / BED',
+    },
+    {
+      aspect: '变异结果层',
+      left: '哪些位点相对参考显示出候选变异及其过滤信息？',
+      right: 'VCF / BCF',
+    },
+    {
+      aspect: '派生指标层',
+      left: '下游统计、定量或聚合后的结果是什么？',
+      right: '表达矩阵、coverage、summary tables',
+    },
+  ]}
+/>
 
-- **SAM**：文本格式，比对结果的明文表示；
-- **BAM**：SAM 的二进制压缩版；
-- **CRAM**：更高效的压缩格式，常结合参考序列。
+## 各层之间如何交接
 
-核心信息包括：
+### 序列层：FASTA
 
-- read ID、参考染色体、位置；
-- CIGAR、MAPQ、flag（包括多重比对信息）；
-- 可选 tag，记录各类附加信息。
+这一层定义的是参考序列或组装序列本身。它提供后续定位、注释和解释的基本框架，但本身还不包含样本证据。
 
-## 注释层：GTF/GFF/BED 等
+### 原始观测层：FASTQ
 
-- **GTF/GFF**：
-  - 表示基因、转录本、外显子等注释的表格格式；
-  - 包含 feature 类型、坐标、strand、属性字段（ID、Parent 等）；
-- **BED**：
-  - 简洁的坐标列表，用于表示区间（promoter、peak 等）。
+这一层持有的是实验直接产生的 reads 与质量值。它代表“样本观测”，但还没有被放进参考坐标系。
 
-这些文件告诉我们“参考上的哪些区间对应什么生物学对象”。
+### 定位结果层：SAM / BAM / CRAM
 
-## 变异层：VCF/BCF
+这一层开始把 reads 放到参考背景下理解。此时我们拥有了位置、CIGAR、MAPQ 等信息，但还没有自动得到“生物学解释”。
 
-- **VCF**：文本格式，记录变异位置和注释信息；
-- **BCF**：VCF 的二进制版。
+### 注释与区间层：GTF / GFF / BED
 
-核心字段包括：
+这一层告诉我们参考上的某些区间对应什么对象或区域。它不是样本证据，而是解释定位结果和下游统计所依赖的参考背景。
 
-- `CHROM, POS, ID, REF, ALT, QUAL, FILTER, INFO`；
-- genotype（GT）、深度（DP）、等位基因频率（AF）、caller 特有信息等。
+### 变异结果层：VCF / BCF
 
-## 层级关系小结
+这一层把定位证据进一步提炼成候选变异及其过滤信息。它比 BAM 更接近“结论”，但仍然依赖参考版本、caller 逻辑与上下文解释。
 
-可以粗略理解为：
+### 派生指标层：矩阵、coverage、汇总表
+
+这一层常常是工作流交付给分析者的最终统计结果，例如表达矩阵、coverage 汇总、feature counts 等。它们通常已经离原始 reads 很远，因此解释时仍要能回溯到前面的层级。
+
+## 一个典型流程里格式如何流动
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '定义参考背景',
+      badge: '序列层',
+      description: '先有 FASTA，必要时再配合 GTF/GFF 等注释文件建立参考框架。',
+      hint: '这是很多后续对象解释的起点，而不是样本证据本身。',
+    },
+    {
+      title: '获得原始观测',
+      badge: '观测层',
+      description: '实验输出 reads，通常保存在 FASTQ。',
+      hint: '此时有原始测序证据，但还没有坐标信息。',
+    },
+    {
+      title: '放入坐标系',
+      badge: '定位层',
+      description: 'reads 被比对或定位后，得到 SAM/BAM/CRAM。',
+      hint: '这里回答的是“放在哪里”，不是“最后意味着什么”。',
+    },
+    {
+      title: '结合注释与任务解释',
+      badge: '解释层',
+      description: '根据具体任务，用 GTF/GFF/BED 或 caller 逻辑把定位结果进一步转成 feature-level 或 variant-level 结果。',
+      hint: '不同任务会把同一层证据转成不同语义层的输出。',
+    },
+    {
+      title: '形成交付结果',
+      badge: '结果层',
+      description: '得到 VCF、表达矩阵、coverage summary 等更靠后的结果文件。',
+      hint: '结果越往后，越要保留回溯前层的能力。',
+    },
+  ]}
+/>
+
+## worked example
+
+以一个简化的 DNA-seq 变异检测流程为例：
 
 ```text
-参考序列层: FASTA
-原始观测层: FASTQ
-比对结果层: SAM/BAM/CRAM
-注释与区间层: GTF/GFF/BED
-变异结果层: VCF/BCF
-派生指标层: 表达矩阵 / coverage / 统计汇总
+FASTA -> FASTQ -> BAM -> VCF -> annotation / summary
 ```
 
-每一层都是前一层进一步“解释”和“提炼”的结果。
+这条链路里，每一步都不是简单“换格式”，而是在改变问题：
 
-## 实践建议
+- `FASTA` 提供参考框架；
+- `FASTQ` 提供样本的原始观测；
+- `BAM` 表示这些观测如何被放到参考坐标系；
+- `VCF` 是基于 BAM 与 caller 逻辑提炼出的候选变异结果；
+- annotation / summary 则把变异继续接到数据库对象、临床解释或统计汇总层。
 
-- 在写 pipeline 或记录分析步骤时，明确标明每一步的输入/输出格式；
-- 不要把“只给 BAM/VCF”的结果当作完全独立的对象，总是记住它们依赖的 FASTQ 和 FASTA；
-- 在版本控制和数据管理上，为不同层次数据采用不同的保存策略（例如：原始 FASTQ/FASTA 长期保存，BAM/VCF 取决于重算成本）。
+因此，如果你只看最后的 `VCF`，却不知道它来自什么参考版本、什么 BAM 证据和什么 caller 逻辑，就很容易误解结果。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '不同软件经常被误认为“只是吃不同格式”，但它们实际上在处理不同语义层的对象。',
+    'alignment、feature counting、variant calling、expression quantification 等步骤，本质上是在不同层之间做信息交接。',
+    '当工作流输出矩阵、VCF 或汇总表时，仍然需要知道它是从哪一层证据提炼出来的。',
+  ]}
+/>
+
+## 常见误区
+
+<PitfallsBox
+  items={[
+    '把 FASTQ 当成已经有坐标背景的数据，而不是原始观测。',
+    '把 GTF/GFF 当成样本证据，而不是参考上的注释背景。',
+    '把 BAM 看成最终解释结果，而忽略它只是定位层表示。',
+    '把 VCF 当成完全脱离参考版本、caller 和过滤逻辑的最终真相。',
+    '看到“结果文件”就以为已经不需要回溯到前一层。',
+  ]}
+/>
 
 ## 相关页面
 
-- [常见文件格式概览](../formats/common-file-formats.mdx)
-- [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
-- [数据、注释与资源](./index.mdx)
+<RelatedLinks
+  links={[
+    {
+      title: '常见文件格式概览',
+      to: '/docs/formats/common-file-formats',
+      label: '具体语义',
+      description: '如果你想看每种格式具体保存什么、没保存什么，去看这页。',
+    },
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      label: '背景约束',
+      description: '理解为什么很多格式层问题本质上仍受参考与坐标体系约束。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      label: '实战流程',
+      description: '查看 FASTQ、BAM、VCF 在真实变异检测工作流中的连接关系。',
+    },
+    {
+      title: '数据、注释与资源',
+      to: '/docs/data-references/',
+      label: '板块入口',
+      description: '回到上层入口，把参考、数据库和格式一起看。',
+    },
+  ]}
+/>

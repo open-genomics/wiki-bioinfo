@@ -10,17 +10,31 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
 
 工具和算法最终都要落回具体数据资源。
 
-这一部分汇总学习和分析中最常见的数据库、参考资源和注释对象入口。
+这一部分不是再做一遍“数据库大全”，而是帮助读者回答几个更实际的问题：
+
+- 我当前面对的是 gene、transcript、protein、structure 还是 dataset？
+- 遇到一个分析问题时，应该先去哪个资源找什么？
+- 数据库里的对象，如何和参考版本、注释体系以及文件格式接起来理解？
 
 ## 这一部分在全站中的位置
 
-这一节属于“数据、注释与资源”大板块，重点帮助读者理解：分析结果最终会映射到哪些数据库对象、版本体系和外部资源上。
+这一节属于“数据、注释与资源”大板块，重点帮助读者把分析结果映射回数据库对象、版本体系和外部资源入口。
+
+如果你想先建立更上层的地图，例如：
+
+- 数据库与注释系统如何分类；
+- 不同 ID 与版本体系有什么差异；
+- 资源层如何和坐标、格式、流程整体连起来；
+
+那么优先阅读 `docs/data-references/*` 会更合适。
 
 ## 推荐阅读顺序
 
 1. [常用数据库与资源](./common-resources.md)
 2. [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
-3. [常见数据格式](../formats/index.mdx)
+3. [数据库与注释系统一览](../data-references/databases-and-annotations.mdx)
+4. [常见数据格式](../formats/index.mdx)
+5. [参考版本、构建号与 liftover](../data-references/reference-versions-and-liftover.mdx)
 
 ## 子主题导航
 
@@ -29,7 +43,7 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
     {
       title: '常用数据库与资源',
       to: '/docs/databases/common-resources',
-      description: '集中了解 NCBI、Ensembl、UniProt、PDB、KEGG、GEO / SRA 等核心入口。',
+      description: '按真实分析任务理解 NCBI、Ensembl、UniProt、PDB、KEGG、GEO / SRA 等资源分别适合回答什么问题。',
     },
   ]}
 />
@@ -41,7 +55,12 @@ import RelatedLinks from '@site/src/components/docs/RelatedLinks';
     {
       title: '数据、注释与资源',
       to: '/docs/data-references/',
-      description: '先从上层入口理解参考、格式、数据库三者为什么应该一起看。',
+      description: '先从上层入口理解参考、格式、数据库三者为什么必须一起看。',
+    },
+    {
+      title: '数据库与注释系统一览',
+      to: '/docs/data-references/databases-and-annotations',
+      description: '如果你更关心资源分类、ID 体系和版本差异，先看这张上层地图。',
     },
     {
       title: '参考基因组、坐标系统与注释',

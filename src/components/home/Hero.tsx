@@ -31,7 +31,7 @@ export default function Hero({className}: HeroProps): ReactNode {
             </Heading>
             <p className={styles.heroSubtitle}>{siteConfig.tagline}</p>
             <p className={styles.heroDescription}>
-              参考 OI Wiki 的组织方式，但先收敛成更稳定的六个入口：开始这里、基础与数学、核心方法、分析方向与案例、数据与资源、附录。
+              参考 OI Wiki 的组织方式，但先收敛成更稳定的六个入口：开始这里、基础与数学、核心方法、分析方向与案例、数据、注释与资源、附录。
               让内容增长时，导航和源码结构也一起成熟。
             </p>
             <div className={styles.buttons}>

@@ -35,16 +35,18 @@ npm run check
 
 ## 内容结构
 
-- `docs/intro/`：项目介绍、学习路线、贡献说明、写作规范
-- `docs/foundations/`：基础预备
-- `docs/sequence/`：序列与字符串
-- `docs/alignment/`：序列比对
-- `docs/assembly/`：基因组组装
-- `docs/phylogeny/`：系统发育
-- `docs/models/`：概率模型与模式识别
-- `docs/databases/`：数据库与资源
-- `docs/workflows/`：分析流程
-- `docs/appendix/`：附录与参考资料
+当前站点围绕 6 个主入口组织：
+
+- `docs/intro/`：开始这里（项目介绍、学习路线、贡献说明、写作规范）
+- `docs/foundations/`：基础与数学（对象层、reads/coverage、坐标系统、图与概率）
+- `docs/core-methods/`：核心方法，总领 `docs/sequence/`、`docs/alignment/`、`docs/assembly/`、`docs/models/`
+- `docs/applications/`：分析方向与案例，总领 `docs/workflows/`、`docs/variants/`、`docs/transcriptomics/`、`docs/single-cell/`、`docs/epigenomics/`、`docs/population/`、`docs/long-read/`、`docs/spatial/`、`docs/proteomics/`、`docs/clinical-variants/`、`docs/structure-bioinfo/`、`docs/multi-omics/`、`docs/phylogeny/`、`docs/ml-bioinfo/`
+- `docs/data-references/`：数据、注释与资源，并连接 `docs/databases/` 与 `docs/formats/`
+- `docs/appendix/`：附录（术语、参考资料等索引型内容）
+
+整体设计强调：先让顶层入口稳定，再持续扩展二级和三级专题。
+
+如果你要补内容，建议优先先判断新主题属于哪个主入口，再决定放到哪一层子目录。
 
 ## 部署说明
 

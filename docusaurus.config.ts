@@ -74,19 +74,24 @@ const config: Config = {
         },
         {
           to: '/docs/applications/',
-          label: '分析方向',
+          label: '分析方向与案例',
           position: 'left',
         },
         {
           to: '/docs/data-references/',
-          label: '数据与资源',
+          label: '数据、注释与资源',
+          position: 'left',
+        },
+        {
+          to: '/docs/appendix/',
+          label: '附录',
           position: 'left',
         },
         {
           href: 'https://github.com/LessUp/wiki-bioinfo',
           label: 'GitHub',
           position: 'right',
-        },
+        }
       ],
     },
     footer: {
@@ -127,11 +132,15 @@ const config: Config = {
           ],
         },
         {
-          title: '数据与社区',
+          title: '数据与附录',
           items: [
             {
               label: '数据、注释与资源',
               to: '/docs/data-references/',
+            },
+            {
+              label: '附录',
+              to: '/docs/appendix/',
             },
             {
               label: '写作规范',

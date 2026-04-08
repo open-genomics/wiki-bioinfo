@@ -51,10 +51,10 @@ Smith-Waterman 需要定义三个参数：
 ### 边界条件
 
 $$
-\begin\{aligned\}
+\begin{aligned}
 H[0][j] &= 0, \quad j = 0, 1, ..., n \\
 H[i][0] &= 0, \quad i = 0, 1, ..., m
-\end\{aligned\}
+\end{aligned}
 $$
 
 边界条件的含义：空串与任何序列的局部比对得分为 0，表示可以从任意位置开始比对。
@@ -65,12 +65,12 @@ $$
 
 $$
 H[i][j] = \max
-\begin\{cases\}
-0 & \text\{重新开始比对\} \\
-H[i-1][j-1] + s(x_i, y_j) & \text\{匹配或替换\} \\
-H[i-1][j] + g & \text\{在 X 中插入 gap（删除 \} x_i \text\{）\} \\
-H[i][j-1] + g & \text\{在 Y 中插入 gap（插入 \} y_j \text\{）\}
-\end\{cases\}
+\begin{cases}
+0 & \text{重新开始比对} \\
+H[i-1][j-1] + s(x_i, y_j) & \text{匹配或替换} \\
+H[i-1][j] + g & \text{在 X 中插入 gap（删除 } x_i \text{）} \\
+H[i][j-1] + g & \text{在 Y 中插入 gap（插入 } y_j \text{）}
+\end{cases}
 $$
 
 **关键区别**：与 Needleman-Wunsch 相比，Smith-Waterman 多了一个选项 `0`，表示如果当前前缀对齐已经不值得继续，就直接从这里重新开始。
@@ -80,7 +80,7 @@ $$
 最优局部比对的得分为矩阵中的最大值：
 
 $$
-H_\{max\} = \max_\{0 \leq i \leq m, 0 \leq j \leq n\} H[i][j]
+H_{\max} = \max_{0 \leq i \leq m,\ 0 \leq j \leq n} H[i][j]
 $$
 
 ## 算法步骤

@@ -150,11 +150,11 @@ $$
 
 $$
 F[i][j] = \max
-\begin\{cases\}
-F[i-1][j-1] + s(r_i, g_j) & \text\{匹配/错配\} \\
-F[i-1][j] + g & \text\{read gap\} \\
-F[i][j-1] + g & \text\{参考 gap\}
-\end\{cases\}
+\begin{cases}
+F[i-1][j-1] + s(r_i, g_j) & \text{匹配/错配} \\
+F[i-1][j] + g & \text{read gap} \\
+F[i][j-1] + g & \text{参考 gap}
+\end{cases}
 $$
 
 ### Affine Gap Penalty

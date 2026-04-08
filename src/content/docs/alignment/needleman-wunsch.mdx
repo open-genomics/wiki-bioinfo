@@ -51,11 +51,11 @@ Needleman-Wunsch 需要定义三个参数：
 ### 边界条件
 
 $$
-\begin\{aligned\}
+\begin{aligned}
 F[0][0] &= 0 \\
 F[i][0] &= i \cdot g, \quad i = 1, 2, ..., m \\
 F[0][j] &= j \cdot g, \quad j = 1, 2, ..., n
-\end\{aligned\}
+\end{aligned}
 $$
 
 边界条件的含义：
@@ -69,11 +69,11 @@ $$
 
 $$
 F[i][j] = \max
-\begin\{cases\}
-F[i-1][j-1] + s(x_i, y_j) & \text\{匹配或替换\} \\
-F[i-1][j] + g & \text\{在 X 中插入 gap（删除 \} x_i \text\{）\} \\
-F[i][j-1] + g & \text\{在 Y 中插入 gap（插入 \} y_j \text\{）\}
-\end\{cases\}
+\begin{cases}
+F[i-1][j-1] + s(x_i, y_j) & \text{匹配或替换} \\
+F[i-1][j] + g & \text{在 X 中插入 gap（删除 } x_i \text{）} \\
+F[i][j-1] + g & \text{在 Y 中插入 gap（插入 } y_j \text{）}
+\end{cases}
 $$
 
 这个递推体现了动态规划的核心思想：当前位置的最优解来自三个更小子问题中的最优选择。

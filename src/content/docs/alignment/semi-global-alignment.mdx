@@ -114,28 +114,28 @@ $$
 #### 变体1：允许S1开头gap
 
 $$
-\begin\{aligned\}
-  dp[0][j] &= 0 \quad \text\{（S1开头gap不罚分）\} \\
-  dp[i][0] &= i \cdot g \quad \text\{（S2开头gap要罚分）\}
-\end\{aligned\}
+\begin{aligned}
+  dp[0][j] &= 0 \quad \text{（S1开头gap不罚分）} \\
+  dp[i][0] &= i \cdot g \quad \text{（S2开头gap要罚分）}
+\end{aligned}
 $$
 
 #### 变体2：允许S2开头gap
 
 $$
-\begin\{aligned\}
-  dp[0][j] &= j \cdot g \quad \text\{（S1开头gap要罚分）\} \\
-  dp[i][0] &= 0 \quad \text\{（S2开头gap不罚分）\}
-\end\{aligned\}
+\begin{aligned}
+  dp[0][j] &= j \cdot g \quad \text{（S1开头gap要罚分）} \\
+  dp[i][0] &= 0 \quad \text{（S2开头gap不罚分）}
+\end{aligned}
 $$
 
 #### 变体3：允许两端gap
 
 $$
-\begin\{aligned\}
-  dp[0][j] &= 0 \quad \text\{（S1开头gap不罚分）\} \\
-  dp[i][0] &= 0 \quad \text\{（S2开头gap不罚分）\}
-\end\{aligned\}
+\begin{aligned}
+  dp[0][j] &= 0 \quad \text{（S1开头gap不罚分）} \\
+  dp[i][0] &= 0 \quad \text{（S2开头gap不罚分）}
+\end{aligned}
 $$
 
 ### 最优解位置

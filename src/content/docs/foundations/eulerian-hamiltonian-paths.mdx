@@ -1,0 +1,288 @@
+---
+description: 欧拉路径与哈密顿路径是图论中的经典问题，在生物信息学中有截然不同的应用：SBH 测序用欧拉路径（多项式时间），组装用哈密顿路径（NP-完全）。
+title: "欧拉路径与哈密顿路径"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+<SummaryBox
+  summary="欧拉路径和哈密顿路径是图论中的两个经典问题，在计算复杂度和生物信息学应用上有本质区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全问题。"
+  bullets={[
+    '欧拉路径：经过每条边恰好一次（SBH 测序）',
+    '哈密顿路径：经过每个顶点恰好一次（片段组装）',
+    '欧拉路径可在线性时间求解，哈密顿路径难解',
+    'de Bruijn 图将组装从哈密顿问题转化为欧拉问题'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '图算法基础', href: '/wiki/foundations/graph-algorithms' },
+    { name: 'de Bruijn 图', href: '/wiki/assembly/de-bruijn-graph' },
+    { name: 'SBH 测序', href: '/wiki/assembly/sequencing-by-hybridization' }
+  ]}
+/>
+
+## 是什么
+
+**欧拉路径（Eulerian Path）** 和 **哈密顿路径（Hamiltonian Path）** 是图论中两个看似相似但本质不同的问题：
+
+| 问题 | 目标 | 计算复杂度 |
+|------|------|-----------|
+| **欧拉路径** | 经过**每条边**恰好一次 | **多项式时间**（线性） |
+| **哈密顿路径** | 经过**每个顶点**恰好一次 | **NP-完全** |
+
+## 要解决什么生物信息学问题
+
+### 杂交测序（SBH）
+
+**问题**：给定所有 l-mer 组成，重建原始 DNA 序列。
+
+**两种建模方式**：
+
+**方法 1：哈密顿路径**（顶点是 l-mer）
+- 顶点：每个 l-mer
+- 边：两个 l-mer 重叠 l-1 个碱基
+- 路径经过所有顶点 = 序列重建
+- **问题**：哈密顿路径是 NP-完全，难!
+
+**方法 2：欧拉路径**（边是 l-mer）⭐
+- 顶点：每个 (l-1)-mer
+- 边：每个 l-mer 连接其前缀和后缀
+- 路径经过所有边 = 序列重建
+- **优势**：欧拉路径有线性时间算法!
+
+### 基因组组装
+
+**传统方法（重叠-布局-共有）**：
+- 顶点：每个测序 read
+- 边：reads 之间的重叠
+- 哈密顿路径 = 基因组序列
+- **问题**：NP-完全，且 repeats 导致路径不唯一
+
+**de Bruijn 图方法**：
+- 顶点：k-1-mer
+- 边：k-mer
+- 欧拉路径 = 基因组序列
+- **优势**：多项式时间，更适合处理 repeats
+
+## 欧拉路径
+
+### 定义
+
+在图 $G=(V, E)$ 中，**欧拉路径**是经过每条边恰好一次的路径。
+
+**欧拉回路**：起点和终点相同的欧拉路径。
+
+### 存在性判定
+
+**定理 8.1**：连通有向图有欧拉回路 **当且仅当** 每个顶点的**入度等于出度**。
+
+**定理 8.2**：连通有向图有欧拉路径 **当且仅当** 最多有两个顶点满足 $|indegree - outdegree| = 1$（半平衡），其余顶点入度等于出度。
+
+### 构造算法
+
+```
+EULERIANPATH(G):
+    // 1. 检查存在性
+    if 不满足定理 8.2:
+        return "无欧拉路径"
+    
+    // 2. 确定起点
+    s = 入度 = 出度 - 1 的顶点（如有），否则任意顶点
+    
+    // 3. 构造路径
+    path = []
+    stack = [s]
+    
+    while stack 非空:
+        v = stack.top()
+        if v 有未使用的出边:
+            w = 邻居顶点
+            stack.push(w)
+            标记边(v,w)为已使用
+        else:
+            path.append(stack.pop())
+    
+    return reverse(path)
+```
+
+**时间复杂度**：$O(|V| + |E|)$
+
+### 实例：SBH
+
+**谱**：$S = \{ATG, TGC, GCA, CAG, AGG, GGT, GTC, TCC\}$
+
+**欧拉图构建**：
+- 顶点：AT, TG, GC, CA, AG, GG, GT, TC, CC（所有前缀/后缀）
+- 边：
+  - AT → TG (ATG)
+  - TG → GC (TGC)
+  - GC → CA (GCA)
+  - ...
+
+**欧拉路径**：AT → TG → GC → CA → AG → GG → GT → TC → CC
+
+对应序列：**ATGCAGGTCC**
+
+## 哈密顿路径
+
+### 定义
+
+在图 $G=(V, E)$ 中，**哈密顿路径**是经过每个顶点恰好一次的路径。
+
+### 计算复杂度
+
+**定理**：哈密顿路径问题是 **NP-完全**。
+
+**含义**：
+- 没有已知的多项式时间算法
+- 只能使用指数时间算法或近似/启发式方法
+- 对于大规模问题，求解困难
+
+### 与旅行商问题的关系
+
+哈密顿路径问题与**旅行商问题（TSP）**等价：
+- TSP 是带权重的哈密顿回路问题
+- 两者都是 NP-完全
+- 许多实际问题可规约到这两个问题
+
+## 生物信息学中的应用对比
+
+### SBH 测序
+
+| 方法 | 图类型 | 复杂度 | 实用性 |
+|------|--------|--------|--------|
+| 哈密顿路径 | 顶点是 l-mer | NP-完全 | ❌ 不实用 |
+| **欧拉路径** | 边是 l-mer | **线性** | ✅ 实用 |
+
+**关键洞察**：Pevzner (1989) 提出用 de Bruijn 图建模 SBH，将问题从哈密顿转化为欧拉。
+
+### 基因组组装
+
+**短 reads 组装**：
+- 传统重叠图：哈密顿路径问题
+- de Bruijn 图：欧拉路径问题
+
+**优势转换**：
+- 处理 repeats 更容易
+- 计算效率更高
+- 适合大规模数据
+
+### 蛋白测序
+
+**谱图方法**：
+- 顶点：质谱峰对应的质量
+- 边：质量差等于氨基酸质量
+- **最长路径**（类似哈密顿）= 肽段序列
+
+**注意**：谱图是 DAG，即使最长路径问题也有多项式时间解法。
+
+## 从哈密顿到欧拉的转换艺术
+
+### 核心思想
+
+**问题转换**：通过巧妙的建模，将 NP-难问题转化为多项式可解问题。
+
+**SBH 示例**：
+
+```
+哈密顿图 (H):
+  顶点 = l-mer: ATG, TGC, GCA, CAG, AGG, GGT, GTC, TCC
+  边 = 重叠关系
+  路径 = 经过所有顶点
+
+欧拉图 (G):
+  顶点 = (l-1)-mer: AT, TG, GC, CA, AG, GG, GT, TC, CC
+  边 = l-mer
+  路径 = 经过所有边
+```
+
+**关键观察**：
+- 每个 l-mer 在欧拉图中是**一条边**
+- 在哈密顿图中是**一个顶点**
+- 两种表示包含相同信息，但图结构不同
+
+### 适用条件
+
+**可转换为欧拉问题的特征**：
+1. 对象可以被分解为重叠片段
+2. 片段的边界可以作为图的顶点
+3. 片段本身可以作为图的边
+
+## 算法实现要点
+
+### 欧拉路径实现
+
+```python
+def eulerian_path(graph):
+    """
+    graph: dict[u] = list of neighbors
+    returns: list of vertices in Eulerian path
+    """
+    # 找到起点（半平衡顶点）
+    start = find_semi_balanced_vertex(graph)
+    
+    # Hierholzer 算法
+    path = []
+    stack = [start]
+    
+    while stack:
+        v = stack[-1]
+        if graph[v]:  # 还有未使用的边
+            w = graph[v].pop()
+            stack.append(w)
+        else:  # 无路可走，回溯
+            path.append(stack.pop())
+    
+    return path[::-1]  # 反转得到正确顺序
+```
+
+### 复杂度分析
+
+| 操作 | 欧拉路径 | 哈密顿路径 |
+|------|---------|-----------|
+| 存在性检验 | $O(|V| + |E|)$ | NP-完全 |
+| 路径构造 | $O(|V| + |E|)$ | 指数时间 |
+| 最短/最长路径 | 多项式 | NP-难 |
+
+## 历史背景
+
+### 欧拉与柯尼斯堡七桥
+
+**1736 年**：Leonhard Euler 解决柯尼斯堡七桥问题，创立图论。
+
+**问题**：能否走遍七座桥，每座桥恰好一次？
+
+**欧拉的方法**：将城市地图抽象为图，顶点表示陆地，边表示桥梁。
+
+**结论**：不可能，因为所有顶点的度数都是奇数。
+
+### 哈密顿与 Icosian 游戏
+
+**1857 年**：William Rowan Hamilton 发明 Icosian 游戏。
+
+**目标**：在正十二面体顶点上找到经过所有顶点的回路。
+
+**与欧拉问题的区别**：
+- 欧拉关注**边**
+- 哈密顿关注**顶点**
+- 前者有多项式算法，后者难解
+
+<RelatedLinks
+  items={[
+    { name: 'de Bruijn 图', href: '/wiki/assembly/de-bruijn-graph', description: '组装中的核心图结构' },
+    { name: 'SBH 测序', href: '/wiki/assembly/sequencing-by-hybridization', description: '欧拉路径的经典应用' },
+    { name: '基因组组装', href: '/wiki/assembly/', description: '组装方法概览' }
+  ]}
+/>
+
+## 总结
+
+- **欧拉路径（边）有多项式时间算法，哈密顿路径（顶点）是 NP-完全**
+- **SBH 测序通过 de Bruijn 图将问题从哈密顿转化为欧拉**
+- **基因组组装同样受益于这种转换，使用 de Bruijn 图替代重叠图**
+- **问题转换是生物信息学算法设计的核心技巧：将难解问题转化为可解问题**

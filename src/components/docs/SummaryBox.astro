@@ -1,7 +1,7 @@
 ---
 interface Props {
   title?: string;
-  summary: string;
+  summary?: string;
   bullets?: string[];
 }
 
@@ -12,7 +12,8 @@ const { title = '快速概览', summary, bullets = [] } = Astro.props;
 
 <section class="summary-card">
   <strong><Icon name="rocket" size="1.2rem" /> {title}</strong>
-  <p>{summary}</p>
+  {summary && <p>{summary}</p>}
+  <slot />
   {bullets.length > 0 && (
     <ul>
       {bullets.map((bullet) => <li>{bullet}</li>)}

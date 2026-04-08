@@ -2,37 +2,55 @@
 
 /* --- Custom Fonts --- */
 @font-face {
-  font-family: 'Code New Roman';
-  src: url('/wiki-bioinfo/fonts/code-new-roman.woff2') format('woff2'),
-    url('/wiki-bioinfo/fonts/code-new-roman.woff') format('woff');
-  font-weight: normal;
+  font-family: 'BioInfo Sans';
+  src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.otf') format('opentype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range:
+    U+0000-00FF,
+    U+0100-024F,
+    U+0259,
+    U+1E00-1EFF,
+    U+2000-206F,
+    U+20A0-20CF,
+    U+2100-214F,
+    U+2190-22FF,
+    U+2460-24FF,
+    U+25A0-27BF;
+}
+
+@font-face {
+  font-family: 'BioInfo Sans';
+  src: url('/wiki-bioinfo/fonts/ResourceHanRoundedCN-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range:
+    U+2E80-2EFF,
+    U+2F00-2FDF,
+    U+3000-303F,
+    U+3040-30FF,
+    U+3100-312F,
+    U+31A0-31BF,
+    U+3400-4DBF,
+    U+4E00-9FFF,
+    U+F900-FAFF,
+    U+FF00-FFEF;
 }
 
 @font-face {
   font-family: 'Code New Roman';
-  src: url('/wiki-bioinfo/fonts/code-new-roman-bold.woff2') format('woff2'),
-    url('/wiki-bioinfo/fonts/code-new-roman-bold.woff') format('woff');
-  font-weight: bold;
+  src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.otf') format('opentype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
 
 @font-face {
   font-family: 'Resource Han Rounded CN';
-  src: url('/wiki-bioinfo/fonts/resource-han-rounded-cn-regular.woff2') format('woff2'),
-    url('/wiki-bioinfo/fonts/resource-han-rounded-cn-regular.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Resource Han Rounded CN';
-  src: url('/wiki-bioinfo/fonts/resource-han-rounded-cn-bold.woff2') format('woff2'),
-    url('/wiki-bioinfo/fonts/resource-han-rounded-cn-bold.woff') format('woff');
-  font-weight: bold;
+  src: url('/wiki-bioinfo/fonts/ResourceHanRoundedCN-Regular.ttf') format('truetype');
+  font-weight: 400;
   font-style: normal;
   font-display: swap;
 }
@@ -59,7 +77,9 @@
   --bioinfo-card-shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
   --bioinfo-transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  --sl-font-system: 'Resource Han Rounded CN', 'Code New Roman', 'Inter Variable', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  --sl-font-system: 'BioInfo Sans', 'Resource Han Rounded CN', 'Code New Roman', 'Inter Variable', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  --sl-font-system-mono: 'Code New Roman', 'Resource Han Rounded CN', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+  --sl-font-mono: 'Code New Roman', 'Resource Han Rounded CN', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
   --sl-text-lg: 1.1rem;
   --sl-line-height: 1.75;
   --sl-line-height-headings: 1.25;
@@ -203,11 +223,14 @@ nav.sidebar a[aria-current='page'] {
 .header-meta-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: stretch;
   gap: 1.25rem;
   margin: 2rem 0;
 }
 
 .header-meta-card {
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-card-radius);
   background: var(--bioinfo-card-bg);
@@ -237,9 +260,18 @@ nav.sidebar a[aria-current='page'] {
 
 .header-meta-card strong {
   display: block;
+  flex: 1;
   color: var(--sl-color-white);
   font-size: 1.1rem;
   line-height: 1.4;
+  text-wrap: pretty;
+}
+
+.header-meta-card .meta-detail {
+  margin: 0.75rem 0 0;
+  color: var(--sl-color-gray-3);
+  font-size: 0.95rem;
+  line-height: 1.6;
 }
 
 /* --- Component: SummaryBox --- */
@@ -262,6 +294,20 @@ nav.sidebar a[aria-current='page'] {
   font-size: 1.2rem;
   margin-bottom: 1rem;
   color: var(--sl-color-accent);
+}
+
+.summary-card> :not(strong) {
+  margin-top: 1rem;
+}
+
+.summary-card> :not(strong):first-child {
+  margin-top: 0;
+}
+
+.summary-card p,
+.summary-card ul,
+.summary-card ol {
+  margin-bottom: 0;
 }
 
 /* --- Component: SectionNavigator --- */
@@ -478,6 +524,31 @@ nav.sidebar a[aria-current='page'] {
   font-size: 0.9rem;
 }
 
+/* --- Component: Mermaid Diagram --- */
+.mermaid-diagram {
+  margin: 1.5rem 0;
+  padding: 1rem;
+  border: 1px solid var(--bioinfo-card-border);
+  border-radius: var(--bioinfo-card-radius);
+  background: var(--bioinfo-card-bg);
+  backdrop-filter: var(--bioinfo-card-glass);
+  box-shadow: var(--bioinfo-card-shadow);
+  overflow-x: auto;
+}
+
+.mermaid-diagram svg {
+  display: block;
+  width: 100%;
+  height: auto;
+  min-width: 32rem;
+}
+
+@media screen and (max-width: 50rem) {
+  .mermaid-diagram svg {
+    min-width: 0;
+  }
+}
+
 /* --- Component: NoteCard (Prerequisites, ToolMapping, Pitfalls) --- */
 .note-card {
   border: 1px solid var(--bioinfo-card-border);
@@ -509,6 +580,16 @@ nav.sidebar a[aria-current='page'] {
 
 .note-card li+li {
   margin-top: 0.5rem;
+}
+
+.note-card a {
+  color: var(--sl-color-accent);
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+.note-card> :last-child {
+  margin-bottom: 0;
 }
 
 .pitfalls-card {

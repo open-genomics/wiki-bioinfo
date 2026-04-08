@@ -8,8 +8,8 @@ const base = import.meta.env.BASE_URL;
 </StarlightHead>
 
 <!-- Preload critical fonts for better performance -->
-<link rel="preload" href={`${base}fonts/resource-han-rounded-cn-regular.woff2`} as="font" type="font/woff2" crossorigin>
-<link rel="preload" href={`${base}fonts/code-new-roman.woff2`} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={`${base}fonts/ResourceHanRoundedCN-Regular.ttf`} as="font" type="font/ttf" crossorigin>
+<link rel="preload" href={`${base}fonts/CodeNewRomanNerdFontMono-Regular.otf`} as="font" type="font/otf" crossorigin>
 
 <script>
   interface ReadingProgressState {
@@ -99,5 +99,144 @@ const base = import.meta.env.BASE_URL;
   if (!state.pageLoadBound) {
     document.addEventListener('astro:page-load', initReadingProgress);
     state.pageLoadBound = true;
+  }
+</script>
+
+<script>
+  interface MermaidApi {
+    initialize: (config: Record<string, unknown>) => void;
+    render: (id: string, source: string) => Promise<{ svg: string; bindFunctions?: (element: Element) => void }>;
+  }
+
+  interface MermaidRenderState {
+    mermaid?: MermaidApi;
+    loadingPromise?: Promise<MermaidApi>;
+    pageLoadBound: boolean;
+    renderCount: number;
+  }
+
+  type MermaidWindow = Window & {
+    __bioinfoMermaidState?: MermaidRenderState;
+  };
+
+  function getMermaidState() {
+    const win = window as MermaidWindow;
+
+    if (!win.__bioinfoMermaidState) {
+      win.__bioinfoMermaidState = {
+        pageLoadBound: false,
+        renderCount: 0,
+      };
+    }
+
+    return win.__bioinfoMermaidState;
+  }
+
+  function getMermaidCodeBlocks() {
+    return Array.from(document.querySelectorAll('pre code, [data-language="mermaid"] code')).filter((node): node is HTMLElement => {
+      const code = node as HTMLElement;
+      const className = code.className || '';
+      const codeLanguage = code.dataset.language;
+      const preLanguage = code.closest('pre')?.dataset.language;
+      const wrapperLanguage = code.closest('[data-language]')?.getAttribute('data-language');
+
+      return className.includes('language-mermaid')
+        || codeLanguage === 'mermaid'
+        || preLanguage === 'mermaid'
+        || wrapperLanguage === 'mermaid';
+    });
+  }
+
+  function getMermaidSource(code: HTMLElement) {
+    const source = code.innerText?.trim() || code.textContent?.trim() || '';
+    return source.replace(/\u00a0/g, ' ');
+  }
+
+  async function loadMermaid() {
+    const state = getMermaidState();
+
+    if (state.mermaid) {
+      return state.mermaid;
+    }
+
+    if (!state.loadingPromise) {
+      const importMermaid = new Function('specifier', 'return import(specifier)') as (specifier: string) => Promise<{ default: MermaidApi }>;
+
+      state.loadingPromise = importMermaid('https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs')
+        .then((module) => {
+          const mermaid = module.default;
+
+          mermaid.initialize({
+            startOnLoad: false,
+            securityLevel: 'loose',
+            theme: 'default',
+            flowchart: {
+              htmlLabels: true,
+              useMaxWidth: true,
+            },
+          });
+
+          state.mermaid = mermaid;
+          return mermaid;
+        });
+    }
+
+    return state.loadingPromise!;
+  }
+
+  async function renderMermaidDiagrams() {
+    const mermaid = await loadMermaid();
+    const codeBlocks = getMermaidCodeBlocks();
+
+    await Promise.all(codeBlocks.map(async (code) => {
+      const pre = code.closest('pre');
+      const host = pre?.closest('figure') ?? pre;
+
+      if (!pre || !host || host instanceof HTMLElement === false) {
+        return;
+      }
+
+      if (host.dataset.mermaidProcessed === 'true') {
+        return;
+      }
+
+      const source = getMermaidSource(code);
+      if (!source) {
+        return;
+      }
+
+      host.dataset.mermaidProcessed = 'pending';
+
+      try {
+        const state = getMermaidState();
+        state.renderCount += 1;
+        const renderId = `bioinfo-mermaid-${state.renderCount}`;
+        const { svg, bindFunctions } = await mermaid.render(renderId, source);
+        const container = document.createElement('div');
+        container.className = 'mermaid-diagram';
+        container.innerHTML = svg;
+        bindFunctions?.(container);
+        host.replaceWith(container);
+      } catch (error) {
+        host.dataset.mermaidProcessed = 'error';
+        console.error('Failed to render mermaid diagram:', error);
+      }
+    }));
+  }
+
+  function initMermaidDiagrams() {
+    void renderMermaidDiagrams();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initMermaidDiagrams, { once: true });
+  } else {
+    initMermaidDiagrams();
+  }
+
+  const mermaidState = getMermaidState();
+  if (!mermaidState.pageLoadBound) {
+    document.addEventListener('astro:page-load', initMermaidDiagrams);
+    mermaidState.pageLoadBound = true;
   }
 </script>

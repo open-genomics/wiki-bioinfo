@@ -8,6 +8,8 @@ interface Props {
   subject?: string;
   topic?: string;
   prereqs?: string[];
+  estimatedTime?: string;
+  difficulty?: string;
 }
 
 import { Icon } from '@astrojs/starlight/components';
@@ -21,43 +23,137 @@ const {
   subject,
   topic,
   prereqs = [],
+  estimatedTime,
+  difficulty,
 } = Astro.props;
 
-const sectionNameMap: Record<string, string> = {
-  Foundations: '基础与数学',
-  Applications: '分析方向与案例',
-  'Core Methods': '核心方法',
-  'Data References': '数据、注释与资源',
+const sectionMetaMap: Record<string, { title: string; description: string }> = {
+  Foundations: {
+    title: '基础与数学',
+    description: '对象层、坐标系统、coverage 与概率图模型的共同语言。',
+  },
+  Applications: {
+    title: '分析方向与案例',
+    description: '把基础对象与算法方法重新放回真实分析任务与工作流。',
+  },
+  'Core Methods': {
+    title: '核心方法',
+    description: '索引、比对、组装与概率模型构成的核心算法主轴。',
+  },
+  'Data References': {
+    title: '数据、注释与资源',
+    description: '参考版本、注释体系、数据格式与数据库的统一入口。',
+  },
+  Appendix: {
+    title: '附录',
+    description: '术语、索引与参考资料入口，帮助快速定位相关主题。',
+  },
 };
 
-const primaryValue = section ? (sectionNameMap[section] ?? section) : (subject ?? title ?? 'BioInfo Wiki');
-const secondaryValue = audience ?? topic ?? description ?? '帮助你快速建立这个主题的阅读目标与上下文。';
-const tertiaryValue = startWith ?? (prereqs.length > 0 ? prereqs.join('、') : '建议先建立相关基础对象与方法直觉，再进入本页。');
+const sectionMeta = section ? sectionMetaMap[section] : undefined;
+const primaryValue = sectionMeta?.title ?? section ?? subject ?? title ?? 'BioInfo Wiki';
+const primaryDetail = sectionMeta?.description
+  ?? (section
+    ? '帮助你快速判断本页所属知识层级与在全站中的位置。'
+    : '帮助你快速判断当前主题与全站知识图谱的连接方式。');
+
+const hasAudience = Boolean(audience);
+const hasTopic = Boolean(topic);
+const hasDescription = Boolean(description);
+const hasReadingMeta = Boolean(estimatedTime || difficulty);
+const hasPathInfo = Boolean(startWith || prereqs.length > 0);
+
+const secondaryLabel = hasAudience
+  ? '适合谁读'
+  : hasTopic
+    ? '核心主题'
+    : hasDescription
+      ? '这一页讲什么'
+      : hasReadingMeta
+        ? '阅读信息'
+        : '阅读目标';
+
+const secondaryValue = hasAudience
+  ? '建议在以下阶段阅读'
+  : hasTopic
+    ? topic!
+    : hasDescription
+      ? '快速建立问题边界'
+      : difficulty
+        ? `难度：${difficulty}`
+        : estimatedTime
+          ? '阅读时长'
+          : '帮助建立阅读上下文';
+
+const secondaryDetail = hasAudience
+  ? audience!
+  : hasDescription
+    ? description!
+    : hasTopic
+      ? (description ?? '帮助你快速抓住本页的核心问题。')
+      : estimatedTime && difficulty
+        ? `预计阅读：${estimatedTime}`
+        : estimatedTime
+          ? `预计阅读：${estimatedTime}`
+          : difficulty
+            ? `内容难度：${difficulty}`
+            : '先判断这页与你当前问题的关系，再决定是否深入展开。';
+
+const pathDetail = startWith
+  ? (prereqs.length > 0 ? `${startWith}；相关前置：${prereqs.join('、')}` : startWith)
+  : (prereqs.length > 0 ? `相关前置：${prereqs.join('、')}` : '');
+
+const tertiaryLabel = hasPathInfo
+  ? (startWith ? '建议起点' : '建议前置')
+  : hasReadingMeta && (hasAudience || hasTopic || hasDescription)
+    ? '阅读信息'
+    : '建议前置';
+
+const tertiaryValue = hasPathInfo
+  ? (startWith ? '推荐阅读路径' : '建议先准备相关前置')
+  : hasReadingMeta
+    ? (difficulty ? `难度：${difficulty}` : '阅读时长')
+    : '先建立相关基础对象与方法直觉';
+
+const tertiaryDetail = hasPathInfo
+  ? pathDetail
+  : estimatedTime && difficulty
+    ? `预计阅读：${estimatedTime}`
+    : estimatedTime
+      ? `预计阅读：${estimatedTime}`
+      : difficulty
+        ? `内容难度：${difficulty}`
+        : '建议先建立相关基础对象与方法直觉，再进入本页。';
 
 const cards = [
   {
     icon: 'list-format',
     label: section ? '所属板块' : '当前主题',
     value: primaryValue,
+    detail: primaryDetail,
   },
   {
-    icon: audience ? 'random' : 'document',
-    label: audience ? '适合谁读' : '这一页讲什么',
+    icon: hasAudience ? 'random' : 'document',
+    label: secondaryLabel,
     value: secondaryValue,
+    detail: secondaryDetail,
   },
   {
-    icon: 'right-arrow',
-    label: startWith ? '建议起点' : '建议前置',
+    icon: hasPathInfo ? 'right-arrow' : 'document',
+    label: tertiaryLabel,
     value: tertiaryValue,
+    detail: tertiaryDetail,
   },
-];
+] as const;
+
 ---
 
 <div class="header-meta-grid">
   {cards.map((card) => (
-    <div class="header-meta-card">
+    <section class="header-meta-card">
       <span class="meta-label"><Icon name={card.icon} size="1rem" /> {card.label}</span>
-      <strong>{card.value}</strong>
-    </div>
+      <strong class="meta-value">{card.value}</strong>
+      <p class="meta-detail">{card.detail}</p>
+    </section>
   ))}
 </div>

@@ -1,0 +1,81 @@
+---
+description: ChIP-seq（Chromatin Immunoprecipitation sequencing）通过免疫沉淀与高通量测序，定位蛋白质在基因组上的结合位点，是研究基因调控的核心技术。
+title: "ChIP-seq 概览"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="ChIP-seq 能够以全基因组范围、单碱基分辨率定位特定蛋白质（如转录因子、修饰组蛋白）的结合位点。它将分子生物学的“免疫富集”与计算生物学的“峰调用”完美结合，是解析基因调控网络的标准方法。"
+  bullets={[
+    '掌握 ChIP-seq 的四大核心步骤：交联、片段化、免疫沉淀、测序',
+    '辨析窄峰（Narrow Peaks）与宽峰（Broad Peaks）的生物学含义',
+    '理解 Input 对照在排除基因组背景偏差中的决定性作用',
+    '了解 FRiP、NSC 和 RSC 等关键质量控制指标'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { name: '序列、字符串与坐标系统', href: '/wiki-bioinfo/foundations/sequences-and-strings' }
+  ]}
+/>
+
+## 1. 核心原理：锁定蛋白质的足迹
+
+ChIP-seq 的本质是**比较富集**：通过特异性抗体抓取目标蛋白，将其结合的 DNA 片段从基因组库中“打捞”出来。
+
+### 实验流程
+1.  **交联 (Cross-linking)**：用甲醛将蛋白质与 DNA 固定在一起。
+2.  **片段化 (Fragmentation)**：通过超声波将 DNA 切成 200-500 bp 的小片段。
+3.  **免疫沉淀 (IP)**：加入针对目标蛋白的抗体，拉下结合的片段。
+4.  **测序 (Sequencing)**：洗脱蛋白质，将回收的 DNA 进行高通量测序。
+
+## 2. 数据的形态：两种典型的“峰”
+
+根据目标蛋白的结合特性，信号呈现不同的模式：
+
+<DefinitionList
+  items={[
+    {
+      term: '窄峰 (Narrow Peaks)',
+      definition: '由转录因子（如 CTCF）产生。峰形尖锐（< 1kb），反映了蛋白对特定 Motif 的精确识别。',
+    },
+    {
+      term: '宽峰 (Broad Peaks)',
+      definition: '由特定的组蛋白修饰（如 H3K27me3）产生。分布平缓，可跨越数 kb，反映了染色质的结构域特征。',
+    },
+  ]}
+/>
+
+## 3. 计算分析：从 Reads 到 Peak
+
+### 为什么需要 Input 对照？
+基因组的背景信号并不是均匀的。开放区域天然易碎，比对软件对不同区域有偏好。
+- **逻辑**：只有 ChIP 样本信号**显著高于**同位置的 Input（未经过 IP 的背景数据）时，才被判定为一个真实的 **Peak**。
+
+### 峰调用 (Peak Calling)
+算法（如 **MACS2**）扫描整个基因组：
+- 建立局部泊松分布模型。
+- 计算 ChIP vs Input 的富集显著性（P-value/FDR）。
+- 确定断点，合并重叠的 Reads。
+
+## 4. 质量评估与解释
+
+- **FRiP (Fraction of Reads in Peaks)**：有多少 Reads 真正落在了峰里。如果这个比例太低，说明实验富集效果差。
+- **Motif 富集**：对于转录因子，其峰区域内应显著包含该因子的共有序列（如 PWM 模型）。
+- **基因注释**：峰是在启动子、增强子还是基因体内？这直接暗示了该蛋白对下游基因的调控作用。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'ATAC-seq 概览', to: '/wiki-bioinfo/epigenomics/atac-seq', description: '检测染色质的开放性' },
+    { title: 'MACS2 峰调用', to: '/wiki-bioinfo/epigenomics/macs2-peak-calling', description: '深入统计模型' },
+    { title: '打分矩阵 (PWM)', to: '/wiki-bioinfo/models/pwm-pssm', description: '理解蛋白结合的偏好性' }
+  ]}
+/>

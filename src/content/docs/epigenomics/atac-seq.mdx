@@ -1,0 +1,67 @@
+---
+description: ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）利用 Tn5 转座酶检测开放染色质区域，揭示基因组的调控元件分布。
+title: "ATAC-seq"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="ATAC-seq 是目前研究染色质可及性（Chromatin Accessibility）最主流的技术。它利用 Tn5 转座酶能够“特异性切割开放区域”的特性，仅需少量细胞即可在全基因组范围绘制调控地图。"
+  bullets={[
+    '掌握 Tn5 转座酶的“切割即连接”原理',
+    '理解插入片段长度分布（Insert Size Distribution）如何反映核小体排布',
+    '掌握 Tn5 插入位点的偏移校正逻辑（+4bp / -5bp）',
+    '了解转录因子足迹（Footprinting）分析的算法挑战'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'ChIP-seq 概览', href: '/wiki-bioinfo/epigenomics/chip-seq-overview' },
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' }
+  ]}
+/>
+
+## 1. 核心原理：Tn5 的“降落伞”
+
+ATAC-seq 的精妙之处在于利用了 **Tn5 转座酶** 的生化特性：
+- **开放性偏好**：Tn5 无法进入紧密包裹在核小体里的 DNA，它只能“降落”在没有蛋白遮挡的开放染色质区域。
+- **切割即连接 (Tagmentation)**：Tn5 在切割 DNA 的瞬间，会自动将测序接头连接到切口末端。
+- **意义**：这一步同时完成了片段化和建库，极大地简化了实验流程。
+
+## 2. 数据的统计特征
+
+### 插入片段长度分布
+ATAC-seq 的片段长度分布呈现明显的周期性：
+- **< 100 bp**：对应无核小体区域（Nucleosome-free regions, NFR），通常是转录因子结合的位置。
+- **~200 bp**：对应被单个核小体保护的区域。
+- **~400 bp**：对应两个核小体。
+- **算法应用**：通过对不同长度片段的分离分析，可以区分调控元件的精确位置与核小体的排布。
+
+## 3. 计算校正：Tn5 偏移
+
+在进行单碱基分辨率的分析（如 Footprinting）时，必须校正 Tn5 的插入偏差：
+- **现象**：由于 Tn5 以二聚体形式结合 DNA，其实际切割位置相对于 Reads 的 5' 端存在偏移。
+- **校正逻辑**：
+    - 正链 Read：起始位置 **+ 4 bp**。
+    - 负链 Read：起始位置 **- 5 bp**。
+- **意义**：只有经过此校正，才能准确识别转录因子真正“踩”在 DNA 上的足迹。
+
+## 4. 峰调用 (Peak Calling) 与注释
+
+与 ChIP-seq 类似，ATAC-seq 使用 **MACS2** 识别信号富集区。
+- **关键差异**：ATAC-seq 强调的是“开放性”，因此峰通常对应启动子、增强子和绝缘子。
+- **功能关联**：通过将峰与最近的基因或已知的调控网络关联，推断该区域的生物学功能。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'ChIP-seq 概览', to: '/wiki-bioinfo/epigenomics/chip-seq-overview', description: '对比“结合”与“开放”' },
+    { title: 'MACS2 峰调用', to: '/wiki-bioinfo/epigenomics/macs2-peak-calling', description: '深入统计检测算法' },
+    { title: 'Footprinting 算法', to: '/wiki-bioinfo/epigenomics/footprinting-algorithms', description: '识别精准的蛋白结合足迹' }
+  ]}
+/>

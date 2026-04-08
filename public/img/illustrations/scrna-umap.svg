@@ -1,0 +1,25 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#fcfdff"/>
+  <style>.title{font:700 34px sans-serif;fill:#183153}.small{font:500 16px sans-serif;fill:#456}.lab{font:600 18px sans-serif;fill:#183153}</style>
+  <text x="60" y="60" class="title">scRNA-seq UMAP clusters</text>
+  <ellipse cx="250" cy="260" rx="120" ry="90" fill="#8ec5ff" opacity="0.85"/>
+  <ellipse cx="480" cy="180" rx="95" ry="75" fill="#ffb0b0" opacity="0.85"/>
+  <ellipse cx="520" cy="420" rx="110" ry="82" fill="#ffd488" opacity="0.85"/>
+  <ellipse cx="800" cy="250" rx="130" ry="92" fill="#9ddca5" opacity="0.85"/>
+  <ellipse cx="920" cy="460" rx="110" ry="80" fill="#c7afff" opacity="0.85"/>
+  <circle cx="210" cy="240" r="7" fill="#2a5f9e"/><circle cx="235" cy="280" r="7" fill="#2a5f9e"/><circle cx="280" cy="250" r="7" fill="#2a5f9e"/><circle cx="265" cy="215" r="7" fill="#2a5f9e"/>
+  <circle cx="450" cy="170" r="7" fill="#b64f5e"/><circle cx="510" cy="180" r="7" fill="#b64f5e"/><circle cx="480" cy="145" r="7" fill="#b64f5e"/><circle cx="495" cy="215" r="7" fill="#b64f5e"/>
+  <circle cx="470" cy="395" r="7" fill="#b07b1f"/><circle cx="540" cy="410" r="7" fill="#b07b1f"/><circle cx="500" cy="450" r="7" fill="#b07b1f"/><circle cx="560" cy="445" r="7" fill="#b07b1f"/>
+  <circle cx="760" cy="240" r="7" fill="#347647"/><circle cx="825" cy="255" r="7" fill="#347647"/><circle cx="790" cy="205" r="7" fill="#347647"/><circle cx="860" cy="280" r="7" fill="#347647"/>
+  <circle cx="890" cy="450" r="7" fill="#6d4ab0"/><circle cx="950" cy="480" r="7" fill="#6d4ab0"/><circle cx="920" cy="430" r="7" fill="#6d4ab0"/><circle cx="980" cy="445" r="7" fill="#6d4ab0"/>
+  <text x="200" y="145" class="lab">T cells</text>
+  <text x="445" y="85" class="lab">B cells</text>
+  <text x="470" y="535" class="lab">Myeloid</text>
+  <text x="770" y="120" class="lab">Epithelial</text>
+  <text x="900" y="575" class="lab">Cycling</text>
+  <line x1="120" y1="620" x2="250" y2="620" stroke="#3c5874" stroke-width="3"/>
+  <line x1="120" y1="620" x2="120" y2="500" stroke="#3c5874" stroke-width="3"/>
+  <text x="260" y="628" class="small">UMAP1</text>
+  <g transform="translate(92,560) rotate(-90)"><text class="small">UMAP2</text></g>
+  <text x="58" y="670" class="small">UMAP 只保留局部邻域结构：它非常适合展示 cluster，但坐标轴本身通常没有直接生物学意义。</text>
+</svg>

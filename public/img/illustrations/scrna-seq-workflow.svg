@@ -1,0 +1,54 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#f8fbff"/>
+  <style>
+    .title { font: 700 34px sans-serif; fill: #183153; }
+    .label { font: 600 21px sans-serif; fill: #183153; }
+    .small { font: 500 16px sans-serif; fill: #37516b; }
+    .box { fill: white; stroke: #b8d7f0; stroke-width: 2; rx: 18; }
+    .arrow { stroke: #4f8cc9; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4f8cc9"/>
+    </marker>
+  </defs>
+  <text x="60" y="60" class="title">scRNA-seq workflow</text>
+  <rect x="55" y="110" width="180" height="110" class="box"/>
+  <text x="88" y="155" class="label">样本解离</text>
+  <text x="78" y="188" class="small">组织解离为单细胞悬液</text>
+  <rect x="285" y="110" width="180" height="110" class="box"/>
+  <text x="315" y="155" class="label">液滴建库</text>
+  <text x="318" y="188" class="small">Barcode + UMI 标记</text>
+  <rect x="515" y="110" width="180" height="110" class="box"/>
+  <text x="570" y="155" class="label">测序</text>
+  <text x="544" y="188" class="small">FASTQ reads 输出</text>
+  <rect x="745" y="110" width="180" height="110" class="box"/>
+  <text x="788" y="155" class="label">定量</text>
+  <text x="768" y="188" class="small">Barcode / UMI 去重</text>
+  <rect x="975" y="110" width="180" height="110" class="box"/>
+  <text x="1018" y="155" class="label">矩阵</text>
+  <text x="998" y="188" class="small">gene × cell counts</text>
+  <path d="M235 165 H285" class="arrow"/>
+  <path d="M465 165 H515" class="arrow"/>
+  <path d="M695 165 H745" class="arrow"/>
+  <path d="M925 165 H975" class="arrow"/>
+  <rect x="140" y="340" width="220" height="120" class="box"/>
+  <text x="197" y="385" class="label">QC</text>
+  <text x="176" y="417" class="small">线粒体比例 / 基因数过滤</text>
+  <rect x="400" y="340" width="220" height="120" class="box"/>
+  <text x="435" y="385" class="label">归一化 + HVG</text>
+  <text x="458" y="417" class="small">筛选高变基因</text>
+  <rect x="660" y="340" width="220" height="120" class="box"/>
+  <text x="728" y="385" class="label">PCA</text>
+  <text x="691" y="417" class="small">构建低维嵌入与邻域图</text>
+  <rect x="920" y="340" width="220" height="120" class="box"/>
+  <text x="965" y="385" class="label">聚类注释</text>
+  <text x="954" y="417" class="small">UMAP + marker genes</text>
+  <path d="M250 460 H400" class="arrow"/>
+  <path d="M620 400 H660" class="arrow"/>
+  <path d="M880 400 H920" class="arrow"/>
+  <path d="M1065 220 V320" class="arrow"/>
+  <circle cx="160" cy="585" r="17" fill="#87c4ff"/><circle cx="195" cy="560" r="15" fill="#ff9fb2"/><circle cx="225" cy="590" r="17" fill="#ffd27f"/>
+  <circle cx="975" cy="575" r="18" fill="#8fd3a8"/><circle cx="1015" cy="545" r="16" fill="#c4a7ff"/><circle cx="1055" cy="585" r="18" fill="#ffb980"/>
+  <text x="58" y="650" class="small">从原始 reads 到单细胞图谱，核心是先获得可靠 count matrix，再做 QC、降维和细胞类型注释。</text>
+</svg>

@@ -1,0 +1,6 @@
+/* KaTeX display math overflow handling */
+.katex-display {
+  padding: 0.5rem 0;
+  overflow-x: auto;
+  overflow-y: hidden;
+}

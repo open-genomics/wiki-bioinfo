@@ -1,0 +1,40 @@
+<svg width="760" height="460" viewBox="0 0 760 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="760" height="460" rx="28" fill="#F5FEFE"/>
+  <text x="64" y="72" fill="#0A6162" font-size="28" font-family="Arial" font-weight="700">de Bruijn graph 示意</text>
+  <text x="64" y="106" fill="#3A5E5F" font-size="18" font-family="Arial">顶点表示 (k-1)-mer，边表示 k-mer，路径对应序列重建。</text>
+  <g stroke="#0F8B8D" stroke-width="8" stroke-linecap="round">
+    <path d="M150 220H256"/>
+    <path d="M318 220H424"/>
+    <path d="M486 220H592"/>
+    <path d="M256 220C278 140 342 122 390 150"/>
+    <path d="M424 150C470 124 538 142 560 220"/>
+    <path d="M256 220C278 300 342 318 390 290"/>
+    <path d="M424 290C470 316 538 298 560 220"/>
+  </g>
+  <g fill="white" stroke="#0F8B8D" stroke-width="6">
+    <circle cx="120" cy="220" r="34"/>
+    <circle cx="288" cy="220" r="34"/>
+    <circle cx="456" cy="220" r="34"/>
+    <circle cx="624" cy="220" r="34"/>
+    <circle cx="396" cy="146" r="34" fill="#DFF8F8"/>
+    <circle cx="396" cy="294" r="34" fill="#DFF8F8"/>
+  </g>
+  <g fill="#163536" font-size="20" font-family="Arial" font-weight="700" text-anchor="middle">
+    <text x="120" y="227">AAG</text>
+    <text x="288" y="227">AGA</text>
+    <text x="456" y="227">GAT</text>
+    <text x="624" y="227">ATT</text>
+    <text x="396" y="153">TCT</text>
+    <text x="396" y="301">CTC</text>
+  </g>
+  <g fill="#3A5E5F" font-size="17" font-family="Arial">
+    <text x="174" y="208">AAGA</text>
+    <text x="342" y="208">AGAT</text>
+    <text x="510" y="208">GATT</text>
+    <text x="288" y="144">TTCT</text>
+    <text x="450" y="140">TCTA</text>
+    <text x="288" y="330">TCTC</text>
+    <text x="448" y="334">CTCT</text>
+  </g>
+  <text x="64" y="406" fill="#3A5E5F" font-size="18" font-family="Arial">分叉来自重复、错误或 coverage 变化；图清理后才能得到更稳定的 contig。</text>
+</svg>

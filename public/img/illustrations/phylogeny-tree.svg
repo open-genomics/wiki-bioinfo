@@ -1,0 +1,26 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#fbfcff"/>
+  <style>.title{font:700 34px sans-serif;fill:#183153}.lab{font:600 20px sans-serif;fill:#183153}.small{font:500 16px sans-serif;fill:#456}</style>
+  <text x="60" y="60" class="title">Phylogenetic tree concepts</text>
+  <line x1="180" y1="560" x2="320" y2="560" stroke="#557799" stroke-width="6"/>
+  <line x1="320" y1="460" x2="320" y2="560" stroke="#557799" stroke-width="6"/>
+  <line x1="320" y1="460" x2="490" y2="460" stroke="#557799" stroke-width="6"/>
+  <line x1="490" y1="360" x2="490" y2="460" stroke="#557799" stroke-width="6"/>
+  <line x1="490" y1="360" x2="700" y2="360" stroke="#557799" stroke-width="6"/>
+  <line x1="700" y1="260" x2="700" y2="360" stroke="#557799" stroke-width="6"/>
+  <line x1="700" y1="260" x2="940" y2="260" stroke="#557799" stroke-width="6"/>
+  <line x1="700" y1="320" x2="940" y2="320" stroke="#557799" stroke-width="6"/>
+  <line x1="490" y1="430" x2="820" y2="430" stroke="#557799" stroke-width="6"/>
+  <line x1="490" y1="520" x2="760" y2="520" stroke="#557799" stroke-width="6"/>
+  <text x="960" y="267" class="lab">Human</text>
+  <text x="960" y="327" class="lab">Chimp</text>
+  <text x="840" y="437" class="lab">Mouse</text>
+  <text x="780" y="527" class="lab">Yeast</text>
+  <circle cx="700" cy="260" r="9" fill="#ffb36b"/>
+  <circle cx="490" cy="360" r="9" fill="#8fd3a8"/>
+  <circle cx="320" cy="460" r="9" fill="#c3a4ff"/>
+  <text x="720" y="220" class="lab">最近共同祖先</text>
+  <text x="520" y="330" class="lab">内部节点</text>
+  <text x="210" y="600" class="small">根</text>
+  <text x="60" y="650" class="small">系统发育树把序列差异、距离或模型似然转成树结构，用来表示样本、物种或基因家族间的进化关系。</text>
+</svg>

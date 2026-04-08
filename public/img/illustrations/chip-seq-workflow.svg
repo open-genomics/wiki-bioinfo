@@ -1,0 +1,25 @@
+<svg width="1200" height="700" viewBox="0 0 1200 700" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1200" height="700" fill="#fbfcff"/>
+  <style>
+    .title { font: 700 34px sans-serif; fill: #183153; }
+    .label { font: 600 22px sans-serif; fill: #183153; }
+    .small { font: 500 16px sans-serif; fill: #456; }
+    .box { fill: white; stroke: #b8d7f0; stroke-width: 2; rx: 16; }
+    .arrow { stroke: #4f8cc9; stroke-width: 4; fill: none; marker-end: url(#arrow); }
+  </style>
+  <defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto"><path d="M0 0 L10 5 L0 10 z" fill="#4f8cc9"/></marker></defs>
+  <text x="60" y="60" class="title">ChIP-seq workflow</text>
+  <rect x="70" y="120" width="170" height="100" class="box"/><text x="112" y="160" class="label">交联</text><text x="98" y="190" class="small">固定蛋白-DNA 复合物</text>
+  <rect x="280" y="120" width="170" height="100" class="box"/><text x="320" y="160" class="label">打断</text><text x="308" y="190" class="small">超声或酶切染色质</text>
+  <rect x="490" y="120" width="170" height="100" class="box"/><text x="525" y="160" class="label">免疫沉淀</text><text x="525" y="190" class="small">抗体富集目标片段</text>
+  <rect x="700" y="120" width="170" height="100" class="box"/><text x="750" y="160" class="label">测序</text><text x="736" y="190" class="small">得到 FASTQ 数据</text>
+  <rect x="910" y="120" width="170" height="100" class="box"/><text x="960" y="160" class="label">比对</text><text x="932" y="190" class="small">reads 映射到参考基因组</text>
+  <path d="M240 170 H280" class="arrow"/><path d="M450 170 H490" class="arrow"/><path d="M660 170 H700" class="arrow"/><path d="M870 170 H910" class="arrow"/>
+  <rect x="210" y="360" width="220" height="120" class="box"/><text x="270" y="405" class="label">峰调用</text><text x="243" y="438" class="small">MACS2 / MACS3，对比 input 背景</text>
+  <rect x="490" y="360" width="220" height="120" class="box"/><text x="550" y="405" class="label">峰注释</text><text x="530" y="438" class="small">promoter / enhancer / gene body</text>
+  <rect x="770" y="360" width="220" height="120" class="box"/><text x="816" y="405" class="label">motif 分析</text><text x="817" y="438" class="small">寻找可能的 TF 结合模式</text>
+  <path d="M995 220 V320" class="arrow"/><path d="M430 420 H490" class="arrow"/><path d="M710 420 H770" class="arrow"/>
+  <path d="M110 590 C180 560, 250 560, 320 590 S460 620, 530 590 S670 560, 740 590 S880 620, 950 590" fill="none" stroke="#ff7e79" stroke-width="5"/>
+  <path d="M110 610 C180 605, 250 605, 320 610 S460 620, 530 610 S670 605, 740 610 S880 620, 950 610" fill="none" stroke="#cfd9e6" stroke-width="5"/>
+  <text x="65" y="655" class="small">ChIP-seq 关注的是“局部富集”而不是绝对覆盖。核心任务是识别显著高于背景的 peaks，并结合注释和 motif 解释其调控意义。</text>
+</svg>

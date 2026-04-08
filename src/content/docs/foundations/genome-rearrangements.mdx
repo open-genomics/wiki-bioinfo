@@ -6,12 +6,23 @@ title: "基因组重排与反转排序"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
 <SummaryBox
   summary="基因组重排研究物种进化过程中基因组结构的变化，特别是通过反转（inversion）事件改变基因顺序。反转排序问题是要找到将一个基因组排列转换为目标排列所需的最少反转次数。"
   bullets={[
     '理解同源区块（synteny blocks）和基因组重排的生物学背景',
     '掌握反转排序问题的形式化定义和贪心算法',
-    '了解断点（breakpoints）概念和改进的贪心策略'
+    '了解断点（breakpoints）概念和改进的贪心策略',
+    '理解近似算法（Approximation Algorithms）在重排问题中的重要性'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki/foundations/algorithms-and-complexity' },
+    { name: '贪心算法基础', href: '/wiki/foundations/algorithms-and-complexity' },
+    { name: '近似算法', href: '/wiki/foundations/approximation-algorithms' },
   ]}
 />
 
@@ -123,17 +134,15 @@ SIMPLEREVERSALSORT(π)
 步骤5： 1 2 3 4 5 6  (反转位置 5-6，prefix = 6，完成)
 ```
 
-### 算法的局限性
+### 算法局限与 Pancake Flipping 问题
 
-这个贪心算法并不总是最优的。考虑排列 π = 6 1 2 3 4 5：
+这个贪心算法并不总是最优的。考虑排列 $\pi = 612345$：
 
-- 贪心算法需要 5 步
-- 但实际上只需要 2 步：
-  ```
-  6 1 2 3 4 5 → 5 4 3 2 1 6 → 1 2 3 4 5 6
-  ```
+- 贪心算法需要 5 步：$612345 \to 162345 \to 126345 \to 123645 \to 123465 \to 123456$
+- 但实际上只需要 2 步：$612345 \to 543216 \to 123456$
 
-问题在于贪心策略过于"短视"，只考虑增加前缀长度，而没有考虑全局最优。
+**Pancake Flipping Problem (煎饼排序问题)**：
+这是重排问题的一个经典变体，要求只能进行**前缀反转**（prefix reversals）。1970年代，哈佛大学本科生 Bill Gates（即后来的微软创始人）曾参与研究该问题，证明了任何长度为 $n$ 的排列可以在 $\frac{5}{3}(n+1)$ 次翻转内完成排序。目前该问题在一般情况下的确切复杂度仍未完全解决。
 
 ## 改进的贪心算法：基于断点
 
@@ -238,7 +247,10 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 
 ## 相关页面
 
-- [动态规划算法](/docs/applications/dynamic-programming)
-- [贪心算法](/docs/foundations/algorithms-and-complexity)
-- [近似算法](/docs/foundations/approximation-algorithms)
-- [图算法](/docs/foundations/graph-algorithms)
+<RelatedLinks
+  links={[
+    { title: '近似算法', to: '/wiki/foundations/approximation-algorithms', description: '理解近似比与性能保证' },
+    { title: '贪心算法', to: '/wiki/foundations/algorithms-and-complexity', description: '基础算法策略' },
+    { title: '曼哈顿旅游问题', to: '/wiki/foundations/manhattan-tourist', description: '动态规划的路径模型' }
+  ]}
+/>

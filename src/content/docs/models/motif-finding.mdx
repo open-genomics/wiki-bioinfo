@@ -7,12 +7,24 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
 <SummaryBox
   summary="Motif 寻找是在多条序列中发现反复出现且具有生物学意义的统计模式：这些模式不是完全一致的字符串，而是带有位置偏好的概率模型。"
   bullets={[
     '核心是从观测数据中提取位置相关的统计偏好',
     'PFM、PWM 和共识序列是三种经典的表示方法',
+    '穷举搜索、贪心搜索和期望最大化（EM）是常用的算法策略',
     '它是 motif discovery 的概念基础，后续算法都基于此表示'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '穷举搜索', href: '/wiki/foundations/exhaustive-search' },
+    { name: '贪心算法', href: '/wiki/foundations/algorithms-and-complexity' },
+    { name: '概率与图基础', href: '/wiki/foundations/probability-and-graphs' },
   ]}
 />
 
@@ -95,7 +107,30 @@ $$
 
 信息含量越高，说明该位置越保守。
 
-## 算法步骤
+### 中间字符串问题 (Median String Problem)
+
+Motif 寻找也可以转化为寻找一个**中间字符串 (Median String)** $v$，使得所有输入序列中与 $v$ 距离最近的 $l$-mer 的距离之和最小。
+
+$$d(v, \text{DNA}) = \sum_{i=1}^t \min_{s_i} d(v, s_i)$$
+
+这是一个穷举搜索问题，复杂度为 $O(4^l \cdot n \cdot t)$。
+
+### 贪心 Motif 搜索 (Greedy Motif Search)
+
+由于穷举搜索速度较慢，实际常用贪心策略（如 CONSENSUS 算法）。它逐个扫描序列，每步选择能使当前 Profile 得分最大化的 $l$-mer。
+
+```text
+GREEDYMOTIFSEARCH(DNA, t, n, l)
+1  bestMotif ← (1, 1, ..., 1)
+2  for s1 ← 1 to n-l+1
+3      for s2 ← 1 to n-l+1
+4          if Score(s, 2, DNA) > Score(bestMotif, 2, DNA)
+5              // 更新最佳起始位置...
+6  for i ← 3 to t
+7      // 贪心选择第 i 条序列的最佳位置
+```
+
+**注意**：贪心算法虽然快，但可能陷入局部最优，错过全局最强的模式。
 
 ### 从实例构建 PFM
 
@@ -351,6 +386,10 @@ motif 寻找与以下场景高度相关：
 
 ## 相关页面
 
-- [隐马尔可夫模型](./hmm.md)
-- [打分矩阵与 gap 罚分](../alignment/scoring-matrices.md)
-- [数据库与资源](../databases/common-resources.md)
+<RelatedLinks
+  links={[
+    { title: '隐马尔可夫模型', to: '/wiki/models/hmm', description: '更复杂的序列状态建模' },
+    { title: '穷举搜索', to: '/wiki/foundations/exhaustive-search', description: '中间字符串问题的暴力解法' },
+    { title: '动态规划基础', to: '/wiki/foundations/dynamic-programming-basics', description: '另一种优化搜索策略' }
+  ]}
+/>

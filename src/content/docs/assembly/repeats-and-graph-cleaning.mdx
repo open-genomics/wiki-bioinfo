@@ -315,11 +315,11 @@ Bubble 是指从同一点分出、稍后又重新汇合的两条短路径。
 
 | 算法 | 时间复杂度 | 空间复杂度 | 主要参数 |
 |------|-----------|-----------|---------|
-| Tip Removal | $O(|V| + |E|)$ | $O(L_{max})$ | $L_{max}$, $C_{min}$ |
-| Bubble 识别 | $O(|V| \cdot d^2 \cdot L_{bubble})$ | $O(L_{bubble})$ | $L_{bubble}$, $S_{min}$ |
-| Bubble 合并 | $O(|B| \cdot L_{bubble})$ | $O(L_{bubble})$ | coverage 比值 |
-| 线性压缩 | $O(|V| + |E|)$ | $O(1)$ | 无 |
-| 异常检测 | $O(|E|)$ | $O(1)$ | $Z_{thresh}$ |
+| Tip Removal | O(V+E) | O(L_max) | L_max, C_min |
+| Bubble 识别 | O(V · d² · L_bubble) | O(L_bubble) | L_bubble, S_min |
+| Bubble 合并 | O(B · L_bubble) | O(L_bubble) | coverage 比值 |
+| 线性压缩 | O(V+E) | O(1) | 无 |
+| 异常检测 | O(E) | O(1) | Z_thresh |
 
 其中 $d$ 为平均顶点出度，$|B|$ 为 bubble 数量。
 
@@ -334,11 +334,11 @@ Bubble 是指从同一点分出、稍后又重新汇合的两条短路径。
 输出：清理后的图 G_T
 
 1. G_current = G₀
-2. 对于 `t = 1` 到 `T`：
+2. 对于 t = 1 到 T：
    a. G_current = TipRemoval(G_current)
    b. G_current = BubbleResolution(G_current)
    c. G_current = LinearCompression(G_current)
-   d. 如果 `G_current ≈ G_{t-1}`（收敛）：
+   d. 如果 G_current ≈ G(t-1)（收敛）：
       - break
 3. 返回 G_current
 ```

@@ -1,0 +1,257 @@
+---
+description: 编辑距离、序列比对的基础算法：从编辑距离到全局/局部比对，理解序列相似性的度量与动态规划实现。
+title: "编辑距离与序列比对"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="编辑距离是度量两个字符串相似度的最小编辑操作数，序列比对则通过插入空格使字符串对齐。这两种概念都通过动态规划解决，是生物信息学中最基础的序列比较方法。"
+  bullets={[
+    '编辑距离允许插入、删除和替换操作，适用于长度不同的字符串比较',
+    '全局比对寻求整个字符串的最佳对齐，局部比对只关注相似片段',
+    '动态规划表格填充方法统一解决各种变体问题',
+    '是 BLAST、Needleman-Wunsch 和 Smith-Waterman 等工具的理论基础'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '动态规划基础', href: '/docs/foundations/dynamic-programming-basics' },
+    { name: '曼哈顿游客问题', href: '/docs/foundations/manhattan-tourist-problem' },
+    { name: '序列与字符串', href: '/docs/foundations/sequences-and-strings' },
+  ]}
+/>
+
+## 什么是编辑距离
+
+编辑距离（edit distance）也称 Levenshtein 距离，是将一个字符串转换为另一个字符串所需的最少单字符编辑操作数。每种操作的成本通常为 1：
+
+- **插入**：在字符串中插入一个字符
+- **删除**：删除字符串中的一个字符  
+- **替换**：将一个字符替换为另一个字符
+
+例如，字符串 "TGCATAT" 和 "ATCCGAT" 的编辑距离为 4：
+
+```
+TGCATAT → ATGCATAT (插入 A)
+ATGCATAT → ATGCAAT (删除 T)
+ATGCAAT → ATGCGAT (替换 C→G)
+ATGCGAT → ATCCGAT (替换 G→C)
+```
+
+### 为什么编辑距离重要
+
+传统字符串匹配（如 Hamming 距离）要求字符串等长且位置对应，但生物序列往往：
+
+- 长度不同（插入/删除突变）
+- 位置不对应（移码突变）
+- 包含噪声和变异
+
+编辑距离允许这些变异，是序列相似性搜索的基础。
+
+## 动态规划计算编辑距离
+
+编辑距离通过动态规划计算，时间复杂度 O(nm)，其中 n 和 m 为字符串长度。
+
+### 递推关系
+
+定义 `d[i,j]` 为字符串 v[1..i] 和 w[1..j] 之间的编辑距离：
+
+```
+d[i,j] = min {
+  d[i-1,j] + 1,        // 删除 v[i]
+  d[i,j-1] + 1,        // 插入 w[j] 
+  d[i-1,j-1] + cost    // 替换 v[i] 为 w[j]，cost = 0 如果 v[i]==w[j]，否则 1
+}
+```
+
+初始条件：
+- `d[0,0] = 0`
+- `d[i,0] = i` (删除前 i 个字符)
+- `d[0,j] = j` (插入前 j 个字符)
+
+### 示例
+
+计算 "GATTACA" 和 "GCATGCU" 的编辑距离：
+
+|   |   | G | C | A | T | G | C | U |
+|---|---|---|---|---|---|---|---|---|
+|   | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+| G | 1 | 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+| A | 2 | 1 | 1 | 1 | 2 | 3 | 4 | 5 |
+| T | 3 | 2 | 2 | 2 | 1 | 2 | 3 | 4 |
+| T | 4 | 3 | 3 | 3 | 2 | 1 | 2 | 3 |
+| A | 5 | 4 | 4 | 3 | 3 | 2 | 2 | 3 |
+| C | 6 | 5 | 4 | 4 | 4 | 3 | 2 | 3 |
+| A | 7 | 6 | 5 | 4 | 4 | 3 | 3 | 2 |
+
+最终编辑距离为 2。
+
+## 从编辑距离到序列比对
+
+编辑距离给出相似性度量，但不显示具体如何对齐。序列比对（sequence alignment）通过在字符串中插入空格（gaps）使字符对齐。
+
+比对矩阵的每一列要么是：
+- 两个匹配字符（相同）
+- 两个不匹配字符（不同）
+- 一个字符和一个空格（indel）
+
+### 全局比对 vs 局部比对
+
+- **全局比对**：对齐整个字符串，适用于相似序列（如同源蛋白）
+- **局部比对**：只对齐相似片段，适用于数据库搜索（如 BLAST）
+
+## 全局序列比对
+
+全局比对寻求覆盖整个字符串的对齐，使用 Needleman-Wunsch 算法。
+
+### 得分函数
+
+定义比对得分为匹配字符的奖励减去不匹配和 indel 的惩罚：
+
+- 匹配：+1
+- 不匹配：-1  
+- 空格：-2
+
+### 动态规划
+
+定义 `s[i,j]` 为 v[1..i] 和 w[1..j] 的最优全局比对得分：
+
+```
+s[i,j] = max {
+  s[i-1,j-1] + score(v[i], w[j]),  // 对角线：匹配或不匹配
+  s[i-1,j] + gap_penalty,          // 上方：v 有空格
+  s[i,j-1] + gap_penalty           // 左侧：w 有空格
+}
+```
+
+初始条件：
+- `s[0,0] = 0`
+- `s[i,0] = i × gap_penalty`
+- `s[0,j] = j × gap_penalty`
+
+## 局部序列比对
+
+局部比对只对齐相似片段，使用 Smith-Waterman 算法。
+
+### 关键差异
+
+局部比对允许空对齐（得分 0），所以递推关系变为：
+
+```
+s[i,j] = max {
+  0,                               // 空对齐
+  s[i-1,j-1] + score(v[i], w[j]),  // 对角线
+  s[i-1,j] + gap_penalty,          // 上方
+  s[i,j-1] + gap_penalty           // 左侧
+}
+```
+
+这确保了只有正得分区域被报告。
+
+### 示例：局部比对
+
+```
+v: ATATATAT
+w: TATATATA
+
+局部比对：
+ATATA
+TATA-
+```
+
+得分：4×1 + 1×(-2) = 2
+
+## 带罚分的比对
+
+生物序列比对使用更复杂的得分系统：
+
+### 替换矩阵
+
+- **简单矩阵**：匹配 +1，不匹配 -1
+- **生物学矩阵**：考虑氨基酸相似性
+  - PAM 矩阵：基于进化距离
+  - BLOSUM 矩阵：基于保守区块
+
+### 空位罚分
+
+简单罚分：每个空格 -σ
+
+**仿射空位罚分**（affine gap penalties）更真实：
+- 空位开始：-ρ
+- 空位延伸：-σ
+
+这样惩罚长空位比多个短空位更重。
+
+## 多序列比对
+
+将比对扩展到 k 个序列，形成多序列比对（MSA）。使用三维动态规划，但复杂度高，通常用启发式方法：
+
+- 渐进比对（progressive alignment）
+- 迭代优化
+- 一致性方法
+
+## 应用
+
+- **数据库搜索**：BLAST 使用局部比对快速找到相似序列
+- **基因组比对**：比较不同物种的基因组
+- **蛋白结构预测**：相似序列往往有相似结构
+- **进化分析**：比对揭示突变模式
+
+<DefinitionList
+  items={[
+    {
+      term: "编辑距离 (Edit Distance)",
+      definition: "将一个字符串转换为另一个字符串的最少编辑操作数。允许插入、删除、替换。"
+    },
+    {
+      term: "全局比对 (Global Alignment)",
+      definition: "对齐整个字符串，适用于高度相似的序列，如同源蛋白。"
+    },
+    {
+      term: "局部比对 (Local Alignment)",
+      definition: "只对齐相似片段，适用于数据库搜索，找出序列中的保守域。"
+    },
+    {
+      term: "动态规划 (Dynamic Programming)",
+      definition: "通过填充表格解决最优化问题，避免重复计算子问题。"
+    },
+    {
+      term: "得分矩阵 (Scoring Matrix)",
+      definition: "定义字符匹配、不匹配和空位的得分，如 PAM 或 BLOSUM 矩阵。"
+    }
+  ]}
+/>
+
+<RelatedLinks
+  links={[
+    {
+      title: '动态规划基础',
+      to: '/docs/foundations/dynamic-programming-basics',
+      label: '前置概念',
+      description: '理解 DP 的核心思想和表格填充方法。'
+    },
+    {
+      title: '曼哈顿游客问题',
+      to: '/docs/foundations/manhattan-tourist-problem',
+      label: '类比',
+      description: 'DP 在网格上的应用，与序列比对的递推关系相似。'
+    },
+    {
+      title: '穷举搜索',
+      to: '/docs/foundations/exhaustive-search',
+      label: '对比',
+      description: '理解为什么穷举搜索在序列比对中不可行。'
+    },
+    {
+      title: 'Motif 寻找',
+      to: '/docs/models/motif-finding',
+      label: '应用',
+      description: '比对技术在 motif discovery 中的应用。'
+    }
+  ]}
+/>

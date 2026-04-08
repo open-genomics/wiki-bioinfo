@@ -1,0 +1,87 @@
+---
+description: 曼哈顿旅游问题（Manhattan Tourist Problem）将动态规划抽象为网格中的最长路径问题，是序列比对算法的直观模型。
+title: "曼哈顿旅游问题"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="想象你是一个在曼哈顿旅游的游客，想从 (0,0) 走到 (n,m)，每条街道（边）都有不同数量的景点。你的目标是走过景点总数最多的路径。"
+  bullets={[
+    '将序列比对问题转化为网格图中的路径搜寻',
+    '引入了二维动态规划的状态转移思想',
+    '通过 DAG（有向无环图）处理非规则网格',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '换钱问题', href: '/wiki/foundations/change-problem' },
+    { name: '概率与图基础', href: '/wiki/foundations/probability-and-graphs' },
+  ]}
+/>
+
+## 问题模型
+
+给定一个 $n \times m$ 的网格，每条水平边和垂直边都有一个权重（景点数）。只能向右或向下移动。
+
+**目标**：找到一条从左上角 $(0,0)$ 到右下角 $(n,m)$ 的路径，使路径上边权重之和最大。
+
+## 动态规划分析
+
+### 状态定义
+设 $s_{i,j}$ 为到达交叉点 $(i,j)$ 时能收集到的最大景点数。
+
+### 递推关系
+要到达 $(i,j)$，只能从上方 $(i-1,j)$ 或左方 $(i,j-1)$ 过来：
+
+$$s_{i,j} = \max \begin{cases} s_{i-1,j} + \text{weight}(\text{vertical edge to } i,j) \\ s_{i,j-1} + \text{weight}(\text{horizontal edge to } i,j) \end{cases}$$
+
+### 初始化
+- $s_{0,0} = 0$
+- 第一行只能从左边推导：$s_{0,j} = s_{0,j-1} + w_{\text{horizontal}}$
+- 第一列只能从上面推导：$s_{i,0} = s_{i-1,0} + w_{\text{vertical}}$
+
+## 算法伪代码
+
+```text
+MANHATTANTOURIST(down_weights, right_weights, n, m)
+1  s[0,0] ← 0
+2  for i ← 1 to n
+3      s[i,0] ← s[i-1,0] + down_weights[i,0]
+4  for j ← 1 to m
+5      s[0,j] ← s[0,j-1] + right_weights[0,j]
+6  for i ← 1 to n
+7      for j ← 1 to m
+8          s[i,j] ← max(s[i-1,j] + down_weights[i,j], 
+                        s[i,j-1] + right_weights[i,j])
+9  return s[n,m]
+```
+
+## 推广到 DAG（有向无环图）
+
+曼哈顿是一个规则网格，但生物信息学中的问题（如带有“跳跃”或特殊剪接的比对）往往需要处理更复杂的结构。
+
+**DAG 中的最长路径**：
+对于任意顶点 $v$，其得分 $s_v$ 为：
+$$s_v = \max_{u \in \text{Predecessors}(v)} \{ s_u + \text{weight}(u, v) \}$$
+
+这要求我们按照**拓扑排序**的顺序来填充得分。
+
+## 与序列比对的联系
+
+曼哈顿旅游问题几乎就是**序列比对**（Sequence Alignment）的代名词：
+- **向右移**：在第一个序列中引入 Gap。
+- **向下移**：在第二个序列中引入 Gap。
+- **对角线移**（如果允许）：表示两个碱基的匹配或错配。
+
+通过定义不同的“边权重”，我们可以灵活地模拟各种生物学打分系统。
+
+## 相关页面
+
+- [换钱问题](./change-problem)
+- [序列比对概览](../alignment/index)
+- [最长公共子序列](../alignment/longest-common-subsequence)
+- [动态规划专题](./dynamic-programming-basics)

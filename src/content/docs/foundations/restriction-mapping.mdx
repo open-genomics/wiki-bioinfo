@@ -6,12 +6,21 @@ title: "限制性图谱构建"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
 <SummaryBox
-  summary="限制性图谱（restriction mapping）是通过限制性酶切实验确定DNA分子上酶切位点位置的技术。核心计算问题是根据片段长度数据推断酶切位点的顺序和位置。"
+  summary="限制性图谱（restriction mapping）是通过限制性酶切实验确定 DNA 分子上酶切位点位置的技术。核心计算问题是根据片段长度数据推断酶切位点的顺序和位置。"
   bullets={[
     '理解部分消化问题（Partial Digest Problem, PDP）的数学形式',
-    '掌握穷举算法和分支定界策略',
+    '掌握穷举算法和分支定界策略（Branch-and-Bound）',
     '了解双消化问题（Double Digest Problem, DDP）和探针部分消化问题（PPDP）'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '穷举搜索', href: '/wiki/foundations/exhaustive-search' },
+    { name: '算法复杂度', href: '/wiki/foundations/algorithms-and-complexity' },
   ]}
 />
 
@@ -64,20 +73,21 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 给定 L = \{2, 2, 3, 4, 5, 7\}，需要找出 X = \{0, 2, 4, 7\}
 
-### 穷举算法
+### Brute Force PDP (穷举法)
 
-最直观的方法是枚举所有可能的位点组合，计算它们的距离集合，与输入比较。
+穷举算法通过枚举所有可能的位点组合来寻找解。对于长度为 $L_{max}$，含有 $n$ 个位点的图谱：
 
+```text
+BRUTEFORCEPDP(L, n)
+1  M ← max(L)
+2  for every subset X = {0, x2, ..., xn-1, M} from {1, ..., M-1}
+3      if ΔX = L
+4          return X
 ```
-BRUTEFORCEPDP(L)
-1 for each possible set X
-2   if ΔX = L
-3     return X
-```
 
-**问题**：搜索空间太大，对于 n 个位点，有指数级可能。
+**缺点**：搜索空间为 $\binom{M-1}{n-2}$，当 $M$ 较大时极度低效。
 
-### 分支定界算法
+### Practical PDP (分支定界算法)
 
 PDP 可以用分支定界（branch-and-bound）策略高效求解。
 
@@ -233,7 +243,10 @@ PPDP 可以分解为两个独立的 PDP：
 
 ## 相关页面
 
-- [穷举搜索](/docs/foundations/algorithms-and-complexity)
-- [分支定界](/docs/foundations/algorithms-and-complexity)
-- [动态规划](/docs/applications/dynamic-programming)
-- [基因组组装](/docs/assembly/de-bruijn)
+<RelatedLinks
+  links={[
+    { title: '穷举搜索', to: '/wiki/foundations/exhaustive-search' },
+    { title: '换钱问题', to: '/wiki/foundations/change-problem', description: '另一个动态规划入门案例' },
+    { title: '基因组组装', to: '/wiki/assembly/olc', description: '大规模图谱构建的现代方法' }
+  ]}
+/>

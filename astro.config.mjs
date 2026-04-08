@@ -92,6 +92,8 @@ export default defineConfig({
                 { slug: 'foundations/dynamic-programming-basics' },
                 { slug: 'foundations/divide-and-conquer' },
                 { slug: 'foundations/exhaustive-search' },
+                { slug: 'foundations/change-problem' },
+                { slug: 'foundations/manhattan-tourist' },
                 { slug: 'foundations/approximation-algorithms' },
                 { slug: 'foundations/randomized-algorithms' },
                 { slug: 'foundations/restriction-mapping' },

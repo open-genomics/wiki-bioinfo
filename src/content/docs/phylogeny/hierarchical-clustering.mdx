@@ -1,0 +1,106 @@
+---
+description: 层次聚类在基因表达与样本关系分析中的作用，以及它与树形表示的联系。包含 HIERARCHICALCLUSTERING 算法、距离更新策略和与 UPGMA 的联系。
+title: "层次聚类"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+<PageHeaderMeta
+  section="系统发育与聚类"
+  audience="需要分析基因表达数据、理解聚类算法原理的研究者"
+  startWith="阅读本文了解层次聚类核心算法，然后学习 UPGMA 或 Neighbor-Joining 算法"
+/>
+
+<SummaryBox
+  summary="层次聚类（Hierarchical Clustering）是基因表达数据分析的核心方法，通过迭代合并最相似的簇构建树状结构（Dendrogram）。"
+  bullets={[
+    '理解凝聚式 (Agglomerative) 层次聚类的核心算法流程',
+    '掌握三种距离更新策略：Single、Complete、Average Linkage',
+    '了解层次聚类与 UPGMA 算法的深层联系',
+    '辨析层次聚类树与系统发育树的本质区别'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '距离矩阵方法', href: '/wiki-bioinfo/phylogeny/distance-methods' },
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
+  ]}
+/>
+
+## 1. 为什么需要层次聚类？
+
+在生物信息学（尤其是转录组学）中，我们经常面对庞大的基因表达矩阵。层次聚类的核心价值在于它不需要预设簇的数量 $k$，而是通过一个完整的合并过程展示数据内部的结构层次。
+
+### 应用场景
+- **基因聚类**：寻找具有相似表达谱的共表达基因。
+- **样本聚类**：识别临床样本中的亚型或批次效应。
+- **树状可视化**：通过系统树图 (Dendrogram) 直观展示对象间的亲疏关系。
+
+## 2. 核心算法：凝聚式聚类
+
+凝聚式层次聚类采用**贪心策略**：从每个对象自成一簇开始，每一步都合并当前距离最近的两个簇。
+
+### HIERARCHICALCLUSTERING 算法
+```text
+1. 初始化：n 个对象各为一个簇
+2. 循环：直到只剩一个簇
+   a. 在距离矩阵中找到最近的两个簇 C1 和 C2
+   b. 合并 C1 和 C2 为新簇 C
+   c. 计算 C 与其他所有簇之间的距离（Linkage）
+   d. 更新距离矩阵，移除 C1 和 C2，加入 C
+3. 输出：记录所有合并过程的树状图
+```
+
+## 3. 距离更新策略 (Linkage)
+
+如何定义“两个簇之间的距离”是算法的核心，不同的策略会产生完全不同的树形：
+
+| 策略 | 定义 | 特点 |
+| :--- | :--- | :--- |
+| **Single Linkage** | 两个簇中最近点对的距离 | 易产生“链状”结构，对噪声敏感。 |
+| **Complete Linkage** | 两个簇中最远点对的距离 | 倾向于产生紧凑的球形簇。 |
+| **Average Linkage** | 所有点对距离的算术平均 | **即 UPGMA 的核心**，在稳健性上表现均衡。 |
+
+## 4. 评价标准：同质性与分离性
+
+一个好的聚类应该满足：
+- **同质性 (Homogeneity)**：同一个簇内的基因表达模式高度相似（内部距离小）。
+- **分离性 (Separation)**：不同簇之间的基因表达模式显著不同（外部距离大）。
+
+## 5. 层次聚类 vs 系统发育树
+
+尽管它们看起来都像树，但其生物学含义完全不同：
+- **层次聚类树**：纯粹基于数据相似性的数学组织，枝长仅代表合并时的距离。
+- **系统发育树**：试图恢复真实的演化历史，枝长通常代表演化时间或替换数。
+
+<ToolMappingBox
+  items={[
+    'R 语言：`hclust()` 是最标准实现；`pheatmap` 常用于表达矩阵可视化。',
+    'Python：`scipy.cluster.hierarchy` 提供了完整的聚类与绘图接口。',
+    '经典文献：Eisen et al. (1998) 首次将层次聚类大规模应用于酵母芯片数据分析。'
+  ]}
+/>
+
+<PitfallsBox
+  items={[
+    '不要过度解读根节点：层次聚类的根节点通常只是最后合并的结果，不一定代表“祖先”。',
+    '预处理至关重要：由于基于距离，数据是否经过 Log 转换或标准化会极大地改变聚类结果。',
+    'Chaining Effect：使用 Single Linkage 时，要警惕异常值将原本不相关的簇“钩”在一起。'
+  ]}
+/>
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'UPGMA 算法', to: '/wiki-bioinfo/phylogeny/upgma', description: '层次聚类在系统发育中的特例' },
+    { title: 'k-means 聚类', to: '/wiki-bioinfo/phylogeny/k-means-bioinformatics', description: '另一种扁平化的聚类方法' },
+    { title: '距离矩阵方法', to: '/wiki-bioinfo/phylogeny/distance-methods', description: '理解演化距离的计算' }
+  ]}
+/>

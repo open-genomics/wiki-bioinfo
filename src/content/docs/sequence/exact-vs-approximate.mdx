@@ -1,0 +1,74 @@
+---
+title: "精确匹配与近似匹配"
+description: 理解精确字符串匹配与允许误差（错配、插入缺失）的近似匹配之间的区别，以及“种子-延伸”架构如何连接这两者。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="在理想的数学世界中，我们寻找精确匹配。但在充满变异和错误的生物学现实中，近似匹配（Approximate Matching）才是常态。这两者的区别决定了算法的设计是从简单的索引查询走向复杂的动态规划。"
+  bullets={[
+    '区分精确匹配的确定性与近似匹配的容错性',
+    '理解生物学中的三种基本“编辑操作”：替换、插入、删除',
+    '掌握“种子-延伸” (Seed-and-Extend) 架构如何兼顾效率与敏感性',
+    '认识鸽巢原理 (Pigeonhole Principle) 在近似匹配中的妙用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' },
+    { name: '索引结构概览', href: '/wiki-bioinfo/sequence/indexing' },
+    { name: '打分矩阵与罚分', href: '/wiki-bioinfo/alignment/scoring-matrices' }
+  ]}
+/>
+
+## 1. 为什么“精确”还不够？
+
+在生物信息学中，查询序列（Query）与参考序列（Reference）几乎永远不会完全相同：
+- **测序错误**：仪器可能会误读碱基（错配）或漏读、多读碱基（Indel）。
+- **生物变异**：SNP、插入和缺失是进化的本质。
+- **物种差异**：同源基因在不同物种间存在天然的序列漂移。
+
+## 2. 近似匹配的定义
+
+**近似匹配问题 (Approximate Pattern Matching)**：
+给定模式串 $P$ 和文本 $T$，以及允许的最大错误数 $k$。寻找 $T$ 中的所有子串 $S$，使得 $P$ 与 $S$ 之间的**编辑距离**（或 Hamming 距离）不超过 $k$。
+
+### 基本编辑操作
+1.  **替换 (Substitution)**：`A` 变成 `G`。
+2.  **插入 (Insertion)**：多出一个碱基。
+3.  **删除 (Deletion)**：缺失一个碱基。
+
+## 3. 桥梁：种子-延伸 (Seed-and-Extend)
+
+面对 3Gb 的文本，直接运行允许 $k$ 个错误的全局比对是非常昂贵的。现代算法利用了**鸽巢原理 (Pigeonhole Principle)**：
+
+> **直觉**：如果你允许一个长度为 30 的 Read 有 2 个错误，那么如果你把它切成 3 段，其中**至少有一段**必须是完全匹配的。
+
+### 算法流程
+1.  **种子阶段 (Seeding)**：利用索引（如哈希或 FM-index）寻找 $P$ 的若干个**精确匹配**短片段。
+2.  **过滤阶段 (Filtering)**：排除那些孤立的、无法形成共线性的种子命中。
+3.  **延伸阶段 (Extending)**：在种子周围运行动态规划（如 Smith-Waterman），允许 Indel 和错配，直到找到最终的近似匹配。
+
+## 4. 权衡：敏感性 vs 效率
+
+| 特性 | 精确匹配 | 近似匹配 |
+| :--- | :--- | :--- |
+| **算法** | 哈希查找、BWT 后向搜索 | 动态规划、种子扩展 |
+| **速度** | 极快 ($O(m)$) | 较慢 ($O(nm)$ 或 $O(m \cdot \text{hits})$) |
+| **敏感性** | 低（错一个碱基就找不到） | 高（能发现同源性） |
+| **典型工具** | 快速过滤、去重 | BWA, Bowtie2, BLAST |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '量化近似匹配的代价' },
+    { title: 'BLAST 算法', to: '/wiki-bioinfo/alignment/blast', description: '最著名的种子-延伸实现' },
+    { title: 'FM-index', to: '/wiki-bioinfo/sequence/fm-index', description: '支持极速种子查找的索引' }
+  ]}
+/>

@@ -5,16 +5,23 @@ interface DefinitionItem {
 }
 
 interface Props {
-  items: DefinitionItem[];
+  items?: DefinitionItem[];
+  definitions?: DefinitionItem[];
 }
 
-const { items } = Astro.props;
+import { Icon } from '@astrojs/starlight/components';
+
+const { items = [], definitions = [] } = Astro.props;
+const resolvedItems = items.length > 0 ? items : definitions;
 ---
 
 <dl class="definition-list">
-  {items.map((item) => (
+  {resolvedItems.map((item) => (
     <div class="definition-card">
-      <dt>{item.term}</dt>
+      <dt>
+        <Icon name="pencil" size="1rem" />
+        {item.term}
+      </dt>
       <dd>{item.definition}</dd>
     </div>
   ))}

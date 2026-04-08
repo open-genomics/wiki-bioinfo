@@ -4,18 +4,93 @@ import StarlightHead from '@astrojs/starlight/components/Head.astro';
 
 <StarlightHead {...Astro.props}><slot /></StarlightHead>
 
-<div class="reading-progress" id="reading-progress"></div>
-
 <script>
+  interface ReadingProgressState {
+    listenersBound: boolean;
+    pageLoadBound: boolean;
+    rafId: number;
+  }
+
+  type ReadingProgressWindow = Window & {
+    __bioinfoReadingProgressState?: ReadingProgressState;
+  };
+
+  function getState() {
+    const win = window as ReadingProgressWindow;
+
+    if (!win.__bioinfoReadingProgressState) {
+      win.__bioinfoReadingProgressState = {
+        listenersBound: false,
+        pageLoadBound: false,
+        rafId: 0,
+      };
+    }
+
+    return win.__bioinfoReadingProgressState;
+  }
+
+  function ensureProgressBar() {
+    let el = document.getElementById('reading-progress');
+
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'reading-progress';
+      el.className = 'reading-progress';
+      el.setAttribute('aria-hidden', 'true');
+      document.body.append(el);
+    }
+
+    return el;
+  }
+
   function updateProgress() {
-    const el = document.getElementById('reading-progress');
-    if (!el) return;
+    const el = ensureProgressBar();
     const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    if (docHeight <= 0) { el.style.width = '0%'; return; }
+
+    if (docHeight <= 0) {
+      el.style.width = '0%';
+      return;
+    }
+
     const pct = Math.min((window.scrollY / docHeight) * 100, 100);
     el.style.width = `${pct}%`;
   }
-  window.addEventListener('scroll', updateProgress, { passive: true });
-  updateProgress();
-  document.addEventListener('astro:page-load', updateProgress);
+
+  function scheduleProgressUpdate() {
+    const state = getState();
+
+    if (state.rafId) {
+      return;
+    }
+
+    state.rafId = window.requestAnimationFrame(() => {
+      state.rafId = 0;
+      updateProgress();
+    });
+  }
+
+  function initReadingProgress() {
+    ensureProgressBar();
+
+    const state = getState();
+    if (!state.listenersBound) {
+      window.addEventListener('scroll', scheduleProgressUpdate, { passive: true });
+      window.addEventListener('resize', scheduleProgressUpdate, { passive: true });
+      state.listenersBound = true;
+    }
+
+    scheduleProgressUpdate();
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initReadingProgress, { once: true });
+  } else {
+    initReadingProgress();
+  }
+
+  const state = getState();
+  if (!state.pageLoadBound) {
+    document.addEventListener('astro:page-load', initReadingProgress);
+    state.pageLoadBound = true;
+  }
 </script>

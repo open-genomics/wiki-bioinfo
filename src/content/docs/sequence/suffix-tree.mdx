@@ -1,0 +1,97 @@
+---
+title: "Suffix Tree"
+description: "从Suffix Trie到Suffix Tree的压缩过程，理解这一经典字符串索引结构的理论基础和几何直觉"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="如果说 Trie 是为了“找一批模式”而设计的，那么 Suffix Tree 就是为了“在一个文本中找任何子串”而设计的。它通过压缩所有后缀的共享前缀，将 $O(n^2)$ 的 Suffix Trie 降至 $O(n)$ 空间。"
+  bullets={[
+    '理解从 Suffix Trie 到 Suffix Tree 的压缩演化过程',
+    '掌握如何利用 Suffix Tree 解决最长重复子串与长公共子串问题',
+    '建立 Suffix Tree、Suffix Array 与 FM-index 之间的技术连贯性',
+    '理解其在基因组自比对和结构域分析中的应用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Trie 与多模式匹配', href: '/wiki-bioinfo/sequence/trie-and-multi-pattern-matching' },
+    { name: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' }
+  ]}
+/>
+
+## 算法历史
+
+Suffix Tree的概念由 Weiner 于1973年首次提出，其构建算法可以在 $O(n)$ 时间内完成。1976年，McCreight 提出了一个更易于理解的线性时间构建算法。1995年，Ukkonen 提出了一个在线的线性时间构建算法，进一步简化了实现。
+
+## 从 Suffix Trie 到 Suffix Tree
+
+### Suffix Trie 的问题
+
+将文本 $T$ 的所有后缀直接插入 Trie，得到 **Suffix Trie**：
+- 节点数：$O(n^2)$（每个后缀贡献最多 $n$ 个节点）
+- 空间开销过大，不实用
+
+**示例**：`BANANA$` 的所有后缀
+- `BANANA$`
+- `ANANA$`
+- `NANA$`
+- `ANA$`
+- `NA$`
+- `A$`
+- `$`
+
+### 压缩的关键观察
+
+**观察**：Suffix Trie 中存在大量只有一个子节点的内部节点（线性链）。
+
+**压缩策略**：将线性路径上的节点合并，边上标记子串而非单个字符。
+
+**压缩后**：
+- 节点数：$O(n)$（最多 $2n-1$ 个节点）
+- 边标签：子串区间 $[i,j]$ 而非完整字符串
+
+### 后缀树的压缩直觉
+观察 Suffix Trie，你会发现许多路径是“单传”的（一个节点只有一个子节点）。
+**Suffix Tree** 的核心改进是：**将所有非分叉的路径压缩为一条边**。
+- 边上的标签不再是单个字符，而是文本中的一个子串区间 $[i, j]$。
+
+## 2. 强大的子串查询功能
+
+一旦构建好 Suffix Tree，许多复杂的字符串问题都能在极短时间内解决：
+
+### 最长重复子串 (Longest Repeat)
+- **直觉**：树中任何一个**内部节点**（Internal Node）都代表了一个至少出现两次的子串（因为它有至少两个分叉）。
+- **算法**：找到树中“最深”的内部节点（即对应的路径标签最长）。
+
+### 长公共子串 (Longest Common Substring)
+- **场景**：寻找序列 $S_1$ 和 $S_2$ 共有最长子串。
+- **算法**：构建一棵包含 $S_1\#$ 和 $S_2\$$ 的**广义后缀树 (Generalized Suffix Tree)**。标记每个节点属于哪个序列。找到最深的、同时包含两个序列叶子节点的内部节点。
+
+## 3. 在生物信息学中的应用
+
+Suffix Tree 是许多经典算法教材的核心，因为它提供了处理长序列最直观的几何解释：
+- **全基因组自比对**：寻找基因组内部的重复元件（如转座子）。
+- **结构域发现**：通过多序列的最长公共子串寻找保守的蛋白质结构域。
+- **MUMmer**：著名的全基因组比对工具，其核心即基于 Suffix Tree 来寻找最大精确匹配 (MUMs)。
+
+## 4. 进化路线：从树到数组
+
+虽然 Suffix Tree 功能强大，但在现代超大规模数据处理中，它的指针开销仍然较大。这促使了更紧凑结构的诞生：
+1.  **Suffix Array (后缀数组)**：将后缀按字典序排列，仅存索引，空间更省。
+2.  **BWT / FM-index**：基于 Burrows-Wheeler 变换，实现了压缩与查询的完美结合，是 BWA 和 Bowtie 的基石。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'Suffix Array 与 BWT', to: '/wiki-bioinfo/sequence/suffix-array-bwt', description: '更紧凑的后缀索引实现' },
+    { title: 'FM-index', to: '/wiki-bioinfo/sequence/fm-index', description: '现代比对工具的核心' },
+    { title: 'Trie 与多模式匹配', to: '/wiki-bioinfo/sequence/trie-and-multi-pattern-matching', description: '前缀共享的基础结构' }
+  ]}
+/>

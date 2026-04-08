@@ -1,0 +1,89 @@
+---
+description: 贪心算法 (Greedy Algorithms) 的核心思想、局限性及其在生物信息学中的应用，如基因组重排和 Motif 搜索。
+title: "贪心算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="贪心算法在每一步选择中都采取当前状态下最优的选择，希望通过局部最优达到全局最优。它简单、高效，但在处理复杂生物学问题时常因陷入局部最优而失效。"
+  bullets={[
+    '理解贪心策略的“短视”特征及其优缺点',
+    '掌握反转排序中的简单贪心与基于断点的改进策略',
+    '了解贪心算法在 Motif Finding 中的应用及其局限',
+    '理解贪心算法与近似算法的关系'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '基因组重排', href: '/wiki-bioinfo/foundations/genome-rearrangements' }
+  ]}
+/>
+
+## 1. 贪心策略的核心
+
+贪心算法（Greedy Algorithm）遵循一个简单的准则：**每一步都做当前看起来最好的选择**。
+
+### 贪心算法的三个特征
+1.  **贪心选择性质**：可以通过局部最优选择产生全局最优解。
+2.  **无后效性**：某个状态以前的过程不会影响以后的状态，只与当前状态有关。
+3.  **简单高效**：通常比动态规划或分支定界快得多。
+
+## 2. 贪心算法的失效：局部最优陷阱
+
+贪心算法最致命的缺点是它不考虑长远后果。
+
+### 示例：换钱问题
+如果在币制 $\{25, 20, 1\}$ 下要凑够 $40$ 分：
+- **贪心策略**：先选最大的 $25$，剩下 $15$ 只能选 $15$ 个 $1$，总计 $16$ 枚硬币。
+- **全局最优**：选 $2$ 个 $20$，总计 $2$ 枚硬币。
+
+在生物信息学中，许多问题（如序列比对、进化树搜索）的搜索空间充满这种“局部陷阱”。
+
+## 3. 应用案例：反转排序 (Reversal Sort)
+
+在研究物种进化时，我们需要通过最少次数的“反转”操作将一个基因排列转换为另一个。
+
+### 简单贪心：前缀固定法
+每一步将数字 $i$ 移到位置 $i$。
+- 排列：`6 1 2 3 4 5`
+- 贪心步骤：需要 5 步（依次将 1, 2, 3, 4, 5 翻转到前面）。
+- 实际最优：只需 2 步（翻转全序列得到 `5 4 3 2 1 6`，再翻转前 5 位得到 `1 2 3 4 5 6`）。
+
+### 改进：基于断点 (Breakpoints) 的贪心
+**断点**是指排列中不连续的邻接关系。
+- 目标：每次反转选择能最大程度减少断点数量的操作。
+- 这种策略虽然仍是贪心的，但它使用了更科学的“势能函数”来引导搜索。
+
+详见：[基因组重排与反转排序](./genome-rearrangements)
+
+## 4. 贪心算法在 Motif 搜索中的影子
+
+在寻找 DNA 序列中的保守模式（Motif）时，一种贪心思路是：
+1.  在第一条序列中选一个可能的起始位置。
+2.  根据这个位置构建 Profile。
+3.  在下一条序列中选与 Profile 最匹配的位置并更新 Profile。
+
+**问题**：这种“滚雪球”式的方法极度依赖第一步的选择。如果第一步选偏了，整个模型都会被带偏。
+**对策**：实际工具（如 MEME）通常结合**多起点重启**或**期望最大化 (EM)** 来弥补贪心的不足。
+
+## 5. 贪心与近似算法 (Approximation)
+
+虽然贪心算法不一定能找到最优解，但我们常能证明它找到的解“不会太差”。
+- **近似比 (Approximation Ratio)**：衡量算法结果与理论最优解的差距。
+- 例如，改进的断点反转排序算法是一个 $4$-近似算法。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '基因组重排', to: '/wiki-bioinfo/foundations/genome-rearrangements', description: '贪心算法在进化研究中的具体应用' },
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '理解算法设计的宏观背景' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '当贪心失效时，如何用 DP 获得全局最优' }
+  ]}
+/>

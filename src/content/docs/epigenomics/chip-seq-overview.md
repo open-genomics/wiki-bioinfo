@@ -1,50 +1,95 @@
 ---
-description: ChIP-seq 的实验原理、峰调用、对照样本和常见下游分析。
+description: ChIP-seq（Chromatin Immunoprecipitation sequencing）通过免疫沉淀与高通量测序，定位蛋白质在基因组上的结合位点，是研究基因调控的核心技术。
 title: "ChIP-seq 概览"
 ---
 
 
-## 是什么
+## 问题背景
 
-ChIP-seq（Chromatin Immunoprecipitation sequencing）用于检测某种蛋白质或某类组蛋白修饰在基因组上的富集位置。最常见的应用包括：
+### 核心问题：蛋白质在基因组上的结合位置
 
-- 转录因子结合位点定位；
-- 组蛋白修饰图谱绘制（如 H3K27ac、H3K4me3）；
-- 比较不同条件下的调控状态差异。
+基因表达受到精细的调控，而转录因子（Transcription Factors, TFs）和组蛋白修饰是这一调控网络的核心执行者。然而，**在复杂的基因组上，这些调控元件究竟位于何处？**
 
-实验流程是：交联 → 打断染色质 → 用抗体富集目标蛋白结合的 DNA 片段 → 建库测序 → 比对参考基因组 → 峰调用。
+ChIP-seq（Chromatin Immunoprecipitation sequencing）正是为解决这一核心问题而诞生的技术。它能够以全基因组范围、单碱基分辨率定位特定蛋白质的结合位点。
+
+### ChIP-seq 解决的生物学问题
+
+ChIP-seq 可以回答：
+- 某个转录因子在全基因组范围内结合哪些位点？
+- 特定的组蛋白修饰（如激活性的 H3K27ac 或抑制性的 H3K27me3）分布在哪里？
+- 不同细胞类型或处理条件下，蛋白质结合图谱如何变化？
+
+这些问题的答案对于理解基因调控网络至关重要。
+
+### 基本原理
+
+ChIP-seq 的核心思想是**免疫富集与测序定位**的结合：
+
+1. **交联固定**：用甲醛将蛋白质与 DNA 共价交联，"冻结"瞬时结合状态
+2. **染色质片段化**：超声或酶切将染色质打断为小片段（通常 200-500 bp）
+3. **免疫沉淀（IP）**：用特异性抗体富集目标蛋白结合的 DNA 片段
+4. **测序与定位**：解交联、提取 DNA、测序，并将 reads 比对到参考基因组
+5. **峰识别**：通过统计方法识别显著富集的区域
 
 <figure>
   <img src="/wiki-bioinfo/img/illustrations/chip-seq-workflow.svg" alt="ChIP-seq workflow" />
   <figcaption>ChIP-seq 的核心思想是把目标蛋白结合或修饰富集的 DNA 片段挑出来，再通过测序还原它们在基因组上的位置。</figcaption>
 </figure>
 
-## 数据特征
+## 数据特征与生物学解释
 
-ChIP-seq 的最终信号不是"逐位点的绝对量"，而是相对富集：目标样本在某些区域的读段覆盖度高于背景对照。
+### 相对富集信号
 
-常见两类峰：
+ChIP-seq 的本质是**比较富集**：我们检测的是目标蛋白结合位点相对于基因组背景的富集程度，而非绝对数量。
 
-- **窄峰（narrow peaks）**：如转录因子、H3K4me3，峰尖锐；
-- **宽峰（broad peaks）**：如 H3K27me3、H3K36me3，分布更平缓、更宽。
+这一设计基于关键洞察：
+- 基因组的大部分区域不与目标蛋白结合
+- 在免疫沉淀后，结合区域的 DNA 片段应显著富集
+- 通过对比"ChIP 样本"与"对照样本"，可以识别真实的结合位点
 
-因此峰调用工具和参数必须与目标类型匹配。
+### 两类峰的生物学含义
+
+根据目标蛋白的生物学特性，ChIP-seq 信号呈现两种典型模式：
+
+**窄峰（Narrow Peaks）**
+- **代表**：转录因子（如 CTCF、PU.1）、活跃启动子标记（H3K4me3）
+- **特征**：峰形尖锐，通常 < 1 kb
+- **原因**：转录因子结合于特定的 DNA 序列（motif），位置精确
+
+**宽峰（Broad Peaks）**
+- **代表**：抑制性标记（H3K27me3）、基因体标记（H3K36me3）
+- **特征**：分布平缓，可跨越数 kb 至数十 kb
+- **原因**：组蛋白修饰可沿染色质传播，或覆盖较大区域
+
+正确识别峰的类型对于选择分析参数至关重要。窄峰需要高分辨率检测，宽峰则需要允许信号在空间上延展的算法。
 
 ## 标准分析流程
 
-### 1. 原始质控与比对
+ChIP-seq 分析需要系统性地从原始数据提取生物学信号：
 
-先做 FASTQ 质控（碱基质量、接头、重复度），然后将 reads 比对到参考基因组：
+### 1. 数据预处理
 
-- 常用比对器：**Bowtie2**、**BWA**；
-- 输出：排序后的 BAM；
-- 通常要去除低质量比对、PCR duplicates 和黑名单区域（ENCODE blacklist）。
+**质控（QC）**：评估测序数据质量
+- 碱基质量分布（Q30 比例）
+- 接头序列残留
+- 重复率（反映文库复杂度）
+
+**比对（Alignment）**：将 reads 定位到参考基因组
+- 常用工具：Bowtie2、BWA
+- 输出：排序后的 BAM 文件
+
+**去噪**：
+- 去除低质量比对（MAPQ < 30）
+- 去除 PCR duplicates（防止高重复序列虚假富集）
+- 去除 ENCODE 黑名单区域（测序假象热点）
 
 ### 2. 峰调用（Peak Calling）
 
-峰调用是 ChIP-seq 的核心。典型工具是 **MACS2 / MACS3**。
+峰调用是 ChIP-seq 的核心步骤，其统计原理见 [MACS2 峰调用算法](./macs2-peak-calling.mdx)。基本思想是：
 
-思想：在基因组上扫描局部区域，判断目标样本的覆盖度是否显著高于背景（input DNA 或 IgG 对照）。
+> 对每个候选基因组窗口，判断 ChIP 样本的 read 覆盖是否显著高于背景（Input 对照）。
+
+标准命令示例：
 
 ```bash
 macs2 callpeak \
@@ -56,75 +101,165 @@ macs2 callpeak \
   --outdir macs2_out
 ```
 
-关键输出：
+关键参数说明：
+- `-t`：ChIP 样本 BAM 文件
+- `-c`：对照样本（Input 或 IgG）
+- `-g`：基因组大小（`hs` 表示人类）
 
-- `narrowPeak` / `broadPeak`：峰区间；
-- `summits.bed`：峰顶位置；
-- `pileup.bdg`：覆盖度轨迹。
+### 3. 峰注释（Peak Annotation）
 
-### 3. 峰注释
-
-把峰与注释文件结合，回答：
-
-- 峰在 promoter、enhancer 还是 gene body？
+识别峰后，需要回答生物学位置问题：
+- 峰位于启动子、增强子还是基因体？
 - 峰附近有哪些基因？
-- 不同样本差异峰可能影响哪些通路？
-
-常用工具：**Homer**、**ChIPseeker**、**bedtools closest**。
-
-### 4. motif 分析
-
-如果目标是转录因子或开放区，常进一步做序列 motif 富集分析：
-
-- de novo motif discovery；
-- 与已知 motif 数据库（JASPAR、HOCOMOCO）比较；
-- 判断可能的协同因子。
-
-这一步与 [PWM / PSSM](../models/pwm-pssm.md) 的概念直接相关。
-
-## 统计视角
-
-ChIP-seq 中每个窗口的 read count 常被视为近似计数数据，峰调用本质上是在做局部富集检验。后续做差异结合分析时，常把每个峰在不同样本中的覆盖度汇总为 count matrix，再用负二项模型分析（类似 RNA-seq 差异表达）。
+- 不同样本的差异峰可能影响哪些通路？
 
 常用工具：
+- **HOMER**：功能注释与 motif 分析
+- **ChIPseeker**：R 包，提供可视化与注释
+- **bedtools closest**：查找最近的基因
 
-- **DiffBind**
-- **csaw**
-- **DESeq2 / edgeR**（在峰计数矩阵上）
+### 4. Motif 分析
 
-## 可视化
+对于转录因子 ChIP-seq，motif 分析是验证与深入理解的关键步骤：
 
-最常见的三类图：
+**De novo motif discovery**：在峰序列中发现富集的序列模式
+- 验证：发现的 motif 是否与已知 TF 一致？
 
-1. **Genome browser track**：IGV / UCSC 看局部峰形；
-2. **Heatmap / profile plot**：围绕 TSS 或峰中心画覆盖度分布；
-3. **Venn / upset plot**：比较不同条件共享与特异峰。
+**已知 motif 富集**：与数据库（JASPAR、HOCOMOCO）比较
+- 推断：协同作用的转录因子
 
-## 常见质量指标
+序列模型基础见 [PWM / PSSM](../models/pwm-pssm.md)。
 
-| 指标 | 含义 |
-|------|------|
-| FRiP | Fraction of Reads in Peaks，峰内 reads 比例 |
-| NSC / RSC | Strand cross-correlation，衡量峰信号质量 |
-| Duplicate rate | 重复率 |
-| Peak number | 峰数量，过多或过少都需警惕 |
+## 统计视角与差异分析
 
-## 常见误区
+### 峰调用的统计本质
 
-- **没有 input 对照也能稳定解释峰**：很多情况下背景偏好会误导峰调用；
-- **峰越高越说明调控越强**：峰高受文库深度、抗体效率、区域可比对性等多因素影响；
-- **最近基因一定是靶基因**：增强子可能跨越很远调控目标基因；
-- **不同抗体结果可以直接比较**：抗体特异性和实验条件差异会显著影响结果。
+峰调用本质上是**局部富集检验**：
+- 零假设（H₀）：某区域的 read 覆盖与背景无异
+- 备择假设（H₁）：某区域的 read 覆盖显著高于背景
 
-## 参考资料
+由于基因组上有数百万个候选窗口，必须进行严格的多重检验校正（如 FDR < 0.01）。
 
-- ENCODE ChIP-seq Guidelines
-- Zhang et al., *MACS* (Genome Biology, 2008)
-- Bailey et al., motif analysis 相关文献
+### 差异结合分析
 
-## 相关页面
+比较不同条件（如处理 vs. 对照）的蛋白质结合变化，需要更精细的统计模型：
 
-- [ATAC-seq](./atac-seq.md)
-- [DNA 甲基化](./dna-methylation.md)
-- [PWM / PSSM](../models/pwm-pssm.md)
-- [参考基因组与注释](../foundations/reference-and-annotation.md)
+**数据转换**：
+- 对每个峰，计算各样本的 read 计数
+- 构建峰 × 样本的计数矩阵
+
+**统计模型**：
+- 使用负二项分布模型（类似 RNA-seq 差异表达分析）
+- 工具：DESeq2、edgeR、DiffBind
+
+**生物学解释**：
+- 差异峰代表条件特异性的调控变化
+- 需要结合基因表达数据验证功能影响
+
+## 数据可视化
+
+可视化是理解 ChIP-seq 数据的重要手段：
+
+### 基因组浏览器（Genome Browser）
+- **IGV**、**UCSC Genome Browser**：查看局部峰形
+- 可叠加多个样本、基因注释、保守性等信息
+- 适合验证特定区域的结合模式
+
+### 热图与信号图谱（Heatmap / Profile Plot）
+- 围绕转录起始位点（TSS）或峰中心绘制信号分布
+- 揭示蛋白质结合的空间模式
+- 比较不同样本的信号一致性
+
+### 峰比较可视化
+- **Venn 图**：显示峰集合的交集
+- **Upset plot**：更适合比较多组样本的共享峰
+- 帮助理解条件特异性与共享调控
+
+## 质量控制指标
+
+评估 ChIP-seq 数据质量需要多维度的指标：
+
+| 指标 | 含义 | 质量参考值 |
+|------|------|-----------|
+| FRiP | Fraction of Reads in Peaks，峰内 reads 比例 | > 1%（TF 通常 > 5%） |
+| NSC | Normalized Strand Cross-correlation，标准化链交叉相关 | > 1.05 |
+| RSC | Relative Strand Cross-correlation，相对链交叉相关 | > 0.8 |
+| 重复率 | PCR duplicates 比例 | < 20% |
+| 峰数量 | 检测到的峰总数 | 依赖抗体和目标 |
+
+**FRiP** 是最重要的质量指标：它反映测序 reads 有多少落在峰区域。高质量的 ChIP 实验应有显著比例的 reads 在峰内。
+
+**NSC / RSC** 反映峰信号的清晰度，与抗体质量和靶点特性相关。
+
+## 常见误区与正确理解
+
+### 误区 1：没有 Input 对照也能可靠检测峰
+
+**误解**：ChIP 样本的覆盖度可以直接用于峰识别，不需要 Input 对照。
+
+**正确理解**：Input 对照至关重要。基因组不同区域的本底信号差异很大：
+- 开放染色质区域天然有更多断裂的 DNA
+- 重复序列区域的比对偏差
+- 测序深度和 GC 含量偏好
+
+没有 Input 对照，这些系统性偏差会被误判为真实的蛋白结合信号。
+
+### 误区 2：峰越高，调控作用越强
+
+**误解**：峰的信号强度（高度/覆盖度）直接反映调控强度。
+
+**正确理解**：峰高受多种技术因素影响：
+- 测序深度
+- 抗体亲和力和特异性
+- 目标蛋白的表达水平
+- 染色质的可及性
+
+生物学上，低峰可能对应强调控（如关键转录因子的单一位点），高峰可能只是技术假象。
+
+### 误区 3：峰最近的基因就是靶基因
+
+**误解**：增强子只调控最近的基因。
+
+**正确理解**：增强子-启动子相互作用可以跨越数十甚至数百 kb，跳过中间基因。简单的"最近基因"策略会：
+- 错过真实的远程调控
+- 将峰错误关联到无关基因
+
+正确的注释需要结合三维基因组信息或表达相关性。
+
+### 误区 4：不同实验的结果可以直接比较
+
+**误解**：不同实验室、不同批次的数据可以直接合并分析。
+
+**正确理解**：ChIP-seq 结果高度依赖实验条件：
+- 抗体批次差异
+- 交联时间和片段化条件
+- 细胞状态和培养条件
+
+比较分析需要严格的批次校正和标准化。
+
+## 历史背景与关键文献
+
+ChIP-seq 技术的发展经历了从低通量到高通量的演进：
+
+**技术演进**：
+- ChIP-on-chip（2000s）：使用微阵列检测，分辨率有限
+- ChIP-seq（2007+）：高通量测序革命，单碱基分辨率
+- 单细胞 ChIP-seq（2015+）：细胞分辨率调控分析
+
+**奠基性文献**：
+- Johnson et al. (2007). Genome-wide mapping of in vivo protein-DNA interactions. *Science*. （早期 ChIP-seq）
+- Zhang et al. (2008). Model-based Analysis of ChIP-Seq (MACS). *Genome Biology*. （峰调用算法）
+- ENCODE Project Consortium (2012). An integrated encyclopedia of DNA elements in the human genome. *Nature*. （大规模 ChIP-seq 应用）
+
+**资源**：
+- ENCODE ChIP-seq 数据标准与质控指南
+- modENCODE 模式生物调控图谱
+- ChIP-Atlas 数据库：已发表 ChIP-seq 数据的整合
+
+## 与其他页面的连接
+
+- **技术互补**：ChIP-seq 与 [ATAC-seq](./atac-seq.md) 是研究基因调控的两种核心方法，分别回答"哪个蛋白结合"和"哪里开放"
+- **算法深入**：峰调用的统计原理见 [MACS2 峰调用算法](./macs2-peak-calling.mdx)
+- **序列模型**：motif 分析涉及 [PWM / PSSM](../models/pwm-pssm.md) 的概率模型
+- **表观遗传整合**：与 [DNA 甲基化](./dna-methylation.md) 数据联合分析可全面理解调控状态
+- **基础参考**：基因注释信息见 [参考基因组与注释](../foundations/reference-and-annotation.md)

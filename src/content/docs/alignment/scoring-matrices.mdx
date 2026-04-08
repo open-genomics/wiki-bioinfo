@@ -1,0 +1,72 @@
+---
+title: "打分矩阵与 Gap 罚分"
+description: 从编辑距离走向真实序列比对，理解 PAM 和 BLOSUM 替换矩阵的推导直觉，以及仿射 Gap 罚分的生物学意义。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="真实序列比对不能假设“所有错误代价相同”。打分矩阵通过量化氨基酸替换的可能性，Gap 罚分通过区分开启与延长代价，共同构建了模拟进化过程的评价体系。"
+  bullets={[
+    '理解 PAM (点突变) 与 BLOSUM (保守块) 矩阵的构建逻辑差异',
+    '掌握仿射 Gap 罚分 (Affine Gap Penalty) 对连续 Indel 事件的偏好',
+    '学习如何根据任务目标（如远缘同源检测 vs. 精确定位）选择得分系统',
+    '建立从概率模型（Log-odds Ratio）到打分矩阵的数学联系'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance' },
+    { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' }
+  ]}
+/>
+
+## 1. 评分系统的生物学直觉
+
+在进化过程中，并不是所有的碱基或氨基酸变化都是等价的。
+- **替换不等价**：生化性质相近的氨基酸（如亮氨酸 Leu 和异亮氨酸 Ile）互相替换的概率，远高于性质截然不同的替换。
+- **Gap 不等价**：一次长度为 5 的连续缺失（如一次重组事件）比 5 次独立的单碱基缺失更可能发生。
+
+## 2. 蛋白质替换矩阵
+
+### PAM (Percent Accepted Mutation)
+由 Margaret Dayhoff 提出，基于**进化模型外推**。
+- **PAM 1**：代表 1% 的氨基酸发生了“可接受”突变。
+- **推导**：通过观察极度相似的序列得到基础概率，再通过矩阵乘法（$PAM_n = PAM_1^n$）模拟更长演化时间下的替换概率。
+- **直觉**：数字越大（如 PAM 250），代表演化时间越长，越适合找**远缘同源**序列。
+
+### BLOSUM (Blocks Substitution Matrix)
+由 Henikoff 提出，基于**实际观测到的保守区块统计**。
+- **BLOSUM 62**：基于相似度大于 62% 的序列块构建。
+- **直觉**：数字越大（如 BLOSUM 80），代表序列越相似，越适合找**高度保守**的区域。
+
+## 3. Gap 罚分模型
+
+### 仿射 Gap 罚分 (Affine Gap Penalty)
+为了反映“连续 Indel 更易发生”的直觉，我们使用：
+$$\text{Cost}(k) = g_o + k \cdot g_e$$
+- $g_o$ (Gap Open)：开启一个新缺口的高额代价。
+- $g_e$ (Gap Extend)：每增加一个碱基的低廉代价。
+
+**算法影响**：在动态规划中，这要求我们维护三个平行的矩阵（$M, I, D$），分别记录匹配、插入和删除的状态，从而追踪 Gap 是否正在延长。
+
+## 4. 从概率到得分：Log-odds Ratio
+
+矩阵中的得分 $s(a, b)$ 并不是拍脑袋定的，它通常是：
+$$s(a, b) = 10 \cdot \log_{10} \frac{P_{observed}(a, b)}{P_{expected}(a, b)}$$
+- **分数为正**：观测到的替换频率高于随机概率，暗示演化上的相关性。
+- **分数为负**：观测频率低于随机，暗示生化性质不相容或演化上的排斥。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '全局比对算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '应用得分矩阵的标准 DP 实现' },
+    { title: '多序列比对 (MSA)', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '基于 SP 得分的群体比较' },
+    { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: '启发式搜索中的得分阈值应用' }
+  ]}
+/>

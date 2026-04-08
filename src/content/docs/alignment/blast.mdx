@@ -1,0 +1,75 @@
+---
+description: BLAST 与局部相似性搜索的概览，详细解释基于启发式的 seed-and-extend 三步法及其统计学意义。
+title: "BLAST：基于 seed-and-extend 的局部搜索"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="BLAST (Basic Local Alignment Search Tool) 是生物信息学中使用最广泛的工具之一。它通过牺牲一定的敏感性，利用启发式算法在巨大的数据库中极速寻找局部相似片段。"
+  bullets={[
+    '理解 BLAST 的三步走策略：Word 列表生成、扫描命中与局部扩展',
+    '掌握 Seed-and-Extend 思想如何将全局搜索压力转化为局部计算',
+    '理解 E-value (期望值) 在衡量比对显著性中的核心作用',
+    '区分不同任务场景下的 BLAST 变体（blastn, blastp, etc.）'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列比对', href: '/wiki-bioinfo/alignment' },
+    { name: 'Smith-Waterman 算法', href: '/wiki-bioinfo/alignment/smith-waterman' },
+    { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
+  ]}
+/>
+
+## 1. 为什么不能直接用 Smith-Waterman？
+
+虽然 Smith-Waterman 算法能保证找到最优局部比对，但它的复杂度是 $O(nm)$。
+- **挑战**：当你在搜索拥有数千亿碱基的 GenBank 数据库时，对每一条序列运行动态规划在计算上是不可接受的。
+- **BLAST 的哲学**：大多数数据库序列与查询序列完全不相关。我们只需要快速找到那些“看起来像”有联系的片段（Seeds），然后只对这些区域进行精细比对。
+
+## 2. BLAST 的启发式三步法
+
+### 第一步：构建 Word 列表 (Seed Generation)
+将查询序列（Query）拆分成长度为 $w$ 的小片段（Words）。
+- **核酸 (blastn)**：通常 $w=11$，且要求精确匹配。
+- **蛋白质 (blastp)**：通常 $w=3$。由于氨基酸的相似性，BLAST 会使用得分矩阵（如 BLOSUM62）生成一组与原始 word 相似且得分超过阈值 $T$ 的“邻近词”。
+
+### 第二步：数据库扫描 (Scanning for Hits)
+利用预先构建好的索引（如哈希表），在数据库中极速定位这些 word 的出现位置。
+- 每个匹配的位置被称为一个 **Hit**（命中）。
+
+### 第三步：局部扩展 (Extension)
+从命中的 Seed 开始，向左右两个方向延伸比对。
+- **策略**：计算延伸后的得分。只要得分在持续增加，就继续扩展。
+- **X-drop 机制**：如果得分下降的幅度超过了预设的门槛 $X$，则停止扩展。
+- **输出**：最终形成 **HSP (High-scoring Segment Pair)**。
+
+## 3. 结果的衡量：E-value 是什么？
+
+BLAST 最重要的输出指标是 **E-value (Expect value)**。
+- **含义**：在一个规模相同的随机数据库中，由于偶然机会产生当前得分 HSP 的期望次数。
+- **解读**：E-value 越接近 0，说明比对结果越显著，越不可能是随机发生的噪音。通常 $E < 10^{-5}$ 被认为具有显著的生物学同源性。
+
+## 4. 常见的 BLAST 变体
+
+| 工具 | 查询序列 (Query) | 数据库 (DB) | 应用场景 |
+| :--- | :--- | :--- | :--- |
+| **blastn** | DNA | DNA | 寻找同源基因、物种鉴定。 |
+| **blastp** | 蛋白质 | 蛋白质 | 功能预测、结构域分析。 |
+| **blastx** | DNA (6 帧翻译) | 蛋白质 | 寻找新基因、分析 EST 序列。 |
+| **tblastn** | 蛋白质 | DNA (6 帧翻译) | 在基因组中寻找特定的蛋白编码区。 |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '局部比对算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: 'BLAST 追求的精确基准' },
+    { title: 'Seed-and-Extend 策略', to: '/wiki-bioinfo/alignment/seed-and-extend', description: '更通用的算法加速思想' },
+    { title: '打分矩阵与罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '理解比对得分的物理意义' }
+  ]}
+/>

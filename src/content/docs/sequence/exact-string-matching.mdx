@@ -1,0 +1,71 @@
+---
+title: "精确字符串匹配"
+description: 精确字符串匹配问题的形式化定义、朴素算法分析与优化思路，建立字符串算法的理论基础。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="精确字符串匹配是序列分析中最基础的问题：给定一个模式串 P 和一个长文本 T，找出 P 在 T 中出现的所有位置。它是索引构建、引物设计和快速数据库搜索的底层逻辑。"
+  bullets={[
+    '掌握朴素匹配算法（Naive Matching）的时间复杂度 bottleneck',
+    '理解“预处理” (Preprocessing) 思想：利用已匹配信息减少重复比较',
+    '了解生物学背景下海量数据对算法 $O(nm)$ 复杂度的严苛挑战',
+    '对比 KMP、Boyer-Moore 和基于索引的匹配策略'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列、字符串与坐标系统', href: '/wiki-bioinfo/foundations/sequences-and-strings' },
+    { name: '算法复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
+  ]}
+/>
+
+## 1. 问题定义
+
+**精确字符串匹配 (Exact Pattern Matching)**：
+给定文本 $T$ (长度 $n$) 和模式串 $P$ (长度 $m$)，找出所有起始位置 $i$，使得 $T[i \dots i+m-1] = P$。
+
+### 生物学应用
+- **Motif 扫描**：查找已知的转录因子结合位点。
+- **引物验证**：确认 PCR 引物在基因组中的唯一性。
+- **Read 定位**：在参考基因组中寻找 Read 的完美匹配（通常是比对的第一步）。
+
+## 2. 朴素匹配算法 (Naive Algorithm)
+
+朴素算法像一个滑动窗口，逐位比较模式串。
+- **逻辑**：从 $T$ 的第 0 位到第 $n-m$ 位，每次尝试与 $P$ 的 $m$ 个字符对齐。
+- **复杂度**：最坏情况下为 $O(nm)$。
+- **致命弱点**：它完全无视了已经匹配过的字符信息。如果 $P = \text{AAAAAB}$，而 $T$ 是一长串 `A`，算法每次都要比较到最后一位才发现失败，然后仅仅右移一位重新开始。
+
+## 3. 预处理的直觉：变聪明一点
+
+为了突破 $O(nm)$，我们需要在匹配之前对模式串 $P$ 进行**预处理**：
+
+### KMP 算法的思路
+利用模式串自身的重复结构。如果匹配到一半失败了，我们已经知道文本的前几个碱基是什么。
+- **Failure Function**：预先计算好如果某位失配，模式串应该“跳”到哪个前缀继续。
+
+### Boyer-Moore 算法的思路
+从右向左匹配。如果你在 $P$ 的末尾发现了一个根本不在 $P$ 中出现的碱基（如文本里是 `G`，而 $P$ 只有 `AT`），你可以直接把整个模式串跳过 $m$ 位。
+
+## 4. 大规模数据的挑战
+
+在人类基因组（30 亿碱基）规模下：
+- $O(nm)$ 的算法可能需要运行数小时甚至更久。
+- 经过优化的 $O(n)$ 算法（如 KMP）只需几秒。
+- **终极方案**：当文本 $T$ 固定而查询 $P$ 非常多时，我们不再扫描文本，而是对文本构建**索引**（如 Suffix Tree 或 BWT），将匹配时间降至 $O(m)$。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'KMP 算法', to: '/wiki-bioinfo/sequence/kmp-algorithm', description: '利用失效函数的线性匹配' },
+    { title: 'Boyer-Moore 算法', to: '/wiki-bioinfo/sequence/boyer-moore-algorithm', description: '大跨度跳跃的匹配策略' },
+    { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '处理海量查询的文本预索引' }
+  ]}
+/>

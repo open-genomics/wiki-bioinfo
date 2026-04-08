@@ -1,6 +1,6 @@
 ---
-description: 近似模式匹配（Approximate Pattern Matching）允许在文本中查找与模式串有少量差异的匹配，是生物信息学中处理测序错误和变异的核心算法。
 title: "近似模式匹配"
+description: "编辑距离、汉明距离与近似匹配算法，理解如何处理测序错误和生物变异的字符串匹配问题"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
@@ -9,12 +9,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
-  summary="近似模式匹配（Approximate Pattern Matching）允许在文本中查找与模式串有最多 k 个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
+  summary="近似模式匹配允许在文本中查找与模式串有最多k个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
   bullets={[
-    '定义：允许最多 k 个错配/插入/删除的匹配',
-    '汉明距离：只允许替换操作',
-    '编辑距离：允许替换、插入、删除',
-    '是 BLAST 等数据库搜索工具的理论基础'
+    '问题定义：在允许k个差异的情况下查找模式出现位置',
+    '距离度量：汉明距离（仅替换）vs 编辑距离（替换/插入/删除）',
+    '算法方法：动态规划O(nm)、q-gram过滤、后缀树搜索',
+    '实际应用：BLAST、BWA、Bowtie等工具的理论基础'
   ]}
 />
 
@@ -350,14 +350,26 @@ BLAST(query, database):
 
 近似模式匹配算法的发展与生物信息学紧密相连：
 
-- **1965**：Levenshtein 提出编辑距离
-- **1970s**：动态规划算法成熟
-- **1980s**：Myers 和 Miller 开发线性空间算法
-- **1990**：BLAST 算法发布，革命性地加速了数据库搜索
-- **1990s-2000s**：后缀数组、BWT/FM-index 用于高效近似匹配
-- **2009**：BWA 等工具将 BWT 引入 NGS 比对
+| 时间 | 里程碑 | 意义 |
+|------|--------|------|
+| 1965 | Levenshtein 提出编辑距离 | 建立了序列差异的数学基础 |
+| 1970s | 动态规划算法成熟 | Needleman-Wunsch, Smith-Waterman |
+| 1980s | Myers-Miller 线性空间算法 | 使长序列比对成为可能 |
+| 1990 | BLAST 算法发布 | 启发式近似匹配，革命性加速 |
+| 1990s | q-gram 过滤方法 | 基于鸽巢原理的快速过滤 |
+| 2000s | BWT/FM-index 用于近似匹配 | 压缩索引支持容错搜索 |
+| 2009 | BWA 发布 | BWT 进入主流NGS比对工具 |
 
 这些算法的演进使得现代生物信息学能够处理海量的基因组数据。
+
+## 参考文献
+
+1. Levenshtein, V. I. (1966). Binary codes capable of correcting deletions, insertions, and reversals. *Soviet Physics Doklady*, 10(8), 707-710.
+2. Needleman, S. B., & Wunsch, C. D. (1970). A general method applicable to the search for similarities in the amino acid sequence of two proteins. *JMB*, 48(3), 443-453.
+3. Smith, T. F., & Waterman, M. S. (1981). Identification of common molecular subsequences. *JMB*, 147(1), 195-197.
+4. Altschul, S. F., et al. (1990). Basic local alignment search tool. *JMB*, 215(3), 403-410.
+5. Myers, G. (1994). A sublinear algorithm for approximate keyword searching. *Algorithmica*, 12(4-5), 345-374.
+6. Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
 
 ## 总结
 

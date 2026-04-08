@@ -7,25 +7,39 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 
 <SummaryBox
-  summary="生物信息学算法不是抽象的数学游戏，而是解决真实生物学问题的计算工具。这一页帮助你建立从生物学问题到算法解决方案的思维框架。"
+  summary="生物信息学算法不是抽象的数学游戏，而是解决真实生物学问题的计算工具。这一章帮助你建立从生物学问题到算法解决方案的思维框架，理解少数几种核心算法思想如何支撑大量生物信息学应用。"
   bullets={[
+    '从生物学问题出发，而非从工具出发',
     '理解算法范式比记住具体实现更重要',
     '每个算法都对应一类生物学问题，找到这个对应关系是关键',
   ]}
 />
 
-## 为什么要学算法
+## 从一个问题开始
 
-在实际的生物信息学工作中，你可能会问：
+想象你在研究一个基因家族。你有一条新测序的基因序列，想知道：
 
-> 既然有现成的工具（BWA、BLAST、GATK），为什么还需要理解底层的算法？
+> 这条序列与已知基因有多相似？它在哪个物种中有同源基因？它的功能区域在哪里？
 
-答案是：**理解算法让你能够**
+这些问题看似简单，但背后涉及一系列计算挑战：
+- 如何度量两条序列的相似程度？
+- 如何在海量数据库中快速找到相似序列？
+- 如何从序列模式推断功能位点？
 
-1. **选择合适的工具**：不同工具基于不同算法，了解算法才能知道哪个工具适合你的数据
-2. **调试问题**：当工具结果不符合预期时，理解算法能帮你定位问题来源
-3. **优化参数**：算法的参数往往对应生物学假设，理解这些假设才能正确调参
-4. **设计新方法**：遇到新问题时，能够借鉴或组合现有算法范式
+这就是生物信息学的核心任务：**把生物学问题转化为可计算的问题，再设计算法求解**。
+
+### 工具使用者 vs. 算法理解者
+
+许多研究者能够熟练使用 BLAST、BWA、GATK 等工具，但当结果出现异常时往往束手无策——调整参数只能依赖试错，读新论文只能死记硬背。问题的根源在于：**只学会了操作工具，没有理解算法思想**。
+
+理解算法的价值在于：
+
+| 能力 | 工具使用者 | 算法理解者 |
+|------|----------|----------|
+| 工具选择 | 凭经验或他人推荐 | 根据问题特征和数据规模理性选择 |
+| 问题调试 | 试错或求助 | 从算法假设出发定位问题根源 |
+| 参数优化 | 套用默认或文献值 | 理解参数对应的生物学假设 |
+| 方法创新 | 难以参与 | 能借鉴或组合现有算法范式 |
 
 ## 从生物学问题到算法
 
@@ -87,9 +101,11 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 **关键直觉**：数据规模决定了必须使用高效的索引和近似方法。
 
-## 核心算法范式速览
+## 核心算法范式
 
-### 1. 动态规划（Dynamic Programming）
+生物信息学中大多数问题可以用以下六种核心算法范式来描述。理解这些范式，你就能理解这个领域的大部分算法设计思想。
+
+### 2.1 动态规划（Dynamic Programming）
 
 **核心思想**：将复杂问题分解为重叠子问题，存储中间结果避免重复计算。
 
@@ -112,7 +128,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [Smith-Waterman 算法](../alignment/smith-waterman.md)
 - [动态规划算法详解](../applications/dynamic-programming.md)
 
-### 2. 图算法（Graph Algorithms）
+### 2.2 图算法（Graph Algorithms）
 
 **核心思想**：将问题转化为图上的路径、连通、匹配等问题。
 
@@ -134,7 +150,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [图算法在生物信息学中的应用](../applications/graph-algorithms.md)
 - [de Bruijn 图](../assembly/de-bruijn.md)
 
-### 3. 字符串算法与索引（String Algorithms & Indexing）
+### 2.3 字符串算法与索引（String Algorithms & Indexing）
 
 **核心思想**：利用字符串的结构特性，通过预处理加速搜索。
 
@@ -164,7 +180,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [FM-index](../sequence/fm-index.mdx)
 - [字符串算法与索引结构](../applications/string-algorithms.md)
 
-### 4. 概率模型（Probabilistic Models）
+### 2.4 概率模型（Probabilistic Models）
 
 **核心思想**：用概率表示不确定性，通过统计推断做出决策。
 
@@ -186,7 +202,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [隐马尔可夫模型](../models/hmm.md)
 - [概率算法与统计推断](../applications/probabilistic-algorithms.md)
 
-### 5. 贪心与启发式（Greedy & Heuristic）
+### 2.5 贪心与启发式（Greedy & Heuristic）
 
 **核心思想**：在计算复杂度限制下寻找足够好的解，不保证全局最优。
 
@@ -207,7 +223,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [多序列比对](../alignment/multiple-sequence-alignment.md)
 - [算法与复杂度](../foundations/algorithms-and-complexity.md)
 
-### 6. 随机化算法（Randomized Algorithms）
+### 2.6 随机化算法（Randomized Algorithms）
 
 **核心思想**：用随机性避免陷入局部最优或加速计算。
 
@@ -226,7 +242,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 **学习路径**：
 - [概率算法与统计推断](../applications/probabilistic-algorithms.md)
 
-## 算法选择决策树
+## 3. 算法选择决策树
 
 面对具体问题时，如何选择合适的算法？
 
@@ -258,7 +274,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 | motif 发现 | 概率模型 + 随机化 | MEME, Gibbs sampling |
 | 复杂统计推断 | 贝叶斯 + MCMC | BEAST, MrBayes |
 
-## 复杂度直觉
+## 4. 复杂度直觉
 
 理解复杂度对于实际应用至关重要。
 
@@ -283,7 +299,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - 考虑磁盘 I/O 和内存限制
 - 某些算法可以牺牲时间换空间，或反之
 
-## 学习建议
+## 5. 如何学习生物信息学算法
 
 ### 初学者路径
 
@@ -306,7 +322,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - **阅读源码**：理解工具中的算法实现
 - **性能分析**：用真实数据测试不同算法
 
-## 常见误区
+## 6. 常见误区与注意事项
 
 ### 算法越复杂越好
 
@@ -324,7 +340,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 不是。常数因子、缓存友好性、并行效率等因素都很重要。
 
-## 下一步
+## 7. 延伸阅读
 
 根据你的背景和目标，选择下一步的学习路径：
 
@@ -343,7 +359,7 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 - [生物信息学算法总览](../applications/algorithms-overview.md)
 - [动态规划算法详解](../applications/dynamic-programming.md)
 
-## 参考资料
+## 8. 参考资料
 
 - Durbin, R., Eddy, S., Krogh, A., & Mitchison, G. (1998). *Biological sequence analysis: probabilistic models of proteins and nucleic acids*. Cambridge university press.
 - Jones, N. C., & Pevzner, P. A. (2004). *An introduction to bioinformatics algorithms*. MIT press.

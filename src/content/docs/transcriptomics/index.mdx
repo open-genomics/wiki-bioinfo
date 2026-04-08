@@ -1,6 +1,6 @@
 ---
-description: 转录组分析板块入口，串联 RNA-seq 工作流、pseudo-alignment、TPM/FPKM/CPM 和基因/转录本层定量。
-title: "转录组"
+description: 转录组分析板块入口，系统介绍 RNA-seq 数据的表达定量、归一化方法与差异表达分析的算法基础。
+title: "转录组分析"
 ---
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
@@ -10,32 +10,60 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 <PageHeaderMeta
   section="Applications"
-  audience="已经接触 RNA-seq 或想理解表达定量、isoform 归属与统计建模的读者"
-  startWith="先理解 RNA-seq 工作流和 pseudo-alignment，再看 TPM/FPKM/CPM 与 gene/isoform 定量差异。"
+  audience="已具备分子生物学基础，希望系统理解 RNA-seq 数据分析算法原理的读者"
+  startWith="从 RNA-seq 数据处理的算法问题出发，依次理解表达定量、归一化与差异表达的统计建模。"
 />
 
-转录组分析关注的是：给定 RNA-seq 等数据，如何理解基因和转录本的表达、剪接、条件差异以及这些变化背后的生物学含义。
+## 问题定义
 
-## 这一部分在全站中的位置
+**转录组分析问题**：给定 RNA-seq 测序数据（reads 或 fragments）和参考转录组注释，推断各基因或转录本的表达丰度，并识别不同生物学条件下的差异表达基因。
 
-这一节位于“分析方向与案例”之下，承接索引、比对和概率模型，把它们重新放回 RNA-seq 的定量与表达解释问题中。
+- **输入**：
+  - 测序 reads（通常是 millions 级）
+  - 参考转录组序列与注释（GTF/GFF 格式）
+  - 实验设计信息（样本分组、生物学重复）
+  
+- **输出**：
+  - 基因/转录本表达矩阵（counts、TPM、FPKM 等）
+  - 差异表达基因列表（log fold change、p-value、FDR）
+  - 功能富集与生物学解释
 
-## 为什么这一节重要
+## 核心算法挑战
 
-RNA-seq 看起来像是“把 reads 比到转录组上再数一数”，但真正困难的地方在于：
+RNA-seq 数据分析涉及一系列相互关联的计算问题：
 
-- 一个 read 可能兼容多个 isoform；
-- 基因层与转录本层的问题并不相同；
-- 定量和差异分析都依赖统计假设；
-- 注释版本变化会直接改变结果解释。
+| 问题 | 核心难点 | 算法策略 |
+|------|---------|---------|
+| **Read 归属** | 一个 read 可能匹配多个转录本 | Pseudo-alignment、EM 算法、贝叶斯推断 |
+| **表达定量** | 从离散计数推断连续丰度 | 极大似然估计、在线学习 |
+| **归一化** | 测序深度、转录本长度、文库组成的系统偏差 | CPM、FPKM、TPM、有效长度校正 |
+| **差异检验** | 计数数据的离散分布、多重检验 | 负二项分布模型、FDR 控制 |
 
-## 推荐阅读顺序
+## 这一节在全站中的位置
 
-1. [RNA-seq 工作流概览](../workflows/rna-seq.md)
-2. [Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)
-3. [TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)
-4. [基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)
-5. [差异表达：从 counts 到统计检验](./differential-expression.mdx)
+转录组分析位于"应用方向"层级，其算法基础分布在：
+
+- **索引与比对**：FM-index、后缀数组支持快速 read 定位（见[序列表示与索引](../sequence/)）
+- **概率模型**：EM 算法用于处理 read 多重归属的不确定性（见[隐马尔可夫模型](../hidden-markov-models/)）
+- **图算法**：转录本组装可建模为图遍历问题（见[图算法](../graph-algorithms/)）
+
+## 内容组织与学习路径
+
+本节按照数据处理的逻辑流程组织，建议按以下顺序阅读：
+
+1. **[RNA-seq 工作流概览](../workflows/rna-seq.md)**：理解从原始数据到生物学结论的完整流程
+2. **[Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)**：学习 k-mer 索引与快速定量算法
+3. **[TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)**：掌握归一化方法的数学定义与适用场景
+4. **[基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)**：区分解析层级对下游分析的影响
+5. **[差异表达：从 counts 到统计检验](./differential-expression.mdx)**：理解负二项分布模型与多重检验校正
+
+## 为什么这些算法问题值得关注
+
+直接运行现有工具（如 Salmon、DESeq2）可以获得结果，但理解底层算法有助于：
+
+- **判断方法适用性**：何时使用 pseudo-alignment 而非传统比对？TPM 与 counts 分别适合什么分析？
+- **解释结果边界**：为什么某些基因无法定量？差异表达的显著性如何判断？
+- **诊断分析失败**：当结果异常时，能否从算法假设层面定位问题？
 
 ## 子主题导航
 

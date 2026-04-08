@@ -1,26 +1,61 @@
 ---
 title: "长读长测序"
+description: "长读长测序技术将单条 read 长度从数百 bp 提升至数十 kb，从根本上改变了基因组组装、结构变异检测和复杂区域解析的能力。"
 ---
 
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 
+<SummaryBox
+  summary="长读长测序（Long-read sequencing）产生数千至数百万碱基长度的连续序列，使研究者能够跨越重复区域、直接观测结构变异，并获得完整的转录本和单倍型信息。"
+  bullets={[
+    'PacBio 与 Oxford Nanopore 是两大主流平台，测序原理和误差特征各异',
+    '长读长组装采用 OLC（Overlap-Layout-Consensus）策略，配合专门的重叠检测算法',
+    'Consensus 算法通过多序列信息整合显著降低测序错误率',
+    '长读长可直接跨越结构变异断点，是 SV 检测的重要技术路线'
+  ]}
+/>
 
-长读长测序把单条 read 的长度从传统短读长的 100–300 bp，提升到数 kb 乃至数十 kb，显著改善了重复区域解析、结构变异检测和复杂组装问题。
+## 核心问题
 
-## 这一部分讲什么
+基因组学研究长期以来面临一个基本限制：**如何组装和解析那些超过测序 read 长度的重复区域？**
 
-本章聚焦：
+传统短读长（Illumina）技术产生的 reads 通常只有 100–300 bp。当基因组中存在长度超过 read 长度的重复序列时，组装图（de Bruijn 图或重叠图）会出现无法解析的分叉，导致：
 
-- PacBio 与 Oxford Nanopore 两大主流平台；
-- 长读长组装与纠错；
-- 结构变异（SV）检测。
+- 组装碎片化（contig N50 低）
+- 重复区域塌陷或错误连接
+- 结构变异难以准确检测
+- 单倍型信息丢失
+
+长读长测序将单条 read 的长度提升到**数 kb 乃至数十 kb甚至上百 kb**，从根本上改变了这一局面。本章将系统介绍：
+
+- **测序平台**：PacBio SMRT 与 Oxford Nanopore 的物理原理与误差模式
+- **组装算法**：从重叠检测到共识生成的完整流程
+- **结构变异检测**：利用长跨度 reads 直接观测基因组重排
 
 ## 为什么重要
 
-- 重复序列是短读长组装和比对的核心难点，而长读长可以跨越更多重复区；
-- SV 常常大于短读长长度，长读长更容易直接观测；
-- 复杂转录本、haplotype phasing 和 de novo assembly 都受益于更长的读段；
-- 临床中的大型缺失、插入和重排解释也越来越依赖长读长证据。
+<PrerequisitesBox
+  items={[
+    { to: '/docs/sequence/sequencing-overview', label: '测序技术基础' },
+    { to: '/docs/assembly/index', label: '基因组组装基础' },
+  ]}
+/>
+
+长读长技术的重要性体现在以下几个关键场景：
+
+**重复区域解析**
+人类基因组中约 50% 为重复序列，包括着丝粒、端粒和转座子。短读长无法唯一比对到这些区域，而长读长可直接跨越重复单元。
+
+**结构变异检测**
+结构变异（SV）通常指 >50 bp 的基因组变异，包括插入、缺失、倒位、重复和易位。SV 常常大于短读长长度，长读长更容易直接观测断点。
+
+**复杂转录本与单倍型**
+选择性剪接产生多种转录本亚型，长读长可捕获完整 mRNA 序列。同时，长跨度信息使得区分同源染色体（phasing）成为可能。
+
+**临床应用**
+大型缺失、插入和重排与多种遗传疾病相关，长读长正成为临床诊断的重要工具。
 
 ## 推荐阅读顺序
 

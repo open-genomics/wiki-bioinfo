@@ -8,68 +8,103 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 
 <SummaryBox
-  summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成‘真变异’。"
+  summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成'真变异'。"
   bullets={[
     '理解 QUAL、DP、AF、FILTER 等 VCF 字段的大致含义，比死记具体软件参数更重要。',
     '过滤逻辑高度依赖 caller、样本类型和设计，下面只提供通用直觉，不是固定阈值菜单。',
   ]}
 />
 
-## 是什么
+## 问题定义
 
-DNA-seq 变异过滤（variant filtering）是在 caller 产生一批候选变异之后，对这些候选根据证据强度和上下文进行筛选的过程。
+变异过滤（Variant Filtering）要解决的核心问题是：
 
-它的目标不是“找到所有差异”，而是：
+> **输入**：一个候选变异集合（通常来自 caller 的原始 VCF 输出），每个变异附带质量分数、深度、等位基因频率等统计信息。  
+> **输出**：一个经过筛选的变异子集，尽可能保留真实的生物学变异，同时剔除假阳性。
 
-- 尽量保留可信的生物学变异；
-- 尽量剔除由测序错误、比对错误或模型局限引起的假阳性；
-- 在召回率和精确率之间做合理平衡。
+该问题的本质是**在召回率（Recall）与精确率（Precision）之间做权衡**。过度严格的过滤会导致假阴性（漏掉真实变异），而过度宽松的过滤则会保留大量假阳性。
 
 ## 为什么重要
 
-真正困难的往往不是 caller 跑出结果，而是判断哪些位点值得信。过滤这一层连接了：
+caller 产生的原始候选集通常包含大量假阳性。研究表明，未经过滤的变异调用中假阳性率可能高达 10-30%。过滤这一层连接了：
 
-- BAM 中的原始 read 证据；
-- VCF 中的质量字段；
-- caller 自带的过滤逻辑；
-- 重复区域、低复杂度区域和样本背景。
+- **原始数据层**：BAM 中的 read 证据、比对质量、碱基质量；
+- **统计层**：VCF 中的质量字段（QUAL、GQ）、深度（DP）、等位基因频率（AF）；
+- **算法层**：caller 内部的统计模型和过滤逻辑；
+- **上下文层**：重复区域、低复杂度区域、样本类型（germline vs somatic）。
 
-如果过滤策略不合理，后续解释、数据库查询和统计分析都会建立在不稳定的候选集上。
+如果过滤策略不合理，后续解释、数据库查询和统计分析都会建立在不稳定的候选集上，导致研究结论不可靠。
 
 ## 核心概念
 
-### 常用字段直觉
+### 常用 VCF 字段的统计意义
+
+理解以下字段的统计含义是设计过滤策略的基础：
 
 <DefinitionList
   items={[
     {
-      term: 'QUAL',
-      definition: '变异本身的质量估计，通常是该位点为假阳性的概率的 phred 标度近似（具体含义依 caller 而定）。',
+      term: 'QUAL (Quality Score)',
+      definition: '变异位点的整体质量估计，通常为 Phred 标度：$QUAL = -10 \log_{10} P(\text{变异不存在} | \text{数据})$。注意不同 caller 的计算方法可能有差异。',
     },
     {
-      term: 'DP (Depth)',
-      definition: '该位点的测序深度。过低的深度难以提供稳定证据，过高的深度有时也提示技术偏好或重复区域问题。',
+      term: 'DP (Depth / Read Depth)',
+      definition: '该位点的测序深度，即覆盖该位置的 reads 数量。深度过低（如 $< 10$）难以提供稳定证据；深度过高（如 $> 500$）可能提示重复区域或技术偏好。',
     },
     {
-      term: 'AF (Allele Frequency)',
-      definition: '在样本中支持该等位基因的 reads 占比。对于二倍体 germline 数据，理想杂合位点常接近 0.5，但真实数据会有偏移。',
+      term: 'AF (Allele Frequency) / VAF',
+      definition: '支持替代等位基因的 reads 占总 reads 的比例。对于二倍体 germline 数据，理想杂合位点 $AF \approx 0.5$，纯合位点 $AF \approx 1.0$；somatic 变异中 $AF$ 反映克隆频率。',
     },
     {
       term: 'FILTER',
-      definition: '标记该变异是否通过内部过滤逻辑。常见值有 PASS 以及各种特定过滤标记。',
+      definition: 'caller 或过滤工具赋予的状态标记。PASS 表示通过所有内部过滤；其他标记（如 LowQual、StrandBias、ClusteredEvents）提示特定的可疑特征。',
+    },
+    {
+      term: 'GQ (Genotype Quality)',
+      definition: '基因型判定的质量分数，$GQ = -10 \log_{10} P(\text{错误基因型} | \text{数据})$。高 GQ 表示对 0/0、0/1、1/1 的判断有信心。',
+    },
+    {
+      term: 'SB (Strand Bias)',
+      definition: '链偏好性度量。真实变异应在正负链上都有支持 reads；若变异只出现在单链，可能是测序错误或链特异性偏好。',
     },
   ]}
 />
 
-### Hard filter 与模型化过滤
+### 过滤策略的分类
 
-**Hard filter**：直接用阈值裁剪，例如深度、质量或 strand bias 低于阈值就剔除。
+#### 1. Hard Filtering（硬过滤）
 
-优点是直观；缺点是很难对不同平台和实验条件自适应。
+**定义**：基于单个或多个字段的简单阈值进行二元判定。
 
-**模型化过滤**：使用多个字段联合评估可信度。
+$$\text{Keep}(v) = \begin{cases} \text{True} & \text{if } DP(v) \geq DP_{\min} \land QUAL(v) \geq QUAL_{\min} \land \dots \\ \text{False} & \text{otherwise} \end{cases}$$
 
-优点是能结合更多证据；缺点是更黑箱，跨项目迁移时要重新理解假设。
+**优点**：
+- 直观可解释，易于实现和调试；
+- 计算成本低，适合大规模数据。
+
+**缺点**：
+- 难以自适应不同平台（Illumina vs. PacBio）和实验条件；
+- 阈值选择往往基于经验，缺乏统计严谨性；
+- 无法捕捉字段间的复杂交互。
+
+#### 2. 模型化过滤（Soft Filtering / ML-based）
+
+**定义**：使用统计模型或机器学习方法，基于多个特征联合评估变异可信度。
+
+常见方法：
+- **高斯混合模型（GMM）**：将变异特征分布建模为真假阳性的混合；
+- **随机森林 / 神经网络**：利用标注数据训练分类器；
+- **Variant Quality Score Recalibration (VQSR)**：用已知变异位点训练模型，为每个变异分配校准后的质量分数。
+
+**优点**：
+- 能整合多个证据源；
+- 可学习平台特定的错误模式；
+- 输出连续的质量分数，便于下游阈值调整。
+
+**缺点**：
+- 需要高质量的训练数据；
+- 模型假设可能不适用于所有样本类型；
+- 跨项目迁移时需要重新评估。
 
 ### 区域上下文
 

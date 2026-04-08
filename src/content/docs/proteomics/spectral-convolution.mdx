@@ -1,64 +1,69 @@
 ---
-description: 谱卷积（Spectral Convolution）用于质谱数据中的肽段修饰鉴定，通过分析质量差分布来检测突变和翻译后修饰。
+description: 谱卷积（Spectral Convolution）算法用于质谱数据中修饰肽段的检测，通过分析质量差分布识别翻译后修饰和突变
 title: "谱卷积与修饰鉴定"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
-  summary="谱卷积通过计算两个质谱间所有质量差的分布，揭示肽段间的修饰差异，是鉴定翻译后修饰和突变的有效算法工具。"
+  summary="谱卷积（Spectral Convolution）通过计算两个质谱间所有质量差的分布，揭示肽段间的修饰差异。与共享峰计数相比，谱卷积能够检测修饰肽段，是翻译后修饰（PTM）鉴定的核心算法工具。"
   bullets={[
-    '定义：两个谱间所有质量差的多重集合',
-    '共享峰计数是谱卷积在零点的高度',
-    '非零峰揭示修饰/突变的质量偏移',
-    '避免穷举搜索，线性时间计算'
+    '理解谱卷积的定义：两个谱间所有质量差的多重集合',
+    '掌握谱卷积揭示修饰的原理：非零峰指示质量偏移',
+    '了解谱卷积与共享峰计数的关系（卷积在零点的高度）',
+    '认识谱卷积在修饰蛋白鉴定中的应用'
   ]}
 />
 
 <PrerequisitesBox
   items={[
-    { name: '谱图', href: '/wiki/sequence/spectrum-graphs' },
-    { name: '肽段测序', href: '/wiki/sequence/spectrum-graphs' },
-    { name: '质谱基础', href: '/wiki/proteomics/' }
+    { name: '质谱基础', href: '/wiki/proteomics/mass-spectrometry-basics' },
+    { name: '谱图图', href: '/wiki/proteomics/spectrum-graphs' },
+    { name: '数据库搜索与FDR', href: '/wiki/proteomics/database-search-and-fdr' }
   ]}
 />
 
-## 是什么
-
-**谱卷积（Spectral Convolution）** 是质谱数据分析的有力工具：给定两个质谱 $S_1$ 和 $S_2$，计算它们之间**所有质量差的分布**，从而揭示两个肽段间的**修饰差异**。
-
-## 要解决什么生物信息学问题
+## 问题背景
 
 ### 修饰蛋白鉴定问题
 
 **背景**：
-- 大多数蛋白在合成后会经历**翻译后修饰**（磷酸化、糖基化等）
-- 数据库中存储的是"标准"序列，而实际样品可能有修饰
-- 传统共享峰计数对修饰敏感，难以检测修饰肽段
+- 大多数蛋白质在合成后会经历翻译后修饰（Post-Translational Modifications, PTM），如磷酸化、糖基化、乙酰化等
+- 蛋白质数据库中存储的是"标准"（未修饰）序列
+- 实际样本中的肽段可能带有修饰，导致其质谱与理论谱不同
 
-**问题**：给定数据库肽段 $P_1$（理论谱 $S_1$）和实验谱 $S_2$，判断 $S_2$ 是否来自 $P_1$ 的修饰版本。
+**问题定义（Modified Protein Identification）**：
+- **输入**：蛋白质数据库、实验谱 $S$、最大修饰数 $k$
+- **输出**：数据库中与 $S$ 最匹配的肽段（允许最多 $k$ 个修饰）
 
-### 应用场景
+### 传统方法的局限
 
-1. **磷酸化鉴定**：检测丝氨酸、苏氨酸、酪氨酸的磷酸化
-2. **糖基化分析**：识别 N-糖基化和 O-糖基化位点
-3. **突变检测**：识别单氨基酸替换
-4. **化学修饰**：分析实验引入的标记分子
+传统数据库搜索基于**共享峰计数**：
+- 如果实验谱与理论谱完全相同，共享峰计数高
+- 如果肽段有修饰，共享峰计数急剧下降
+- 即使有单个修饰，许多匹配峰也会丢失
+
+**示例**：肽段 GPFNA 的 b-ions：`{58, 155, 302, 416}`
+
+如果 P 被磷酸化（+80 Da），实验谱变为：`{58, 155+80=235, 302+80=382, 416+80=496}`
+
+共享峰计数 = 0（假设阈值内没有匹配）
+
+但这两个谱显然相关！谱卷积正是为了捕捉这种隐藏的相似性。
 
 ## 核心思想
 
 ### 谱卷积定义
 
-给定两个质谱 $S_1$ 和 $S_2$，**谱卷积**定义为：
+给定两个质谱 $S_1$ 和 $S_2$，**谱卷积** $S_2 \ominus S_1$ 定义为：
 
 $$S_2 \ominus S_1 = \{s_2 - s_1 : s_1 \in S_1, s_2 \in S_2\}$$
 
 这是**多重集合**（multiset），即相同值可以出现多次。
 
-对于质量差 $x$，其**重数**为：
+对于质量差 $x$，其**重数**（multiplicity）为：
 
 $$(S_2 \ominus S_1)(x) = |\{(s_1, s_2) : s_2 - s_1 = x, s_1 \in S_1, s_2 \in S_2\}|$$
 
@@ -66,43 +71,45 @@ $$(S_2 \ominus S_1)(x) = |\{(s_1, s_2) : s_2 - s_1 = x, s_1 \in S_1, s_2 \in S_2
 
 | 情况 | 谱卷积特征 |
 |------|-----------|
-| 相同肽段 | 在 $x=0$ 处有高峰（共享峰） |
-| 单修饰（质量差 $\delta$） | 在 $x=0$ 和 $x=\delta$ 处有两个近似相等的峰 |
-| 多修饰 | 在多个 $x$ 值处有显著峰 |
-
-### 与共享峰计数的关系
-
-**共享峰计数** = $(S_2 \ominus S_1)(0)$
-
-即谱卷积在零点的高度。
+| **相同肽段** | 在 $x = 0$ 处有高峰（共享峰） |
+| **单修饰（质量差 $\delta$）** | 在 $x = 0$ 和 $x = \delta$ 处有两个近似相等的峰 |
+| **多修饰** | 在多个 $x$ 值处有显著峰（$0, \delta_1, \delta_2, \delta_1+\delta_2$ 等） |
 
 ### 修饰检测原理
 
 如果肽段 $P_2$ 是 $P_1$ 的单修饰版本（修饰质量为 $\delta$）：
 
-- $P_1$ 的 N-端碎片在 $P_2$ 中对应质量偏移 $-\delta$
-- $P_1$ 的 C-端碎片在 $P_2$ 中对应质量偏移 $+\delta$
-- 因此谱卷积在 $x=0$（未修饰部分）和 $x=\delta$（修饰部分）都有峰
+- $P_1$ 的 N-terminal 碎片 $P_i$ 在 $P_2$ 中对应质量偏移 $+\delta$
+- $P_1$ 的 C-terminal 碎片 $P_{-i}$ 在 $P_2$ 中对应质量偏移 $-\delta$
+- 因此谱卷积在 $x = 0$（未修饰部分）和 $x = \pm\delta$（修饰部分）都有峰
+
+### 与共享峰计数的关系
+
+**共享峰计数** = $(S_2 \ominus S_1)(0)$
+
+即谱卷积在零点的高度。共享峰计数只是谱卷积的一个特例！
 
 ## 算法步骤
 
 ### 1. 计算谱卷积
 
 ```
-SPECTRALCONVOLUTION(S1, S2):
+SPECTRAL-CONVOLUTION(S₁, S₂):
     convolution = 空的多重集合
-    for s1 in S1:
-        for s2 in S2:
-            convolution.add(s2 - s1)
+    for s₁ in S₁:
+        for s₂ in S₂:
+            convolution.add(s₂ - s₁)
     return convolution
 ```
 
 **时间复杂度**：$O(|S_1| \cdot |S_2|)$
 
+**空间复杂度**：$O(|S_1| \cdot |S_2|)$ 存储所有质量差
+
 ### 2. 识别显著峰
 
 ```
-IDENTIFYMODIFICATIONS(convolution, threshold):
+IDENTIFY-MODIFICATIONS(convolution, threshold):
     modifications = []
     for x in convolution.keys():
         if convolution[x] > threshold:
@@ -110,145 +117,173 @@ IDENTIFYMODIFICATIONS(convolution, threshold):
     return modifications
 ```
 
+阈值选择：
+- 基于背景噪声水平
+- 基于统计显著性（如 p-value）
+- 基于先验修饰知识
+
 ### 3. 验证候选修饰
 
 对于候选修饰质量 $\delta$：
 - 检查 $S_2$ 中是否存在与 $S_1$ 偏移 $\delta$ 的峰子集
 - 验证这些峰的位置是否符合肽段碎片的预期分布
+- 检查修饰质量是否对应已知的 PTM 质量
 
-## 实例说明
+常见 PTM 质量：
+| 修饰 | 质量偏移（Da） |
+|------|---------------|
+| 磷酸化（Phosphorylation） | +79.966 |
+| 糖基化（Glycosylation） | +162.053（Hex） |
+| 乙酰化（Acetylation） | +42.011 |
+| 甲基化（Methylation） | +14.015 |
+| 氧化（Oxidation） | +15.995 |
+
+## 示例说明
 
 ### 单修饰示例
 
 **理论谱 $S_1$**（肽段 GPFNA）：
+
 | b-ion | 质量 |
 |-------|------|
-| b1 (G) | 58 |
-| b2 (GP) | 149 |
-| b3 (GPF) | 296 |
+| $b_1$ (G) | 58 |
+| $b_2$ (GP) | 155 |
+| $b_3$ (GPF) | 302 |
 
 **实验谱 $S_2$**（GPFNA + 磷酸化 @ P，+80 Da）：
+
 | b-ion | 质量 | 说明 |
 |-------|------|------|
-| b1 (G) | 58 | 未修饰 |
-| b2 (GP*) | 229 | +80 |
-| b3 (GPF*) | 376 | +80 |
+| $b_1$ (G) | 58 | 未修饰 |
+| $b_2$ (GP*) | 235 | +80 |
+| $b_3$ (GPF*) | 382 | +80 |
 
 **谱卷积计算**（部分）：
 
 | $s_2 - s_1$ | 重数 | 来源 |
 |-------------|------|------|
-| 0 | 1 | 58-58 |
-| 80 | 2 | 229-149, 376-296 |
-| 171 | 1 | 229-58 |
+| 0 | 1 | 58 - 58 |
+| 80 | 2 | 235 - 155, 382 - 302 |
+| 177 | 1 | 235 - 58 |
+| 324 | 1 | 382 - 58 |
 | ... | ... | ... |
 
-**结果**：在 $x=0$ 和 $x=80$ 处有两个显著峰，提示 +80 Da 修饰（磷酸化）。
+**结果**：在 $x = 0$（重数 1）和 $x = 80$（重数 2）处有两个显著峰，提示 +80 Da 修饰（磷酸化）。
 
 ### 双修饰示例
 
 如果肽段有两个不同修饰（质量分别为 $\delta_1$ 和 $\delta_2$）：
-- 谱卷积在 $x=0, \delta_1, \delta_2, \delta_1+\delta_2$ 处有峰
+
+- 谱卷积在 $x = 0, \delta_1, \delta_2, \delta_1 + \delta_2$ 处有峰
 - 峰高比例反映不同修饰组合的碎片数量
-
-## 谱对齐
-
-### 问题定义
-
-**谱对齐**：给定两个谱 $S_1$ 和 $S_2$，找到质量偏移序列 $k_1, k_2, ..., k_n$，使对齐后的相似度最大。
-
-### 与谱卷积的关系
-
-谱卷积揭示**全局**修饰，谱对齐揭示**局部**（位点特异性）修饰。
-
-**谱对齐算法**：
-1. 使用谱卷积识别候选修饰质量
-2. 在修饰位置附近构建局部比对
-3. 优化整体对齐得分
+- 通过分析峰模式可推断修饰数量和组合
 
 ## 算法复杂度与优化
 
 ### 朴素实现
 
-- **时间**：$O(|S_1| \cdot |S_2|)$
-- **空间**：$O(|S_1| \cdot |S_2|)$ 存储所有质量差
+- **时间**：$O(n \cdot m)$，其中 $n = |S_1|$，$m = |S_2|$
+- **空间**：$O(n \cdot m)$ 存储所有质量差
+
+对于典型质谱（100-1000 个峰），朴素实现已足够快速。
 
 ### 优化策略
 
-1. **质量分箱**：将质量值分箱到离散区间，减少不同值数量
-2. **FFT 加速**：使用快速傅里叶变换在 $O(n \log n)$ 时间内计算卷积
-3. **剪枝**：只考虑与已知修饰质量匹配的质量差
+1. **质量分箱（Mass Binning）**：
+   - 将质量值分箱到离散区间
+   - 减少不同值数量，降低存储需求
 
-### 实际复杂度
+2. **FFT 加速**：
+   - 将谱图表示为质量轴上的函数
+   - 使用快速傅里叶变换在 $O(N \log N)$ 时间内计算卷积
 
-质谱通常有 100-1000 个峰，谱卷积计算在实际中非常快速。
+3. **剪枝**：
+   - 只考虑与已知修饰质量匹配的质量差
+   - 基于先验知识减少计算
 
-## 应用：修饰蛋白鉴定
+## 谱卷积 vs 谱对齐
 
-### 问题设置
+| 特性 | 谱卷积 | 谱对齐 |
+|------|--------|--------|
+| **修饰检测** | 全局修饰（所有位点相同偏移） | 局部修饰（位点特异性偏移） |
+| **输出** | 质量偏移量 | 最优对齐路径 |
+| **复杂度** | $O(n^2)$ | $O(n^2 k)$ |
+| **修饰位点** | 不直接提供 | 精确定位 |
 
-**输入**：
-- 蛋白数据库
-- 实验谱 $S$
-- 最大修饰数 $k$
+**实际应用**：
+1. **谱卷积**：快速识别候选修饰质量
+2. **谱对齐**：精确定位修饰位点
+3. **联合使用**：修饰鉴定的完整流程
 
-**输出**：数据库中与 $S$ 最匹配的蛋白（允许最多 $k$ 个修饰）。
-
-### 算法流程
+## 修饰蛋白鉴定流程
 
 ```
-MODIFIEDPROTEINIDENTIFICATION(database, S, k):
-    for each protein P in database:
-        S_P = 生成 P 的理论谱
-        convolution = SPECTRALCONVOLUTION(S_P, S)
-        
-        // 寻找 k 个修饰使匹配最优
-        modifications = SELECTKMODIFICATIONS(convolution, k)
-        score = COMPUTESCORE(convolution, modifications)
-        
-    return 得分最高的蛋白及其修饰
+实验谱 S
+    ↓
+数据库搜索（SEQUEST/Mascot）
+    ↓
+低分匹配 → 谱卷积分析
+    ↓
+识别候选修饰质量 δ₁, δ₂, ...
+    ↓
+谱对齐精确定位修饰位点
+    ↓
+修饰肽段鉴定报告
 ```
-
-### 避免穷举搜索
-
-传统方法需要生成**所有可能修饰组合**的虚拟数据库，计算量巨大。
-
-谱卷积**直接**从数据推断修饰，无需穷举。
 
 ## 局限性与注意事项
 
 ### 主要挑战
 
-1. **质量精度**：质谱误差可能导致误判修饰质量
-2. **混合谱**：多个肽段共存产生复杂卷积
-3. **中性丢失**：某些修饰碎片会丢失修饰基团
-4. **异构修饰**：不同修饰可能有相同质量（如 +80 可能是磷酸化或硫酸化）
+1. **质量精度**：
+   - 质谱误差可能导致误判修饰质量
+   - 解决方案：设置质量容差，使用高分辨质谱
 
-### 解决方案
+2. **混合谱**：
+   - 多个肽段共存产生复杂卷积
+   - 解决方案：谱去卷积预处理
 
-| 挑战 | 解决方案 |
-|------|----------|
-| 质量精度 | 设置质量容差，使用高分辨质谱 |
-| 混合谱 | 谱去卷积算法分离组分 |
-| 中性丢失 | 包含丢失修饰的碎片类型 |
-| 异构修饰 | 结合保留时间、碎片模式等额外信息 |
+3. **中性丢失**：
+   - 某些修饰碎片会丢失修饰基团
+   - 解决方案：包含丢失修饰的碎片类型
 
-<RelatedLinks
-  links={[
-    { title: '谱图', to: '/wiki/sequence/spectrum-graphs', description: '质谱测序的图方法' },
-    { title: '序列比对', to: '/wiki/alignment/global-local', description: '谱对齐的基础' },
-    { title: 'proteomics', to: '/wiki/proteomics/', description: '蛋白质组学方法概览' }
-  ]}
-/>
+4. **异构修饰**（Isobaric Modifications）：
+   - 不同修饰可能有相同质量
+   - 示例：+80 Da 可能是磷酸化或硫酸化
+   - 解决方案：结合保留时间、碎片模式等额外信息
+
+### 常见误区
+
+| 误区 | 正确理解 |
+|------|---------|
+| 谱卷积高重数峰一定是修饰 | 可能是随机巧合，需统计验证 |
+| 谱卷积可直接确定修饰位置 | 谱卷积只给出质量偏移，确定位点需谱对齐 |
+| 谱卷积适用于所有修饰检测 | 对于多个复杂修饰，谱对齐更可靠 |
+| 所有非零峰都是修饰信号 | 可能是噪声或仪器伪峰 |
 
 ## 历史注记
 
-谱卷积方法由 **Pevzner** 和 **Mulyukov** 于 2003 年提出，用于 MS/MS 数据中的修饰鉴定。该方法成为后续 **MS-GF**、**MODi** 等修饰鉴定算法的基础。
+谱卷积方法由 **Pavel Pevzner** 和 **Zarir Mulyukov** 于 2003 年提出，用于 MS/MS 数据中的修饰鉴定。该方法成为后续 **MS-GF**（Mass Spectrometry - Generating Function）、**MODi** 等修饰鉴定算法的基础。
 
-## 总结
+谱卷积的核心贡献在于：
+- 避免穷举所有修饰组合的虚拟数据库
+- 直接从数据推断修饰存在
+- 为后续谱对齐算法提供候选修饰质量
 
-- **谱卷积通过分析质量差分布揭示肽段间的修饰差异**
-- **共享峰计数是谱卷积的特例（零点高度）**
-- **非零峰直接指示修饰的质量偏移**
-- **避免穷举搜索，计算效率高**
-- **是翻译后修饰鉴定的核心算法工具**
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '谱对齐', to: '/wiki/proteomics/spectral-alignment', description: '精确定位修饰位点的动态规划算法' },
+    { title: '谱图图', to: '/wiki/proteomics/spectrum-graphs', description: '从头肽段测序的图算法' },
+    { title: '质谱基础', to: '/wiki/proteomics/mass-spectrometry-basics', description: 'MS1/MS2 原理与肽段测序问题' },
+    { title: '数据库搜索与 FDR', to: '/wiki/proteomics/database-search-and-fdr', description: '蛋白质鉴定的数据库搜索方法' }
+  ]}
+/>
+
+## 参考文献
+
+- Pevzner, P.A., et al. (2001). Efficient long-tailed recognition of spectra by superimposed almost continuous words. *RECOMB*, 140-149.
+- Pevzner, P.A., & Mulyukov, Z. (2003). Improving the capacity of the spectral convolution method for motif discovery. *Bioinformatics*, 19(4), 491-492.
+- Kim, S., et al. (2008). Spectral probabilities and generating functions of tandem mass spectra: a strike against decoy databases. *Journal of Proteome Research*, 7(8), 3354-3363.
+- Chalkley, R.J., & Clauser, K.R. (2012). Modification site localization scoring: strategies and performance. *Molecular & Cellular Proteomics*, 11(5), 3-14.

@@ -1,16 +1,26 @@
 ---
 title: "系统发育与进化"
+description: 从序列或特征差异重建进化关系的算法方法，包括距离法、简约法和似然法。
 ---
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
-
 
 <PageHeaderMeta
   section="Applications"
   audience="已经理解比对与距离概念，希望进一步理解树结构与进化关系解释的读者"
   startWith="先从层次聚类和 k-means 建立数据分群直觉，再进入 MSA 与系统发育方法。"
 />
+
+## 问题定义
+
+**系统发育树重建问题（Phylogenetic Tree Reconstruction Problem）**：
+
+给定 $n$ 个物种（或基因序列）的特征数据，重建一棵能最好地解释这些数据的进化树。
+
+**输入**：$n$ 个物种的特征矩阵（如多序列比对结果）或 $n \times n$ 距离矩阵 $D$
+
+**输出**：一棵带权树 $T$，其中叶子节点对应现存的 $n$ 个物种，内部节点对应假设的祖先物种，边权表示进化距离或时间
 
 系统发育分析试图根据序列或特征差异重建物种、基因或样本之间的进化关系。
 
@@ -19,23 +29,49 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
   <figcaption>系统发育树用叶节点、内部节点和分支结构来表达样本之间的关系；但不同建树方法对应的统计假设并不相同。</figcaption>
 </figure>
 
+## 生物学背景
+
+在过去，生物学家依赖形态学特征（如喙的形状、鳍的存在与否）来构建进化树。今天，DNA序列为重建进化树提供了更客观的依据。
+
+一个著名的例子是**大熊猫分类争议**：
+- 1870年，大熊猫被归类为浣熊科（基于骨骼相似性）
+- 1985年，Steven O'Brien等人使用DNA序列和算法解决了这一争议，证明大熊猫属于熊科
+- 这项研究使用了约50万个核苷酸来构建熊和浣熊的进化树
+
+另一个重要案例是**人类起源的"出非洲"假说**：
+- Rebecca Cann、Mark Stoneking和Allan Wilson通过构建人类线粒体DNA的进化树
+- 提出了现代人类在约20万年前起源于非洲的假说
+- 这展示了系统发育分析如何将人类起源问题转化为算法问题
+
 ## 这一部分在全站中的位置
 
-它位于“分析方向与案例”之下，承担的是应用层中的一个经典方向：把序列相似性、表达模式相似性与树方法重新组织成结构解释。
+它位于"分析方向与案例"之下，承担的是应用层中的一个经典方向：把序列相似性、表达模式相似性与树方法重新组织成结构解释。
 
 ## 为什么这一节重要
 
 系统发育把比对、距离、模型和统计推断的结果，转换成更高层的关系结构。它既是一个独立主题，也是很多比较分析和进化研究中的解释层。
 
+### 三种主要的系统发育重建方法
+
+| 方法类型 | 代表算法 | 核心思想 | 适用场景 |
+|---------|---------|---------|---------|
+| **距离法** | UPGMA, Neighbor-Joining | 从距离矩阵重建树 | 快速分析，大样本 |
+| **简约法** | Fitch, Sankoff | 最小化进化变化次数 | 序列相似度高 |
+| **似然法** | Maximum Likelihood, Bayesian | 最大化数据概率 | 准确推断，统计评估 |
+
 ## 推荐阅读顺序
 
-1. [层次聚类](./hierarchical-clustering.md)
-2. [k-means 在生物信息学中的应用](./k-means-bioinformatics.md)
-3. [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)
-4. [距离方法概览](./distance-methods.md)
-5. [加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)
-6. [Parsimony](./parsimony.md)
-7. [Maximum Likelihood](./maximum-likelihood.md)
+我们推荐以下学习路径：
+
+1. **[层次聚类](./hierarchical-clustering.md)** — 理解树状结构的基本构建方法
+2. **[k-means 在生物信息学中的应用](./k-means-bioinformatics.md)** — 理解聚类与分区概念
+3. **[多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)** — 获得系统发育分析的输入数据
+4. **[距离方法概览](./distance-methods.md)** — 理解距离矩阵方法的一般框架
+5. **[UPGMA算法](./upgma.mdx)** — 学习基于分子钟假设的层次聚类
+6. **[Neighbor-Joining算法](./neighbor-joining.mdx)** — 学习不依赖分子钟假设的距离法
+7. **[加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)** — 理解距离矩阵与树的理论关系
+8. **[Parsimony](./parsimony.mdx)** — 学习基于最小进化的位点方法
+9. **[Maximum Likelihood](./maximum-likelihood.mdx)** — 学习基于统计模型的现代方法
 
 ## 子主题导航
 

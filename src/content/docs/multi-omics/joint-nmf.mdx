@@ -16,22 +16,33 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   ]}
 />
 
-## 是什么
+## 问题定义
 
-联合非负矩阵分解（Joint Non-negative Matrix Factorization, Joint NMF）是标准 NMF 在多组学场景下的扩展。
+### 什么是联合非负矩阵分解
 
-给定 $K$ 个组学数据矩阵 $X^{(1)}, X^{(2)}, ..., X^{(K)}$，Joint NMF 将它们分解为：
+**联合非负矩阵分解（Joint Non-negative Matrix Factorization, Joint NMF）** 是标准 NMF 在多组学场景下的扩展，通过共享基矩阵实现多组学数据在低维空间的对齐。
+
+### 输入与输出
+
+**输入**：
+- $K$ 个组学数据矩阵：$X^{(1)}, X^{(2)}, ..., X^{(K)}$
+- 其中 $X^{(k)} \in \mathbb{R}^{n \times p_k}$，$n$ 为样本数，$p_k$ 为组学 $k$ 的特征数
+- 潜在维度 $r$（需预先指定或自动选择）
+
+**输出**：
+- $W \in \mathbb{R}^{n \times r}$：**共享基矩阵**（所有组学共用）
+- $H^{(k)} \in \mathbb{R}^{r \times p_k}$：组学 $k$ 的**特异系数矩阵**
+- 重构矩阵：$\hat{X}^{(k)} = W H^{(k)}$
+
+**关键约束**：$W \geq 0$，$H^{(k)} \geq 0$（所有元素非负）
+
+### 数学模型
+
+给定 $K$ 个组学数据矩阵，Joint NMF 将它们分解为：
 
 $$
 X^\{(k)\} \approx W H^\{(k)\}, \quad k = 1, 2, ..., K
 $$
-
-其中：
-- $W \in \mathbb{R}^{n \times r}$ 是**共享基矩阵**，所有组学共用
-- $H^{(k)} \in \mathbb{R}^{r \times p_k}$ 是组学 $k$ 的**特异系数矩阵**
-- $n$ 是样本数，$r$ 是潜在因子数，$p_k$ 是组学 $k$ 的特征数
-
-关键约束：$W \geq 0$，$H^{(k)} \geq 0$（所有元素非负）
 
 ## 为什么重要
 

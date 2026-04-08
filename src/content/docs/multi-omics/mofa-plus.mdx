@@ -16,24 +16,42 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   ]}
 />
 
-## 是什么
+## 问题定义
 
-MOFA+（Multi-Omics Factor Analysis Plus）是用于多组学数据整合的贝叶斯因子分析方法。
+### 什么是 MOFA+
 
-其核心假设是：观测到的多组学数据由一组共享的潜在因子（latent factors）驱动，每组学对这些因子有不同的敏感度（权重）。
+**MOFA+（Multi-Omics Factor Analysis Plus）** 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，实现跨组学的联合建模。
 
-模型结构：
+### 输入与输出
+
+**输入**：
+- $K$ 个组学数据矩阵：$X^{(1)}, X^{(2)}, ..., X^{(K)}$
+- 其中 $X^{(k)} \in \mathbb{R}^{n \times p_k}$，$n$ 为样本数，$p_k$ 为组学 $k$ 的特征数
+- 潜在因子数 $r$（可由 ARD 自动学习）
+- 可选：批次标签、协变量
+
+**输出**：
+- $Z \in \mathbb{R}^{r \times n}$：共享潜在因子矩阵（$r$ 个因子，$n$ 个样本）
+- $W^{(k)} \in \mathbb{R}^{p_k \times r}$：组学 $k$ 的因子载荷矩阵
+- $\tau^{(k)}$：组学 $k$ 的噪声参数
+- 因子重要性：通过 ARD 参数自动学习
+
+### 核心假设
+
+MOFA+ 的核心假设是：观测到的多组学数据由一组共享的潜在因子（latent factors）驱动，每组学对这些因子有不同的敏感度（权重）。
+
+**生成模型**：
 
 $$
 X^\{(k)\} = W^\{(k)\} Z + \epsilon^\{(k)\}, \quad \epsilon^\{(k)\} \sim \mathcal\{N\}(0, \tau^\{(k)\})
 $$
 
 其中：
-- $X^{(k)} \in \mathbb{R}^{n \times p_k}$ 是组学 $k$ 的观测数据
-- $Z \in \mathbb{R}^{r \times n}$ 是共享潜在因子矩阵（$r$ 个因子，$n$ 个样本）
-- $W^{(k)} \in \mathbb{R}^{p_k \times r}$ 是组学 $k$ 的因子载荷矩阵
-- $\tau^{(k)}$ 是组学 $k$ 的噪声参数
-- $\epsilon^{(k)}$ 是观测噪声
+- $X^{(k)}$：组学 $k$ 的观测数据
+- $Z$：共享潜在因子矩阵
+- $W^{(k)}$：组学 $k$ 的因子载荷矩阵
+- $\tau^{(k)}$：组学 $k$ 的噪声参数
+- $\epsilon^{(k)}$：观测噪声
 
 ## 为什么重要
 

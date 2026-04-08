@@ -1,11 +1,10 @@
 ---
-description: Maximum Likelihood系统发育算法详解：通过Pruning算法计算似然值，理解替换模型和参数优化的树推断方法。
+description: Maximum Likelihood最大似然法：在给定演化模型下寻找最可能产生观测数据的系统发育树。
 title: "Maximum Likelihood算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
 
 <SummaryBox
   summary="Maximum Likelihood（最大似然）通过在给定演化模型下寻找最可能产生观测序列的系统发育树，使用Pruning算法高效计算似然值，是现代系统发育分析的主流方法。"
@@ -15,6 +14,25 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '是理解模型化系统发育推断的关键，连接了概率论和进化生物学',
   ]}
 />
+
+## 问题定义
+
+**最大似然系统发育重建问题**：
+
+给定多序列比对数据和替换模型，找到使观测数据概率最大的树拓扑、分支长度和模型参数。
+
+**输入**：
+- $n$ 个序列的多序列比对 $D$（长度为 $L$）
+- 替换模型 $M$（如Jukes-Cantor、HKY、GTR），包含转移概率矩阵 $P(t)$
+- 平衡碱基频率 $\pi$
+
+**输出**：树拓扑 $T$、分支长度向量 $b$、模型参数 $\theta$，最大化似然函数：
+
+$$L(T, b, \theta | D) = P(D | T, b, \theta) = \prod_{k=1}^{L} P(D_k | T, b, \theta)$$
+
+或等价地，最大化对数似然：
+
+$$\ell(T, b, \theta | D) = \sum_{k=1}^{L} \log P(D_k | T, b, \theta)$$
 
 ## 是什么
 

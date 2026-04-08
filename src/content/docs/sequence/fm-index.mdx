@@ -1,6 +1,6 @@
 ---
-description: FM-index 概览，解释 BWT 之上的压缩全文索引如何支持高效 exact matching。
 title: "FM-index"
+description: "基于BWT的压缩全文索引，理解backward search算法和Occ/C数组如何支持高效精确匹配"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
@@ -9,10 +9,12 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
-  summary="FM-index 是理解‘为什么 read mapper 能在巨大参考基因组上快速查找’的关键一页：它把 BWT 的可压缩性和 backward search 的区间更新结合起来。"
+  summary="FM-index 是基于 BWT 的压缩全文索引，通过 backward search 和 Occ/C 数组实现高效的精确匹配查询，是 BWA、Bowtie 等现代比对工具的核心。"
   bullets={[
-    '先理解 suffix array 和 BWT，再看 FM-index 会更自然。',
-    '这页的重点是索引骨架和搜索思路，不是完整比对算法。',
+    '核心结构：BWT 字符串 + C 数组 + Occ/Rank 数据结构',
+    '查询算法：Backward search，从右向左逐步收缩区间',
+    '空间效率：接近信息论下界，适合大基因组索引',
+    '时间效率：单次查询 O(|P|)，与文本长度无关'
   ]}
 />
 
@@ -104,6 +106,23 @@ FM-index 特别适合：
 ### 有了 FM-index 就不需要 seed-and-extend
 
 不一定。真实工具通常仍会结合 seeding、过滤和局部扩展策略。
+
+## 历史注记
+
+FM-index由Ferragina和Manzini于2000年提出，名称来自作者姓氏首字母（Ferragina-Manzini Index）。它将原本用于数据压缩的BWT发展为支持高效查询的全文索引。
+
+**关键发展**：
+- 2000年：FM-index理论提出
+- 2009年：BWA将FM-index引入生物信息学，成为NGS比对的标准方法
+- 2011年：Bowtie2进一步优化，支持gapped alignment
+- 至今：FM-index仍是短读长比对的主流索引方法
+
+## 参考文献
+
+1. Ferragina, P., & Manzini, G. (2000). Opportunistic data structures with applications. *FOCS 2000*, 390-398.
+2. Ferragina, P., & Manzini, G. (2005). Indexing compressed text. *JACM*, 52(4), 552-581.
+3. Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
+4. Langmead, B., et al. (2009). Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. *Genome Biology*, 10(3), R25.
 
 ## 相关页面
 

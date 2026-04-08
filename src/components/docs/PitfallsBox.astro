@@ -1,15 +1,19 @@
 ---
 interface Props {
   title?: string;
-  items: string[];
+  items?: string[];
+  pitfalls?: string[];
 }
 
-const { title = '常见误区', items } = Astro.props;
+import { Icon } from '@astrojs/starlight/components';
+
+const { title = '常见误区', items = [], pitfalls = [] } = Astro.props;
+const resolvedItems = items.length > 0 ? items : pitfalls;
 ---
 
 <aside class="note-card pitfalls-card">
-  <strong>{title}</strong>
+  <strong><Icon name="warning" size="1.2rem" /> {title}</strong>
   <ul>
-    {items.map((item) => <li>{item}</li>)}
+    {resolvedItems.map((item) => <li>{item}</li>)}
   </ul>
 </aside>

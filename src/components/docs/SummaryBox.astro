@@ -5,11 +5,13 @@ interface Props {
   bullets?: string[];
 }
 
+import { Icon } from '@astrojs/starlight/components';
+
 const { title = '快速概览', summary, bullets = [] } = Astro.props;
 ---
 
 <section class="summary-card">
-  <strong>{title}</strong>
+  <strong><Icon name="rocket" size="1.2rem" /> {title}</strong>
   <p>{summary}</p>
   {bullets.length > 0 && (
     <ul>

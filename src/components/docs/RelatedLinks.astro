@@ -10,23 +10,41 @@ interface Props {
   links: RelatedLink[];
 }
 
-const { links } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+import { Icon } from '@astrojs/starlight/components';
+import { buildHref, isExternalHref } from './link-utils';
 
-function resolveHref(to: string): string {
-  if (to.startsWith('http')) return to;
-  const cleaned = to.replace(/^\/docs\//, '/');
-  return `${base}${cleaned}`;
-}
+const { links } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const resolvedLinks = links.map((link) => {
+  const href = buildHref(link.to, base);
+
+  return {
+    ...link,
+    href,
+    external: isExternalHref(href),
+  };
+});
 ---
 
 <div class="related-grid">
-  {links.map((link) => (
-    <a class="related-card" href={resolveHref(link.to)}>
-      {link.label && <span class="related-label">{link.label}</span>}
+  {resolvedLinks.map((link) => (
+    <a
+      class="related-card"
+      href={link.href}
+      target={link.external ? '_blank' : undefined}
+      rel={link.external ? 'noopener noreferrer' : undefined}
+    >
+      <div class="related-header">
+        {link.label && <span class="related-label">{link.label}</span>}
+        {link.external && <Icon name="external" size="1rem" />}
+      </div>
       <h3>{link.title}</h3>
       <p>{link.description}</p>
-      <span class="secondary-action">延伸阅读</span>
+      <span class="secondary-action">
+        延伸阅读
+        <Icon name="right-arrow" size="0.9rem" />
+      </span>
     </a>
   ))}
 </div>

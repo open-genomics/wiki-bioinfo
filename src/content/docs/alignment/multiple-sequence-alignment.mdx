@@ -1,0 +1,68 @@
+---
+description: 多序列比对（MSA）的目标、难点与渐进式比对的核心思路，以及 Profile 在群体模式比对中的应用。
+title: "多序列比对 (MSA)"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="如果说双序列比对关注“两条序列如何对齐”，那么多序列比对（Multiple Sequence Alignment, MSA）则是在同一个框架中同时比较多条同源序列，旨在揭示保守位点和家族变异模式。"
+  bullets={[
+    '理解 MSA 空间复杂度的指数级增长挑战',
+    '掌握 Sum-of-Pairs (SP) 得分作为优化目标的逻辑',
+    '学习渐进式比对（Progressive Alignment）与指导树（Guide Tree）的原理',
+    '理解 Profile 如何将“多对一”比对转化为“一对一”计算'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '双序列比对', href: '/wiki-bioinfo/alignment/needleman-wunsch' },
+    { name: '得分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' },
+    { name: '加法系统发育', href: '/wiki-bioinfo/phylogeny/additive-phylogeny' }
+  ]}
+/>
+
+## 1. 为什么比对多条序列更难？
+
+### 复杂度爆炸
+在双序列比对中，我们使用二维动态规划矩阵。当序列数量增加到 $k$ 条时：
+- **空间复杂度**：需要构建一个 $k$ 维超立方体，大小为 $O(n^k)$。
+- **实际影响**：即便只有 10 条中等长度的序列，精确动态规划所需的内存和时间也会超出任何单机的处理能力。
+
+## 2. 优化目标：Sum-of-Pairs 得分
+
+如何评价一个多序列比对的好坏？最常用的标准是 **Sum-of-Pairs (SP) Score**：
+- **逻辑**：将多序列比对的每一列拆解为所有可能的两两（Pairwise）比对。
+- **总分**：所有序列对的比对得分之和。
+- **局限**：SP 得分在生物学上并不总是完美（如某些变异可能在演化中只发生一次但在多对中被重复计数），但它是目前计算上最易处理的基准。
+
+## 3. 渐进式比对 (Progressive Alignment)
+
+为了规避 $O(n^k)$ 的计算量，几乎所有主流 MSA 工具（如 ClustalW, MUSCLE）都采用**渐进式**策略：
+
+1.  **两两比对**：先计算所有序列对之间的相似性。
+2.  **构建指导树 (Guide Tree)**：基于相似性矩阵构建一棵树（通常使用 Neighbor-Joining 或 UPGMA）。
+3.  **按序合并**：沿着树的分支，从最相似的序列开始合并。
+4.  **Profile 对齐**：当两个分支合并时，我们将已对齐的序列组视为一个 **Profile**，进行 Profile-Profile 比对。
+
+### 核心直觉：Profile 的力量
+**Profile** 记录了对齐列中每个碱基出现的频率分布。将“序列对 Profile”或“Profile 对 Profile”的比对，在算法上可以简化为类似于双序列比对的复杂度，从而将整体耗时降至可接受范围。
+
+## 4. 常见误区：MSA vs 系统发育
+
+- **指导树不等于进化树**：Progressive alignment 中生成的指导树仅仅是为了确定合并顺序，它可能并不代表真实的系统发育关系。
+- **“Once a gap, always a gap”**：渐进式比对是贪心的。如果在早期步骤中引入了错误的 Gap，后续合并无法修正它。这是目前 MSA 算法持续优化的重点。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '打分矩阵与罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '理解 SP 得分的底层权重' },
+    { title: 'Neighbor-Joining', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '指导树构建的常用方法' },
+    { title: 'HMM 基因预测', to: '/wiki-bioinfo/models/hmm', description: 'Profile 思想的概率模型延伸' }
+  ]}
+/>

@@ -1,0 +1,80 @@
+---
+description: 蛋白质鉴定的数据库搜索方法、PSM 评分、Target-Decoy 策略与 FDR 控制，以及基于虚拟数据库的修饰搜索逻辑。
+title: "数据库搜索与 FDR"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="数据库搜索是目前蛋白质鉴定最常用的方法。本章介绍肽段-谱图匹配（PSM）的概念、常用评分算法、通过 Target-Decoy 策略控制错误发现率（FDR）的统计方法，以及如何处理带有修饰的肽段。"
+  bullets={[
+    '理解肽段-谱图匹配 (PSM) 作为蛋白质鉴定的基本单位',
+    '掌握共享峰计数、相关系数 (XCorr) 与概率评分的原理',
+    '掌握 Target-Decoy 策略在估计假阳性率中的应用',
+    '了解基于“虚拟数据库”的修饰肽段搜索挑战'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '质谱基础', href: '/wiki-bioinfo/proteomics/mass-spectrometry-basics' },
+    { name: '谱图 (Spectrum Graphs)', href: '/wiki-bioinfo/proteomics/spectrum-graphs' }
+  ]}
+/>
+
+## 1. 蛋白质鉴定的核心：数据库搜索
+
+虽然 De novo 测序理论上可以识别任何序列，但在处理海量实验数据时，**数据库搜索**更具优势：
+- **效率**：将搜索范围限制在已知的蛋白质序列中，极大减少了候选解的空间。
+- **鲁棒性**：利用已知信息弥补实验谱图的不完整。
+
+### 肽段-谱图匹配 (PSM)
+**PSM (Peptide-Spectrum Match)** 是蛋白质鉴定的最小证据单位。它是指一个实验谱图与数据库中一个候选肽段序列之间的关联。
+
+## 2. 评分算法：如何衡量“对得准”？
+
+### 共享峰计数 (Shared Peaks Count)
+最直观的方法：统计实验谱峰与理论谱峰重合的数量。
+- **缺点**：忽略了峰的强度信息，容易受到背景噪声（随机峰）的干扰。
+
+### 交叉相关 (XCorr)
+SEQUEST 等工具使用的核心算法。它通过计算实验谱与理论谱之间的位移相关性来抗噪。
+- **直觉**：如果两个谱图在大部分峰的位置上吻合，它们的互相关函数在零位移处会产生一个高峰。
+
+### 概率评分 (MOWSE/Mascot)
+计算一个匹配纯粹由随机产生的概率。
+- **公式**：$\text{Score} = -10 \cdot \log_{10}(P)$
+- **意义**：分值越高，匹配越不可能是随机发生的，可靠性越高。
+
+## 3. 修饰肽段的搜索：虚拟数据库逻辑
+
+蛋白质在体内常发生**翻译后修饰 (PTM)**（如磷酸化、乙酰化）。
+- **挑战**：修饰会改变氨基酸的质量，使得理论谱完全错位。
+- **虚拟数据库**：一种早期的解决思路是生成一个包含所有可能修饰组合的巨大数据库。
+- **计算代价**：即使一个肽段只有 2 个潜在修饰位点，组合数量也会随修饰类型指数级增长。这促使了后来**谱卷积**和**谱对齐**算法的诞生（详见相关页面）。
+
+## 4. 统计保障：FDR 与 Target-Decoy
+
+在处理数百万个 PSM 时，即便单个匹配错误的概率只有 0.1%，累积产生的假阳性结果也会非常惊人。
+
+### Target-Decoy 策略
+1.  **Target 库**：真实的已知蛋白序列。
+2.  **Decoy 库**：将真实序列反转 (Reversed) 或随机打乱 (Shuffled) 产生的“伪序列”。
+3.  **核心假设**：如果一个匹配来自 Decoy 库，那它必然是假阳性。通过观察高分匹配中 Decoy 的占比，我们可以估计 Target 库中的假阳性率。
+
+### 错误发现率 (FDR) 公式
+$$\text{FDR} \approx \frac{\text{Decoy Hits}}{\text{Target Hits}}$$
+- 通常蛋白质组学研究要求 **FDR < 1%**。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '谱对齐', to: '/wiki-bioinfo/proteomics/spectral-alignment', description: '精确定位修饰位置的算法' },
+    { title: '谱卷积', to: '/wiki-bioinfo/proteomics/spectral-convolution', description: '检测全局质量偏移的工具' },
+    { title: '质谱基础', to: '/wiki-bioinfo/proteomics/mass-spectrometry-basics', description: '理解 MS1/MS2 原始数据' }
+  ]}
+/>

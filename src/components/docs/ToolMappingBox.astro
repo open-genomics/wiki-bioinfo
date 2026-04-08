@@ -4,11 +4,13 @@ interface Props {
   items: string[];
 }
 
+import { Icon } from '@astrojs/starlight/components';
+
 const { title = '与真实工具或流程的连接', items } = Astro.props;
 ---
 
 <aside class="note-card tool-mapping-card">
-  <strong>{title}</strong>
+  <strong><Icon name="seti:json" size="1.2rem" /> {title}</strong>
   <ul>
     {items.map((item) => <li>{item}</li>)}
   </ul>

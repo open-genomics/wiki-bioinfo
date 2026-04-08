@@ -1,31 +1,110 @@
 ---
 title: "结构生物信息学"
+description: 蛋白质、RNA 与复合体三维结构的预测、比较与解释
 ---
 
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
+结构生物信息学（Structural Bioinformatics）是研究生物大分子三维结构的计算学科。它回答的核心问题是：**给定分子序列，如何预测其结构？如何比较不同结构？结构如何解释功能？**
 
-结构生物信息学研究蛋白质、RNA 与复合体的三维结构如何被预测、比较和解释。它连接了序列、进化、物理约束与功能机制。
+## 本章在知识地图中的位置
 
-## 这一部分讲什么
+结构生物信息学处于**序列层**与**功能层**之间的关键连接点：
 
-本章聚焦：
+```
+序列层 ──→ 结构层 ──→ 功能层
+   │          │          │
+   ▼          ▼          ▼
+基因组   结构生物信息学   通路/表型
+         (本章主题)
+```
 
-- 蛋白结构的基本层次；
-- AlphaFold 与现代结构预测；
-- 结构比对与 fold 概念。
+理解这一点很重要：结构既是**序列信息的物理实现**，又是**功能执行的三维基础**。这使得结构生物信息学成为连接"基因型"与"表型"的桥梁学科。
+
+## 学科背景与发展脉络
+
+### 实验结构生物学的演进
+
+结构生物信息学的发展与实验技术密切相关：
+
+- **1958**：X 射线晶体学首次解析肌红蛋白结构（Kendrew），开启蛋白质结构时代
+- **1980s**：NMR 开始用于蛋白质结构测定，提供溶液状态信息
+- **1994**：CASP 竞赛启动，系统评估计算方法进展
+- **2013**：冷冻电镜（Cryo-EM）技术突破，"分辨率革命"开始
+- **2020**：AlphaFold 2 在 CASP14 中达到实验精度，计算方法取得历史性突破
+
+### 计算方法的演进
+
+与实验技术并行的是计算方法的发展：
+
+1. **比较建模时代（1990s-2000s）**：依赖已知同源结构，如 SWISS-MODEL
+2. **从头预测尝试（2000s-2010s）**：物理能量函数 + 采样，如 Rosetta
+3. **共进化分析时代（2010s）**：利用 MSA 中的共进化信号预测接触
+4. **深度学习时代（2018-至今）**：AlphaFold 等端到端方法
+
+## 本章核心内容
+
+本章围绕三个递进层次组织：
+
+### 1. 蛋白结构基础
+
+理解蛋白结构的**层次组织**（一级到四级）、**功能模块**（domain 与 motif）、以及**动态性**（构象变化与无序区域）。这是后续所有结构分析的基础。
+
+### 2. 结构预测：AlphaFold 与现代方法
+
+深入理解结构预测的核心思想：**从序列和进化信息学习折叠的几何规律**。重点包括：
+- 输入：MSA 与共进化信号的作用
+- 输出：如何解读 pLDDT 和 PAE 等置信度指标
+- 局限：预测与实验结构的边界在哪里
+
+### 3. 结构比对与 fold 分类
+
+学习**量化结构相似性**的方法：
+- 指标：RMSD、TM-score 的数学定义与应用场景
+- 算法：结构比对的计算原理
+- 分类：SCOP、CATH 等 fold 数据库的层次体系
 
 ## 为什么重要
 
-- 相似序列不一定意味着完全相同功能，但结构往往更接近功能层；
-- 很多致病变异、活性位点和结合位点只能放到三维结构中更好解释；
-- 结构预测显著改变了蛋白功能注释与假设生成方式。
+结构生物信息学的重要性体现在：
 
-## 推荐阅读顺序
+### 1. 结构比序列更接近功能
 
-1. [蛋白结构基础](./protein-structure-basics.md)
-2. [AlphaFold 与结构预测](./alphafold-and-structure-prediction.md)
-3. [结构比对与 fold](./structure-alignment-and-fold.md)
+远缘同源蛋白可能序列差异很大（< 30% 相似），但折叠方式相似。这导致：
+- 序列比对失败的案例，结构比对可能成功
+- 功能预测需要结合结构信息
+- 药物设计依赖精确的三维构象
+
+### 2. 结构预测改变了研究范式
+
+AlphaFold 使计算结构预测从**专家工具**变成**常规资源**：
+- 结构空白大幅减少（AlphaFold DB 覆盖超过 2 亿个结构）
+- 实验设计可以基于结构假设
+- 大规模结构分析成为可能
+
+### 3. 变异解释与机制理解
+
+很多生物学问题需要三维视角：
+- 致病变异的位置是否在关键结构区域？
+- 突变如何影响稳定性或相互作用？
+- 活性位点的几何约束是什么？
+
+## 前置知识
+
+阅读本章前，建议具备以下基础：
+
+- **[分子生物学基础](../molecular-bioinfo/)**：氨基酸、蛋白质合成、中心法则
+- **[序列比对](../alignment/sequence-alignment/)**：理解多序列比对（MSA）的概念
+- **[机器学习基础](../ml-bioinfo/)**（可选）：有助于理解 AlphaFold 的模型架构
+
+## 后续学习路径
+
+完成本章后，可以进一步学习：
+
+- **[蛋白质组学](../proteomics/)**：大规模蛋白质研究与功能注释
+- **[药物发现](../drug-discovery/)**（如适用）：基于结构的药物设计
+- **[分子动力学模拟](../md-simulation/)**（如适用）：理解蛋白动态
 
 ## 子主题导航
 
@@ -34,17 +113,31 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
     {
       title: '蛋白结构基础',
       to: '/docs/structure-bioinfo/protein-structure-basics',
-      description: '理解一级到四级结构、domain、motif 与稳定性来源。',
+      description: '理解一级到四级结构、domain、motif 与稳定性来源',
     },
     {
       title: 'AlphaFold 与结构预测',
       to: '/docs/structure-bioinfo/alphafold-and-structure-prediction',
-      description: '理解现代结构预测的输入、输出、置信度与局限。',
+      description: '理解现代结构预测的输入、输出、置信度与局限',
     },
     {
       title: '结构比对与 fold',
       to: '/docs/structure-bioinfo/structure-alignment-and-fold',
-      description: '从 RMSD、TM-score 到 fold family，理解结构相似性的比较方式。',
+      description: '从 RMSD、TM-score 到 fold family，理解结构相似性的比较方式',
     },
   ]}
 />
+
+## 参考资源
+
+### 经典教材
+
+- Branden, C., & Tooze, J. (1999). *Introduction to Protein Structure* (2nd ed.). Garland Science.
+- Fersht, A. (1999). *Structure and Mechanism in Protein Science*. W.H. Freeman.
+
+### 数据库与工具
+
+- **PDB**：https://www.rcsb.org/ — 实验测定结构数据库
+- **AlphaFold DB**：https://alphafold.ebi.ac.uk/ — 预测结构数据库
+- **SCOP2**：http://scop2.mrc-lmb.cam.ac.uk/ — 结构分类数据库
+- **Foldseek**：https://search.foldseek.com/ — 快速结构搜索

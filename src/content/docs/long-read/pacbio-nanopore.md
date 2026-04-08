@@ -1,59 +1,103 @@
 ---
-description: PacBio 与 Oxford Nanopore 长读长测序平台的原理、误差与应用。
+description: PacBio 与 Oxford Nanopore 两大长读长测序平台的物理原理、误差模式与典型应用场景。
 title: "PacBio 与 Nanopore"
 ---
 
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 
-## 两大主流平台
+<SummaryBox
+  summary="PacBio SMRT 测序与 Oxford Nanopore 测序代表了两种截然不同的长读长技术路线：前者通过荧光信号实时观测单分子合成过程，后者通过离子电流变化识别穿过纳米孔的碱基。"
+  bullets={[
+    'PacBio HiFi 通过环形共识测序（CCS）实现 Q20-Q30 单条 read 精度',
+    'Nanopore 可产生超长 reads（>1 Mb），且支持直接 RNA 测序',
+    '两种平台的误差特征不同：PacBio 以随机插入缺失为主，Nanopore 有系统性同聚物偏差',
+    '分析工具需要根据平台特性选择参数和模型'
+  ]}
+/>
 
-当前长读长测序主要由两类技术主导：
+## 问题引入：如何读取长 DNA 分子？
 
-- **PacBio SMRT sequencing**
-- **Oxford Nanopore sequencing**
+短读长测序（Illumina）的基本策略是**将长 DNA 打断成短片段**，然后并行测序。如果我们希望直接读取长 DNA 分子，需要解决什么新问题？
 
-两者都能产生远长于 Illumina 的 reads，但测序原理、误差模式和典型应用并不完全相同。
+长读长测序技术面临的核心挑战是：**如何在保持 DNA 分子完整性的同时，逐个识别碱基？**
+
+当前有两条主要技术路线：
+- **合成观测法**（PacBio）：实时观察 DNA 聚合酶合成新链的过程
+- **穿孔检测法**（Nanopore）：检测 DNA 穿过纳米孔时的物理信号变化
 
 ## PacBio：单分子实时测序
 
-PacBio 的核心是 **SMRT（Single Molecule Real-Time）** 测序。DNA 聚合酶被固定在纳米尺度的 ZMW（zero-mode waveguide）孔底，系统实时记录荧光标记核苷酸被掺入时发出的信号。
+### 核心原理
 
-### HiFi reads
+PacBio 的 **SMRT（Single Molecule Real-Time）** 测序建立在零模波导（Zero-Mode Waveguide, ZMW）技术之上。每个 ZMW 是一个直径约 70 nm、深度 100 nm 的纳米孔，底部固定着 DNA 聚合酶。
 
-PacBio 近年的重要进展是 **HiFi / CCS（circular consensus sequencing）**：
+测序过程：
 
-1. 将同一 DNA 分子做成环形模板；
-2. 聚合酶多次绕环测序；
-3. 将多次观测整合为高精度共识序列。
+1. **模板准备**：待测 DNA 片段与引物、聚合酶结合，固定在 ZMW 底部
+2. **合成观测**：四种核苷酸（A、T、C、G）带有不同颜色的荧光标记，在溶液中自由扩散
+3. **信号捕获**：当聚合酶掺入某个核苷酸时，该碱基的荧光信号在 ZMW 底部短暂停留，被光学系统记录
+4. **碱基识别**：根据荧光颜色确定碱基类型，根据信号间隔确定时序
 
-结果是：
+### 从 CLR 到 HiFi：共识测序的力量
 
-- read 长度常在 10–25 kb；
-- 单条 read 精度可以达到 Q20–Q30 级别；
-- 非常适合高质量组装、变异检测和 isoform 分析。
+早期 PacBio 产生 **CLR（Continuous Long Read）**，单条 read 长度可达 10-50 kb，但错误率较高（~15%）。关键突破是 **CCS（Circular Consensus Sequencing）** 技术：
 
-## Nanopore：电流信号读序列
+**制备环形模板（SMRTbell）**：
+- 在 DNA 片段两端连接发夹接头，形成环形结构
+- 聚合酶可沿环多次循环测序
 
-Oxford Nanopore 的原理是：单链 DNA 或 RNA 穿过蛋白纳米孔时，不同的 k-mer 会引起不同的离子电流变化，系统通过这些电流信号反推出碱基序列。
+**多次观测整合**：
+- 同一分子被测序 10-30 次
+- 通过多序列共识（consensus）校正随机误差
+- 最终产生 **HiFi read**：长度 10-25 kb，精度 Q20-Q30（99-99.9%）
 
-优点：
+这一过程本质上是用**时间换精度**：牺牲通量，换取单分子的高准确性。
 
-- read 可以非常长，常见几十 kb，极端情况下超过 1 Mb；
-- 仪器灵活，从 MinION 到 PromethION；
-- 可直接测 RNA 或检测某些修饰信号。
+## Nanopore：纳米孔电流测序
 
-挑战：
+### 核心原理
 
-- basecalling 质量依赖模型与信号质量；
-- 在某些同聚物和复杂区域的误差模式与 PacBio 不同。
+Oxford Nanopore 技术采用完全不同的物理原理。蛋白质纳米孔（如 CsgG）嵌入脂质双分子层，两侧施加电压形成离子电流。
 
-## 误差模式比较
+测序过程：
 
-| 平台 | 典型优势 | 典型挑战 |
-|------|----------|----------|
-| PacBio HiFi | 高准确率、适合高质量组装 | 成本与文库质量要求较高 |
-| Nanopore | 超长 reads、设备灵活、可直接 RNA | 信号噪声与 basecalling 依赖更强 |
+1. **分子驱动**：单链 DNA/RNA 在电场作用下被马达蛋白（helicase）解旋，逐个穿过纳米孔
+2. **电流调制**：不同 k-mer（通常 5-mer）占据孔道时，会改变离子电流的电导特性
+3. **信号记录**：系统以 kHz 频率采样电流信号，产生原始电信号时间序列
+4. **碱基识别**：通过 **basecalling 算法**（如 HMM 或神经网络）将电流信号解码为碱基序列
 
-长读长错误不只是“更多 mismatch”，还会表现为插入/缺失偏差、同聚物问题和平台特异性噪声，因此分析工具通常需要专门建模。
+### 技术特点
+
+**超长读长**
+由于 DNA 保持完整，理论上 read 长度只受限于文库制备和 DNA 质量。实际应用中已报道超过 2 Mb 的 reads。
+
+**直接 RNA 测序**
+与其他平台不同，Nanopore 可直接测序 RNA 分子（无需反转录），并保留碱基修饰信息（如 m6A 甲基化）。
+
+**便携性**
+MinION 设备仅重 87 克，可通过 USB 连接笔记本运行，支持野外实时测序。
+
+## 误差模式与平台比较
+
+理解两种平台的误差特征对于选择分析工具至关重要：
+
+| 特征 | PacBio HiFi | Nanopore |
+|------|-------------|----------|
+| 读长范围 | 10-25 kb | 可达 >1 Mb |
+| 单条精度 | Q20-Q30 | Q10-Q20 |
+| 主要误差类型 | 随机插入缺失 | 同聚物收缩/延伸 |
+| 系统偏差 | 较少 | 某些序列上下文有偏差 |
+| 通量 | 中等 | 高（PromethION）|
+| 设备成本 | 高 | 低（MinION）到高（PromethION）|
+
+**误差来源差异**：
+
+- **PacBio**：荧光信号检测误差、聚合酶滑移，多为随机误差
+- **Nanopore**：电流信号噪声、分子动力学波动、复杂序列上下文（如 homopolymer），存在系统性偏差
+
+这意味着：
+- PacBio 数据适合直接用于变异检测
+- Nanopore 数据通常需要共识后处理（polishing）才能达到高准确性
 
 ## 应用场景
 

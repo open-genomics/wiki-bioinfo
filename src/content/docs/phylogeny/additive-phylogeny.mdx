@@ -1,0 +1,78 @@
+---
+description: 从可加性距离矩阵重建系统发育树的算法理论，包括四点条件、悬挂边长度计算和 ADDITIVEPHYLOGENY 递归算法。
+title: "加法系统发育"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="加法系统发育探讨如何从距离矩阵精确恢复树结构。如果矩阵满足“可加性”，我们就能通过递归算法找回那棵唯一的潜在树。"
+  bullets={[
+    '理解可加矩阵（Additive Matrix）的定义与生物学意义',
+    '掌握判定准则：四点条件（Four-Point Condition）',
+    '学习悬挂边长度（Limb Length）的稳健计算方法',
+    '掌握 ADDITIVEPHYLOGENY 递归算法的构建逻辑'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '演化树与聚类概览', href: '/wiki-bioinfo/phylogeny' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' }
+  ]}
+/>
+
+## 1. 什么是可加性 (Additivity)？
+
+在基于距离的方法构建系统发育树时，我们假设物种间的进化差异可以由一棵带权树完全解释。
+
+**定义**：一个 $n \times n$ 的距离矩阵 $D$ 是**可加的 (Additive)**，如果存在一棵带权树 $T$，其叶子节点对应这 $n$ 个物种，且矩阵中任意两点 $i, j$ 的距离 $D_{ij}$ 正好等于树上 $i$ 到 $j$ 的唯一路径权值之和。
+
+### 直觉：树是对距离的“解释”
+如果矩阵是可加的，意味着进化的路径是分叉的，没有回变或平行的进化事件。这种矩阵是理解系统发育重建的最理想模型。
+
+## 2. 判定准则与悬挂边计算
+
+### 四点条件 (Four-Point Condition)
+判定一个矩阵是否为可加矩阵的准则是四点条件。对于任意四个物种 $i, j, k, l$，计算：
+1. $S_1 = D_{ij} + D_{kl}$
+2. $S_2 = D_{ik} + D_{jl}$
+3. $S_3 = D_{il} + D_{jk}$
+
+**定理**：矩阵 $D$ 是可加的，当且仅当在上述三个和中，**最大的两个完全相等**。
+
+### 悬挂边长度 (Limb Length) 的计算
+在构建树时，首先需要确定叶子节点到其父节点的距离。
+
+对于物种 $j$，其**悬挂边长度**可以通过其他任意两个物种 $i$ 和 $k$ 计算得出：
+$$LimbLength(j) = \min_{i, k} \frac{D_{ij} + D_{jk} - D_{ik}}{2}$$
+
+- **直觉**：在树结构中，$D_{ij} + D_{jk}$ 计算了 $j$ 到父节点的两次距离，而减去 $D_{ik}$ 则抵消了 $i$ 到 $k$ 的公共路径。取所有对 $(i, k)$ 的最小值是为了在存在数据偏差时获得最稳健的结果。
+
+## 3. ADDITIVEPHYLOGENY 算法
+
+如果矩阵是可加的，我们可以使用递归方法来恢复树。
+
+### 核心逻辑
+1.  **寻找退化三元组**：寻找三个物种 $i, j, k$，使得 $D_{ij} + D_{jk} = D_{ik}$。这表示物种 $j$ 处于连接 $i$ 和 $k$ 的路径分支上。
+2.  **修剪 (Trimming)**：如果矩阵不是直接退化的，我们计算一个物种（如 $n$）的 `LimbLength`，然后从所有涉及 $n$ 的距离中减去这个长度，使其变为“悬挂”在路径上的形态。
+3.  **递归**：临时移除该物种，在规模为 $n-1$ 的矩阵上递归构建树。
+4.  **接回**：在生成的树中找到 $i$ 到 $k$ 路径上的准确位置，将移除的物种重新接回。
+
+## 4. 与现实方法的连接
+
+现实中的序列距离矩阵通常由于多重替换和测序误差而不严格满足可加性。
+- **Neighbor-Joining (NJ)** 可以看作是 `ADDITIVEPHYLOGENY` 的鲁棒变体，它在矩阵非严格可加时仍能寻找最优的邻居合并方案。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '邻接法 (Neighbor Joining)', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '处理非精确距离的实用方法' },
+    { title: 'UPGMA', to: '/wiki-bioinfo/phylogeny/upgma', description: '基于超度量假设的聚类方法' },
+    { title: '最大简约法 (Parsimony)', to: '/wiki-bioinfo/phylogeny/parsimony', description: '基于序列特征的演化树构建' }
+  ]}
+/>

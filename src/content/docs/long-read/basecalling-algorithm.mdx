@@ -1,325 +1,170 @@
 ---
-description: Nanopore Basecalling 算法的详细实现，包括 HMM 模型、神经网络架构和信号处理。
+description: Nanopore Basecalling 算法的核心思想，包括 HMM 模型与神经网络方法。
 title: "Basecalling 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 
-
 <SummaryBox
-  summary="Basecalling 是将 Nanopore 原始电流信号转换为碱基序列的核心算法，现代工具使用神经网络或隐马尔可夫模型直接从信号预测 k-mer 序列。"
+  summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
   bullets={[
-    'HMM 模型通过状态转移和发射概率建模信号与 k-mer 的关系',
-    '神经网络（CNN/RNN/Transformer）直接学习信号到碱基的映射',
-    '信号归一化和上下文建模是准确性的关键',
+    'Nanopore 测量 k-mer 穿过纳米孔时的离子电流变化，而非直接识别碱基',
+    'HMM 通过状态转移和发射概率建模信号生成过程',
+    '神经网络（CNN/RNN/Transformer）直接学习信号到碱基的端到端映射',
+    '现代 basecaller 已超越传统 HMM，采用深度学习方法'
   ]}
 />
 
-## 是什么
+## 问题引入：如何"阅读"电流信号
 
-Basecalling 算法解决以下问题：
+Nanopore 测序的物理原理与 Illumina 或 PacBio 截然不同：
 
-> 给定 Nanopore 测序产生的离子电流时间序列信号，推断出对应的 DNA/RNA 碱基序列。
+> **Illumina**：检测荧光标记的核苷酸
+> **PacBio**：检测荧光标记的核苷酸掺入事件
+> **Nanopore**：检测 DNA 穿过纳米孔时的**离子电流变化**
 
-Nanopore 测序不直接读取碱基，而是测量 DNA/RNA 分子穿过纳米孔时引起的离子电流变化。不同 k-mer 会产生特征性的电流信号模式。
+核心问题是：**如何将连续的电流信号时间序列转换为离散的碱基序列？**
 
-## 要解决什么生物信息学问题
+这类似于语音识别问题——将连续的声波信号转换为离散的音素/文字序列。Basecalling 算法就是解决这一解码问题的核心。
 
-在实际生物信息学应用中，basecalling 适合的场景包括：
+## 物理基础：信号从何而来
 
-- **实时测序**：在测序过程中实时生成碱基序列
-- **直接 RNA 测序**：无需反转录直接测序 RNA
-- **修饰检测**：通过信号异常检测碱基修饰
-- **质量评估**：评估测序质量和错误模式
+当单链 DNA 在电场驱动下穿过蛋白质纳米孔时，孔道中的 k-mer（k 个连续碱基）会阻挡离子流，产生特征性的电流信号。
 
-## 数学模型
+### 信号生成模型
 
-### 信号生成过程
-
-当 DNA 分子穿过纳米孔时，电流信号可以建模为：
+电流信号可建模为：
 
 $$
 I(t) = f(k(t)) + \epsilon(t)
 $$
 
 其中：
-- `I(t)` 是时刻 `t` 的电流信号
-- `k(t)` 是时刻 `t` 位于孔内的 k-mer
-- f(·) 是 k-mer 到电流的映射函数
-- ε(t) 是噪声（包括热噪声、电子噪声、分子动力学噪声）
+- $I(t)$：时刻 $t$ 的观测电流
+- $k(t)$：时刻 $t$ 位于孔内的 k-mer（通常 $k=5$）
+- $f(\cdot)$：k-mer 到电流的映射函数（非线性）
+- $\epsilon(t)$：噪声（热噪声、电子噪声、分子动力学波动）
 
-### 问题形式化
+**关键观察**：
+- 不同 k-mer 产生不同的特征电流（典型范围 20-200 pA）
+- 同一 k-mer 由于噪声产生电流分布（近似高斯）
+- 相邻信号高度重叠（一个碱基移动只改变 k-mer 的一个位置）
 
-给定信号序列 S = s₁, s₂, ..., sₙ，目标是找到碱基序列 B = b₁, b₂, ..., bₘ，使得：
+## 数学框架：解码问题形式化
 
-$$
-B^* = \arg\max_B P(B | S) = \arg\max_B \frac\{P(S | B) P(B)\}\{P(S)\}
-$$
-
-假设先验 P(B) 均匀，则等价于最大化似然：
-
-$$
-B^* = \arg\max_B P(S | B)
-$$
-
-## HMM 模型
-
-### HMM 定义
-
-HMM 将 basecalling 建模为隐马尔可夫模型：
-
-- **隐状态**：k-mer 序列（每个状态对应一个 k-mer）
-- **观测值**：电流信号
-- **转移概率**：从一个 k-mer 转移到下一个 k-mer 的概率
-- **发射概率**：给定 k-mer 产生特定电流信号的概率
-
-### 状态空间
-
-对于 k-mer 大小 k，状态空间大小为 4ᵏ（A, C, G, T 的组合）。
-
-例如，k=5 时有 4⁵ = 1024 个状态。
-
-### 转移概率
-
-由于 DNA 序列是连续的，转移具有约束：
-
-- 从 k-mer `x₁x₂...xₖ` 只能转移到 `x₂...xₖy`，其中 `y ∈ {A, C, G, T}`
-- 因此每个状态最多有 4 个可能的转移
-
-转移概率矩阵 `A`：
+给定观测信号序列 $S = s_1, s_2, \ldots, s_T$，目标是找到最可能的碱基序列 $B = b_1, b_2, \ldots, b_L$：
 
 $$
-A_\{ij\} = P(q_\{t+1\} = j | q_t = i)
+B^* = \arg\max_B P(B | S) = \arg\max_B P(S | B) \cdot P(B)
 $$
 
-其中 `q_t` 是时刻 `t` 的隐状态。
+其中：
+- $P(S | B)$：发射概率（信号生成模型）
+- $P(B)$：序列先验（如 k-mer 频率、上下文约束）
 
-### 发射概率
+由于信号与碱基的比例关系不确定（一个碱基移动可能产生多个信号点），这是一个**序列到序列**的推断问题。
 
-发射概率 B 定义为：
+## HMM 模型：概率图方法
 
-$$
-b_i(s) = P(S_t = s | q_t = i)
-$$
+### 模型结构
 
-通常假设电流信号服从高斯分布：
+隐马尔可夫模型（HMM）将 basecalling 建模为：
 
-$$
-b_i(s) = \frac\{1\}\{\sqrt\{2\pi\sigma_i^2\}\} \exp\left(-\frac\{(s - \mu_i)^2\}\{2\sigma_i^2\}\right)
-$$
+- **隐状态**：当前位于孔内的 k-mer（共 $4^k$ 个可能状态）
+- **观测值**：电流信号 $s_t$
+- **状态转移**：由于 DNA 是连续移动的，从 k-mer $x_1x_2\ldots x_k$ 只能转移到 $x_2\ldots x_k y$（其中 $y \in \{A,C,G,T\}$）
+- **发射概率**：$P(s_t | \text{k-mer})$，通常建模为高斯分布
 
-其中 `μᵢ` 和 `σᵢ` 是状态 `i` 的均值和标准差。
+### 发射概率建模
 
-### Viterbi 算法
-
-使用 Viterbi 算法找到最可能的隐状态序列：
-
-定义 `δₜ(i)` 为：时刻 `t` 处于状态 `i` 的最优路径得分。
-
-递推公式：
+对于每个 k-mer $k_i$，观测电流服从：
 
 $$
-\delta_t(i) = \max_\{j\} [\delta_\{t-1\}(j) \cdot A_\{ji\}] \cdot b_i(s_t)
+P(s | k_i) = \mathcal{N}(s; \mu_i, \sigma_i^2) = \frac{1}{\sqrt{2\pi\sigma_i^2}} \exp\left(-\frac{(s - \mu_i)^2}{2\sigma_i^2}\right)
 $$
 
-回溯得到最优状态序列，然后转换为碱基序列。
+参数 $(\mu_i, \sigma_i)$ 通过训练数据估计。
 
-## 神经网络模型
+### Viterbi 解码
 
-现代 basecaller（如 Guppy、Bonito）使用深度神经网络。
+使用 Viterbi 算法找到最优状态序列：
 
-### CNN 架构
+$$
+\delta_t(i) = \max_j \left[ \delta_{t-1}(j) \cdot a_{ji} \right] \cdot b_i(s_t)
+$$
 
-早期 basecaller 使用卷积神经网络：
+其中 $\delta_t(i)$ 是时刻 $t$ 处于状态 $i$ 的最优路径概率。
 
+**复杂度**：$O(T \times 4^k \times 4) = O(T \cdot 4^k)$。对于 $k=5$（1024 状态），这在计算上是可行的。
+
+### HMM 的局限性
+
+1. **特征独立性假设**：发射概率仅依赖当前 k-mer，忽略上下文
+2. **固定 k-mer 大小**：难以捕捉长程依赖
+3. **高斯噪声假设**：实际噪声分布更复杂
+
+这些局限性推动了神经网络方法的发展。
+
+## 神经网络模型：端到端学习
+
+### 架构演进
+
+现代 basecaller 采用深度神经网络，架构经历了三代演进：
+
+**第一代：CNN（如 DeepNano）**
 ```
-Signal → 1D Conv → ReLU → Pool → Conv → ... → FC → Softmax → k-mer Probabilities
+Signal → 1D Conv → ReLU → Pool → ... → FC → Softmax
 ```
+- 局部特征提取强，但长程依赖建模弱
 
-**优势**：
-- 局部特征提取能力强
-- 计算效率高
-- 适合处理固定长度窗口
-
-**劣势**：
-- 长距离依赖建模能力弱
-- 需要固定输入长度
-
-### RNN/LSTM 架构
-
-循环神经网络可以处理变长序列：
-
+**第二代：RNN/LSTM（如 Guppy 早期版本）**
 ```
-Signal → Embedding → LSTM → LSTM → ... → FC → Softmax → Base Probabilities
+Signal → LSTM → LSTM → ... → FC → Softmax
 ```
+- 自然处理变长序列，建模时间依赖
+- 训练较慢，并行化困难
 
-**优势**：
-- 自然处理变长序列
-- 建模长距离依赖
-- 适合实时 streaming
-
-**劣势**：
-- 训练较慢
-- 并行化困难
-
-### Transformer 架构
-
-最新的 basecaller（如 Dorado）使用 Transformer：
-
+**第三代：Transformer（如 Dorado）**
 ```
-Signal → Embedding → Multi-Head Attention → FFN → ... → FC → Softmax
+Signal → Embedding → Multi-Head Attention → ... → Softmax
 ```
+- 全局上下文建模，高度并行化
+- 计算资源需求高，但准确性最佳
 
-**优势**：
-- 最强的长距离依赖建模
-- 高度并行化
-- 可以处理全局上下文
+### 训练与损失函数
 
-**劣势**：
-- 计算资源需求高
-- 需要大量训练数据
-
-### 训练目标
-
-通常使用交叉熵损失：
+使用大量（信号，参考序列）配对数据训练，优化交叉熵损失：
 
 $$
-L = -\sum_\{t=1\}^\{T\} \sum_\{b \in \\{A,C,G,T\\}\} y_\{t,b\} \log(\hat\{p\}_\{t,b\})
+L = -\sum_t \sum_{b \in \{A,C,G,T\}} y_{t,b} \log(\hat{p}_{t,b})
 $$
 
-其中 `$y_{t,b}$` 是真实标签的 one-hot 编码，`$\hat{p}_{t,b}$` 是预测概率。
+关键挑战是建立信号与参考的**对齐**（信号与碱基的比例关系不确定）。
 
-## 信号处理
+## 关键技术与挑战
 
-### 归一化
+### 信号预处理
 
-原始信号需要归一化以消除批次效应：
+**归一化**：消除测序批次和温度差异
+- Z-score 归一化：$s'_t = (s_t - \mu) / \sigma$
+- 分位数归一化：将信号映射到固定范围
 
-**Z-score 归一化**：
+**上下文建模**：
+- 滑动窗口：处理信号与碱基的非确定性对应关系
+- 注意力机制：在 Transformer 中聚合全局上下文
 
-$$
-s'_t = \frac\{s_t - \mu\}\{\sigma\}
-$$
+### 主要挑战
 
-其中 μ 和 σ 是信号的均值和标准差。
+**同聚物问题**：
+同一碱基连续重复（如 AAAA）时，信号变化缓慢，难以确定重复次数。这是 Nanopore basecalling 的主要误差来源。
 
-**分位数归一化**：
+**速度波动**：
+DNA 穿过纳米孔的速度不均匀，导致信号时间扭曲。
 
-将信号映射到固定范围（如 [0, 1]）：
+**修饰碱基**：
+甲基化等修饰改变电流信号，需要专门训练模型或将其作为额外输出维度。
 
-$$
-s'_t = \frac\{s_t - q_\{0.01\}\}\{q_\{0.99\} - q_\{0.01\}\}
-$$
-
-### 滑动窗口
-
-由于信号与 k-mer 的对应关系不确定，使用滑动窗口：
-
-1. 提取固定长度窗口（如 400 个信号点）
-2. 预测窗口中心的 k-mer
-3. 滑动窗口预测整个序列
-
-### 上下文聚合
-
-提高准确性需要考虑更长的上下文：
-
-- **前向-后向**：结合前后信号
-- **多头注意力**：在 Transformer 中聚合全局信息
-- **残差连接**：保留低层特征
-
-## 算法步骤
-
-### HMM Basecalling 流程
-
-#### 步骤 1：模型训练
-
-1. 收集训练数据：已知序列 + 对应信号
-2. 估计每个 k-mer 的发射分布（均值、方差）
-3. 设定转移概率（通常设为均匀）
-
-#### 步骤 2：信号预处理
-
-```python
-def preprocess_signal(raw_signal):
-    # 归一化
-    normalized = (raw_signal - mean(raw_signal)) / std(raw_signal)
-    # 可选：滤波去噪
-    filtered = lowpass_filter(normalized, cutoff=1000)
-    return filtered
-```
-
-#### 步骤 3：Viterbi 解码
-
-```python
-def viterbi_decode(signal, transition, emission):
-    T = len(signal)
-    N = num_states
-    
-    # 初始化
-    delta = np.zeros((T, N))
-    psi = np.zeros((T, N), dtype=int)
-    
-    delta[0] = np.log(emission[:, signal[0]])
-    
-    # 递推
-    for t in range(1, T):
-        for j in range(N):
-            scores = delta[t-1] + np.log(transition[:, j])
-            psi[t, j] = np.argmax(scores)
-            delta[t, j] = scores[psi[t, j]] + np.log(emission[j, signal[t]])
-    
-    # 回溯
-    states = np.zeros(T, dtype=int)
-    states[-1] = np.argmax(delta[-1])
-    for t in range(T-2, -1, -1):
-        states[t] = psi[t+1, states[t+1]]
-    
-    return states
-```
-
-#### 步骤 4：k-mer 到碱基转换
-
-将 k-mer 序列转换为碱基序列（取每个 k-mer 的第一个碱基）。
-
-### 神经网络 Basecalling 流程
-
-#### 步骤 1：模型训练
-
-1. 准备训练数据集
-2. 设计网络架构（CNN/RNN/Transformer）
-3. 训练模型最小化交叉熵损失
-4. 验证和测试
-
-#### 步骤 2：信号预处理
-
-```python
-def preprocess_signal(raw_signal):
-    # 归一化
-    normalized = normalize(raw_signal)
-    # 分段
-    chunks = split_into_chunks(normalized, window_size=400, stride=5)
-    return chunks
-```
-
-#### 步骤 3：推理
-
-```python
-def basecall_signal(model, signal_chunks):
-    predictions = []
-    for chunk in signal_chunks:
-        prob = model(chunk)  # 输出 k-mer 概率
-        base = argmax(prob)
-        predictions.append(base)
-    return predictions
-```
-
-#### 步骤 4：后处理
-
-可选的后处理步骤：
-- HMM 平滑
-- 质量分数校准
-- 同聚物校正
 
 ## Worked Example
 

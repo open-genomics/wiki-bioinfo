@@ -1,0 +1,87 @@
+---
+title: "生物信息学中的基础对象"
+description: 建立 DNA、RNA、蛋白质、基因组、reads 和注释等基本对象的整体认识，理解分子生物学实验技术产生的原始数据。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="生物信息学并非研究抽象算法，而是处理一组互相转换、互相约束的生物学对象。理解这些对象及其背后的实验技术，是选择合适算法的前提。"
+  bullets={[
+    '区分 DNA、RNA 和蛋白质在信息载体、表达和功能层面的不同角色',
+    '理解中心法则（Central Dogma）定义的生物信息流动',
+    '掌握 PCR、克隆、电泳等产生原始测序数据的实验技术原理',
+    '认识个体差异（0.1%）与物种差异在比较基因组学中的意义'
+  ]}
+/>
+
+## 1. 核心生物学对象
+
+在算法抽象之前，我们需要明确处理的是什么对象：
+
+<DefinitionList
+  items={[
+    {
+      term: 'DNA (脱氧核糖核酸)',
+      definition: '基因组信息的终极载体。由 A, T, G, C 四种碱基组成，双螺旋结构通过互补配对（Chargaff 规则）实现信息复制。',
+    },
+    {
+      term: 'RNA (核糖核酸)',
+      definition: '信息的中间传递者。在真核生物中需经过剪接（Splicing）去掉内含子，保留外显子形成 mRNA。',
+    },
+    {
+      term: '蛋白质',
+      definition: '生命的执行者。由 mRNA 上的密码子（Codon）翻译而成，决定了细胞的功能与结构。',
+    },
+    {
+      term: 'Reads (测序读段)',
+      definition: '测序仪产生的原始观测片段。它们是不完整的、带有误差的序列碎片，是组装和比对算法的输入。',
+    },
+  ]}
+/>
+
+## 2. 中心法则：生物信息的流动
+
+**中心法则 (Central Dogma)** 描述了遗传信息的标准流向：**DNA $\to$ RNA $\to$ 蛋白质**。
+
+- **转录 (Transcription)**：DNA 模板合成 RNA。
+- **翻译 (Translation)**：mRNA 在核糖体上按密码子表（Codon Table）组装氨基酸。
+- **遗传密码的简并性**：多个密码子可对应同一种氨基酸（如 CGC 和 AGG 都编码精氨酸），这对基因预测算法中的统计偏好分析至关重要。
+
+## 3. 分子生物学“算法”与实验技术
+
+理解算法需要了解数据的来源。许多实验技术本身就可以看作是高效的物理算法：
+
+### 复制与扩增：PCR 技术
+**PCR (聚合酶链式反应)** 是 DNA 的“印刷机”。通过变性、退火、延伸的循环，使目标片段呈指数级增长。
+- **意义**：解决了单个 DNA 分子难以检测的问题，为测序提供了充足的模板。
+
+### 切割与拼接：限制性酶
+**限制性内切酶** 是“分子剪刀”，识别特定的回文序列（如 `GGATCC`）并切割。
+- **粘性末端** 就像“分子胶水”，允许我们将不同来源的 DNA 片段拼接在一起。
+
+### 测量长度：凝胶电泳
+通过电场驱动 DNA 片段通过凝胶，长片段移动慢，短片段移动快。
+- **应用**：在测序技术成熟前，这是构建限制性图谱（Restriction Mapping）的主要手段。
+
+### 探测与搜索：DNA 芯片
+**探针 (Probe)** 利用杂交原理在海量 DNA 溶液中寻找互补序列。
+- **直觉**：这相当于分子级别的“常数时间搜索”，是计算机算法梦寐以求的效率。
+
+## 4. 个体差异与物种差异
+
+- **个体差异**：人与人之间约有 **0.1%** (300 万个碱基) 的差异。生物信息学的变异检测 (Variant Calling) 目标就是识别这些微小区别。
+- **比较基因组学**：通过比对不同物种（如人与果蝇）的基因组，寻找高度保守的区域，这些区域通常对应着关键的生物学功能。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '序列、字符串与坐标系统', to: '/wiki-bioinfo/foundations/sequences-and-strings', description: '将生物对象抽象为计算对象' },
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解原始测序数据的特性' },
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '处理大规模生物数据的算法直觉' }
+  ]}
+/>

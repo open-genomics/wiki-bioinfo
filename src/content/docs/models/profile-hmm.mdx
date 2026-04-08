@@ -74,19 +74,23 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 - **转移概率** $a_{uv}$：从状态 u 转移到状态 v 的概率
 - **发射概率** $e_i(c)$：Match 或 Insert 状态 i 发射字符 c 的概率
 
-### Viterbi 算法
+### Viterbi 算法与特殊状态处理
 
-定义 $V_t(i)$ 为时刻 t 到达状态 i 的最优路径概率：
+在 Profile HMM 中，Viterbi 算法需要处理三种状态的转移。特别需要注意的是 **Delete 状态 (D)**，因为它不发射任何字符（称为“静默状态”）。
 
-$$
-V_t(j) = \max_\{i\} \left[ V_\{t-1\}(i) \cdot a_\{ij\} \cdot e_j(o_t) \right]
-$$
+定义 $v^M_j(i)$ 为观测序列前缀 $x_1 \dots x_i$ 与模型前缀（直到状态 $M_j$）对齐的最优对数似然得分。
 
-对于 Delete 状态（不发射字符）：
+1.  **Match 状态 ($M_j$)**：
+    $$v^M_j(i) = \log \frac{e_{M_j}(x_i)}{p(x_i)} + \max \begin{cases} v^M_{j-1}(i-1) + \log a_{M_{j-1}M_j} \\ v^I_{j-1}(i-1) + \log a_{I_{j-1}M_j} \\ v^D_{j-1}(i-1) + \log a_{D_{j-1}M_j} \end{cases}$$
 
-$$
-V_t(D_j) = \max_\{i\} \left[ V_t(i) \cdot a_\{i,D_j\} \right]
-$$
+2.  **Insert 状态 ($I_j$)**：
+    $$v^I_j(i) = \log \frac{e_{I_j}(x_i)}{p(x_i)} + \max \begin{cases} v^M_j(i-1) + \log a_{M_jI_j} \\ v^I_j(i-1) + \log a_{I_jI_j} \\ v^D_j(i-1) + \log a_{D_jI_j} \end{cases}$$
+
+3.  **Delete 状态 ($D_j$)**：
+    由于不消耗字符，得分直接从上一个位置转移：
+    $$v^D_j(i) = \max \begin{cases} v^M_{j-1}(i) + \log a_{M_{j-1}D_j} \\ v^I_{j-1}(i) + \log a_{I_{j-1}D_j} \\ v^D_{j-1}(i) + \log a_{D_{j-1}D_j} \end{cases}$$
+
+**注意**：Delete 状态的计算不需要 $i-1$，这在动态规划填表时需要特别注意计算顺序，确保在计算 $v^D_j(i)$ 时，$v^M_{j-1}(i)$ 等同一列的状态已经更新。
 
 ## 为什么 PWM 不够用
 

@@ -4,11 +4,13 @@ interface Props {
   items: string[];
 }
 
+import { Icon } from '@astrojs/starlight/components';
+
 const { title = '前置知识', items } = Astro.props;
 ---
 
 <aside class="note-card">
-  <strong>{title}</strong>
+  <strong><Icon name="open-book" size="1.2rem" /> {title}</strong>
   <ul>
     {items.map((item) => <li>{item}</li>)}
   </ul>

@@ -1,37 +1,79 @@
 ---
 title: "蛋白质组学"
+description: "基于质谱的蛋白质组学分析：从肽段测序到蛋白质鉴定与定量"
 ---
 
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
+## 本章要解决什么问题
 
-蛋白质组学关注的是：在样本中真正被翻译出来并可被检测到的蛋白质有哪些，它们的丰度、修饰和相互作用如何变化。
+蛋白质组学（Proteomics）研究的是在特定细胞、组织或生物体中**实际表达**的蛋白质集合，以及这些蛋白质的丰度、修饰状态和相互作用网络。
 
-## 这一部分讲什么
+与基因组学不同，蛋白质组学面对的是一个动态且复杂的系统：
+- **RNA ≠ Protein**：转录水平与蛋白质水平的相关性通常只有 0.4-0.6
+- **翻译后修饰（PTM）**：磷酸化、糖基化等修饰直接调控蛋白质功能
+- **时空特异性**：不同细胞类型、不同生理状态下蛋白质组成差异巨大
 
-本章聚焦基于质谱（mass spectrometry, MS）的蛋白质组学分析：
+### 核心计算问题
 
-- 质谱测量原理；
-- 数据库搜索与 FDR；
-- 定量蛋白质组学。
+基于质谱的蛋白质组学产生巨大的数据量，需要算法来解决：
 
-## 为什么重要
+1. **肽段测序问题（Peptide Sequencing）**：从质谱图推断肽段序列
+2. **蛋白质鉴定问题（Protein Identification）**：从数据库中识别产生实验谱的蛋白质
+3. **修饰蛋白鉴定问题（Modified Protein Identification）**：识别带有翻译后修饰的肽段
+4. **蛋白质定量问题（Protein Quantification）**：比较不同条件下蛋白质丰度变化
 
-- RNA 不等于 protein，表达调控还发生在翻译后层面；
-- 蛋白质修饰、降解和复合体决定了更多直接功能；
-- 临床 biomarker 和药物靶点常常更接近蛋白层证据。
+<PrerequisitesBox
+  items={[
+    { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' },
+    { name: '图算法', href: '/wiki/foundations/graph-algorithms' },
+    { name: '序列比对', href: '/wiki/alignment/global-local' }
+  ]}
+/>
+
+## 本章内容概览
+
+本章系统介绍基于串联质谱（MS/MS）的蛋白质组学数据分析方法：
+
+| 章节 | 核心问题 | 算法技术 |
+|------|---------|---------|
+| [质谱基础](./mass-spectrometry-basics.md) | 理解 MS1/MS2、谱图构建、肽段测序问题 | 谱图图（Spectrum Graph）、动态规划 |
+| [数据库搜索与 FDR](./database-search-and-fdr.md) | 蛋白质鉴定、假阳性控制 | 共享峰计数、Target-Decoy 策略 |
+| [定量蛋白质组学](./quantitative-proteomics.md) | 蛋白质丰度比较 | Label-free、TMT/iTRAQ |
+| [谱卷积](./spectral-convolution.mdx) | 修饰肽段检测 | 谱卷积算法 |
+| [谱对齐](./spectral-alignment.mdx) | 精确定位修饰位点 | 动态规划、$k$-相似性 |
+| [谱图图](./spectrum-graphs.mdx) | 从头肽段测序 | DAG 最长路径 |
+
+## 历史背景
+
+蛋白质测序的历史早于 DNA 测序。Frederick Sanger 在 1940 年代末通过 Edman 降解法测定了胰岛素的 52 个氨基酸序列，获得他的第一个诺贝尔奖。随着 DNA 测序技术的发展，蛋白质直接测序逐渐被取代，但质谱技术的进步使蛋白质组学在 1990 年代重新兴起。
+
+现代蛋白质组学工作流程由 Matthias Mann 和 John Yates 等先驱建立，核心思想是：
+- 将蛋白质酶解为肽段
+- 用串联质谱（MS/MS）测量肽段碎片
+- 通过数据库搜索或从头测序推断肽段序列
+- 汇总肽段证据鉴定蛋白质并进行定量分析
 
 ## 推荐阅读顺序
 
-1. [质谱基础](./mass-spectrometry-basics.md)
-2. [数据库搜索与 FDR](./database-search-and-fdr.md)
-3. [定量蛋白质组学](./quantitative-proteomics.md)
+```
+质谱基础
+    ↓
+谱图图 / 肽段测序
+    ↓
+数据库搜索与 FDR
+    ↓
+谱卷积 → 谱对齐（修饰鉴定）
+    ↓
+定量蛋白质组学
+```
 
-## 与其他板块的连接
+## 与其他章节的联系
 
-- 蛋白语言模型可继续看 [机器学习与基础模型](../ml-bioinfo/index.md)；
-- 蛋白层证据可与 [临床变异解释](../clinical-variants/index.md) 形成互补；
-- 上游序列与基因结构基础见 [基础与数学](../foundations/index.md)。
+- **上游知识**：[序列分析基础](../sequence/index.md)、[动态规划](../foundations/dynamic-programming-basics.md)
+- **下游应用**：[临床变异解释](../clinical-variants/index.md)、[系统生物学](../pathways/index.md)
+- **相关技术**：[机器学习与蛋白语言模型](../ml-bioinfo/index.md)
 
 ## 子主题导航
 
@@ -40,17 +82,40 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
     {
       title: '质谱基础',
       to: '/docs/proteomics/mass-spectrometry-basics',
-      description: '从 peptide、m/z 到 MS1 / MS2 的基本测量逻辑。',
+      description: 'MS1/MS2 测量原理、肽段碎裂、谱图构建基础',
+    },
+    {
+      title: '谱图图',
+      to: '/docs/proteomics/spectrum-graphs',
+      description: '将质谱数据转换为有向无环图，从头肽段测序的图算法',
+    },
+    {
+      title: '谱卷积',
+      to: '/docs/proteomics/spectral-convolution',
+      description: '通过质量差分布检测翻译后修饰和突变',
+    },
+    {
+      title: '谱对齐',
+      to: '/docs/proteomics/spectral-alignment',
+      description: '动态规划算法精确定位修饰位点，k-相似性概念',
     },
     {
       title: '数据库搜索与 FDR',
       to: '/docs/proteomics/database-search-and-fdr',
-      description: '理解 peptide-spectrum match、target-decoy 和鉴定置信度控制。',
+      description: '蛋白质鉴定、PSM、Target-Decoy 假阳性控制策略',
     },
     {
       title: '定量蛋白质组学',
       to: '/docs/proteomics/quantitative-proteomics',
-      description: '理解 label-free、TMT 和蛋白丰度比较。',
+      description: 'Label-free、TMT/iTRAQ 定量策略与数据分析',
     },
   ]}
 />
+
+## 参考文献
+
+- Sanger, F. (1949). The terminal amino acids of insulin. *Biochemical Journal*, 45(5), 563.
+- Dancik, V., et al. (1999). De novo peptide sequencing via tandem mass spectrometry. *Journal of Computational Biology*, 6(3-4), 327-342.
+- Eng, J.K., et al. (1994). An approach to correlate tandem mass spectral data of peptides with amino acid sequences in a protein database. *JASMS*, 5(11), 976-989.
+- Elias, J.E., & Gygi, S.P. (2007). Target-decoy search strategy for increased confidence in large-scale protein identifications by mass spectrometry. *Nature Methods*, 4(3), 207-214.
+

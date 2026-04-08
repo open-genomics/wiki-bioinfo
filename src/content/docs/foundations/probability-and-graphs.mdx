@@ -1,0 +1,70 @@
+---
+title: "概率、图与动态规划预备"
+description: 生物信息学中三大核心数学模型的概览：处理不确定性的概率模型、处理结构的图模型以及寻求最优解的动态规划。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="如果把生物信息学看作计算问题，那么其核心抽象几乎可以归结为三类模型。它们不是孤立的章节分类，而是贯穿整个学科的通用语言，用于处理高噪音、大规模且具有复杂结构的生物数据。"
+  bullets={[
+    '概率模型：处理观测与真实状态之间的不确定性（如 HMM、PWM）',
+    '图模型：处理生物对象间的连接、路径与网络关系（如 de Bruijn 图、演化树）',
+    '动态规划：在重叠子问题中寻找全局最优解释（如序列比对、Viterbi 解码）',
+    '理解三者如何交织解决真实的生物信息学挑战'
+  ]}
+/>
+
+## 1. 概率模型：处理不确定性
+
+生物数据（如测序 Reads）充满了噪音和不确定性。我们看到的观测值（Observations）并不直接等于真实状态（Hidden States）。
+
+- **核心思想**：我们不再问“这是否正确”，而是问“在给定观测下，这种解释的概率是多少”。
+- **典型应用**：
+    - **HMM (隐马尔可夫模型)**：根据 DNA 序列特征预测隐藏的外显子/内含子结构。
+    - **位置权重矩阵 (PWM)**：描述转录因子结合位点的统计偏好。
+    - **变异检测**：利用贝叶斯推断判断一个位点是真实变异还是测序错误。
+
+## 2. 图模型：处理结构与连接
+
+图 ($G = (V, E)$) 是描述生物对象间关系的理想工具。
+
+### 基础定义
+- **顶点 (Vertex)**：代表对象（如 Read、基因、物种）。
+- **边 (Edge)**：代表关系（如重叠、调控、演化）。
+- **路径 (Path)**：代表一个连续的序列或演化过程。
+
+### 生物信息学中的图论背景
+- **DNA 阵列与 SBH**：早期的杂交测序（SBH）通过构建图并寻找欧拉路径（Eulerian Path）来重构序列。
+- **基因组组装**：现代组装算法（如 SPAdes）在 de Bruijn 图中通过简化拓扑结构来处理基因组中的重复序列。
+- **演化分析**：系统发育树本质上是带权的树状图，用于解释物种间的亲疏远近。
+
+## 3. 动态规划：寻找最优解释
+
+动态规划 (DP) 适用于具有**最优子结构**和**重叠子问题**的优化任务。
+
+- **直觉**：如果我们要找到从 A 到 C 的最优路径，且必须经过 B，那么整条路径的最优性必然包含 A 到 B 的最优路径。
+- **为什么在 BioInfo 中重要？**
+    - 序列比对（Needleman-Wunsch）通过填充二维矩阵，系统地探索了指数级数量的可能对齐方案。
+    - 状态解码（Viterbi）在 HMM 的状态网格中寻找概率最大的路径。
+
+## 4. 三者的交织
+
+在真实的生物信息学工具中，这些模型往往是重叠的：
+- **HMM** 既是概率模型（状态转移），又利用动态规划（Viterbi）进行求解。
+- **组装算法** 既是图问题（寻路），又需要利用概率模型（覆盖度统计）来修剪错误的边。
+- **比对软件** 既利用索引加速（图/树结构），又利用动态规划进行局部精化。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '理解计算成本的底线' },
+    { title: '隐马尔可夫模型', to: '/wiki-bioinfo/models/hmm', description: '概率与动态规划的深度结合' },
+    { title: '图算法基础', to: '/wiki-bioinfo/foundations/graph-algorithms', description: '深入图论的细节' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '掌握 DP 的递推直觉' }
+  ]}
+/>

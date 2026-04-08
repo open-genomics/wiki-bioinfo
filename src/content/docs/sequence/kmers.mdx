@@ -1,0 +1,69 @@
+---
+title: "k-mer 与序列表示"
+description: k-mer 作为生物序列离散化表示的基础，理解其在索引、比对、组装和分类中的核心作用。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="面对数十亿碱基的基因组，直接处理长字符串往往效率低下。k-mer（长度为 k 的连续子串）是生物信息学中最基础的离散化表示方法，它是统计序列特征、构建索引和组装图的基石。"
+  bullets={[
+    '掌握 k-mer 的形式化定义及其在长序列中的分布特性',
+    '理解 k 值选择在敏感性与特异性之间的权衡',
+    '了解基于哈希表的 k-mer 计数与位置索引方法',
+    '认识 k-mer 在 de Bruijn 图组装中的核心作用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列、字符串与坐标系统', href: '/wiki-bioinfo/foundations/sequences-and-strings' },
+    { name: '哈希表', href: '/wiki-bioinfo/sequence/hash-tables' }
+  ]}
+/>
+
+## 1. 什么是 k-mer？
+
+**定义**：对于一段长度为 $n$ 的序列 $S$，其 **k-mer** 是指其中所有长度为 $k$ 的连续子串。
+- 数量：一段长度为 $n$ 的序列包含 $n-k+1$ 个 k-mer。
+- **示例**：序列 `ACGTC` 的 3-mers 为 `ACG`, `CGT`, `GTC`。
+
+## 2. 统计与重复发现
+
+### 频率表 (l-mer Tabulation)
+在基因组分析中，一种最简单的索引方式是构建 **k-mer 频率表**。
+- **结构**：一个哈希表或数组，记录每个可能的 $k$-长度字符串在基因组中出现的位置列表。
+- **用途**：快速定位重复序列。如果一个 k-mer 在表中出现了多次，说明它是一个重复单元。
+
+### 最大重复 (Maximal Repeats)
+短的重复（如 $k=12$）在基因组中非常普遍，往往没有生物学意义。
+- **挑战**：我们需要找到能够向左右两端延伸且不再相同的**最大重复**。
+- **算法思路**：先通过 k-mer 索引找到“种子”匹配，再尝试双向扩展。
+
+## 3. 参数 $k$ 的权衡
+
+选择合适的 $k$ 值至关重要：
+
+| $k$ 值大小 | 优点 | 缺点 |
+| :--- | :--- | :--- |
+| **较小 ($k < 15$)** | 对错配更容忍，适合找短保守基序。 | 随机匹配多，区分力差，索引冗余大。 |
+| **较大 ($k > 25$)** | 区分力极强，适合唯一步对。 | 对测序错误极度敏感，一个碱基错就会破坏整个匹配。 |
+
+## 4. 在 de Bruijn 图中的应用
+
+k-mer 是现代组装算法的核心抽象。
+- **节点与边**：在图中，我们将 $(k-1)$-mer 作为顶点，而 $k$-mer 则代表连接前缀顶点和后缀顶点的**有向边**。
+- **组装本质**：寻找图中的欧拉路径，即重建那条遍历了所有观测到的 k-mer 的原始序列。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '索引结构概览', to: '/wiki-bioinfo/sequence/indexing', description: '基于 k-mer 的数据库加速' },
+    { title: 'de Bruijn 图组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: 'k-mer 在重构基因组中的应用' },
+    { title: '哈希表', to: '/wiki-bioinfo/sequence/hash-tables', description: '存储 k-mer 的核心数据结构' }
+  ]}
+/>

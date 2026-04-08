@@ -3,45 +3,223 @@ description: RMSD、TM-score、fold 与结构相似性比较的基础。
 title: "结构比对与 fold"
 ---
 
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
-## 核心问题
+<SummaryBox
+  summary="结构比对回答的核心问题是：两个蛋白质的三维形状有多相似？与序列比对不同，结构比对关注空间几何而非字符匹配。通过 RMSD、TM-score 等指标，我们可以量化结构相似性；而 fold 概念则帮助我们理解结构相似性背后的拓扑组织规律。"
+  bullets={[
+    '结构比对与序列比对的根本区别：几何 vs 字符',
+    'RMSD 和 TM-score 是两类互补的结构相似性度量',
+    'fold 是理解蛋白结构分类的拓扑概念'
+  ]}
+/>
 
-序列比对问的是“字符是否相似”，结构比对更关心：
+## 引言：为什么需要结构比对
 
-- 两个蛋白的三维形状是否相近？
-- 它们是否共享类似 fold 或 domain architecture？
-- 这种相似性是全局的，还是只限于局部结构域？
+设想你有两个蛋白的结构数据，想知道它们是否有进化关系。直接比较序列可能行不通——远缘同源蛋白的序列相似性可能已经低于统计显著性阈值。但正如我们在[蛋白结构基础](./protein-structure-basics)中讨论的，**结构比序列进化更慢**。
 
-## 常见指标
+这正是结构比对的动机所在。1970 年代，随着第一批蛋白结构通过 X 射线晶体学解析出来，科学家开始系统性地比较它们。Rossmann 和 Argos 在 1976 年开发了一些最早的结构比对算法，目的是识别远缘同源的脱氢酶。从那时起，结构比对成为识别远程进化关系、理解蛋白进化、以及功能预测的核心工具。
 
-### RMSD
+## 结构比对与序列比对：本质区别
 
-RMSD 衡量对应原子之间的平均偏差，但它：
+| 特征 | 序列比对 | 结构比对 |
+|-----|---------|---------|
+| **比较对象** | 字符序列（A,C,G,T 或氨基酸） | 三维坐标（x, y, z） |
+| **允许的操作** | 插入、删除、替换 | 刚体变换（旋转、平移）+ 残基匹配 |
+| **优化目标** | 最大化匹配分数 | 最小化坐标偏差 |
+| **计算复杂度** | 多项式时间（动态规划） | 通常是 NP-hard 的近似 |
+| **敏感范围** | 序列相似性 > 20-30% | 序列相似性可低至 10% 甚至更低 |
 
-- 对局部大偏差很敏感；
-- 受蛋白长度影响明显；
-- 更适合比较已知对应关系下的接近程度。
+核心差异在于：结构比对需要同时解决**对应关系（correspondence）**和**空间叠加（superposition）**两个耦合问题。
 
-### TM-score
+## 结构相似性的度量指标
 
-TM-score 尝试减少长度依赖，更适合比较整体 fold 是否相似。在远缘结构比较中通常比 RMSD 更稳健。
+### RMSD（Root Mean Square Deviation）
 
-## fold 的概念
+RMSD 是结构生物学中最经典的相似性度量，计算两个结构中对应原子位置的平均偏差：
 
-fold 可以粗略理解为蛋白主链的总体拓扑组织方式。它不只是“长得像”，而是更接近：
+$$
+\text{RMSD} = \sqrt{\frac{1}{N} \sum_{i=1}^{N} \| \mathbf{x}_i - \mathbf{y}_i \|^2}
+$$
 
-- 二级结构如何排列；
-- domain 如何组织；
-- 是否共享同类结构骨架。
+其中 $\mathbf{x}_i$ 和 $\mathbf{y}_i$ 是两个结构中第 $i$ 个对应原子的坐标，$N$ 是比对的原子数。
 
-## 常见误区
+**RMSD 的特性**：
 
-- **RMSD 小就一定同源**：还需结合长度、比对覆盖范围和生物学背景；
-- **结构相似一定来自共同祖先**：也可能有功能收敛；
-- **只看全局分数**：很多功能只依赖局部 pocket 或 interface。
+<DefinitionList
+  items={[
+    {
+      term: '几何直观',
+      definition: 'RMSD ≈ 1-2 Å 表示几乎相同；RMSD ≈ 5 Å 有明显差异；RMSD > 10 Å 通常认为结构不同',
+    },
+    {
+      term: '依赖对应关系',
+      definition: 'RMSD 计算需要先知道哪些残基是对应的——这正是结构比对需要解决的核心问题',
+    },
+    {
+      term: '对异常值敏感',
+      definition: '单个柔性 loop 的偏移可能使整个 RMSD 增大，即使核心结构很相似',
+    },
+    {
+      term: '长度依赖性',
+      definition: '长蛋白通常 RMSD 更大，即使相对质量相同；这是因为偏差有更多机会累积',
+    },
+  ]}
+/>
+
+### TM-score（Template Modeling Score）
+
+TM-score 由 Zhang 和 Skolnick 于 2004 年提出，旨在解决 RMSD 的长度依赖性问题：
+
+$$
+\text{TM-score} = \frac{1}{L_{\text{target}}} \sum_{i=1}^{N} \frac{1}{1 + \left(\frac{d_i}{d_0(L_{\text{target}})}\right)^2}
+$$
+
+其中 $d_i$ 是第 $i$ 对对应残基的距离，$d_0$ 是与目标蛋白长度相关的归一化因子：
+
+$$
+d_0(L_{\text{target}}) = 1.24 \sqrt[3]{L_{\text{target}} - 15} - 1.8
+$$
+
+**TM-score 的解读**：
+
+| TM-score | 含义 | 功能关系推断 |
+|---------|------|-------------|
+| > 0.9 | 几乎相同 | 相同功能 |
+| 0.8-0.9 | 高度相似 | 可能相同功能 |
+| 0.5-0.8 | 相似 fold | 可能相关功能 |
+| < 0.5 | 可能不同 fold | 功能关系不确定 |
+
+TM-score 的一个重要性质是它在不同长度蛋白间更具可比性，这使其成为 fold 识别的首选指标。
+
+### 其他常用指标
+
+| 指标 | 公式特点 | 主要用途 |
+|-----|---------|---------|
+| **GDT_TS** | 多个距离阈值下的精度平均 | CASP 评估标准 |
+| **MaxSub** | 基于子集的最优叠加 | 识别最相似子结构 |
+| **LDLT** | 局部距离差异测试 | 局部精度评估 |
+| **S-score** | 距离转换的相似性分数 | 数据库搜索 |
+
+## Fold：蛋白结构的拓扑分类
+
+### Fold 的定义
+
+Fold（折叠类型）描述蛋白质主链的总体拓扑组织方式。它不仅关乎"长得像"，更关注：
+
+- **二级结构元件的排列**：α-helix 和 β-sheet 如何空间排布
+- **连接顺序**：二级结构元件的序列顺序如何映射到空间位置
+- **整体拓扑**：链的走向和二级结构之间的连接方式
+
+### Fold 分类的历史
+
+随着 PDB 数据库的增长，系统性地组织蛋白结构变得必要：
+
+1. **SCOP（Structural Classification of Proteins）**：Murzin 等人于 1995 年开发，基于专家手工分类
+   - Class：全 α、全 β、α/β、α+β 等
+   - Fold：核心二级结构的排列拓扑
+   - Superfamily：可能同源的 fold
+   - Family：明确同源
+
+2. **CATH**：Orengo 等人开发的层次分类系统
+   - Class：二级结构组成
+   - Architecture：二级结构的空间排布（不考虑连接顺序）
+   - Topology/Fold：考虑连接顺序的拓扑
+   - Homologous Superfamily：进化关系
+
+3. **ECOD（Evolutionary Classification of Protein Domains）**：整合进化和结构信息
+
+### Fold 的有限性
+
+一个重要的观察是：自然界中的 fold 种类似乎是有限的。尽管蛋白序列空间巨大，但目前已知的独特 fold 只有约 2000-3000 种。这引出了几个重要推论：
+
+- **收敛进化**：不同序列可能收敛到相同 fold（功能约束）
+- **设计原则**：某些 fold 在热力学上更有利
+- **进化机制**：domain shuffling 和基因融合创造多样性
+
+## 结构比对的算法原理
+
+### 问题的双重性
+
+结构比对比序列比对更复杂，因为它需要同时解决：
+
+1. **对应关系问题**：目标蛋白的哪些残基应该与模板对齐？
+2. **叠加问题**：找到使对应原子 RMSD 最小的刚体变换
+
+这两个问题相互依赖：不知道对应关系就无法计算最优叠加；不知道最优叠加就无法判断残基是否对应。
+
+### 经典算法方法
+
+#### 动态规划法（如 SSAP）
+
+Taylor 和 Orengo 于 1989 年开发的 SSAP（Sequential Structure Alignment Program）使用双层动态规划：
+- 内层：比较残基对之间的局部几何环境
+- 外层：找到全局最优的残基对应路径
+
+#### 距离矩阵法（如 DALI）
+
+Holm 和 Sander 于 1993 年开发的 DALI 基于残基间距离矩阵的比较：
+- 计算两个蛋白内部所有残基对的 Cα 距离矩阵
+- 寻找相似的距离矩阵子模式
+- 这对检测结构重复单元特别有效
+
+#### 几何哈希法（如 VAST）
+
+使用局部几何特征（如二级结构元素的方向向量）进行快速索引：
+- 快速筛选候选匹配
+- 然后精细比对
+
+### 现代方法的发展
+
+| 工具 | 核心算法 | 特点 |
+|-----|---------|------|
+| **TM-align** | 启发式搜索 + 动态规划 | 优化 TM-score，速度快 |
+| **Foldseek** | 3Di 字母表 + 序列比对 | 将结构信息编码为"结构字母" |
+| **MM-align** | 多对多比对 | 处理多 domain 蛋白 |
+
+## 结构比对的生物学应用
+
+### 功能预测
+
+结构比对可以帮助预测未知功能蛋白的功能：
+- 如果与已知酶结构相似，可能有催化活性
+- 需要结合活性位点保守性分析
+
+### 进化分析
+
+- **识别远缘同源**：序列比对失败时，结构比对仍能检测关系
+- **研究 fold 进化**：理解 fold 如何随时间变化或保守
+
+### 药物设计
+
+- **结构口袋比较**：识别具有相似结合口袋的蛋白
+- **选择性预测**：区分相似结构的细微差异
+
+<PitfallsBox
+  pitfalls={[
+    '**RMSD 小就一定同源**：需结合 TM-score、比对覆盖范围综合判断；小片段的 RMSD 可能低但全局不同源',
+    '**结构相似一定来自共同祖先**：功能趋同（convergent evolution）可能导致不同序列收敛到相似 fold',
+    '**只看全局分数**：许多功能依赖局部 pocket 或 interface，全局相似性可能掩盖局部关键差异',
+    '**忽视比对覆盖度**：只比对一小部分残基的低 RMSD 不如覆盖大部分的高 RMSD 有意义',
+    '**混淆 fold 与 function**：相同 fold 可以执行不同功能，需结合活性位点分析'
+  ]}
+/>
 
 ## 相关页面
 
-- [蛋白结构基础](./protein-structure-basics.md)
-- [AlphaFold 与结构预测](./alphafold-and-structure-prediction.md)
-- [系统发育与进化](../phylogeny/index.md)
+<RelatedLinks
+  links={[
+    { title: '蛋白结构基础', href: '/docs/structure-bioinfo/protein-structure-basics', description: '理解蛋白结构的四个层次' },
+    { title: 'AlphaFold 与结构预测', href: '/docs/structure-bioinfo/alphafold-and-structure-prediction', description: '现代结构预测与置信度评估' },
+    { title: '系统发育与进化', href: '/docs/phylogeny', description: '进化关系分析方法' },
+  ]}
+/>
+
+## 参考阅读
+
+- Zhang, Y., & Skolnick, J. (2005). TM-align: A protein structure alignment algorithm based on TM-score. *Nucleic Acids Research*, 33(7), 2302-2309.
+- Holm, L., & Sander, C. (1993). Protein structure comparison by alignment of distance matrices. *Journal of Molecular Biology*, 233(1), 123-138.
+- Andreeva, A., et al. (2008). Data growth and its impact on the SCOP database. *Nucleic Acids Research*, 36(Database issue), D419-D425.

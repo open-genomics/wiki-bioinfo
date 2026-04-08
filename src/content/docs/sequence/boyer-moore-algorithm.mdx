@@ -1,6 +1,6 @@
 ---
-description: Boyer-Moore算法详解：通过bad character和good suffix规则实现高效跳跃，理解实际应用中最快的字符串匹配算法。
 title: "Boyer-Moore算法"
+description: "通过bad character rule和good suffix rule实现高效跳跃，理解为什么这是实际应用中最快的单模式字符串匹配算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
@@ -8,22 +8,41 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 
 <SummaryBox
-  summary="Boyer-Moore算法通过从右向左匹配和智能跳跃规则，在实际应用中往往是最快的字符串匹配算法，是理解启发式优化的经典案例。"
+  summary="Boyer-Moore算法通过从右向左匹配和智能跳跃规则，在实际应用中往往是最快的字符串匹配算法，平均时间复杂度接近O(n/m)。"
   bullets={[
-    '重点理解bad character rule和good suffix rule如何实现跳跃',
-    'Boyer-Moore在生物信息学中虽不直接使用，但其跳跃思想影响了很多现代mapper',
+    '核心思想：从右向左匹配，利用失配信息实现大跨度跳跃',
+    'Bad Character Rule：根据失配字符决定跳跃距离',
+    'Good Suffix Rule：利用已匹配后缀信息优化跳跃',
+    '实际性能：最坏O(nm)，平均接近O(n/m)，实践中通常最快'
   ]}
 />
 
-## 是什么
+## 算法历史
 
-Boyer-Moore算法是另一种经典的精确字符串匹配算法，由Robert Boyer和J Strother Moore在1977年提出。
+Boyer-Moore算法由 Robert S. Boyer 和 J Strother Moore 于1977年发表，是第一个在实践中实现亚线性平均时间复杂度的字符串匹配算法。
 
-与KMP从左向右匹配不同，Boyer-Moore的创新在于：
+**发表背景**：
+- 发表于 "A fast string searching algorithm"（Communications of the ACM）
+- 与 KMP 同年发表，但采用了完全不同的优化策略
+- 在大型字母表（如英文文本）上表现尤为出色
 
-- **从右向左匹配**：先比较模式串的末尾字符
-- **智能跳跃**：当失配时，根据已匹配的信息进行大跨度跳跃
-- **最坏情况线性，实际中亚线性**：在很多实际应用中，甚至不需要检查文本的每个字符
+**核心创新**：
+- 从右向左扫描，与直觉相反但效率更高
+- 双重跳跃规则（bad character + good suffix）
+- 利用字母表信息实现远超模式串长度的跳跃
+
+## 问题描述
+
+Boyer-Moore解决与KMP相同的精确字符串匹配问题：
+
+> 给定文本 $T$（长度 $n$）和模式串 $P$（长度 $m$），在 $T$ 中找出所有 $P$ 的出现位置。
+
+但采用了完全不同的策略：
+
+- **KMP**：从左向右，利用已匹配前缀信息
+- **Boyer-Moore**：从右向左，利用失配字符信息
+
+**关键洞察**：如果模式串末尾字符都不匹配，中间字符必然也不匹配，可以直接跳过整个模式串长度。
 
 ## 为什么重要
 
@@ -216,21 +235,29 @@ P:     X Y Z D E F
 
 ## 复杂度分析
 
-### 时间复杂度
+### 理论复杂度
 
-- **预处理**：$O(m + |\Sigma|)$
-- **匹配**：
-  - 最坏情况：$O(nm)$（如文本全为同一字符，模式串为不同字符）
-  - 平均情况：$O(n/m)$（特别是模式串较长且字母表较大时）
-  - 最好情况：$O(n/m)$（每次都跳过整个模式串）
+| 阶段 | 时间复杂度 | 空间复杂度 |
+|------|-----------|-----------|
+| 预处理（Bad Character） | $O(m + |\Sigma|)$ | $O(|\Sigma|)$ |
+| 预处理（Good Suffix） | $O(m)$ | $O(m)$ |
+| 匹配（最坏情况） | $O(nm)$ | $O(1)$ 额外 |
+| 匹配（平均情况） | $O(n/m)$ | $O(1)$ 额外 |
+| 匹配（最好情况） | $O(n/m)$ | $O(1)$ 额外 |
 
 ### 为什么实际中很快
 
-Boyer-Moore在实际中往往很快的原因：
+Boyer-Moore 在实践中通常是最快的字符串匹配算法：
 
-1. **从右向左匹配**：很多情况下末尾字符就会失配，避免大量比较
-2. **大跨度跳跃**：bad character rule经常能跳过整个模式串
-3. **字母表优势**：DNA字母表虽小（4个字符），但蛋白质字母表较大（20个字符），跳跃效果更好
+1. **从右向左匹配**：大部分情况下末尾字符就会失配，避免检查模式串其余部分
+2. **大跨度跳跃**：Bad Character Rule 在大型字母表上经常能跳过整个模式串长度
+3. **双重保险**：两个规则取最大值，确保每次跳跃尽可能大
+4. **字母表效应**：蛋白质序列（20字符）比DNA（4字符）更有利于跳跃
+
+**实际表现**：
+- 英文文本（256字符）：通常检查 $< n/10$ 个字符
+- DNA序列（4字符）：性能不如英文，但仍优于KMP
+- 蛋白质序列（20字符）：性能介于两者之间
 
 ## worked example
 
@@ -294,11 +321,20 @@ Boyer-Moore本身在现代生物信息学工具中不常直接使用，但：
 
 Boyer-Moore在大字母表（如蛋白质序列）上效果更好，因为bad character rule更容易实现大跨度跳跃。在小字母表（如DNA）上，优势可能不明显。
 
-## 参考资料
+## 历史注记
 
-- Boyer, R. S., & Moore, J. S. (1977). "A fast string searching algorithm"
-- Cormen, T. H., et al. *Introduction to Algorithms*, Chapter 32
-- Gusfield, D. *Algorithms on Strings, Trees, and Sequences*
+Boyer-Moore算法的发表标志着字符串算法从"最坏情况优化"向"实际性能优化"的转变。与KMP追求最坏情况线性时间不同，Boyer-Moore追求平均情况下的亚线性时间。
+
+有趣的是，原始论文只描述了Bad Character Rule。Good Suffix Rule是后来在改进版本中（Boyer-Moore-Horspool）加入的。现在通常将两者结合称为"完整Boyer-Moore算法"。
+
+**Horspool变体**：Nigel Horspool于1980年提出了简化版本，只使用Bad Character Rule的简化形式，实现更简单，在许多场景下性能接近完整算法。
+
+## 参考文献
+
+1. Boyer, R. S., & Moore, J. S. (1977). A fast string searching algorithm. *Commun. ACM*, 20(10), 762-772.
+2. Cormen, T. H., et al. (2009). *Introduction to Algorithms* (3rd ed.), Chapter 32. MIT Press.
+3. Gusfield, D. (1997). *Algorithms on Strings, Trees, and Sequences*. Cambridge University Press.
+4. Horspool, R. N. (1980). Practical fast searching in strings. *Software: Practice and Experience*, 10(6), 501-506.
 
 ## 相关页面
 

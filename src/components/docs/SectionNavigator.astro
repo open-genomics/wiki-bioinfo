@@ -11,26 +11,41 @@ interface Props {
   items: SectionCard[];
 }
 
-const { items } = Astro.props;
-const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+import { Icon } from '@astrojs/starlight/components';
+import { buildHref, isExternalHref } from './link-utils';
 
-function resolveHref(to: string): string {
-  if (to.startsWith('http')) return to;
-  const cleaned = to.replace(/^\/docs\//, '/');
-  return `${base}${cleaned}`;
-}
+const { items } = Astro.props;
+const base = import.meta.env.BASE_URL;
+
+const resolvedItems = items.map((item) => {
+  const href = buildHref(item.to, base);
+
+  return {
+    ...item,
+    href,
+    external: isExternalHref(href),
+  };
+});
 ---
 
 <div class="section-nav-grid">
-  {items.map((item) => (
-    <a class="section-nav-card" href={resolveHref(item.to)}>
+  {resolvedItems.map((item) => (
+    <a
+      class="section-nav-card"
+      href={item.href}
+      target={item.external ? '_blank' : undefined}
+      rel={item.external ? 'noopener noreferrer' : undefined}
+    >
       <div class="section-nav-topline">
         {item.badge && <span class="card-badge">{item.badge}</span>}
         {item.meta && <span class="section-meta">{item.meta}</span>}
       </div>
       <h3>{item.title}</h3>
       <p>{item.description}</p>
-      <span class="primary-action">进入子主题</span>
+      <span class="primary-action">
+        进入子主题
+        <Icon name="right-arrow" size="1rem" />
+      </span>
     </a>
   ))}
 </div>

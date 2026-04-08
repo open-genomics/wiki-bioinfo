@@ -1,0 +1,79 @@
+---
+description: 距离矩阵方法（Distance-based Methods）通过将序列差异转化为成对距离来构建演化树，是理解 UPGMA 和 Neighbor-Joining 算法的基础。
+title: "距离矩阵方法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能“解释”这些距离的树。"
+  bullets={[
+    '理解从多序列比对到距离矩阵的压缩过程',
+    '掌握常见的演化距离度量（如 Hamming、Jukes-Cantor）',
+    '了解距离法在处理大规模数据时的计算优势',
+    '对比有根树（UPGMA）与无根树（NJ）构建的逻辑差异'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列比对', href: '/wiki-bioinfo/alignment' },
+    { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
+  ]}
+/>
+
+## 1. 核心流程：从序列到树
+
+基于距离的方法通常分为两个独立步骤：
+1.  **距离估计**：通过比对计算每对序列之间的演化距离，填充 $n \times n$ 的距离矩阵 $D$。
+2.  **树构建**：应用特定算法（如 UPGMA 或 NJ）根据矩阵 $D$ 推断树拓扑结构和边权。
+
+## 2. 什么是“演化距离”？
+
+距离矩阵中的每一个值 $D_{ij}$ 应该反映物种 $i$ 和 $j$ 自共同祖先分化以来积累的替换总数。
+
+<DefinitionList
+  items={[
+    {
+      term: 'p-distance',
+      definition: '简单的差异比例（错配数 / 比对长度）。虽然直观，但在分化时间较长时会因为“多次替换”而低估真实距离。',
+    },
+    {
+      term: '模型校正距离',
+      definition: '如 Jukes-Cantor (JC) 模型，通过数学公式补偿多次替换，使距离更接近真实的演化事件数。',
+    },
+    {
+      term: '超度量 (Ultrametric)',
+      definition: '一种特殊的距离性质，要求所有物种到根的路径长度相等。这是 UPGMA 算法的核心假设。',
+    },
+  ]}
+/>
+
+## 3. 距离法的优缺点
+
+### 优势
+- **计算极快**：相比最大似然法 (ML) 或贝叶斯法，距离法能处理包含数万条序列的超大数据集。
+- **直观性**：将进化关系量化为空间距离，易于通过聚类方法理解。
+
+### 局限
+- **信息丢失**：将整个序列比对简化为一个数字，丢失了具体的位点变异信息（如某些位点演化快，某些慢）。
+- **对噪声敏感**：如果距离估计不准，构建出的树拓扑可能发生剧烈跳变。
+
+## 4. 常见算法家族
+
+本章节将详细探讨以下两种最经典的距离算法：
+- **UPGMA**：基于平均连接的聚类，产生有根树，假设分子钟。
+- **Neighbor-Joining (NJ)**：基于 Q 矩阵的启发式搜索，产生无根树，不要求分子钟。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'UPGMA 算法', to: '/wiki-bioinfo/phylogeny/upgma', description: '基于聚类直觉的建树方法' },
+    { title: 'Neighbor-Joining', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '现代系统发育分析的标准距离法' },
+    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: '距离法的数学理想模型' }
+  ]}
+/>

@@ -1,0 +1,79 @@
+---
+description: Corrupted Cliques 问题的 NP-hard 性质与 CAST 启发式算法，用于基因表达数据的噪声聚类。
+title: "Corrupted Cliques 与 CAST 算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="基因表达数据常含噪声，导致距离图偏离理想的团图（Clique Graph）结构。Corrupted Cliques 问题研究如何用最少的边增删恢复团图结构，CAST 算法是一种实用的启发式解决方案。"
+  bullets={[
+    '理解聚类的核心质量标准：同质性 (Homogeneity) 与分离性 (Separation)',
+    '掌握团图（Clique Graph）作为理想聚类结果的数学定义',
+    '了解 Corrupted Cliques 问题的计算复杂性（NP-hard）',
+    '学习 CAST 算法通过“亲和力”搜索构建稳健簇的逻辑'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '层次聚类', href: '/wiki-bioinfo/phylogeny/hierarchical-clustering' },
+    { name: 'k-means 聚类', href: '/wiki-bioinfo/phylogeny/k-means-bioinformatics' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' }
+  ]}
+/>
+
+## 1. 聚类的直觉：同质性与分离性
+
+在基因表达分析中，聚类（Clustering）的目标是将具有相似表达模式的基因归为一类。评价一个聚类好坏有两个核心直觉：
+
+1.  **同质性 (Homogeneity)**：同一个簇内的成员应该尽可能相似。
+2.  **分离性 (Separation)**：不同簇的成员应该尽可能不同。
+
+### 距离图与噪声
+我们将基因表示为图中的顶点。如果两个基因的表达距离小于某个阈值 $\theta$，我们就连一条边。
+- **理想状态**：图应该是 **团图 (Clique Graph)**，即每个连通分量都是一个完全图（所有点两两相连），且不同连通分量之间没有边。
+- **现实噪声**：由于实验误差，原本相似的基因可能没连上边（缺失边），原本不相关的基因可能连上了边（错误边）。
+
+## 2. 数学挑战：Corrupted Cliques 问题
+
+**Corrupted Cliques Problem** 的定义是：给定一个由于噪声而“损坏”的图 $G$，通过最少次数的添加边或删除边操作，将其修复为一个完美的团图。
+
+- **复杂性**：该问题被证明是 **NP-完全 (NP-complete)** 的。
+- **意义**：这说明在存在噪声的情况下，寻找理论上的“最优”聚类在计算上是极其困难的。
+
+## 3. 启发式方案：CAST 算法
+
+为了处理大规模基因表达数据，Ben-Dor, Shamir 和 Yakhini 提出了 **CAST (Cluster Affinity Search Technique)** 算法。
+
+### 核心概念：亲和力 (Affinity)
+基因 $i$ 对簇 $C$ 的亲和力定义为它与簇中所有成员的平均距离。
+- 如果亲和力大于阈值 $\theta$，我们认为该基因与簇是 **Close** 的。
+- 反之则是 **Distant** 的。
+
+### 算法逻辑
+CAST 采用“边建边修”的策略：
+1.  **选种**：从剩余基因中选一个度数最高的作为新簇的种子。
+2.  **拉人 (Add)**：只要存在与当前簇 Close 的基因，就将其加入簇中。
+3.  **踢人 (Remove)**：加入新成员后，重新检查。如果某个成员因为新人的加入而导致它与簇的平均亲和力降至阈值以下（变得 Distant），则将其踢出。
+4.  **收敛**：直到簇成员不再变化，完成一个簇的构建，并从总集中移除这些基因。
+
+## 4. CAST 的优势与局限
+
+| 优点 | 局限 |
+| :--- | :--- |
+| **无需预设 k**：不需要提前知道有多少个簇。 | **对阈值敏感**：$\theta$ 的选择极大地影响结果。 |
+| **稳健性**：能比层次聚类更好地处理基因表达中的噪声。 | **不保证最优**：作为启发式算法，结果依赖初始种子的选择。 |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '层次聚类', to: '/wiki-bioinfo/phylogeny/hierarchical-clustering', description: '传统的生物信息聚类方法' },
+    { title: 'k-means 聚类', to: '/wiki-bioinfo/phylogeny/k-means-bioinformatics', description: '基于中心点的聚类算法' },
+    { title: '图算法基础', to: '/wiki-bioinfo/foundations/graph-algorithms', description: '理解连通分量与完全图' }
+  ]}
+/>

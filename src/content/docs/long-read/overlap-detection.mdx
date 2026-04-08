@@ -1,36 +1,48 @@
 ---
-description: 重叠检测算法的详细实现，包括 Minimap 的 minimizer 采样、MHAP 的 MinHash 和完整 worked example。
+description: 长读长组装中的重叠检测算法，包括 Minimap 的 minimizer 采样与 MHAP 的 MinHash 策略。
 title: "重叠检测算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 
-
 <SummaryBox
-  summary="重叠检测是长读长组装的核心第一步：它从海量 reads 中高效找到可能拼接的 read 对，为后续的布局和共识构建基础。"
+  summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
   bullets={[
-    '核心挑战是 O(n²) 的全对全比较，必须通过索引和启发式方法降维',
-    'Minimap 的 minimizer 和 MHAP 的 MinHash 是两种主流降维策略',
+    '全对全比对对于百万级 reads 计算不可行，必须采用降维策略',
+    'Minimap 的 minimizer 采样通过选取代表性 k-mer 构建索引',
+    'MHAP 的 MinHash 通过概率估计快速筛选候选',
+    '两类方法都基于"共享特征暗示重叠"的核心思想'
   ]}
 />
 
-## 是什么
+## 问题引入：组合爆炸的困境
 
-重叠检测算法解决以下问题：
+考虑一个简单的组装场景：
 
-> 给定 N 条长 reads，找出所有满足重叠长度和相似度阈值的 read 对。
+> 某细菌基因组大小 5 Mb，测序深度 50×，平均读长 10 kb。
+> 需要的 reads 数量：N = (5M × 50) / 10k = 25,000 条
 
-对于长读长数据，直接进行全对全比对的时间复杂度是 O(n²)，对于百万级 reads 不可行。因此，现代算法通过降维、索引和启发式搜索将复杂度降低到近线性。
+如果进行**全对全比对**以寻找重叠：
+- 比较次数：N × (N-1) / 2 ≈ **3.12 亿次**
+- 每次比对（Smith-Waterman）：O(L²)，L = 10 kb
 
-## 要解决什么生物信息学问题
+这在计算上是不可行的。因此，我们需要一种方法，在不进行显式比对的情况下，**快速识别可能重叠的 read 对**。
 
-在实际生物信息学应用中，重叠检测适合的场景包括：
+## 核心思想：从特征共享到候选筛选
 
-- **de novo 组装**：构建 read-read overlap 图作为组装起点
-- **纠错**：通过重叠区域的共识提高单条 read 质量
-- **haplotype phasing**：识别来自同一单倍型的 reads
-- **重复区域解析**：通过长跨度 overlap 穿越重复序列
+重叠检测算法基于一个关键观察：
+
+> 如果两条 reads 存在显著重叠，它们必然共享大量相同的短序列片段（k-mers）。
+
+因此，我们可以通过以下步骤降维：
+
+1. **特征提取**：从每条 read 中提取代表性特征（如 k-mers）
+2. **索引构建**：建立特征到 reads 的倒排索引
+3. **候选生成**：共享足够多特征的 read 对进入候选集
+4. **精确验证**：仅对候选对进行详细比对确认
+
+这种方法将复杂度从 O(n²) 降低到 O(n × f)，其中 f 是特征提取和索引查询的代价。
 
 ## 数学模型
 
@@ -38,114 +50,142 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 设 reads 集合为 $R = \{r_1, r_2, \ldots, r_n\}$，每条 read $r_i$ 是长度为 $L_i$ 的字符串。
 
-定义 read $r_i$ 和 read $r_j$ 的重叠满足：
+**重叠定义**：read $r_i$ 和 $r_j$ 存在有效重叠，当满足：
 
-1. **重叠长度** ≥ L_min（如 1 kb）
-2. **相似度** ≥ S_min（如 90%）
-3. **方向一致性**（同向或反向互补）
+1. **重叠长度**：$|overlap(r_i, r_j)| \geq L_{\min}$（如 1 kb）
+2. **序列相似度**：$sim(r_i, r_j) \geq S_{\min}$（如 85%）
+3. **方向**：同向或反向互补
 
-### 目标
+### 计算挑战
 
-找到所有满足条件的 read 对 $(i, j)$，使得 $overlap(r_i, r_j)$ 为真。
+直接枚举所有 read 对的时间复杂度为 $O(n^2 \cdot L^2)$。对于人类基因组规模（~100万条 reads），这完全不可行。
 
-## Minimap 算法
+### 降维策略
 
-Minimap 是当前最广泛使用的长读长比对和重叠检测工具，其核心是 **minimizer 采样**。
-
-### Minimizer
-
-给定序列 S、窗口大小 w 和 k-mer 大小 k，minimizer 定义为：
-
-对于每个窗口 S[i:i+w]，计算该窗口内所有 k-mer 的哈希值，选择哈希值最小的 k-mer 作为该窗口的 minimizer。
+现代算法的核心是将问题分解为：
 
 $$
-\text\{minimizer\}(S[i:i+w]) = \arg\min_\{j \in [i, i+w-k+1]\} \text\{hash\}(S[j:j+k])
+\text{重叠检测} = \text{候选生成（粗筛）} + \text{精确验证（精筛）}
 $$
 
-### 索引构建
+其中候选生成阶段的目标是高敏感性（不漏掉真实重叠），精确验证阶段的目标是高特异性（过滤假阳性）。
 
-1. 对每条 read 提取所有 minimizers
-2. 构建 minimizer → (read_id, position) 的倒排索引
-3. 共享 minimizer 的 read 对作为候选
+## Minimap：Minimizer 采样策略
 
-### 过滤与验证
+### 核心思想
 
-1. **共线性检查**：候选 read 对的 minimizer 位置应呈线性关系
-2. **局部比对**：对通过过滤的候选进行精确比对验证
-3. **阈值筛选**：保留满足长度和相似度要求的重叠
+Minimap 的核心洞察是：**不需要索引所有 k-mers，只需索引具有代表性的子集**。
 
-## MHAP 算法
+考虑一个序列窗口：如果我们知道窗口内"最小"（哈希值最小）的 k-mer，这个 k-mer 相对稳定——当序列发生小的突变时，最小 k-mer 改变的概率较低。
 
-MHAP（MinHash Alignment Protocol）使用 **MinHash** 签名估计 Jaccard 相似度。
+### Minimizer 定义
+
+给定序列 $S$、窗口大小 $w$ 和 k-mer 大小 $k$，**minimizer** 是窗口内哈希值最小的 k-mer：
+
+$$
+\text{minimizer}(S[i:i+w]) = \arg\min_{j \in [i, i+w-k+1]} \text{hash}(S[j:j+k])
+$$
+
+**关键性质**：
+- 相邻窗口往往共享相同的 minimizer，因此 minimizer 密度约为 $2/(w+1)$
+- 窗口大小 $w$ 控制采样密度：大 $w$ 产生更少 minimizers
+- 反向互补序列的 minimizers 一致，便于处理 DNA 双链
+
+### 算法流程
+
+1. **索引构建**：
+   - 对每条 read 提取所有 minimizers
+   - 构建倒排索引：minimizer → [(read_id, position), ...]
+
+2. **候选识别**：
+   - 查询 read 的 minimizers
+   - 共享足够多 minimizers 的 read 对进入候选
+
+3. **共线性检查**：
+   - 候选 read 对的 minimizer 位置应呈线性关系（斜率一致）
+   - 过滤随机共享的 minimizers
+
+4. **精确验证**：
+   - 对通过检查的候选进行局部动态规划比对
+   - 确认重叠长度和相似度满足阈值
+
+## MHAP：MinHash 概率估计策略
+
+### 核心思想
+
+MHAP 使用 **MinHash** 技术，通过概率估计快速比较集合相似度。
+
+### Jaccard 相似度
+
+对于两个 k-mer 集合 $A$ 和 $B$，**Jaccard 相似度**定义为：
+
+$$
+J(A, B) = \frac{|A \cap B|}{|A \cup B|}
+$$
+
+该指标度量集合的重叠程度：$J = 1$ 表示完全相同，$J = 0$ 表示无共享元素。
 
 ### MinHash 原理
 
-对于集合 A 和 B，Jaccard 相似度定义为：
+直接计算 Jaccard 相似度需要知道完整的集合交集和并集，代价高昂。MinHash 提供了一种**概率估计**方法：
+
+1. 对集合中每个元素计算哈希值
+2. 选择最小的 $h$ 个哈希值作为集合的**签名**
+3. 两个签名中共享的最小哈希值比例近似 Jaccard 相似度：
 
 $$
-J(A, B) = \frac\{|A \cap B|\}\{|A \cup B|\}
+\hat{J}(A, B) \approx \frac{|\text{signature}(A) \cap \text{signature}(B)|}{h}
 $$
 
-MinHash 是一种概率估计方法：
+**数学保证**：$\hat{J}$ 是 $J$ 的无偏估计，方差随 $h$ 增大而减小。
 
-1. 对每条 read 的所有 k-mer 计算哈希值
-2. 选择最小的 h 个哈希值作为签名
-3. 两个签名共享的最小哈希值比例近似 Jaccard 相似度
+### 算法流程
 
-$$
-\hat\{J\}(A, B) \approx \frac\{|\text\{signature\}(A) \cap \text\{signature\}(B)|\}\{h\}
-$$
-
-### 算法步骤
-
-1. **签名生成**：每条 read 生成 MinHash 签名
-2. **候选筛选**：签名相似度 > 阈值的 read 对进入候选
+1. **签名生成**：每条 read 的所有 k-mers 计算哈希，保留最小的 $h$ 个
+2. **候选筛选**：签名相似度超过阈值的 read 对进入候选集
 3. **精确验证**：对候选进行局部比对确认重叠
 
-## 算法步骤
+### Minimap vs MHAP
 
-### Minimap 流程
+| 特征 | Minimap | MHAP |
+|------|---------|------|
+| 核心方法 | 空间采样（minimizer） | 概率估计（MinHash） |
+| 索引大小 | 较小（~2N/w） | 中等（N×h） |
+| 敏感性 | 高（保留局部结构） | 可调（通过 h 控制） |
+| 速度 | 极快 | 快 |
+| 适用场景 | 一般组装 | 极高错误率数据 |
 
-#### 步骤 1：参数设置
+## 复杂度分析
 
-- k-mer 大小 k（通常 15-21）
-- 窗口大小 w（通常 10-20）
-- 最小重叠长度 L_min
-- 最小相似度 S_min
+### Minimap
 
-#### 步骤 2：Minimizer 提取
+**时间复杂度**：
+- Minimizer 提取：$O(N \cdot L)$，N 为 read 数，L 为平均长度
+- 索引构建：$O(N \cdot L/w)$，$w$ 为窗口大小
+- 候选识别：$O(M \cdot d)$，$M$ 为 minimizer 数，$d$ 为平均倒排列表长度
+- 精确验证：$O(C \cdot L)$，$C$ 为候选对数
 
-对每条 read r：
+总时间复杂度：$O(N \cdot L + C \cdot L)$。在实际情况中，$C \ll N^2$，因此接近线性。
 
-```python
-for i in range(0, len(r) - w + 1):
-    window = r[i:i+w]
-    min_hash = min(hash(window[j:j+k]) for j in range(w - k + 1))
-    minimizers.append((min_hash, i))
-```
+**空间复杂度**：
+- 存储 minimizers：$O(N \cdot L/w)$
+- 倒排索引：$O(N \cdot L/w)$
 
-#### 步骤 3：索引构建
+总空间复杂度：$O(N \cdot L/w)$，约为序列总大小的 $1/w$。
 
-构建哈希表：minimizer_hash → [(read_id, position), ...]
+### MHAP
 
-#### 步骤 4：候选识别
+**时间复杂度**：
+- 签名生成：$O(N \cdot L \cdot k)$，$k$ 为 k-mer 大小
+- 候选筛选：$O(N \cdot h \cdot \log N)$，$h$ 为签名大小
+- 精确验证：$O(C \cdot L)$
 
-遍历索引，共享至少 t 个 minimizers 的 read 对作为候选。
+总时间复杂度：$O(N \cdot L \cdot k + C \cdot L)$
 
-#### 步骤 5：共线性检查
+**空间复杂度**：
+- 存储签名：$O(N \cdot h)$
 
-对于候选 (rᵢ, rⱼ)：
-
-1. 提取共享 minimizers 的位置列表 Pᵢ, Pⱼ
-2. 检查 (Pᵢ, Pⱼ) 是否近似线性（通过线性回归或斜率一致性）
-
-#### 步骤 6：精确验证
-
-对通过检查的候选进行局部动态规划比对，计算：
-
-- 重叠长度 L
-- 相似度 S = (匹配数) / (对齐长度)
-- 如果 L ≥ L_min 且 S ≥ S_min，保留该重叠
+总空间复杂度：$O(N \cdot h)$
 
 ## Worked Example
 
@@ -222,43 +262,6 @@ r₂:  CGTACGTACGTA
 
 如果 L_min = 10, S_min = 90%，则保留该重叠。
 
-## 复杂度分析
-
-### Minimap
-
-#### 时间复杂度
-
-- Minimizer 提取：O(N · L)，N 为 read 数，L 为平均 read 长度
-- 索引构建：O(N · L/w)，w 为窗口大小
-- 候选识别：O(M · d)，M 为 minimizer 数，d 为平均倒排列表长度
-- 精确验证：O(C · L)，C 为候选对数
-
-总时间复杂度：O(N · L + C · L)
-
-在实际情况中，$C \ll N^2$，因此接近线性。
-
-#### 空间复杂度
-
-- 存储 minimizers：O(N · L/w)
-- 倒排索引：O(N · L/w)
-
-总空间复杂度：O(N · L/w)
-
-### MHAP
-
-#### 时间复杂度
-
-- 签名生成：O(N · L · k)，k 为 k-mer 大小
-- 候选筛选：O(N · h · log N)，h 为签名大小
-- 精确验证：O(C · L)
-
-总时间复杂度：O(N · L · k + C · L)
-
-#### 空间复杂度
-
-- 存储签名：O(N · h)
-
-总空间复杂度：O(N · h)
 
 ## 与真实工具或流程的连接
 

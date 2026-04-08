@@ -1,0 +1,75 @@
+---
+description: 质谱蛋白质组学基础：从离子化到肽段测序的计算问题定义与算法概述。
+title: "质谱基础"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="基于质谱的蛋白质组学通过测量肽段的质荷比（m/z）来推断蛋白质身份。核心流程包括：离子化、MS1 全扫描、MS2 碎裂谱获取，以及通过谱图重建或数据库搜索鉴定肽段序列。"
+  bullets={[
+    '理解 MS1（一级质谱）和 MS2（二级质谱）在蛋白质鉴定中的不同作用',
+    '掌握肽段碎裂产生的 b-ion 与 y-ion 的质量互补逻辑',
+    '了解肽段测序（Peptide Sequencing）作为路径搜索问题的数学定义',
+    '认识蛋白质识别从“手工组装”到“自动化数据库搜索”的演进'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' },
+    { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
+  ]}
+/>
+
+## 1. 为什么不直接测序蛋白质？
+
+与 DNA 测序不同，直接对长蛋白质进行测序面临巨大挑战：
+- **长度与结构**：蛋白质通常由数百甚至上千个氨基酸组成，且具有复杂的二级和三级结构。
+- **化学异质性**：20 种氨基酸的化学性质差异巨大，且存在各种翻译后修饰。
+- **动态范围**：细胞内蛋白质浓度的差异可达 10^6 倍以上。
+
+**解决方案**：采用“底向上” (Bottom-up) 策略，先用蛋白酶（如胰蛋白酶 Trypsin）将蛋白质切成短小的**肽段 (Peptides)**，再通过质谱分析这些肽段。
+
+## 2. 串联质谱 (Tandem MS/MS) 流程
+
+质谱仪的工作原理可以简化为两个关键阶段：
+
+### MS1：前体扫描 (Precursor Scan)
+测量完整肽段离子的质荷比 ($m/z$)。
+- **作用**：确定肽段的分子量，并选择其中一个高丰度的离子进行后续碎裂。
+
+### MS2：碎片扫描 (Fragment Scan)
+将选定的肽段离子通过碰撞（如 CID/HCD）碎裂成更小的碎片。
+- **作用**：产生反映肽段内部序列信息的碎裂谱。这是肽段测序的核心数据。
+
+## 3. 肽段碎裂的数学模型
+
+当肽段沿骨架碎裂时，会产生两类主要的碎片离子：
+- **b-ion**：包含 N 端（氨基端）的碎片。
+- **y-ion**：包含 C 端（羧基端）的碎片。
+
+**核心等式**：
+对于一个位置的碎裂，其产生的 b-ion 和 y-ion 的质量之和应等于母离子质量加上水分子的质量（约 18 Da）。
+- 这种**互补性**是验证谱图真伪和辅助测序的关键直觉。
+
+## 4. 肽段测序问题 (Peptide Sequencing Problem)
+
+**形式化定义**：
+给定实验测得的碎片质量多重集 $S$、母离子质量 $M$ 以及离子类型偏移 $\Delta$，寻找一个氨基酸序列 $P$，使其产生的理论谱与 $S$ 的匹配得分最高。
+
+- **寻路直觉**：如果将质量看作顶点，氨基酸质量看作边，那么肽段测序就转化为在**谱图 (Spectrum Graph)** 这个有向无环图中寻找一条从 0 到 $M$ 的最优路径。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '谱图 (Spectrum Graphs)', to: '/wiki-bioinfo/proteomics/spectrum-graphs', description: '基于图论的肽段测序算法' },
+    { title: '数据库搜索与 FDR', to: '/wiki-bioinfo/proteomics/database-search-and-fdr', description: '主流的蛋白鉴定方法' },
+    { title: '谱卷积', to: '/wiki-bioinfo/proteomics/spectral-convolution', description: '检测肽段修饰的数学工具' }
+  ]}
+/>

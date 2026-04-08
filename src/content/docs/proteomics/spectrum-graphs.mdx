@@ -1,287 +1,337 @@
 ---
-description: 谱图图算法：将质谱数据转换为有向无环图，将肽段测序问题转化为图中的路径搜索问题。
+description: 谱图图算法：将质谱数据转换为有向无环图，将肽段测序问题转化为DAG中的最长路径问题
 title: "谱图图（Spectrum Graphs）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
-  summary="谱图图算法将实验质谱图转换为有向无环图（DAG），将肽段测序问题转化为在图中寻找从0到母离子质量的路径问题，是蛋白质组学中肽段序列推断的核心算法。"
+  summary="谱图图（Spectrum Graph）算法将实验质谱数据转换为有向无环图（DAG），将肽段测序问题转化为在图中寻找从源点到汇点的最优路径问题。这是从头肽段测序的核心算法。"
   bullets={[
-    '理解质谱图到谱图图的转换过程',
-    '掌握基于谱图图的肽段测序算法',
-    '了解完整谱图和不完整谱图的区别',
-    '学习概率评分方法改进路径选择'
+    '理解谱图图的构建原理：从质谱峰到图节点和边',
+    '掌握完整谱图与不完备谱图的概念及其对测序的影响',
+    '了解基于概率评分改进路径选择的方法',
+    '认识谱图图方法的时间复杂度与算法优化'
   ]}
 />
 
-## 问题背景
+<PrerequisitesBox
+  items={[
+    { name: '质谱基础', href: '/wiki/proteomics/mass-spectrometry-basics' },
+    { name: '有向无环图（DAG）', href: '/wiki/foundations/graph-algorithms' },
+    { name: '最长路径问题', href: '/wiki/foundations/graph-algorithms' },
+    { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
+  ]}
+/>
 
-### 肽段测序问题
+## 1. 从质谱到谱图 (From Spectrum to Graph)
 
-在串联质谱（tandem MS/MS）中，我们获得一个实验质谱图 S，需要推断出产生这个质谱图的肽段序列 P。
+在串联质谱 (MS/MS) 中，我们的目标是根据实验测得的离子质量峰（Spectrum $S$）重建肽段序列。
 
-**输入**：
-- 实验质谱图 S = \{s₁, s₂, ..., s_q\}
-- 离子类型集合 Δ = \{δ₁, ..., δ_k\}（如 b-ions、y-ions 等）
-- 母离子质量 m
+### 建模直觉
+- **顶点**：代表可能的肽段前缀质量。
+- **边**：当两个顶点的质量差刚好等于一个氨基酸的质量时，连一条边。
+- **路径**：从质量 0 到总质量 $M$ 的路径就代表了一个候选的肽段序列。
 
-**输出**：
-- 质量为 m 的肽段 P，使其理论质谱图与实验质谱图 S 的匹配度最高
+### 离子类型的多重性
+由于质谱仪产生的峰可能是不同离子类型（如 b-ions, y-ions），我们通常不知道一个峰 $s$ 到底对应哪种偏移。
+- 如果峰 $s$ 是由偏移 $\delta$ 产生的，那么真实的部分质量是 $s + \delta$。
+- **谱图构建**：对于实验谱中的每个质量 $s$，我们为每种可能的离子类型 $\delta_j$ 创建一个顶点。
 
-### 传统方法的局限
+## 2. 肽段测序：寻路问题
 
-**穷举搜索方法**：
-- 生成所有 20^l 个长度为 l 的氨基酸序列
-- 计算每个序列的理论质谱图
-- 找到与实验质谱图匹配最好的序列
+### 完整谱图 (Complete Spectrum)
+如果一个谱图包含了肽段所有前缀对应的离子峰，那么正确序列一定对应图中一条从起点到终点的路径。
+- **算法**：在 DAG 中寻找最长路径（即包含最多匹配峰的路径）。
 
-**问题**：
-- 搜索空间呈指数增长（20^l）
-- 即使使用分支定界和前缀剪枝，计算量仍然巨大
-- 前缀剪枝可能错误地丢弃正确序列
+### 概率评分 (Probabilistic Scoring)
+现实中的谱图通常是不完整的，且充满噪声。
+- 我们需要为每个顶点分配一个分数，反映观测到的峰与理论预期之间的匹配概率。
+- 目标转化为：在 DAG 中寻找**总分最高**的路径。
+
+## 3. 算法实现：动态规划
 
 ## 谱图图构建
 
-### 基本思想
+### 基本概念
 
-谱图图方法不生成所有可能的氨基酸序列，而是从实验质谱图直接构建图结构，将肽段测序问题转化为图中的路径搜索问题。
+谱图图方法的核心观察：实验质谱中的每个峰可能来自某种离子类型的碎片，通过逆向推理可推断碎片的质量，进而重建肽段序列。
 
 ### 离子类型
 
-质谱仪在碎裂肽段时会产生多种离子类型：
+质谱仪碎裂肽段时产生多种离子类型：
 
 <DefinitionList
   items={[
     {
       term: 'b-ions',
-      definition: '最常见的 N-terminal 离子，对应 δ = -1（即质量 = 部分肽段质量 - 1）',
+      definition: '最常见的 N-terminal 离子，对应肽键断裂后保留 N 端，质量偏移 $\delta = -1$（即离子质量 = 部分肽段质量 - 1）',
     },
     {
       term: 'y-ions',
-      definition: '最常见的 C-terminal 离子，对应 δ = 19',
+      definition: '最常见的 C-terminal 离子，对应肽键断裂后保留 C 端，质量偏移 $\delta = 19$',
     },
     {
       term: 'b-H₂O',
-      definition: 'b-离子失去水分子（H₂O，质量 18）',
+      definition: 'b-离子失去水分子（$H_2O$，质量 18）产生的离子',
     },
     {
-      term: 'y-NH₃',
-      definition: 'y-离子失去氨分子（NH₃，质量 17）',
+      term: 'b-NH₃',
+      definition: 'b-离子失去氨分子（$NH_3$，质量 17）产生的离子',
+    },
+    {
+      term: 'y-H₂O',
+      definition: 'y-离子失去水分子产生的离子',
+    },
+    {
+      term: 'a-ions',
+      definition: 'N-terminal 离子，比对应 b-ion 少一个 CO（质量 28）',
     },
   ]}
 />
 
-### 图构建步骤
+### 图构建算法
 
-假设我们只考虑 N-terminal 离子，忽略 C-terminal 离子以简化说明。
+**假设**（简化说明）：先只考虑 N-terminal 离子，忽略 C-terminal 离子。
 
-**步骤1：为每个质谱峰创建顶点**
+#### 步骤 1：为每个质谱峰创建顶点
 
-对于实验质谱图中的每个质量 s ∈ S，由于不知道它是由哪种离子类型产生的，我们为每种离子类型 δ_j 创建一个"猜测"顶点。
+对于实验质谱中的每个质量 $s \in S$，由于不知道它由哪种离子类型产生，我们为每种离子类型 $\delta_j \in \Delta$ 创建一个"猜测"顶点。
 
-如果质量 s 是由离子类型 δ_j 产生的，那么部分肽段的质量 x 满足：
-```
-s = x - δ_j
-x = s + δ_j
-```
+如果质量 $s$ 是由离子类型 $\delta_j$ 产生的，那么部分肽段的质量 $x$ 满足：
+$$s = x - \delta_j \Rightarrow x = s + \delta_j$$
 
-因此，对于每个 s，我们创建 k 个顶点，标记为质量 s + δ₁, s + δ₂, ..., s + δ_k。
+因此，对于每个峰 $s$，我们创建 $k$ 个顶点，标记为质量：
+$$V(s) = \{s + \delta_1, s + \delta_2, ..., s + \delta_k\}$$
 
-**步骤2：添加起始和终止顶点**
+#### 步骤 2：添加源点和汇点
 
-- 起始顶点：质量 0
-- 终止顶点：质量 m（母离子质量）
+- **源点（Source）**：$v_{source}$，质量为 0
+- **汇点（Sink）**：$v_{sink}$，质量为 $m$（母离子质量）
 
-**步骤3：添加边**
+#### 步骤 3：添加边
 
-在顶点 u 和 v 之间添加有向边 (u, v)，如果：
-- mass(v) > mass(u)
-- mass(v) - mass(u) 等于某个氨基酸的质量
+在顶点 $u$ 和 $v$ 之间添加有向边 $(u, v)$，当且仅当：
+- $\text{mass}(v) > \text{mass}(u)$
+- $\text{mass}(v) - \text{mass}(u) = m(a)$，其中 $m(a)$ 是某个氨基酸 $a$ 的残基质量
 
-边用对应的氨基酸标记。
+边用对应的氨基酸标记：$\text{label}(u, v) = a$。
 
-### 图的形式化定义
+### 形式化定义
 
-给定实验质谱图 S = \{s₁, ..., s_q\} 和离子类型集合 Δ = \{δ₁, ..., δ_k\}：
+给定实验质谱 $S = \{s_1, ..., s_q\}$ 和离子类型集合 $\Delta = \{\delta_1, ..., \delta_k\}$：
 
-- **顶点集合**：V = \{s_initial\} ∪ V₁ ∪ ... ∪ V_q ∪ \{s_final\}
-  - s_initial = 0
-  - s_final = m
-  - V_i(s_i) = \{s_i + δ₁, ..., s_i + δ_k\}（每个质谱峰生成 k 个顶点）
-  
-- **边集合**：E = \{(u, v) | mass(v) - mass(u) = m(a) for some amino acid a\}
+**顶点集合**：
+$$V = \{v_{source}\} \cup V_1 \cup ... \cup V_q \cup \{v_{sink}\}$$
 
-- **边标签**：label(u, v) = 氨基酸 a，其中 m(a) = mass(v) - mass(u)
+其中：
+- $v_{source} = 0$
+- $v_{sink} = m$
+- $V_i(s_i) = \{s_i + \delta_1, ..., s_i + \delta_k\}$（每个质谱峰生成 $k$ 个顶点）
 
-谱图图最多有 qk + 2 个顶点。
+**边集合**：
+$$E = \{(u, v) \mid \text{mass}(v) - \text{mass}(u) = m(a) \text{ for some amino acid } a\}$$
 
-### Worked Example
+**谱图图规模**：最多 $qk + 2$ 个顶点，$O(qk)$ 条边。
 
-假设：
-- 质谱图 S = \{58, 149, 204, 351, 442\}
-- 离子类型 Δ = \{1\}（只考虑 b-ions）
-- 母离子质量 m = 498
+### 示例
+
+**给定**：
+- 质谱 $S = \{58, 149, 204, 351, 442\}$
+- 离子类型 $\Delta = \{-1\}$（仅 b-ions）
+- 母离子质量 $m = 498$
 - 氨基酸质量：G=57, P=97, F=147, N=114, A=71
 
-**构建顶点**：
-- 起始顶点：0
-- 对于每个 s ∈ S，创建顶点 s + 1：
-  - 58 → 59
-  - 149 → 150
-  - 204 → 205
-  - 351 → 352
-  - 442 → 443
-- 终止顶点：498
+**顶点构建**：
+- 源点：0
+- 峰顶点（质量 +1）：59, 150, 205, 352, 443
+- 汇点：498
 
-**添加边**：
-- 0 → 59（边标签 G，因为 59 - 0 = 59 - 1 = 58 ≈ 57）
-- 59 → 150（边标签 P，因为 150 - 59 = 91 ≈ 97）
-- ... 等等
-
-实际中，由于质量测量有误差，需要允许一定的质量容差。
+**边构建**（部分）：
+- $0 \rightarrow 59$：G（$59 - 0 \approx 57$）
+- $59 \rightarrow 150$：P（$150 - 59 = 91 \approx 97$）
+- $150 \rightarrow 205$：S 或 A（$205 - 150 = 55$，最接近 57）
+- ...以此类推
 
 ## 从谱图图到肽段序列
 
 ### 完整谱图
 
-**定义**：质谱图 S 是完整的，如果对于肽段 P = p₁...pₙ 的每个 N-terminal 部分肽段 P_i（1 ≤ i ≤ n），S 中至少包含一个对应的离子类型。
+**定义**：质谱 $S$ 对于肽段 $P = p_1...p_n$ 是**完整的**，如果对于 $P$ 的每个 N-terminal 部分肽段 $P_i$（$1 \leq i \leq n$），$S$ 中至少包含一个对应 $P_i$ 的离子类型峰。
 
-**关键观察**：对于完整谱图，谱图中存在一条从 s_initial 到 s_final 的路径，其边标签正好是肽段序列 P。
+**关键观察**：对于完整谱图，谱图中存在一条从 $v_{source}$ 到 $v_{sink}$ 的路径，其边标签正好是肽段序列 $P$。
 
-### 肽段测序作为路径问题
+### 肽段测序作为最长路径问题
 
 对于完整谱图，肽段测序问题转化为：
-- 在有向无环图（DAG）中寻找从 0 到 m 的路径
-- 理想情况下，正确路径是边数最多的路径（Longest Path in DAG）
+> **在有向无环图（DAG）中寻找从源点到汇点的最长路径**
 
-### 不完整谱图的挑战
+DAG 中的最长路径问题可通过动态规划在 $O(V + E)$ 时间内求解：
 
-实验质谱图通常是不完整的：
-- 某些离子类型可能缺失
+```
+LONGEST-PATH-DAG(G, source, sink):
+    // 拓扑排序
+    topo_order = TOPOLOGICAL-SORT(G)
+    
+    // 初始化
+    for each vertex v:
+        dist[v] = -∞
+        dist[source] = 0
+    
+    // 动态规划
+    for v in topo_order:
+        for each edge (v, u) in G:
+            if dist[u] < dist[v] + 1:
+                dist[u] = dist[v] + 1
+                prev[u] = v
+    
+    // 回溯路径
+    path = BACKTRACK(sink, prev)
+    return path
+```
+
+### 不完备谱图的挑战
+
+实际质谱通常是不完整的：
+- 某些离子类型可能完全缺失
 - 存在化学噪声（无关的峰）
 - 即使谱图完整，也可能存在多条相同长度的路径
 
-**问题**：单纯选择边数最多的路径不能反映顶点的"重要性"。
+**单纯最长路径的问题**：
+- 不考虑顶点的"重要性"差异
+- 所有边权重相等，无法区分不同离子类型的可靠性
 
 ## 概率评分方法
 
 ### 基本思想
 
 不同离子类型出现的概率不同：
-- b-ions 最常见（概率高）
-- b-H₂O-NH₃ 等罕见离子（概率低）
-
-因此，应该根据离子类型的概率对顶点进行评分。
+- b-ions 最常见（概率高，~0.8-0.9）
+- y-ions 也常见（概率高）
+- b-H₂O、y-NH₃ 等罕见离子（概率低）
+- 化学噪声产生任意质量的概率为 $p_R$（很低）
 
 ### 概率模型
 
-假设：
-- 每个离子类型 δ_i 有出现的概率 p(δ_i)
+**假设**：
+- 每个离子类型 $\delta_i$ 有出现概率 $p(\delta_i)$
 - 不同离子类型的出现相互独立
-- 化学噪声产生任意质量的概率为 p_R
+- 化学噪声产生任意质量的概率为 $p_R$
 
-对于部分肽段 P_i，如果它产生离子类型 δ₁, ..., δ_l（"存在"的离子），而不产生 δ_\{l+1\}, ..., δ_k（"缺失"的离子），则顶点得分为：
+对于部分肽段 $P_i$，假设它产生离子类型 $\delta_1, ..., \delta_l$（"存在"的离子），而不产生 $\delta_{l+1}, ..., \delta_k$（"缺失"的离子）。
 
-```
-score = [∏_\{i=1\}^\{l\} p(δ_i)] × [∏_\{i=l+1\}^\{k\} (1 - p(δ_i))] ×
-        [p_R / (1 - p_R)]
-```
+顶点得分（对数似然比形式）：
+$$\text{score}(P_i) = \sum_{i=1}^{l} \log\frac{p(\delta_i)}{p_R} + \sum_{i=l+1}^{k} \log\frac{1 - p(\delta_i)}{1 - p_R}$$
 
-这个评分考虑了：
-- 奖励解释顶点的离子类型
-- 惩罚缺失的离子类型
-- 考虑化学噪声的影响
+这个评分：
+- **奖励**解释顶点的离子类型（高频离子得分高）
+- **惩罚**缺失的离子类型（期望出现但未出现）
+- **考虑化学噪声**的影响
 
-### 改进的路径选择
+### 改进的测序问题
 
 使用概率评分后，肽段测序问题转化为：
-- 在谱图图中寻找从 0 到 m 的路径
-- 最大化路径上顶点评分的总和
+> **在谱图图中寻找从源点到汇点的路径，使路径上顶点得分的总和最大**
 
-这可以通过动态规划在 DAG 中高效求解。
+这同样可以通过 DAG 中的动态规划高效求解。
 
-## 算法复杂度
+## 算法复杂度分析
 
 ### 图构建
 
-- **时间复杂度**：O(qk)，其中 q 是质谱峰数，k 是离子类型数
-- **空间复杂度**：O(qk)
+- **时间复杂度**：$O(qk)$，其中 $q$ 是质谱峰数，$k$ 是离子类型数
+- **空间复杂度**：$O(qk)$，存储顶点和边
 
 ### 路径搜索
 
-- **时间复杂度**：O(V + E) = O(qk + qk·20) ≈ O(qk)，在 DAG 中使用拓扑排序
-- **空间复杂度**：O(V) = O(qk)
-
-## 实际应用
+- **时间复杂度**：$O(V + E) = O(qk + qk \cdot |\mathcal{A}|) \approx O(qk)$
+  - 其中 $|\mathcal{A}|$ 是氨基酸字母表大小（约 20）
+- **空间复杂度**：$O(V) = O(qk)$，存储距离和回溯指针
 
 ### 考虑 C-terminal 离子
 
-上述简化模型只考虑了 N-terminal 离子。实际应用中：
-- 将质谱图 S 与其"反转"版本结合
-- 同时考虑 N-terminal 和 C-terminal 离子
-- 提高肽段测序的准确性
+实际应用中需要同时考虑 N-terminal 和 C-terminal 离子：
+- 将原始谱图 $S$ 与"反转"谱图结合
+- C-terminal 离子对应从母离子质量反向减去的碎片
+- 形成更复杂的图结构，但算法原理相同
 
-### 质量容差
+## 实际应用与工具
 
-实际质谱仪测量有误差：
-- 允许一定的质量容差（如 ±0.5 Da）
-- 在构建边时使用模糊匹配而非精确匹配
+### 考虑质量容差
 
-### 评分函数的改进
+实际质谱仪测量有误差，构建边时：
+- 允许一定的质量容差（如 $\pm 0.5$ Da 或 $\pm 10$ ppm）
+- 使用模糊匹配而非精确匹配
 
-实际工具使用更复杂的评分函数：
-- 考虑峰强度（intensity）
-- 使用更精确的离子类型概率模型
-- 考虑氨基酸的先验概率
+### 评分函数改进
+
+实际工具使用更复杂的评分：
+- 考虑峰强度（intensity）信息
+- 使用机器学习的离子类型概率模型
+- 考虑氨基酸序列的先验概率
+
+### 真实工具
+
+| 工具 | 特点 | 算法基础 |
+|------|------|---------|
+| **PEAKS** | 商业软件，de novo 测序金标准 | 谱图图 + 动态规划 |
+| **Novor** | 实时 de novo 测序 | 深度学习增强的谱图图方法 |
+| **PepNovo** | 开源 de novo 测序 | 概率谱图图模型 |
+| **Sherenga** | 早期实现 | 经典谱图图算法 |
+| **Lutefisk** | 早期开源工具 | 谱图图 + 启发式 |
+
+### 现代工作流程
+
+```
+高质量谱图 ─→ De novo 测序（谱图图方法）
+                ↓
+低质量谱图 ─→ 数据库搜索（SEQUEST/Mascot）
+                ↓
+            结果整合 → 蛋白质鉴定
+```
 
 ## 常见误区
 
-### 谱图图总是能唯一确定肽段序列
+| 误区 | 正确理解 |
+|------|---------|
+| 谱图图总能唯一确定肽段序列 | 实际中可能存在多条得分相近的路径，导致序列歧义 |
+| 完整谱图在实际中很常见 | 实验谱图通常不完备，某些离子类型可能完全缺失 |
+| 只需考虑 b-ions | 实际应用需要同时考虑多种离子类型（b、y、a 等） |
+| 最长路径总是正确答案 | 对于不完备谱图，需结合概率评分；最长边数路径不一定最优 |
+| De novo 测序已取代数据库搜索 | 两者各有优势：de novo 发现新序列，数据库搜索更可靠、快速 |
 
-不是。即使使用概率评分，谱图图方法也可能：
-- 返回多个候选序列
-- 对于低质量质谱图，结果不确定
-- 需要结合数据库搜索等方法
+## 与真实测序工具的连接
 
-### 完整谱图在实际中很常见
+谱图图方法是现代 de novo 测序算法的理论基础，实际工具在此基础上添加：
+- 机器学习评分函数
+- 序列标签辅助
+- 与数据库搜索的混合策略
+- 修饰和突变处理
 
-不是。实验质谱图通常是不完整的：
-- 某些离子类型可能完全缺失
-- 噪声峰可能干扰路径选择
-- 需要概率评分来处理不完整性
+## 历史注记
 
-### 只需要考虑 b-ions
+谱图图方法由 **Vlado Dancik** 等人在 1999 年提出（De novo peptide sequencing via tandem mass spectrometry, *Journal of Computational Biology*）。该方法首次系统性地将图算法引入肽段测序，奠定了现代 de novo 蛋白质组学的基础。
 
-不是。实际应用中需要：
-- 同时考虑多种离子类型
-- 利用 N-terminal 和 C-terminal 离子的互补性
-- 使用更复杂的离子类型模型
-
-## 与真实工具的连接
-
-谱图图方法在真实工具中的应用：
-
-- **PEAKS**：使用谱图图进行从头肽段测序
-- **Novor**：基于深度学习的谱图图方法变种
-- **PepNovo**：使用概率谱图图模型
-- **Sherenga**：早期的谱图图实现
-
-现代蛋白质组学流程通常：
-- 对高质量谱图使用谱图图进行从头测序
-- 对低质量谱图使用数据库搜索
-- 结合两种方法提高鉴定率
-
-## 参考资料
-
-- Dancik, V., et al. (1999). De novo peptide sequencing via tandem mass spectrometry. *Journal of Computational Biology*, 6(3-4), 327-342.
-- Chen, T., et al. (2001). A dynamic programming approach to de novo peptide sequencing via tandem mass spectrometry. *Journal of Computational Biology*, 8(3), 325-337.
+随后，**Chen 和 Schwartz**（2001）提出了改进的动态规划算法，**Frank 和 Pevzner** 开发了 PepNovo 等开源工具，推动了该领域的普及。
 
 ## 相关页面
 
-- [质谱基础](./mass-spectrometry-basics.md)
-- [肽段测序问题](./peptide-sequencing.md)
-- [数据库搜索与 FDR](./database-search-and-fdr.md)
-- [图算法](../foundations/graph-algorithms.md)
+<RelatedLinks
+  links={[
+    { title: '质谱基础', to: '/wiki/proteomics/mass-spectrometry-basics', description: 'MS1/MS2 原理与肽段测序问题' },
+    { title: '谱卷积', to: '/wiki/proteomics/spectral-convolution', description: '修饰检测的谱卷积方法' },
+    { title: '谱对齐', to: '/wiki/proteomics/spectral-alignment', description: '动态规划谱对齐算法' },
+    { title: '数据库搜索与 FDR', to: '/wiki/proteomics/database-search-and-fdr', description: '蛋白质鉴定的数据库搜索方法' },
+    { title: '图算法', to: '/wiki/foundations/graph-algorithms', description: 'DAG 最长路径与动态规划' }
+  ]}
+/>
+
+## 参考文献
+
+- Dancik, V., et al. (1999). De novo peptide sequencing via tandem mass spectrometry. *Journal of Computational Biology*, 6(3-4), 327-342.
+- Chen, T., et al. (2001). A dynamic programming approach to de novo peptide sequencing via tandem mass spectrometry. *Journal of Computational Biology*, 8(3), 325-337.
+- Frank, A., & Pevzner, P. (2005). PepNovo: de novo peptide sequencing via probabilistic network modeling. *Analytical Chemistry*, 77(4), 964-973.
+- Ma, B., et al. (2003). PEAKS: powerful software for peptide de novo sequencing by tandem mass spectrometry. *Rapid Communications in Mass Spectrometry*, 17(20), 2337-2342.

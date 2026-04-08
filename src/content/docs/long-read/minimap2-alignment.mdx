@@ -1,242 +1,197 @@
 ---
-description: Minimap2 比对算法的详细实现，包括 seed-chain-align 流程、动态规划和完整 worked example。
+description: Minimap2 比对算法的核心思想，包括 seed-chain-align 三阶段框架与关键优化策略。
 title: "Minimap2 比对算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 
-
 <SummaryBox
-  summary="Minimap2 是当前最广泛使用的长读长比对工具，其核心 seed-chain-align 流程通过降维索引、链式聚类和动态规划实现高效准确的序列比对。"
+  summary="Minimap2 是当前最广泛使用的长读长比对工具。其核心 seed-chain-align 框架通过粗定位-链式筛选-精细比对的三阶段策略，将长读长比对从 O(m×n) 降低到近线性复杂度。"
   bullets={[
-    'seed 阶段使用 minimizer 索引快速定位候选区域',
-    'chain 阶段通过动态规划找到最大共线性链',
-    'align 阶段使用带状动态规划进行精确比对',
+    'Seeding：通过 minimizer 索引快速定位候选区域，避免全对全扫描',
+    'Chaining：使用动态规划将 seeds 聚类为共线性链，过滤假阳性匹配',
+    'Alignment：在链约束区域内使用带状动态规划进行精确比对',
+    '三阶段渐进策略平衡了速度、内存和准确性'
   ]}
 />
 
-## 是什么
+## 问题引入：长序列比对的计算挑战
 
-Minimap2 算法解决以下问题：
+考虑长读长比对的典型场景：
 
-> 给定一条长 read 和一个参考基因组，找到 read 在参考上的最优比对位置。
+> Read 长度：20 kb
+> 参考基因组：3 Gb（人类基因组）
+> 传统 Smith-Waterman 动态规划复杂度：$O(m \times n) = 6 \times 10^{13}$ 操作
 
-Minimap2 是 Minimap 的继承者，不仅支持长读长，还支持短读长、splice-aware 比对等多种模式。
+这在计算上是不可行的。我们需要一种方法，在**不牺牲准确性**的前提下，**大幅降低计算复杂度**。
 
-## 要解决什么生物信息学问题
+## 核心思想：从降维索引到局部精确比对
 
-在实际生物信息学应用中，Minimap2 适合的场景包括：
+Minimap2 的核心洞察是：**不需要在整个基因组上进行动态规划，只需在可能匹配的区域进行精确比对**。
 
-- **read mapping**：将测序 reads 比对到参考基因组
-- **组装 scaffolding**：将 contigs 比对到参考或彼此之间
-- **SV 检测**：通过比对模式识别结构变异
-- **转录本比对**：支持跨内含子的 splice-aware 比对
-- **重叠检测**：在无参考情况下进行 read-read 比对
+这引出了三阶段框架：
+
+$$
+\text{完整比对} = \underbrace{\text{Seeding（粗筛）}}_{\text{找到候选区域}} + \underbrace{\text{Chaining（精筛）}}_{\text{组织候选为链}} + \underbrace{\text{Alignment（精确比对）}}_{\text{局部位点计算}}
+$$
+
+### 阶段 1：Seeding - 粗定位
+
+**问题**：如何在 3 Gb 参考基因组中快速找到 20 kb read 的可能位置？
+
+**解决方案**：使用 **minimizer 索引**
+
+- 从 read 中提取代表性 k-mer 子集（minimizers）
+- 在预构建的参考索引中查询这些 minimizers
+- 每个 minimizer "命中" 指示一个候选匹配位置
+
+这类似于在图书馆中通过关键词索引快速定位相关书籍，而非逐页扫描。
+
+### 阶段 2：Chaining - 链式组织
+
+**问题**：单个 minimizer 命中不可靠（可能存在大量假阳性），如何识别真实的比对区域？
+
+**核心观察**：真实的比对会产生**共线性**的 minimizer 命中——它们在 read 和参考上的相对顺序一致。
+
+**解决方案**：使用动态规划将 minimizer 命中聚类为**链（chain）**
+
+- 每个链代表一个候选比对区域
+- 链得分反映匹配质量（覆盖长度、共线性程度）
+- 保留高分链，丢弃孤立命中
+
+### 阶段 3：Alignment - 精确比对
+
+**问题**：已知 read 大致对应参考的某个区域，如何获得碱基级别的精确比对？
+
+**解决方案**：在链约束的局部区域内进行**带状动态规划**
+
+- 限制 DP 计算区域（带状）
+- 大幅降低计算量
+- 获得精确的插入/缺失和错配位置
 
 ## 数学模型
 
-### 问题形式化
+### 全局比对问题
 
-设 read 序列为 R = r₁r₂...rₘ，参考基因组为 G = g₁g₂...gₙ。
+设 read $R = r_1 r_2 \ldots r_m$，参考基因组 $G = g_1 g_2 \ldots g_n$。
 
-目标是找到位置 pos 和比对路径 π，使得：
+最优比对定义为：
 
 $$
-\pi^* = \arg\max_{\pi} \sum_{(i,j) \in \pi} s(r_i, g_j) - \sum_{\text{gaps}} \text{penalty}(\text{gap})
+\pi^* = \arg\max_{\pi} \sum_{(i,j) \in \pi} s(r_i, g_j) - \sum_{\text{gaps}} \gamma(gap)
 $$
 
-其中 s(rᵢ, gⱼ) 是匹配/错配得分，penalty(gap) 是 gap 罚分。
+其中 $s(\cdot)$ 是匹配/错配得分函数，$\gamma(\cdot)$ 是间隙罚分函数。
 
-### Seed-Chain-Align 框架
+直接求解需要 $O(m \times n)$ 时间和空间。
 
-Minimap2 采用三阶段框架：
+### Seed-Chain-Align 分解
 
-1. **Seeding**：通过 minimizer 找到候选匹配位置（粗定位）
-2. **Chaining**：将 seeds 聚类成共线性链（筛选和排序）
-3. **Alignment**：对链进行精确动态规划比对（精细比对）
+Minimap2 将全局问题分解为三个子问题：
 
-## Seeding 阶段
+$$
+\pi^* \approx \arg\max_{\text{chain}} \left[ \arg\max_{\text{align in chain}} \left( \sum s - \sum \gamma \right) \right]
+$$
 
-### Minimizer 索引
+分解的合理性基于**序列连续性假设**：真实比对在局部是连续的，可以通过种子链来近似。
 
-参考基因组预处理：
+## Seeding 阶段：降维索引
 
-1. 对参考基因组提取所有 minimizers
-2. 构建倒排索引：minimizer → (chromosome, position)
+### Minimizer 索引构建
 
-对于 read：
+**参考基因组预处理**：
+1. 滑动窗口提取 minimizers（窗口大小 $w$，k-mer 大小 $k$）
+2. 构建倒排索引：$\text{minimizer} \rightarrow \{(\text{chrom}, \text{pos})\}$
 
+**Read 查询**：
 1. 提取 read 的 minimizers
-2. 在索引中查找匹配的参考位置
-3. 这些位置称为 "seeds"
+2. 索引查询 → 获得候选位置列表
+3. 这些位置称为 **anchors** 或 **seeds**
 
-### Seed 过滤
+### Seed 过滤策略
 
-并非所有 seeds 都保留，过滤条件包括：
+并非所有 seeds 都有效：
 
-- **唯一性**：只保留在参考中出现次数 ≤ k 的 minimizers（k 通常为 10-100）
-- **间距一致性**：seeds 在 read 和参考上的相对位置应一致
-- **密度阈值**：区域内的 seeds 数量应超过阈值
+- **高频过滤**：在参考中出现次数 > $f$ 的 minimizers 通常来自重复区域，丢弃
+- **距离约束**：相邻 seeds 在 read 和参考上的距离应大致相等
+- **密度检查**：有效比对区域应有足够的 seed 密度
 
-### 窗口策略
+### 参数权衡
 
-Minimap2 使用窗口化 minimizer：
+| 参数 | 增大效果 | 减小效果 |
+|------|----------|----------|
+| k-mer 大小 $k$ | 特异性↑，假阳性↓ | 敏感性↑，索引大小↑ |
+| 窗口大小 $w$ | 索引更小，速度↑ | 敏感性↑，种子更多 |
 
-- 窗口大小 w：控制 minimizer 密度
-- k-mer 大小 k：控制特异性
+## Chaining 阶段：共线性链构建
 
-参数选择权衡：
-- 大 w、小 k：更多 seeds，更高敏感性，更多候选
-- 小 w、大 k：更少 seeds，更高特异性，更快速度
+### 问题建模
 
-## Chaining 阶段
+给定 seeds 集合 $S = \{s_1, s_2, \ldots, s_n\}$，每个 seed $s_i$ 包含：
+- read 位置 $x_i$
+- 参考位置 $y_i$
+- 长度 $l_i$
 
-### 问题定义
+**目标**：找到子集 $C \subseteq S$，满足：
+1. **单调性**：$x_1 < x_2 < \ldots < x_k$ 且 $y_1 < y_2 < \ldots < y_k$
+2. **最大化链得分**
 
-给定 seeds 集合 $S = \{s_1, s_2, \ldots, s_n\}$，每个 seed $s_i$ 有：
-- read 位置 xᵢ
-- 参考位置 yᵢ
-- 长度 lᵢ
+### 动态规划求解
 
-目标是找到种子子集 $C \subseteq S$，使得：
+定义 $DP[i]$ 为以 seed $i$ 结尾的最优链得分。
 
-1. 种子按顺序排列：$x_1 < x_2 < \ldots < x_k$ 且 $y_1 < y_2 < \ldots < y_k$
-2. 最大化总得分
-
-### 动态规划公式
-
-定义 DP[i] 为：以 seed i 结尾的最优链得分。
-
-递推公式：
+**递推公式**：
 
 $$
-DP[i] = \max_\{j < i, y_j < y_i\} \\{DP[j] + \alpha \cdot (x_i - x_j - l_j) - \beta \cdot |(y_i - y_j) - (x_i - x_j)|\\}
+DP[i] = \max_{j < i, y_j < y_i} \left\{ DP[j] + \alpha \cdot (x_i - x_j - l_j) - \beta \cdot |(y_i - y_j) - (x_i - x_j)| \right\}
 $$
 
-其中：
-- α 是匹配奖励系数
-- β 是距离惩罚系数（惩罚非线性）
+**得分组成**：
+- **覆盖奖励** $\alpha \cdot (x_i - x_j - l_j)$：奖励 read 上的连续覆盖
+- **共线性惩罚** $\beta \cdot |\Delta y - \Delta x|$：惩罚参考与 read 距离不一致（暗示重排或错误）
 
-边界条件：$DP[i] \ge l_i$（单个 seed 的得分）
+**边界条件**：$DP[i] \geq l_i$（单个 seed 的最小得分）
 
-### 链得分解释
+### 算法特性
 
-得分包含两部分：
-1. **覆盖奖励**：α · (xᵢ - xⱼ - lⱼ) 奖励更长的覆盖
-2. **共线性惩罚**：β · |Δy - Δx| 惩罚 read 和参考上的距离不一致
+- **时间复杂度**：$O(n \log n)$ 使用平衡树优化，或 $O(n^2)$ 朴素实现
+- **输出**：通常保留 top-$k$ 条链作为候选比对区域
 
-### 链选择
+## Alignment 阶段：带状动态规划
 
-1. 计算所有 seeds 的 DP 值
-2. 选择得分最高的链
-3. 通常保留 top-k 条链作为候选
+### 问题简化
 
-## Alignment 阶段
+链已经确定了 read 在参考上的大致位置和方向。精确比对只需要在**局部区域**进行。
 
-### 带状动态规划
-
-对于选定的链，在链周围进行精确比对：
-
-1. 确定比对区域：链的起点和终点，加上边界 padding
-2. 使用带状动态规划（banded DP）进行比对
-3. 带宽 b 根据链的共线性程度自适应调整
+**带状动态规划（Banded DP）**：
+- 限制 DP 矩阵计算区域为对角线附近带宽 $b$ 的范围
+- 假设链的共线性保证了最优路径在此带状区域内
+- 复杂度从 $O(m \times n)$ 降低到 $O(m \times b)$
 
 ### 递推公式
 
-与标准 Needleman-Wunsch 类似，但限制在带宽 b 内：
-
-对于位置 (i, j)，只在 |i - j| ≤ b 时计算：
+在带状区域内使用标准 Needleman-Wunsch：
 
 $$
-F[i][j] = \max
-\begin{cases}
+F[i][j] = \max \begin{cases}
 F[i-1][j-1] + s(r_i, g_j) & \text{匹配/错配} \\
-F[i-1][j] + g & \text{read gap} \\
-F[i][j-1] + g & \text{参考 gap}
+F[i-1][j] + \gamma_{\text{open/extend}} & \text{read gap} \\
+F[i][j-1] + \gamma_{\text{open/extend}} & \text{参考 gap}
 \end{cases}
 $$
 
-### Affine Gap Penalty
+使用 **affine gap penalty**：
+- $g_{\text{open}}$：开启间隙的惩罚
+- $g_{\text{extend}}$：延伸间隙的惩罚
 
-Minimap2 使用 affine gap penalty：
+### 特殊模式：Splice-Aware
 
-- gap 开启罚分：g_open
-- gap 延伸罚分：g_extend
+对于 RNA-seq 数据：
+- 允许大 gap（内含子，通常 >50 bp）
+- 在 gap 边界检测 GT-AG 剪接信号
+- 对符合剪接模式的 gap 给予奖励
 
-需要额外的矩阵处理 gap 状态。
-
-### Splice-Aware 比对（可选）
-
-对于 RNA-seq 数据，Minimap2 支持 GT-AG 剪接位点：
-
-1. 在比对中允许大 gap（内含子）
-2. 大 gap 两端检测 GT-AG 信号
-3. 给予剪接位点额外奖励
-
-## 算法步骤
-
-### 完整流程
-
-#### 步骤 1：索引构建（一次性）
-
-```python
-def build_index(reference, k=15, w=10):
-    minimizers = extract_minimizers(reference, k, w)
-    index = build_inverted_index(minimizers)
-    return index
-```
-
-#### 步骤 2：Seeding
-
-```python
-def find_seeds(read, index, k=15, w=10):
-    read_minimizers = extract_minimizers(read, k, w)
-    seeds = []
-    for (minimizer, pos) in read_minimizers:
-        if minimizer in index:
-            for (ref_chrom, ref_pos) in index[minimizer]:
-                seeds.append(Seed(pos, ref_pos, k))
-    return filter_seeds(seeds)
-```
-
-#### 步骤 3：Chaining
-
-```python
-def chain_seeds(seeds, alpha=1, beta=0.1):
-    seeds.sort(by=read_position)
-    dp = [seed.length for seed in seeds]
-    predecessor = [None for seed in seeds]
-    
-    for i in range(len(seeds)):
-        for j in range(i):
-            if seeds[j].ref_pos < seeds[i].ref_pos:
-                score = (dp[j] + 
-                        alpha * (seeds[i].read_pos - seeds[j].read_pos) -
-                        beta * abs((seeds[i].ref_pos - seeds[j].ref_pos) - 
-                                  (seeds[i].read_pos - seeds[j].read_pos)))
-                if score > dp[i]:
-                    dp[i] = score
-                    predecessor[i] = j
-    
-    # 回溯得到最优链
-    best_chain = backtrack(dp, predecessor)
-    return best_chain
-```
-
-#### 步骤 4：Alignment
-
-```python
-def align_chain(read, reference, chain, bandwidth=100):
-    # 确定比对区域
-    start_ref = chain[0].ref_pos - bandwidth
-    end_ref = chain[-1].ref_pos + chain[-1].length + bandwidth
-    ref_region = reference[start_ref:end_ref]
-    
-    # 带状动态规划
-    alignment = banded_dp(read, ref_region, bandwidth)
-    return alignment
-```
 
 ## Worked Example
 

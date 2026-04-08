@@ -1,64 +1,103 @@
 ---
 title: "生物信息学中的机器学习"
+description: 从表示学习到深度学习架构，探索机器学习如何解决生物序列建模的核心问题。
 ---
 
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 
-机器学习正在快速改变生物信息学：从 motif 预测、蛋白结构预测，到单细胞嵌入、序列语言模型和多组学整合，越来越多问题被重新表述为表示学习和预测问题。
+## 为什么要用机器学习分析生物序列
 
-## 这一部分讲什么
+生物信息学的核心挑战之一是从序列中识别**功能性模式**：调控元件在哪里？蛋白质如何折叠？突变会产生什么影响？
 
-本章聚焦三个核心算法架构：
+传统方法（如 PWM、HMM）依赖**手工设计特征**，需要专家知识来定义什么是重要的。但当面对以下情况时，这些方法遇到瓶颈：
 
-- **序列深度学习概览**：CNN、Transformer、RNN 的基本概念；
-- **CNN for Sequences**：卷积神经网络在序列中的详细算法实现；
-- **RNN/LSTM for Sequences**：循环神经网络和长短期记忆网络的详细算法实现；
-- **Transformer for Sequences**：自注意力机制和 Transformer 的详细算法实现；
-- **生物序列嵌入与语言模型**：DNA/RNA/protein foundation models。
+- **组合性调控**：多个 motif 的组合效应难以用简单规则描述
+- **长程相互作用**：远距离调控元件的影响超出传统模型的感受野
+- **数据规模**：大规模测序数据的手工标注成本极高
 
-## 为什么重要
+<DefinitionList
+  items={[
+    {
+      term: '表示学习（Representation Learning）',
+      definition: '让算法自动从原始数据中学习有意义的特征表示，而非依赖人工设计的特征工程。',
+    },
+    {
+      term: '归纳偏置（Inductive Bias）',
+      definition: '模型架构本身引入的先验假设，如 CNN 的局部性、Transformer 的全局注意力。',
+    },
+    {
+      term: '迁移学习（Transfer Learning）',
+      definition: '将在大规模数据上预训练得到的表示，迁移到下游特定任务中。',
+    },
+  ]}
+/>
 
-- 很多经典手工特征正在被端到端表示学习替代；
-- 预训练模型显著降低了下游任务的数据门槛；
-- 机器学习不再只是“加一个分类器”，而是成为建模复杂生物规律的重要工具。
+## 本章要解决什么问题
 
-## 推荐阅读顺序
+本章从**算法层**视角，系统介绍生物序列深度学习的核心架构及其设计思想：
 
-1. [序列深度学习](./deep-learning-for-sequences.md)
-2. [CNN for Sequences](./cnn-for-sequences.md)
-3. [RNN/LSTM for Sequences](./rnn-lstm-for-sequences.md)
-4. [Transformer for Sequences](./transformer-for-sequences.md)
-5. [嵌入与语言模型](./embeddings-and-language-models.md)
+### 1. 序列表示基础
+如何将离散的碱基/氨基酸序列转化为连续的数值表示，使得机器学习模型能够处理。
 
-## 子主题导航
+### 2. 三种核心架构
+
+| 架构 | 核心归纳偏置 | 适用场景 |
+|------|-------------|----------|
+| **CNN** | 局部卷积、位置不变性 | motif 检测、调控元件识别 |
+| **RNN/LSTM** | 递归处理、时序依赖 | 基因预测、可变剪接分析 |
+| **Transformer** | 全局自注意力、长程依赖 | 蛋白质结构预测、大规模预训练 |
+
+### 3. 预训练与迁移
+如何通过自监督预训练从海量无标注序列中学习通用表示，再迁移到下游任务。
+
+## 学习路径
+
+建议按以下顺序阅读，形成从概念到具体、从基础到前沿的完整认知：
 
 <SectionNavigator
   items={[
     {
-      title: '序列深度学习',
+      title: '1. 序列深度学习',
       to: '/docs/ml-bioinfo/deep-learning-for-sequences',
-      description: '从 one-hot 编码到 CNN、Transformer 和下游监督任务。',
+      description: '理解序列表示、核心架构对比、任务类型与经典方法的关系。',
     },
     {
-      title: 'CNN for Sequences',
+      title: '2. CNN for Sequences',
       to: '/docs/ml-bioinfo/cnn-for-sequences',
-      description: '卷积神经网络在序列中的详细算法实现，包括卷积操作、池化和 worked example。',
+      description: '卷积操作、池化、特征图可视化；DeepBind、DeepSEA 等经典工作解析。',
     },
     {
-      title: 'RNN/LSTM for Sequences',
+      title: '3. RNN/LSTM for Sequences',
       to: '/docs/ml-bioinfo/rnn-lstm-for-sequences',
-      description: '循环神经网络和长短期记忆网络的详细算法实现，包括门控机制和 worked example。',
+      description: '隐状态、门控机制、梯度问题；双向 RNN 与多层堆叠。',
     },
     {
-      title: 'Transformer for Sequences',
+      title: '4. Transformer for Sequences',
       to: '/docs/ml-bioinfo/transformer-for-sequences',
-      description: '自注意力机制和 Transformer 的详细算法实现，包括位置编码和 worked example。',
+      description: '自注意力、位置编码、多头机制；现代生物语言模型的基础架构。',
     },
     {
-      title: '嵌入与语言模型',
+      title: '5. 嵌入与语言模型',
       to: '/docs/ml-bioinfo/embeddings-and-language-models',
-      description: '理解 DNA、RNA、蛋白语言模型及其表示迁移。',
+      description: 'ESM、DNABERT 等 foundation models；表示迁移与下游应用。',
     },
   ]}
 />
+
+## 前置知识
+
+阅读本章前，建议熟悉：
+
+- **生物层**：[DNA 测序数据](../sequence/dna-sequencing-data.md)、[基因结构](../sequence/gene-structure.md)、[蛋白质结构](../structure-bioinfo/protein-structure-basics.md)
+- **模型层**：[概率模型](../models/index.md)、[PWM/PSSM](../models/pwm-pssm.md)
+- **算法层**：基本的神经网络概念（层、激活函数、反向传播）
+
+## 与经典方法的关系
+
+深度学习并未完全取代经典方法。理解它们的互补关系很重要：
+
+- **经典方法**（PWM、HMM）：提供可解释的归纳偏置，适合小数据量、高可解释性场景
+- **深度学习方法**：提供更强的表示能力，适合大规模数据、复杂模式识别
+- **混合方法**：在实际流程中常常结合使用，如用深度学习提取特征后接经典分类器

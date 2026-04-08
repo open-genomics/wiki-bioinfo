@@ -1,0 +1,92 @@
+---
+title: "序列、字符串与坐标系统"
+description: 将生物序列抽象为计算机科学中的字符串，理解碱基配对、反向互补以及生物信息学中的坐标约定。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="生物序列（DNA, RNA, 蛋白质）在计算层面上被抽象为有限字母表上的字符串。理解这一抽象以及随之而来的坐标系统约定，是所有后续算法（如比对、组装）的物理基础。"
+  bullets={[
+    '掌握 DNA 的四字符字母表 {A, C, G, T} 及其双链互补特性',
+    '理解“反向互补” (Reverse Complement) 在测序数据处理中的核心地位',
+    '区分 0-based 与 1-based、半开区间与闭区间等坐标约定',
+    '认识字符串抽象如何将生物学问题转化为计算几何与模式匹配问题'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' },
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
+  ]}
+/>
+
+## 1. 从分子到字符串
+
+在计算机眼里，复杂的生物大分子被简化为线性排列的字符：
+
+<DefinitionList
+  items={[
+    {
+      term: 'DNA 字符串',
+      definition: '字母表 Σ = {A, C, G, T}。长度可从几百 bp (Reads) 到几百 Mb (染色体)。',
+    },
+    {
+      term: 'RNA 字符串',
+      definition: '字母表 Σ = {A, C, G, U}。通常代表转录后的信息片段。',
+    },
+    {
+      term: '蛋白质字符串',
+      definition: '字母表 Σ 包含 20 种标准氨基酸。蛋白质的性质很大程度上取决于氨基酸序列。',
+    },
+  ]}
+/>
+
+## 2. 关键特性：方向性与互补性
+
+### 5' $\to$ 3' 方向
+DNA 和 RNA 链具有极性。在生物信息学中，除非特别说明，**字符串默认按 5' 端到 3' 端的顺序存储**。
+
+### 反向互补 (Reverse Complement)
+由于 DNA 是双链且反向平行的，对于序列 $S = \text{ATGC}$：
+1.  **互补 (Complement)**：按 A-T, G-C 配对规则得到 `TACG`。
+2.  **反向 (Reverse)**：将字符串前后颠倒。
+3.  **反向互补**：得到 `GCAT`。
+- **算法挑战**：在搜索 Motif 或比对 Reads 时，必须同时考虑原始序列及其反向互补链，因为测序仪可能从任何一条链上读取信息。
+
+## 3. 坐标系统：生物信息学的“巨坑”
+
+不同工具和文件格式对位置的计数规则不同，这常导致 **Off-by-one (差一)** 错误。
+
+| 特性 | 0-based (零基) | 1-based (一基) |
+| :--- | :--- | :--- |
+| **起始编号** | 从 0 开始计算 | 从 1 开始计算 |
+| **区间表示** | 通常为半开区间 $[start, end)$ | 通常为闭区间 $[start, end]$ |
+| **示例格式** | BED, BAM, Python 索引 | VCF, GFF, SAM (文本), R |
+| **长度计算** | $end - start$ | $end - start + 1$ |
+
+### 示例
+对于序列 `ACTG`：
+- 在 **0-based** 系统中，第一个碱基 `A` 的位置是 0，区间 `[0, 2)` 代表 `AC`。
+- 在 **1-based** 系统中，第一个碱基 `A` 的位置是 1，区间 `[1, 2]` 代表 `AC`。
+
+## 4. 字符串抽象的威力
+
+一旦序列被视为字符串，我们就能借用计算机科学中数十年的研究成果：
+- **子串匹配**：寻找 Motif 或引物位置。
+- **编辑距离**：衡量两条序列之间的变异（替换、插入、缺失）。
+- **哈希与索引**：在 30 亿碱基的基因组中实现秒级搜索。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解字符串碎片的来源' },
+    { title: '精确字符串匹配', to: '/wiki-bioinfo/sequence/exact-string-matching', description: '最基础的字符串算法' },
+    { title: '参考基因组与注释', to: '/wiki-bioinfo/foundations/reference-and-annotation', description: '坐标系统在基因组尺度上的应用' }
+  ]}
+/>

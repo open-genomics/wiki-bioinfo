@@ -1,0 +1,70 @@
+---
+title: "全局比对与局部比对"
+description: 理解 Needleman-Wunsch 全局比对与 Smith-Waterman 局部比对的算法差异，以及它们在处理不同进化场景时的适用性。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="序列比对并不只有一种“对齐方式”。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。"
+  bullets={[
+    '掌握 Needleman-Wunsch 算法的全局比对逻辑：从头到尾的强制解释',
+    '掌握 Smith-Waterman 算法的局部比对逻辑：允许在得分低于 0 时“推倒重来”',
+    '理解为什么局部比对在寻找保守结构域和 Motif 时更具优势',
+    '辨析两种比对方式在动态规划矩阵初始化和回溯终点上的不同'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance' },
+    { name: '打分矩阵与罚分', href: '/wiki-bioinfo/alignment/scoring-matrices' },
+    { name: '曼哈顿旅游问题', href: '/wiki-bioinfo/foundations/manhattan-tourist' }
+  ]}
+/>
+
+## 1. 全局比对 (Global Alignment)
+
+**Needleman-Wunsch 算法**是全局比对的基石。它假设两条序列在进化上是整体相关的，因此试图将它们从第一个碱基对齐到最后一个。
+
+### 核心递推
+$$F(i,j) = \max \begin{cases} F(i-1,j-1) + s(x_i, y_j) \\ F(i-1,j) + g \\ F(i,j-1) + g \end{cases}$$
+
+- **初始条件**：首行首列按 $i \cdot g$ 或 $j \cdot g$ 填充（惩罚端点 Gap）。
+- **回溯终点**：强制从右下角 $(n, m)$ 开始，直到左上角 $(0, 0)$。
+
+## 2. 局部比对 (Local Alignment)
+
+**Smith-Waterman 算法**针对的是“局部同源”场景。例如，两个功能完全不同的蛋白质可能共享同一个保守的催化结构域。
+
+### 为什么全局比对会失效？
+如果在全局比对中，两个序列中间有一段高度保守的区域，但两侧是完全无关的噪音，那么两侧的 Gap 或错配惩罚会迅速“淹没”中间的匹配得分，导致算法给出错误的解释。
+
+### 核心改进：引入 0
+$$H(i,j) = \max \begin{cases} 0 \\ H(i-1,j-1) + s(x_i, y_j) \\ H(i-1,j) + g \\ H(i,j-1) + g \end{cases}$$
+
+- **直觉**：如果当前的对齐得分变成了负数（说明当前匹配非常糟糕），算法允许在这里直接放弃之前的对齐，将得分设为 0，从当前点重新开始寻找新的高分片段。
+- **初始条件**：首行首列全填 0（不再惩罚序列开头的 Gap）。
+- **回溯终点**：从整个矩阵中的**最高得分点**开始回溯，直到遇到第一个得分为 0 的单元格。
+
+## 3. 对比总结
+
+| 特性 | 全局比对 (NW) | 局部比对 (SW) |
+| :--- | :--- | :--- |
+| **应用场景** | 比较近缘物种的同源基因。 | 寻找结构域、Motif、Read 定位。 |
+| **矩阵初始化** | 惩罚首行首列（$i \cdot g$）。 | 首行首列全为 0。 |
+| **递推公式** | 取三个方向的最大值。 | 取四个方向（含 0）的最大值。 |
+| **回溯位置** | 必须从 $(n, m)$ 开始。 | 从矩阵内任意最大值处开始。 |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '打分矩阵', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '定义匹配与错配的权重' },
+    { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: '局部比对的极速启发式版本' },
+    { title: '多序列比对 (MSA)', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '将比对扩展到多条序列' }
+  ]}
+/>

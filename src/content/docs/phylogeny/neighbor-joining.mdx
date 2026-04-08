@@ -1,11 +1,10 @@
 ---
-description: Neighbor-Joining算法详解：不依赖分子钟假设的距离矩阵建树方法，理解Q矩阵和最小化树长原理。
+description: Neighbor-Joining算法：不依赖分子钟假设的距离矩阵建树方法，通过Q矩阵最小化总树长。
 title: "Neighbor-Joining算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
 
 <SummaryBox
   summary="Neighbor-Joining（NJ）是一种不依赖分子钟假设的距离矩阵建树算法，通过最小化总树长来选择邻居对，是目前最常用的系统发育树构建方法之一。"
@@ -16,16 +15,31 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   ]}
 />
 
-## 是什么
+## 问题定义
 
-Neighbor-Joining（NJ）是一种自底向上的距离矩阵建树算法，由Saitou和Nei在1987年提出。
+**Neighbor-Joining系统发育重建问题**：
 
-与UPGMA不同，NJ的关键特点是：
-- **不依赖分子钟假设**：允许不同分支以不同速率演化
-- **最小化总树长**：通过选择使总树长最小的邻居对来构建树
-- **产生无根树**：结果是一棵无根的系统发育树
+给定一个 $n \times n$ 距离矩阵，构建一棵总树长最小的无根系统发育树。
 
-## 要解决什么生物信息学问题
+**输入**：$n \times n$ 距离矩阵 $D = (d_{ij})$，不要求满足分子钟假设
+
+**输出**：一棵无根树 $T$，使得总树长 $\sum_{e \in E(T)} \text{length}(e)$ 最小化，且对于任意两个叶子 $i$ 和 $j$，树上路径长度接近 $D_{ij}$
+
+## 1. Neighbor-Joining 的直觉：寻找真正的“邻居”
+
+与 UPGMA 不同，Neighbor-Joining (NJ) **不要求分子钟假设**。它允许不同分支以完全不同的速率演化。
+
+### 核心动机
+在可加性树（Additive Tree）中，一对“邻居”是指连接到同一个内部节点的两个叶子节点。NJ 的目标就是通过一种巧妙的评分方式，在每一步迭代中“捕获”这对真正的邻居。
+
+### 如何定义“近”？
+简单的距离 $D_{ij}$ 可能会误导我们（例如，两个演化极快的物种虽然距离远，但在拓扑上可能是邻居）。因此，NJ 引入了一个衡量标准：**两个节点不仅要彼此接近，还要与其他节点尽可能远离。**
+
+这导致了 **Q 矩阵** 的诞生：
+$$Q_{ij} = (n-2)d_{ij} - \sum d_{ik} - \sum d_{jk}$$
+- $d_{ij}$ 小（彼此近）且总偏差大（离别人远）的这对节点将获得最小的 $Q$ 值，成为合并的首选。
+
+## 2. 算法流程
 
 NJ解决的是：
 - 当不同分支演化速率不均匀时，如何从距离矩阵构建正确的系统发育树

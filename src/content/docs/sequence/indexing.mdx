@@ -1,0 +1,72 @@
+---
+title: "索引结构概览"
+description: 系统介绍生物序列索引的主要类型，理解哈希表、后缀结构和压缩索引的技术谱系。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="在处理人类基因组等大规模数据时，逐位扫描的时间复杂度 $O(nm)$ 是不可接受的。索引（Index）通过预处理文本 T，构建辅助数据结构，使得后续查询可以在亚线性时间内完成。"
+  bullets={[
+    '理解哈希索引与后缀索引两大技术谱系',
+    '掌握哈希表在处理短 Seed 匹配中的优势',
+    '了解 Suffix Tree 与 Suffix Array 如何组织所有后缀',
+    '认识 FM-index 如何在极小内存开销下实现全文检索'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' },
+    { name: 'k-mer 与序列表示', href: '/wiki-bioinfo/sequence/kmers' }
+  ]}
+/>
+
+## 1. 为什么索引至关重要？
+
+在生物信息学中，我们通常面临“一个大文本 $T$（参考基因组）对大量小模式 $P$（测序 Reads）”的场景。
+- **挑战**：人类基因组有 30 亿个位置。如果没有索引，比对一个 Read 就需要扫描 30 亿次。
+- **解决方案**：将文本 $T$ 转化为一种可以快速检索的数据结构。这种“空间换时间”的策略是现代生物信息学软件（如 BWA, Bowtie）的生命线。
+
+## 2. 索引的两大家族
+
+### A. 基于哈希 (Hashing)
+将基因组切分为所有的 $k$-mers，并存储它们出现的位置。
+- **优点**：构建简单，查询极其迅速（平均 $O(1)$）。
+- **局限**：内存消耗巨大（存储所有 $k$-mer 及其位置列表）；对重复序列敏感；通常仅支持精确匹配。
+- **典型代表**：BLAST (Seeds 查找), Kraken (物种分类), Minimap2 (Minimizers)。
+
+### B. 基于后缀 (Suffix-based)
+将文本的所有后缀进行系统性的组织。
+- **Suffix Tree**：通过压缩前缀路径将所有后缀存入一棵树。查询时间 $O(m)$，但指针开销很大。
+- **Suffix Array**：将后缀按字典序排列并存储起始索引。通过二分查找实现 $O(m \log n)$。
+- **FM-index (BWT)**：现代工业标准。利用 Burrows-Wheeler 变换实现极致压缩，同时支持高效的后向搜索（Backward Search）。
+
+## 3. 技术权衡分析
+
+| 索引类型 | 查询时间 | 内存消耗 | 适用场景 |
+| :--- | :--- | :--- | :--- |
+| **k-mer 哈希表** | $O(m)$ | 很高 | 数据库初步筛选、分类 |
+| **Suffix Tree** | $O(m)$ | 高 | 复杂模式分析（如寻找最大重复） |
+| **Suffix Array** | $O(m \log n)$ | 中 | 理论研究、中等规模搜索 |
+| **FM-index** | $O(m)$ | **极低 (压缩)** | 全基因组 Read Mapping (BWA/Bowtie) |
+
+## 4. 索引与比对的协作
+
+现代工具通常采用 **Seed-and-Extend** 策略：
+1.  **Seeding**：利用索引快速找到若干个精确匹配的短片段（Seeds）。
+2.  **Filtering**：通过共线性等启发式规则过滤掉明显错误的区域。
+3.  **Extending**：在剩余的候选区域运行昂贵的动态规划算法，处理错配和 Gap。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'Suffix Array 与 BWT', to: '/wiki-bioinfo/sequence/suffix-array-bwt', description: '深入理解后缀索引原理' },
+    { title: 'FM-index', to: '/wiki-bioinfo/sequence/fm-index', description: '现代 Read Mapper 的心脏' },
+    { title: 'k-mer 与序列表示', to: '/wiki-bioinfo/sequence/kmers', description: '最简单的索引单元' }
+  ]}
+/>

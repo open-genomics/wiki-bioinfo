@@ -1,26 +1,63 @@
 ---
 interface Props {
-  section: string;
-  audience: string;
-  startWith: string;
+  section?: string;
+  audience?: string;
+  startWith?: string;
+  title?: string;
+  description?: string;
+  subject?: string;
+  topic?: string;
+  prereqs?: string[];
 }
 
 import { Icon } from '@astrojs/starlight/components';
 
-const { section, audience, startWith } = Astro.props;
+const {
+  section,
+  audience,
+  startWith,
+  title,
+  description,
+  subject,
+  topic,
+  prereqs = [],
+} = Astro.props;
+
+const sectionNameMap: Record<string, string> = {
+  Foundations: '基础与数学',
+  Applications: '分析方向与案例',
+  'Core Methods': '核心方法',
+  'Data References': '数据、注释与资源',
+};
+
+const primaryValue = section ? (sectionNameMap[section] ?? section) : (subject ?? title ?? 'BioInfo Wiki');
+const secondaryValue = audience ?? topic ?? description ?? '帮助你快速建立这个主题的阅读目标与上下文。';
+const tertiaryValue = startWith ?? (prereqs.length > 0 ? prereqs.join('、') : '建议先建立相关基础对象与方法直觉，再进入本页。');
+
+const cards = [
+  {
+    icon: 'list-format',
+    label: section ? '所属板块' : '当前主题',
+    value: primaryValue,
+  },
+  {
+    icon: audience ? 'random' : 'document',
+    label: audience ? '适合谁读' : '这一页讲什么',
+    value: secondaryValue,
+  },
+  {
+    icon: 'right-arrow',
+    label: startWith ? '建议起点' : '建议前置',
+    value: tertiaryValue,
+  },
+];
 ---
 
 <div class="header-meta-grid">
-  <div class="header-meta-card">
-    <span class="meta-label"><Icon name="list-format" size="1rem" /> 所属板块</span>
-    <strong>{section}</strong>
-  </div>
-  <div class="header-meta-card">
-    <span class="meta-label"><Icon name="random" size="1rem" /> 适合谁读</span>
-    <strong>{audience}</strong>
-  </div>
-  <div class="header-meta-card">
-    <span class="meta-label"><Icon name="right-arrow" size="1rem" /> 建议起点</span>
-    <strong>{startWith}</strong>
-  </div>
+  {cards.map((card) => (
+    <div class="header-meta-card">
+      <span class="meta-label"><Icon name={card.icon} size="1rem" /> {card.label}</span>
+      <strong>{card.value}</strong>
+    </div>
+  ))}
 </div>

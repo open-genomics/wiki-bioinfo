@@ -141,11 +141,12 @@ nav.sidebar a[aria-current='page'] {
 .summary-card {
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
+  background:
+    linear-gradient(180deg, rgba(15, 139, 141, 0.06), transparent),
+    var(--bioinfo-card-bg);
   box-shadow: var(--bioinfo-card-shadow);
   margin: 1.75rem 0;
   padding: 1.1rem 1.2rem;
-  background: linear-gradient(180deg, rgba(15, 139, 141, 0.06), transparent);
 }
 
 .summary-card strong {

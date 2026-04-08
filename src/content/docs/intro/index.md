@@ -1,5 +1,6 @@
 ---
 title: "开始这里"
+description: BioInfo Wiki 项目介绍、学习路线、贡献方式与写作规范入口
 ---
 
 
@@ -8,7 +9,7 @@ BioInfo Wiki 是一个面向中文社区的开源生物信息学知识库。
 它参考 OI Wiki 的组织方式，同时配合一套统一的配图规范：
 
 <figure>
-  <img src="/wiki-bioinfo/img/figures/wiki-knowledge-map.png" alt="BioInfo Wiki global knowledge map showing Foundations, Core Methods, Applications, Data & References, and Workflows" />
+  <img src="../img/figures/wiki-knowledge-map.png" alt="BioInfo Wiki global knowledge map showing Foundations, Core Methods, Applications, Data & References, and Workflows" />
   <figcaption>BioInfo Wiki 的知识地图：从基础对象和方法，到数据与资源，再到分析方向与完整工作流。</figcaption>
 </figure>
 
@@ -44,5 +45,5 @@ BioInfo Wiki 是一个面向中文社区的开源生物信息学知识库。
 - [学习路线](./roadmap.md)
 - [如何贡献](./contributing.md)
 - [写作规范](./style-guide.md)
-- [基础与数学](../foundations/index.md)
-- [核心方法](../core-methods/index.mdx)
+- [基础与数学](../foundations/)
+- [核心方法](../core-methods/)

@@ -1,22 +1,22 @@
 ---
-title: "Affine gap penalty"
+title: "仿射间隙罚分（Affine Gap Penalty）"
 ---
 
 
 ## 是什么
 
-Affine gap penalty 是比对打分中非常重要的改进：它不再把每个 gap 字符都看成同样代价，而是把 gap 的代价拆成两部分：
+仿射间隙罚分（Affine gap penalty）是比对打分中非常重要的改进：它不再把每个 gap 字符都看成同样代价，而是将 gap 的代价拆成两部分：
 
 - gap opening penalty
 - gap extension penalty
 
-这更符合很多真实场景中的直觉：开一个新 gap 往往比把已有 gap 再延长一个字符更“昂贵”。
+这更符合真实场景中的生物学直觉：开启一个新 gap 往往比延长已有 gap 更"昂贵"。
 
 ## 要解决什么生物信息学问题
 
 如果把 gap 中每个字符都按同一代价处理，那么一个长 indel 和多个零散小 indel 的总代价可能差不多，这常常不符合真实进化或测序错误模式。
 
-Affine gap 的目标，就是让比对模型更合理地偏好“少量连续 gap”，而不是“大量碎片化 gap”。
+仿射间隙罚分的目标是让比对模型更合理地偏好"少量连续 gap"，而非"大量碎片化 gap"。
 
 ## 输入与输出
 

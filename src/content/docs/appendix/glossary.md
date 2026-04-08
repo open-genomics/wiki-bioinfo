@@ -19,28 +19,28 @@ title: "术语表"
 
 ## 核心术语
 
-- **read**：测序读段，是测序仪直接产生的原始序列片段。
-- **reference genome**：参考基因组，作为比对、变异检测和注释解释的参考序列背景。
-- **annotation**：注释，用来描述 gene、transcript、exon、CDS 等 feature 的位置与属性。
-- **alignment**：比对，指把序列与参考序列或另一条序列建立字符级对应关系。
-- **mapping**：定位，通常更强调把 reads 放到参考上的候选位置，未必强调完整字符级解释。
-- **assembly**：组装，在没有完整参考或不依赖参考的情况下把 reads 重建成更长序列。
-- **contig**：连续组装片段，由重叠或图路径拼接出的连续序列。
-- **scaffold**：骨架序列，在 contig 基础上进一步利用配对信息、长读长或其他证据连接得到。
-- **coverage**：覆盖度，表示某段序列被 reads 覆盖的深度或广度。
-- **k-mer**：长度为 k 的子串，是索引、计数、组装图和 pseudo-alignment 的常见基本单位。
-- **motif**：序列模式，常指具有生物学意义、可在多条序列中重复出现的局部模式。
-- **variant**：变异，表示样本序列相对参考序列的差异，如 SNV、indel 或结构变异。
-- **gene**：基因，是功能或调控层的基本单位之一，但不等于某一条具体 transcript。
-- **transcript**：转录本，是基因表达后形成的 RNA 产物层对象，可能存在多个 isoform。
-- **isoform**：同一基因产生的不同转录本形式，常因可变剪接或不同转录起始/终止位点而产生。
-- **protein**：蛋白质，是 gene/transcript 下游的功能产物层对象。
-- **coordinate system**：坐标系统，指序列区间如何编号、边界如何定义以及如何解释链方向。
-- **multi-mapping**：多重比对，指一个 read 可以兼容多个参考位置或多个 transcript。
-- **BWT（Burrows–Wheeler Transform）**：Burrows–Wheeler 变换，是压缩索引与快速搜索的核心构件之一。
-- **FM-index**：建立在 BWT 之上的压缩全文索引结构，可高效支持序列搜索。
-- **HMM（Hidden Markov Model）**：隐马尔可夫模型，用于建模隐藏状态与观测序列之间的概率关系。
-- **profile HMM**：面向序列家族建模的 HMM，常用于蛋白家族与保守区域识别。
+- **测序读段（read）**：测序仪直接产生的原始序列片段。
+- **参考基因组（reference genome）**：作为比对、变异检测和注释解释的参考序列背景。
+- **注释（annotation）**：描述基因（gene）、转录本（transcript）、外显子（exon）、编码区（CDS, Coding Sequence）等特征（feature）的位置与属性。
+- **比对（alignment）**：将序列与参考序列或另一条序列建立字符级对应关系。
+- **定位（mapping）**：强调将读段（reads）定位到参考序列的候选位置，未必建立完整字符级对应。
+- **组装（assembly）**：在无完整参考或不依赖参考的情况下，将读段重建成更长序列。
+- **连续组装片段（contig）**：由重叠或图路径拼接而成的连续序列。
+- **骨架序列（scaffold）**：在连续组装片段（contig）基础上，利用配对信息、长读长或其他证据连接得到的更长序列。
+- **覆盖度（coverage）**：某段序列被读段覆盖的深度或广度。
+- **k-mer**：长度为 k 的子串，是索引、计数、组装图和伪比对（pseudo-alignment）的常见基本单位。
+- **序列模式（motif）**：具有生物学意义、可在多条序列中重复出现的局部模式。
+- **变异（variant）**：样本序列相对参考序列的差异，如单核苷酸变异（SNV, Single Nucleotide Variant）、插入缺失（indel）或结构变异。
+- **基因（gene）**：功能或调控层的基本单位之一，但不等同于某一条具体转录本（transcript）。
+- **转录本（transcript）**：基因表达后形成的 RNA 产物层对象，可能存在多个可变剪接形式（isoform）。
+- **可变剪接形式（isoform）**：同一基因产生的不同转录本形式，常因可变剪接或不同转录起始/终止位点而产生。
+- **蛋白质（protein）**：基因/转录本下游的功能产物层对象。
+- **坐标系统（coordinate system）**：序列区间的编号方式、边界定义及链方向的解释规则。
+- **多重比对（multi-mapping）**：一个读段可兼容多个参考位置或多个转录本的情况。
+- **Burrows–Wheeler 变换（Burrows–Wheeler Transform, BWT）**：压缩索引与快速搜索的核心构件之一。
+- **FM-index**：建立在 Burrows–Wheeler 变换之上的压缩全文索引结构，可高效支持序列搜索。
+- **隐马尔可夫模型（Hidden Markov Model, HMM）**：用于建模隐藏状态与观测序列之间概率关系的概率图模型。
+- **谱隐马尔可夫模型（profile HMM）**：面向序列家族建模的 HMM，常用于蛋白家族与保守区域识别。
 
 ## 应用场景
 

@@ -15,7 +15,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 # 经典计算问题索引
 
-本页整理了生物信息学教材（如 Jones & Pevzner《An Introduction to Bioinformatics Algorithms》）中定义的经典计算问题，作为全站知识地图的补充索引。
+本页整理生物信息学教材（如 Jones & Pevzner《An Introduction to Bioinformatics Algorithms》）中的经典计算问题，作为全站知识地图的补充索引。
 
 ---
 

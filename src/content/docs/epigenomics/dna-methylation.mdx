@@ -1,0 +1,66 @@
+---
+description: DNA 甲基化（DNA Methylation）是最核心的表观遗传修饰。本节介绍其生物学功能、基于 HMM 的 CG 岛识别算法以及亚硫酸氢盐测序（WGBS）的处理逻辑。
+title: "DNA 甲基化"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="DNA 甲基化是在不改变 DNA 序列的前提下，通过在胞嘧啶上添加甲基来调控基因表达的机制。它是理解细胞分化、基因组印记和癌症发生的关键。"
+  bullets={[
+    '掌握 CpG 二核苷酸与 CpG 岛（CG-islands）的概念',
+    '理解识别 CG 岛的 HMM 建模直觉：公平赌场模型的应用',
+    '掌握亚硫酸氢盐测序（Bisulfite Sequencing）将甲基化信号转化为序列差异的原理',
+    '了解差异甲基化区域（DMR）的统计检测逻辑'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '隐马尔可夫模型', href: '/wiki-bioinfo/models/hmm' },
+    { name: '序列与字符串', href: '/wiki-bioinfo/foundations/sequences-and-strings' },
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' }
+  ]}
+/>
+
+## 1. 什么是 DNA 甲基化？
+
+在哺乳动物中，甲基化主要发生在 **CpG**（C-磷酸-G）二核苷酸的胞嘧啶 (C) 上。
+- **CpG 岛**：基因组中 CpG 出现频率显著高于背景的区域，通常位于基因启动子区。
+- **生物学效应**：启动子区的高甲基化通常与**基因沉默**相关；而基因体 (Gene Body) 的甲基化则往往与活跃转录正相关。
+
+## 2. 算法挑战：如何识别 CG 岛？
+
+由于甲基化胞嘧啶易突变为胸腺嘧啶 (T)，导致基因组中大部分 CpG 已经丢失。剩下的 CpG 往往聚集在功能重要的区域。
+
+### HMM 建模直觉
+我们可以将寻找 CG 岛的问题建模为一个 **公平赌场 (Fair Bet Casino)** 问题：
+- **隐藏状态**：当前碱基属于“CG 岛”内部还是“背景区域”。
+- **观测**：实际看到的碱基序列。
+- **逻辑**：在“CG 岛”状态下，发射 `C` 和 `G` 的概率显著高于背景状态。通过 **Viterbi 算法**，我们可以推断出整条序列中最可能的隐藏状态路径，从而精确定位 CG 岛的边界。
+
+## 3. 实验与计算：WGBS 流程
+
+**亚硫酸氢盐处理 (Bisulfite Treatment)** 是检测甲基化的金标准：
+1.  **化学转化**：将未甲基化的 `C` 转化为 `U`（测序读为 `T`），而甲基化的 `C` 保持不变。
+2.  **比对挑战**：这导致 Read 与参考基因组之间存在大量的 $C \to T$ 错配。
+3.  **计算对策**：使用专门的比对工具（如 Bismark 或 bwa-meth）。它们通常将参考基因组也进行三碱基转换，从而在降低的字母表空间中进行匹配。
+
+## 4. 统计分析：DMR 的鉴定
+
+**DMR (Differentially Methylated Regions)** 是指在不同条件（如癌症 vs 正常）下甲基化水平显著不同的区域。
+- **量化**：计算每个位点的甲基化比例 $\beta = \frac{C}{C+T}$。
+- **建模**：由于 $\beta$ 值具有有界性（0 到 1 之间），通常使用 **Beta-Binomial 分布** 来处理生物学重复间的变异。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '隐马尔可夫模型', to: '/wiki-bioinfo/models/hmm', description: 'CG 岛识别的底层模型' },
+    { title: 'DMR 检测算法', to: '/wiki-bioinfo/epigenomics/dmr-detection', description: '深入统计检验细节' },
+    { title: 'ATAC-seq 概览', to: '/wiki-bioinfo/epigenomics/atac-seq', description: '另一种关键的表观组学技术' }
+  ]}
+/>

@@ -1,0 +1,83 @@
+---
+description: 单细胞 RNA 测序（scRNA-seq）的技术原理、主流平台对比，以及从原始数据到细胞图谱的完整分析流程。
+title: "scRNA-seq 总览"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的“平均值”迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。"
+  bullets={[
+    '理解 scRNA-seq 与 Bulk RNA-seq 的本质差异：从“果昔”到“水果切盘”',
+    '掌握主流平台（10x Genomics, Smart-seq2）的捕获原理与优劣',
+    '掌握 scRNA-seq 标准分析管线：质控、归一化、降维、聚类',
+    '理解 UMI 统计原理如何校正 PCR 扩增偏差'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' },
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { name: 'RNA-seq 工作流', href: '/wiki-bioinfo/workflows/rna-seq' }
+  ]}
+/>
+
+## 1. 为什么需要单细胞测序？
+
+**Bulk RNA-seq 的局限**：测量的是成千上万个细胞的平均表达水平。这会掩盖：
+- **稀有细胞**：如干细胞或免疫亚群。
+- **异质性**：即便外观相同的细胞，表达状态也可能完全不同。
+- **动态过程**：如细胞分化的中间态。
+
+**scRNA-seq 的方案**：为每个细胞打上唯一的 **Cell Barcode**，从而在合并测序后能通过计算手段将 Reads 重新分配回原始细胞。
+
+## 2. 核心技术组件
+
+<DefinitionList
+  items={[
+    {
+      term: 'Cell Barcode',
+      definition: '识别细胞身份的 DNA 标签。同一细胞产生的所有 Read 携带相同的 Barcode。',
+    },
+    {
+      term: 'UMI (Unique Molecular Identifier)',
+      definition: '识别原始 RNA 分子的 DNA 标签。用于区分真实的分子扩增与 PCR 重复，是单细胞定量的基石。',
+    },
+    {
+      term: '液滴法 (Droplet-based)',
+      definition: '如 10x Genomics。通量极高（数万细胞），但通常只覆盖转录本的 3\' 端。',
+    },
+    {
+      term: '平板法 (Plate-based)',
+      definition: '如 Smart-seq2。通量较低，但能实现全长转录本覆盖，灵敏度更高。',
+    },
+  ]}
+/>
+
+## 3. 标准分析流程
+
+1.  **预处理 (Preprocessing)**：比对基因组，利用 Barcode 分配细胞，利用 UMI 去重。
+2.  **质控 (QC)**：过滤掉死细胞（线粒体基因占比过高）和空液滴（检测到的基因数太少）。
+3.  **降维 (Dimensionality Reduction)**：由于基因数（约 20,000）远大于特征信息，通常先用 **PCA** 提取主成分，再用 **UMAP/t-SNE** 进行二维可视化。
+4.  **聚类 (Clustering)**：基于降维后的特征，利用 **Leiden** 或 **Louvain** 算法自动划分细胞群。
+5.  **注释 (Annotation)**：寻找每个群的差异表达基因（Marker Genes），结合生物学知识确定细胞类型。
+
+## 4. 统计学考量：Dropout 与稀疏性
+
+由于单细胞中 RNA 含量极低，捕获过程具有高度的随机性。
+- **Dropout 现象**：某个基因在细胞中确实表达，但因为没被捕获到而显示为 0。
+- **后果**：产生极度稀疏的表达矩阵（通常 90% 以上为 0），这要求下游算法（如轨迹推断）必须具有极强的统计鲁棒性。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '细胞 Barcode 与 UMI', to: '/wiki-bioinfo/single-cell/cell-barcode-umi', description: '单细胞定量的分子基础' },
+    { title: '聚类与 UMAP', to: '/wiki-bioinfo/single-cell/clustering-and-umap', description: '解析异质性的算法实现' },
+    { title: '轨迹推断', to: '/wiki-bioinfo/single-cell/trajectory-analysis', description: '追踪细胞分化的动态过程' }
+  ]}
+/>

@@ -1,0 +1,67 @@
+---
+description: 群体结构的数学定义、主成分分析原理、祖源推断模型及其在 GWAS 混杂控制中的应用。
+title: "群体结构"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="群体结构（Population Structure）是指样本并非来自遗传均匀的单一群体，而是由具有不同祖源背景的亚群构成。这种不均匀性是 GWAS 中虚假关联的主要来源，必须通过统计手段进行校正。"
+  bullets={[
+    '理解群体分化的衡量指标：$F_{ST}$ 系数',
+    '掌握主成分分析 (PCA) 如何在基因型空间中揭示样本的地理/历史背景',
+    '理解混合人群（Admixture）的比例推断模型',
+    '掌握在关联分析中控制群体混杂的算法策略'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Hardy–Weinberg 平衡', href: '/wiki-bioinfo/population/hardy-weinberg' },
+    { name: 'GWAS 分析', href: '/wiki-bioinfo/population/gwas' }
+  ]}
+/>
+
+## 1. 群体结构的起源：隔离与漂变
+
+人类由于地理、文化或历史原因，在漫长的演化中形成了不同的亚群。
+- **遗传漂变 (Genetic Drift)**：在小规模亚群中，碱基频率会由于随机采样发生剧烈波动。
+- **选择 (Selection)**：不同环境导致特定位点在亚群间出现显著的频率差异。
+
+**数学表征 ($F_{ST}$)**：
+$F_{ST}$ 用于量化亚群间的分化程度。
+- $F_{ST} = 0$：完全均匀混合。
+- $F_{ST} = 1$：完全分化（亚群间固定了不同的等位基因）。
+- **直觉**：人类大洲间群体的 $F_{ST}$ 约为 0.1-0.15，说明 10-15% 的变异可由祖源差异解释。
+
+## 2. 识别工具：主成分分析 (PCA)
+
+PCA 是识别群体结构最常用的降维工具。
+- **逻辑**：将数百万个 SNP 投影到二维或三维空间中。
+- **发现**：研究证明，基因型的前两个主成分（PC1 和 PC2）往往能完美映射出样本的地理起源（如“欧洲地图”效应）。
+- **算法用途**：在 GWAS 中将这些 PC 作为协变量，可以有效抵消背景差异。
+
+## 3. 群体混合 (Admixture) 模型
+
+许多现代人是多个祖先群体的混合。
+- **STRUCTURE/ADMIXTURE 算法**：假设存在 $K$ 个祖先群，计算每个个体来自这些祖先群的百分比。
+- **统计原理**：基于隐马尔可夫模型 (HMM) 或期望最大化 (EM) 算法，通过观测到的 SNP 组合反推最可能的祖源构成。
+
+## 4. 为什么它是 GWAS 的“幽灵”？
+
+如果在病例组中正好包含了较多来自亚群 A 的样本，而对照组多来自亚群 B：
+- 任何在 A 和 B 之间频率不同的 SNP（即便与疾病无关）都会在统计上显示显著关联。
+- **后果**：产生海量的假阳性信号，掩盖真实的致病变异。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'GWAS 分析', to: '/wiki-bioinfo/population/gwas', description: '如何利用 PCA 校正混杂' },
+    { title: 'Hardy–Weinberg 平衡', to: '/wiki-bioinfo/population/hardy-weinberg', description: '群体混合导致的平衡偏离' },
+    { title: '机器学习基础', to: '/wiki-bioinfo/ml-bioinfo', description: '理解 PCA 的数学底蕴' }
+  ]}
+/>

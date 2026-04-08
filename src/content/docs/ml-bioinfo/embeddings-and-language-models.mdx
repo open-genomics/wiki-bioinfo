@@ -1,0 +1,78 @@
+---
+description: 生物序列的预训练语言模型、自监督学习与表示迁移，理解模型如何从海量序列中“学习”进化约束与功能模式。
+title: "嵌入与语言模型"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="生物语言模型的核心思想是“自监督预训练”：通过在海量无标注序列上运行填空或预测任务，模型能够自发地学习到蛋白质折叠、碱基规律和进化保守性。这些学到的特征（Embeddings）可以极大地提升下游低样本任务的精度。"
+  bullets={[
+    '理解自监督学习的本质：利用序列自身的结构作为监督信号',
+    '掌握预训练-微调（Pre-train & Fine-tune）的两阶段范式',
+    '了解代表性模型：ESM (蛋白)、DNABERT (DNA) 的设计初衷',
+    '认识 Embedding 空间中的相似性与生物学功能的深层联系'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列深度学习', href: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences' },
+    { name: 'Transformer 架构', href: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences' }
+  ]}
+/>
+
+## 1. 为什么需要语言模型？
+
+**数据的结构性失衡**：
+- **已知序列**：UniProt 等数据库中有数亿条蛋白质序列。
+- **实验标注**：真正通过生化实验确定结构或功能的序列仅占万分之一。
+
+**语言模型的方案**：就像人类通过阅读大量文本学会语法一样，模型通过“阅读”大量生命序列，学习残基之间的共现规律。这种规律本质上反映了蛋白质的物理化学约束和进化压力。
+
+## 2. 自监督预训练任务
+
+为了让模型在没有标签的情况下学习，我们设计了以下“游戏”：
+
+<DefinitionList
+  items={[
+    {
+      term: '掩码建模 (Masked LM)',
+      definition: '随机遮住序列中 15% 的碱基或残基，让模型根据上下文猜出它们是什么。这迫使模型理解局部的生化环境和长程的相互作用。',
+    },
+    {
+      term: '因果预测 (Autoregressive)',
+      definition: '给定前 N 个残基，预测第 N+1 个。这是生成式模型（如 ProtGPT）的基础。',
+    },
+    {
+      term: '对比学习 (Contrastive)',
+      definition: '让模型识别同一序列的不同变体，并在高维空间中将相似的序列“拉近”，不相似的“推远”。',
+    },
+  ]}
+/>
+
+## 3. 嵌入 (Embedding) 的层级
+
+模型预训练完成后，我们可以从中提取不同深度的信息：
+- **残基层 (Token-level)**：每个位置的向量。常用于预测二级结构、结合位点或修饰位点。
+- **序列层 (Global-level)**：整条序列的摘要向量。常用于蛋白质分类、家族聚类或相似性搜索。
+- **注意力图 (Attention Maps)**：反映位置间的关联。可以直接揭示蛋白质内部的接触图（Contact Map）。
+
+## 4. 迁移学习的流程
+
+1.  **大规模预训练**：在数十亿参数的模型上投入巨大算力，学习通用的“生命语言”。
+2.  **下游微调**：在你的特定课题（如某个罕见病的突变预测）上，利用少量的实验数据对模型进行轻微调整。
+- **优势**：即使你只有几百个实验样本，也能获得极高的预测性能。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'Transformer 架构', to: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences', description: '语言模型的底层引擎' },
+    { title: '序列深度学习', to: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '从 one-hot 走向分布式表示' },
+    { title: '蛋白质结构预测', to: '/wiki-bioinfo/structure-bioinfo/alphafold-and-structure-prediction', description: 'Embedding 的终极应用' }
+  ]}
+/>

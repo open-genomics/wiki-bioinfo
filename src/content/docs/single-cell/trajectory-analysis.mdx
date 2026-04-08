@@ -1,0 +1,87 @@
+---
+description: 单细胞轨迹推断（Trajectory Inference）的算法原理：从离散快照重建连续发育过程，涵盖伪时间建模、分支路径识别与 RNA Velocity 动态推断。
+title: "轨迹推断"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="单细胞测序捕捉的是细胞发育过程中的“瞬间快照”。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。"
+  bullets={[
+    '理解伪时间 (Pseudotime) 的概念：基于转录组距离而非物理时间',
+    '掌握轨迹建模的拓扑结构：线性、分支（Bifurcation）、循环与树状',
+    '理解 RNA Velocity 及其在推断细胞“演化方向”中的前瞻性作用',
+    '掌握主流工具（Monocle, PAGA, scVelo）的底层算法直觉'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '聚类与 UMAP 降维', href: '/wiki-bioinfo/single-cell/clustering-and-umap' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' },
+    { name: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' }
+  ]}
+/>
+
+## 1. 从快照到过程：伪时间的诞生
+
+在发育生物学中，细胞的分化是一个连续过程。但在实验中，我们一次性杀死了所有细胞进行测序。
+- **挑战**：我们无法追踪同一个细胞随时间的变化。
+- **假设**：如果群体中存在处于不同发育阶段的细胞，那么通过计算它们之间的转录组相似性，我们可以将它们排序。
+- **伪时间 (Pseudotime)**：定义为细胞沿发育路径相对于起始点的距离。
+
+## 2. 轨迹拓扑与图论建模
+
+轨迹推断本质上是在降维后的空间中寻找**路径**。
+
+<DefinitionList
+  items={[
+    {
+      term: '线性轨迹',
+      definition: '最简单的发育过程，如红细胞的成熟。算法寻找一条穿过数据中心的主曲线。',
+    },
+    {
+      term: '分支轨迹 (Bifurcation)',
+      definition: '细胞面临命运选择（如干细胞分化为髓系或淋巴系）。算法需要识别图中的分叉点。',
+    },
+    {
+      term: 'PAGA (图抽象)',
+      definition: '通过计算 cluster 间的连接强度，在宏观层面构建拓扑结构，比单细胞层面的路径搜索更稳健。',
+    },
+  ]}
+/>
+
+## 3. RNA Velocity：向量场的力量
+
+传统的轨迹推断是“回溯式”的，而 **RNA Velocity** 提供了“预测性”的视角。
+
+### 核心直觉
+- **未剪接 RNA (Unspliced)**：刚转录出来的原始信号。
+- **已剪接 RNA (Spliced)**：成熟的信号。
+- **逻辑**：如果一个基因的未剪接量远高于稳态比例，说明它正在“加速”表达。
+- **结果**：通过对数千个基因的速率进行矢量求和，我们可以得到每个细胞在 UMAP 空间中的“速度矢量”，直接指出它接下来将演化成哪种状态。
+
+## 4. 算法权衡与误区
+
+| 特性 | 轨迹推断 (Pseudotime) | RNA Velocity |
+| :--- | :--- | :--- |
+| **基础** | 细胞间的静态距离 | 剪接与降解的动力学 |
+| **方向** | 需要手动指定起点 | 自动推断方向 |
+| **敏感度** | 对大尺度过程敏感 | 对瞬时动态敏感 |
+
+**常见误区**：
+- **UMAP 形状就是轨迹**：错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。
+- **伪时间等于真实时间**：错误。细胞在不同阶段的停留时间不同，伪时间反映的是状态变化量。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'scRNA-seq 总览', to: '/wiki-bioinfo/single-cell/scrna-seq-overview', description: '理解单细胞测序基础' },
+    { title: '聚类与 UMAP', to: '/wiki-bioinfo/single-cell/clustering-and-umap', description: '轨迹推断的前置步骤' },
+    { title: '图算法基础', to: '/wiki-bioinfo/foundations/graph-algorithms', description: '理解路径、树与连通性' }
+  ]}
+/>

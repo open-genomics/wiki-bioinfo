@@ -1,0 +1,77 @@
+---
+description: PacBio 与 Oxford Nanopore 两大长读长测序平台的物理原理、误差模式与典型应用场景。
+title: "PacBio 与 Nanopore"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="PacBio SMRT 测序与 Oxford Nanopore 测序代表了两种截然不同的长读长技术路线。它们打破了短读长的长度限制，为解析基因组复杂区域、结构变异和单倍型组装提供了关键数据。"
+  bullets={[
+    '掌握 PacBio HiFi 的环形共识测序（CCS）原理及其高精度特性',
+    '理解 Nanopore 电流信号解码（Basecalling）的挑战与超长 Read 潜力',
+    '辨析两者的误差特征：随机 Indel (PacBio) vs. 系统性同聚物偏差 (Nanopore)',
+    '认识直接 RNA 测序在修饰检测中的独特优势'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' }
+  ]}
+/>
+
+## 1. 长读长的革命
+
+**传统二代测序 (NGS)** 的核心限制是 Read 长度（通常 < 300bp）。这导致：
+- 无法跨越基因组中的大型重复序列。
+- 难以直接识别大规模的结构变异 (SV)。
+- 无法区分来自两条同源染色体的序列（Phasing 问题）。
+
+**长读长测序 (Long-read Sequencing)** 将 Read 长度提升到了 $10 \text{ kb}$ 甚至 $1 \text{ Mb}$ 以上，从根本上解决了这些难题。
+
+## 2. PacBio：单分子实时合成 (SMRT)
+
+PacBio 通过观测 DNA 聚合酶合成新链时的荧光信号来实现测序。
+
+### CCS 与 HiFi Reads
+PacBio 最具竞争力的技术是 **CCS (Circular Consensus Sequencing)**：
+1.  **闭环模板**：将 DNA 片段制备成环状。
+2.  **循环测序**：让聚合酶绕着这个环反复跑几十圈。
+3.  **取平均 (Consensus)**：通过对同一分子的多次观测，抵消掉单次读取的随机误差。
+- **结果**：产生长度约 $15 \text{ kb}$、准确率高达 $99.9\%$ 的 **HiFi Reads**。
+
+## 3. Oxford Nanopore (ONT)：电流检测
+
+ONT 并不观察合成过程，而是让单链 DNA 直接穿过一个极小的蛋白质孔洞（纳米孔）。
+
+### 物理原理
+- **电流波动**：孔洞中充满了离子电流。当 DNA 碱基穿过时，会阻碍电流，产生独特的特征性波动。
+- **Basecalling**：利用深度学习（如神经网络）将电信号时间序列“翻译”回碱基序列。
+
+### 独特优势
+- **超长 Read**：只要 DNA 分子足够完整，它就能一直穿过去。目前最长记录已超过 $4 \text{ Mb}$。
+- **直接测序**：可以不经过 PCR 扩增和反转录，直接读取原始 RNA 分子，保留甲基化等修饰信息。
+
+## 4. 平台特性对比
+
+| 特性 | PacBio HiFi | Oxford Nanopore |
+| :--- | :--- | :--- |
+| **读长** | 中等长 ($15 \text{--} 20 \text{ kb}$) | 极长 ($10 \text{ kb --} 1 \text{ Mb}+$) |
+| **单条准确率** | 极高 ($>99.9\%$) | 较高 ($90\% \text{--} 99\%$) |
+| **误差模式** | 随机 Indel | 系统性同聚物 (Homopolymer) 误差 |
+| **设备体积** | 巨大 (实验室级) | 便携 (MinION 仅 U 盘大小) |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '长读长组装', to: '/wiki-bioinfo/long-read/long-read-assembly', description: '如何拼接这些长碎片' },
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '长读长的优势应用' },
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解深度与质量的关系' }
+  ]}
+/>

@@ -1,0 +1,80 @@
+---
+title: "算法设计范式"
+description: 生物信息学六大算法设计范式：从穷举搜索到随机化算法的核心思想、复杂度特征及典型应用场景。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="面对复杂的生物学问题，如何将其转化为可计算的模型并选择最高效的策略？生物信息学算法通常遵循六种核心范式。理解这些范式是掌握工具底层逻辑、进行参数优化乃至设计新算法的关键。"
+  bullets={[
+    '掌握穷举、贪心、动规、分治、图论和随机化六大核心策略',
+    '理解“正确性”与“效率”之间的权衡：NP-完全问题的现实挑战',
+    '学习如何将生物序列、重排和组装问题映射到特定的算法范式',
+    '认识现代工具如何通过组合多种范式来应对海量数据'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '序列、字符串与坐标系统', href: '/wiki-bioinfo/foundations/sequences-and-strings' }
+  ]}
+/>
+
+## 1. 穷举搜索 (Exhaustive Search)
+
+**核心直觉**：如果不考虑时间，枚举所有可能的解，逐一验证，总能找到最优解。
+- **生物学示例**：[限制性图谱构建](../foundations/restriction-mapping)（枚举所有切点组合）、[Motif 寻找](../models/motif-finding)（枚举所有起始位置）。
+- **挑战**：搜索空间随数据规模呈指数级增长。通常需要通过**分支定界 (Branch and Bound)** 进行剪枝优化。
+
+## 2. 贪心算法 (Greedy Algorithms)
+
+**核心直觉**：在每一步都采取当前看起来最好的局部选择，希望累积成全局最优。
+- **生物学示例**：[基因组重排中的简单反转排序](../foundations/genome-rearrangements)。
+- **陷阱**：局部最优不等于全局最优。著名的[找零问题](../foundations/change-problem)证明了贪心在非标准币制下会失效。
+
+## 3. 动态规划 (Dynamic Programming)
+
+**核心直觉**：将问题分解为重叠的子问题，存储中间结果（记忆化），避免重复计算。
+- **生物学示例**：[序列比对](../alignment)（Needleman-Wunsch, Smith-Waterman）、[RNA 二级结构预测](../structure-bioinfo)、[HMM 状态解码](../models/viterbi-forward-backward)。
+- **本质**：是在[曼哈顿网格](../foundations/manhattan-tourist)中寻找一条权重最大的路径。
+
+## 4. 分治算法 (Divide and Conquer)
+
+**核心直觉**：将大问题切分成相互独立的子问题，递归求解后再合并。
+- **生物学示例**：[Hirschberg 算法](../foundations/divide-and-conquer)（空间高效比对）、快速排序。
+- **意义**：常用于优化动态规划的巨大内存开销，或在处理数亿个 Reads 时通过排序加速搜索。
+
+## 5. 图算法 (Graph Algorithms)
+
+**核心直觉**：将生物对象建模为顶点，将它们的关系建模为边，利用图论路径搜索解决问题。
+- **生物学示例**：[基因组组装](../assembly)（de Bruijn 图中的欧拉路径）、[肽段测序](../proteomics/spectrum-graphs)（谱图中的最长路径）。
+- **启示**：[SBH 问题](../assembly/sequencing-by-hybridization)展示了将建模从哈密顿路径（NP-完全）切换到欧拉路径（线性）的巨大威力。
+
+## 6. 随机化算法 (Randomized Algorithms)
+
+**核心直觉**：当搜索空间大到无法穷举且没有精确多项式算法时，通过“掷骰子”智能地探索空间。
+- **生物学示例**：[Gibbs Sampling](../models/gibbs-sampling)（寻找隐藏 Motif）、随机投影（Random Projections）。
+- **分类**：
+    - **Las Vegas**：结果总是正确，但运行时间不确定（如随机快排）。
+    - **Monte Carlo**：运行时间固定，但结果有一定概率错误（如 Gibbs Sampling）。
+
+## 7. 范式的协作：现代工具的真相
+
+真实的生物信息学软件很少只用一种范式。它们通常是“混合体”：
+- **BWA/minimap2**：利用索引（字符串索引）进行 Seeding $\to$ 贪心过滤 $\to$ 动态规划延伸。
+- **GATK**：比对 (DP) $\to$ 局部重组装 (图算法) $\to$ 变异判定 (概率模型)。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '理解 Big-O 与可行性' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '掌握 DP 的核心递推' },
+    { title: '图算法基础', to: '/wiki-bioinfo/foundations/graph-algorithms', description: '理解顶点与边的建模力' }
+  ]}
+/>

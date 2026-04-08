@@ -1,0 +1,80 @@
+---
+description: 生物序列深度学习的基础概念、输入表示与架构对比，以及从传统概率模型（如 Profile HMM）到神经网络的演进直觉。
+title: "序列深度学习"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="生物序列本质上是离散符号的线性排列。深度学习通过将这些符号转化为连续的数值嵌入（Embeddings），利用卷积、递归和注意力机制，捕获隐藏在碱基序列背后的复杂生物学规律。"
+  bullets={[
+    '理解从离散字符串到连续向量空间的表示转换（One-hot, k-mer Embedding）',
+    '掌握三大核心架构的归纳偏置：CNN 捕获局部 Motif，RNN 处理时序依赖，Transformer 建模长程相互作用',
+    '建立从 Profile HMM 到神经序列模型的演进直觉',
+    '认识“迁移学习”如何解决生物学标注数据稀缺的问题'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Profile HMM', href: '/wiki-bioinfo/models/profile-hmm' },
+    { name: '序列与字符串', href: '/wiki-bioinfo/foundations/sequences-and-strings' },
+    { name: 'Motif 寻找', href: '/wiki-bioinfo/models/motif-finding' }
+  ]}
+/>
+
+## 1. 演进：从 Profile HMM 到神经网络
+
+在[Profile HMM](./profile-hmm)中，我们通过状态转移（M/I/D）来刻画序列家族。神经网络可以看作是这种概率模型的非线性、高维扩展：
+- **Profile HMM**：使用显式状态和线性转换，解释性强，但难以捕获非线性的长程依赖。
+- **神经网络**：通过隐藏层提取特征，虽然解释性较弱（黑盒），但能通过多层嵌套识别极其复杂的变异模式和结构约束。
+
+## 2. 序列的数值化表示
+
+机器学习模型无法直接读入字符串，必须进行编码：
+
+<DefinitionList
+  items={[
+    {
+      term: 'One-hot 编码',
+      definition: '将 A, C, G, T 映射为互相正交的 4 维向量。优点是简单无损，缺点是无法表达碱基间的生化相似性。',
+    },
+    {
+      term: 'k-mer 嵌入 (Embedding)',
+      definition: '模仿 NLP 中的词向量。将序列切分为重叠的 k-mers（如 3-mer），学习每个 k-mer 在高维空间中的稠密表示。',
+    },
+    {
+      term: '物理化学编码',
+      definition: '直接输入氨基酸的电荷、疏水性、分子量等特征，将领域知识融入模型。',
+    },
+  ]}
+/>
+
+## 3. 架构选择与归纳偏置 (Inductive Bias)
+
+选择哪种神经网络架构取决于我们要解决的生物学问题：
+
+| 架构 | 核心偏置 | 擅长领域 | 示例应用 |
+| :--- | :--- | :--- | :--- |
+| **CNN** | 局部性、平移不变性 | 识别短模式 (Motif) | 转录因子结合位点识别 (DeepBind) |
+| **RNN/LSTM** | 时序依赖、变长处理 | 处理具有序列逻辑的过程 | 基因结构标注、RNA 剪接预测 |
+| **Transformer** | 全局注意力 (Attention) | 捕获残基间的长程相互作用 | 蛋白质结构预测 (AlphaFold)、大语言模型 |
+
+## 4. 迁移学习：数据稀缺的解药
+
+生物学中最大的挑战是：**已知序列多，标注数据（如功能实验）少**。
+- **预训练 (Pre-training)**：在海量无标注序列上进行自监督学习（如掩码语言建模），让模型学习序列的“通用文法”。
+- **微调 (Fine-tuning)**：在特定的、小规模的标注实验数据上对模型进行二次训练。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'CNN 与 Motif 识别', to: '/wiki-bioinfo/ml-bioinfo/cnn-for-sequences', description: '卷积神经网络在序列中的应用' },
+    { title: 'Transformer 与蛋白质模型', to: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences', description: '注意力机制的革命' },
+    { title: '嵌入与语言模型', to: '/wiki-bioinfo/ml-bioinfo/embeddings-and-language-models', description: '自监督学习的原理' }
+  ]}
+/>

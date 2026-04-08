@@ -1,0 +1,83 @@
+---
+description: 重复序列与低复杂度区域（Repeats & LCRs）中的变异检测挑战，以及基于后缀树和哈希表的重复寻找算法直觉。
+title: "重复与低复杂度区域"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="人类基因组中超过 50% 的序列由重复元素构成。这些区域是变异检测的“重灾区”，因为它们会引发多重比对歧义和测序错误积累。理解重复序列的算法特征是准确识别复杂区域变异的基础。"
+  bullets={[
+    '理解重复序列的主要分类：串联重复 (Tandem) 与散在重复 (Interspersed)',
+    '掌握低复杂度区域 (LCR) 对比对质量 (MAPQ) 的负面影响',
+    '了解寻找最大重复 (Maximal Repeats) 的算法直觉：哈希表与后缀树',
+    '掌握针对重复区域的变异过滤策略'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'k-mer 与序列表示', href: '/wiki-bioinfo/sequence/kmers' },
+    { name: '索引结构概览', href: '/wiki-bioinfo/sequence/indexing' },
+    { name: '比对质量与多重比对', href: '/wiki-bioinfo/alignment/mapping-quality-and-multi-mapping' }
+  ]}
+/>
+
+## 1. 基因组中的重复类型
+
+重复序列不仅是噪音，它们往往与演化、疾病和基因调控密切相关：
+
+<DefinitionList
+  items={[
+    {
+      term: '串联重复 (Tandem Repeats)',
+      definition: '一段序列紧密首尾相连。包括微卫星 (STR, 1-6bp 单元) 和卫星 DNA。极易发生“复制滑移”，是 Indel 变异的高发区。',
+    },
+    {
+      term: '散在重复 (Interspersed Repeats)',
+      definition: '通过转座作用散布在基因组遍处。如 Alu 元件和 LINE-1。会导致 Reads 错误比对到同源的副本上。',
+    },
+    {
+      term: '片段重复 (Segmental Dups)',
+      definition: '长度 >1kb 且高度相似 (>90%) 的大片段。是产生拷贝数变异 (CNV) 的温床。',
+    },
+  ]}
+/>
+
+## 2. 算法直觉：如何找到所有重复？
+
+在构建参考基因组或分析变异时，首先需要识别这些重复区域。
+
+### 朴素方案：k-mer 频率表
+通过对基因组中所有的 $l$-mer 进行计数，可以快速发现哪些短片段出现了多次。
+- **局限**：只能找到固定长度的重复，无法识别具有不同长度的**最大重复 (Maximal Repeats)**。
+
+### 进阶方案：后缀树 (Suffix Tree)
+后缀树是解决重复发现问题的终极武器。
+- **直觉**：树中任何一个拥有至少两个子节点的**内部节点**，都代表了一个在基因组中至少出现两次的子串。
+- **算法**：通过遍历后缀树，可以在线性时间 $O(n)$ 内找到基因组中所有的重复模式及其精确坐标。
+
+## 3. 变异检测的挑战：映射错位 (Mis-mapping)
+
+在重复区域，比对软件（如 BWA）往往无法确定一条 Read 到底来自哪个副本。
+- **后果**：Read 的 **MAPQ (Mapping Quality)** 会被降为 0 或极低值。
+- **假阳性陷阱**：如果副本 A 发生了变异，但 Read 被错误比对到了副本 B，算法会误报副本 B 存在变异。这就是所谓的“伪变异” (Paralogous Sequence Variants, PSVs)。
+
+## 4. 实践中的对策
+
+1.  **使用掩码 (Masking)**：在分析前利用 RepeatMasker 标记已知重复区，过滤掉低信度位点。
+2.  **局部重组装 (Local Assembly)**：对于复杂的 Indel，不依赖比对，而是直接在局部利用 k-mer 重新拼出序列。
+3.  **长读长验证**：利用 PacBio 或 Nanopore 数据跨越整个重复区域，直接观测断点。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '高效发现重复的利器' },
+    { title: 'k-mer 与序列表示', to: '/wiki-bioinfo/sequence/kmers', description: '简单的重复计数单元' },
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '解析大片段重排' }
+  ]}
+/>

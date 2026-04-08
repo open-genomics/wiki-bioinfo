@@ -1,0 +1,80 @@
+---
+description: Hardy–Weinberg 平衡的数学原理、推导过程及其在群体遗传学和 GWAS 质量控制中的应用。
+title: "Hardy–Weinberg 平衡"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="Hardy–Weinberg 平衡（HWE）是群体遗传学的理论基石。它证明了在理想条件下，等位基因频率和基因型频率将在代际间保持不变。这一模型为识别进化压力和评估测序质量提供了关键参照。"
+  bullets={[
+    '理解随机交配下基因型频率的数学推导：$p^2 + 2pq + q^2 = 1$',
+    '掌握 HWE 的五个理想假设条件：大群体、随机交配、无突变、无选择、无迁移',
+    '学习如何利用卡方检验或精确检验评估位点是否偏离平衡',
+    '掌握 HWE 过滤在 GWAS 质量控制中的应用逻辑'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '概率与图基础', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { name: '变异检测总览', href: '/wiki-bioinfo/variants/variant-calling-overview' }
+  ]}
+/>
+
+## 1. 理想群体的稳定性
+
+1908 年，Hardy 和 Weinberg 独立证明了一个深刻的结论：在没有进化动力干扰的情况下，孟德尔遗传本身不会改变群体的遗传组成。
+
+### 数学推导
+设等位基因 $A$ 的频率为 $p$，等位基因 $a$ 的频率为 $q$（$p+q=1$）。
+在随机交配下，下一代的基因型频率将达到平衡：
+- $f(AA) = p^2$
+- $f(Aa) = 2pq$
+- $f(aa) = q^2$
+
+**直觉**：这就像是从一个巨大的“基因池”中随机抽取两个碱基。抽取两个 $A$ 的概率是 $p \cdot p$，抽取一个 $A$ 一个 $a$ 的组合有两种（$Aa$ 或 $aA$），概率为 $2pq$。
+
+## 2. 平衡的破坏：进化的证据
+
+如果一个位点显著偏离 HWE，通常意味着以下情况之一正在发生：
+- **选择 (Selection)**：某种基因型具有生存优势。
+- **群体分层 (Population Stratification)**：样本其实来自两个演化背景不同的亚群（Wahlund 效应）。
+- **近亲繁殖 (Inbreeding)**：增加了纯合子的比例。
+- **技术噪音**：这是生物信息学中最常见的解释——该位点可能存在测序错误或比对歧义。
+
+## 3. 在 GWAS 中的质量控制 (QC)
+
+在全基因组关联研究中，HWE 检验是过滤“垃圾信号”的强力工具。
+
+### 过滤逻辑
+- **对照组 (Controls)**：如果对照组位点偏离 HWE（如 $p < 10^{-6}$），通常认为该位点是由于技术缺陷（如探针质量差）造成的假信号，应予以剔除。
+- **病例组 (Cases)**：**慎重过滤**。与疾病强相关的致病位点在病例组中天然可能偏离 HWE，这是真实的生物学信号。
+
+## 4. 统计检验方法
+
+<DefinitionList
+  items={[
+    {
+      term: '卡方检验 (Chi-square)',
+      definition: '适用于样本量较大的情况。通过比较观察计数与 HWE 期望计数之间的差异来计算显著性。',
+    },
+    {
+      term: '精确检验 (Exact Test)',
+      definition: '适用于稀有变异或小样本。它直接计算所有可能基因型组合的概率，是目前 GWAS 分析的工业标准。',
+    },
+  ]}
+/>
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'GWAS 分析', to: '/wiki-bioinfo/population/gwas', description: '关联研究的统计模型' },
+    { title: '连锁不平衡', to: '/wiki-bioinfo/population/linkage-disequilibrium', description: '位点间的非随机关联' },
+    { title: '群体结构', to: '/wiki-bioinfo/population/population-structure', description: '理解样本的演化背景' }
+  ]}
+/>

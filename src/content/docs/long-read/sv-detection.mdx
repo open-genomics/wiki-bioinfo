@@ -1,0 +1,78 @@
+---
+description: 基于长读长的结构变异检测原理、证据类型与工具方法，涵盖基因组重排的进化视角。
+title: "结构变异检测"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="结构变异（Structural Variation, SV）通常指基因组中大于 50 bp 的变异。长读长测序通过跨越变异断点，为解析缺失、重复、倒位和易位等复杂重排提供了前所未有的分辨率。"
+  bullets={[
+    '掌握 SV 的主要类型：DEL, INS, DUP, INV, TRA',
+    '理解长读长检测 SV 的核心证据：Split-read (分割比对) 与覆盖度波动',
+    '了解 SV 与基因组重排（Rearrangements）在进化尺度上的统一性',
+    '掌握从比对信号到变异判定的完整算法流程'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Small Variants 与 SV', href: '/wiki-bioinfo/variants/small-variants-vs-sv' },
+    { name: '基因组重排', href: '/wiki-bioinfo/foundations/genome-rearrangements' },
+    { name: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore' }
+  ]}
+/>
+
+## 1. 为什么长读长是 SV 检测的“金标准”？
+
+**短读长的局限**：如果一个 $500 \text{ bp}$ 的插入发生在一片重复序列中， $150 \text{ bp}$ 的短读长完全无法判断插入序列的来源，甚至无法探测到断点的存在。
+
+**长读长的优势**：
+- **直接观测**：单条 Read 往往能同时包含变异及其两侧的侧翼序列。
+- **跨越重复**：能穿透基因组中的“黑洞”（如转座子、着丝粒），识别隐藏其中的结构变化。
+
+## 2. 核心算法信号
+
+长读长 SV Caller（如 Sniffles, cuteSV）通过分析 BAM 文件中的非正常比对信号来工作：
+
+<DefinitionList
+  items={[
+    {
+      term: 'Split-read (分割比对)',
+      definition: '单条 Read 的不同部分被比对到了基因组的不连续位置。这是精确定位断点 (Breakpoint) 的最强证据。',
+    },
+    {
+      term: 'Large Indels in CIGAR',
+      definition: '在比对字符串中直接观察到大的 \'I\' (插入) 或 \'D\' (缺失) 操作符。',
+    },
+    {
+      term: 'Discordant Orientations',
+      definition: 'Read 内部序列的方向与参考基因组相反，通常暗示了倒位 (Inversion)。',
+    },
+  ]}
+/>
+
+## 3. SV 与重排：进化的视角
+
+正如在[基因组重排](../foundations/genome-rearrangements)中所述，大规模的结构变异本质上是基因组的**排列变换**。
+- **临床意义**：在癌症中，易位 (Translocation) 产生的融合基因（如 *BCR-ABL1*）是导致细胞失控生长的关键。
+- **演化直觉**：SV 是物种分化的重要驱动力，通过计算不同物种间的 SV 距离，可以推断其进化历史。
+
+## 4. 挑战：重复序列与噪音
+
+尽管长读长很强大，但在**低复杂度区域**（如简单的微卫星重复）检测 SV 仍有困难：
+- **算法对策**：需要结合单倍型 (Haplotype) 信息，利用两个亲本序列的差异来辅助判断变异的真伪。
+- **过滤**：利用群体频率数据库（如 gnomAD SV）排除常见的良性多态性。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'Small Variants 与 SV', to: '/wiki-bioinfo/variants/small-variants-vs-sv', description: '对比不同尺度的变异' },
+    { title: '基因组重排', to: '/wiki-bioinfo/foundations/genome-rearrangements', description: '理解重排的数学本质' },
+    { title: '重复与低复杂度区域', to: '/wiki-bioinfo/variants/repeats-and-low-complexity', description: '检测中的主要干扰源' }
+  ]}
+/>

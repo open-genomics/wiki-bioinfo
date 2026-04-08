@@ -1,0 +1,74 @@
+---
+description: 单细胞数据降维与聚类的算法原理：从 PCA 线性投影到 Leiden/Louvain 图社区检测，以及 UMAP 非线性可视化的数学直觉。
+title: "聚类与 UMAP 降维"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的“维度灾难”。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。"
+  bullets={[
+    '掌握 PCA 的线性投影逻辑：寻找解释最大方差的变异轴',
+    '理解聚类的核心标准：同质性 (Homogeneity) 与分离性 (Separation)',
+    '掌握 Leiden/Louvain 算法：基于模块度优化的图社区检测',
+    '辨析 UMAP 可视化与图聚类的关系：可视化不等于分类依据'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'scRNA-seq 总览', href: '/wiki-bioinfo/single-cell/scrna-seq-overview' },
+    { name: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { name: 'Corrupted Cliques 与 CAST', href: '/wiki-bioinfo/phylogeny/corrupted-cliques-cast' }
+  ]}
+/>
+
+## 1. 维度灾难与降维必要性
+
+在单细胞矩阵中，每个细胞是一个 20,000 维的向量。直接在高维空间计算欧氏距离会导致：
+- **距离失效**：在高维空间，任意两点间的距离趋于相等，无法区分细胞类型。
+- **噪音干扰**：单细胞数据的稀疏性（Dropout）会淹没真实的生物学信号。
+
+**策略**：先用 **PCA** 进行线性压缩，去除噪音；再构建 **k-NN 图**，将全局问题转化为局部连接问题。
+
+## 2. 聚类的数学直觉：同质性与分离性
+
+正如在 [Corrupted Cliques](./corrupted-cliques-cast) 中讨论的，一个理想的聚类（如团图）应满足：
+1.  **同质性 (Homogeneity)**：同一簇内的细胞在转录组上高度相似。
+2.  **分离性 (Separation)**：不同簇的细胞之间界限清晰。
+
+### 图聚类：Leiden 算法
+现代单细胞分析（如 Scanpy, Seurat）首选 **Leiden** 或 **Louvain** 算法。
+- **逻辑**：在细胞邻域图中，通过最大化**模块度 (Modularity)** 来识别连接紧密的节点集合。
+- **分辨率 (Resolution)**：通过调整参数控制聚类的粒度。高分辨率会产生更多细分的小群。
+
+## 3. 可视化的魔术：UMAP
+
+**UMAP (Uniform Manifold Approximation and Projection)** 是目前最流行的降维可视化算法。
+
+### 核心思想
+- **流形假设**：假设细胞分布在一个高维空间中弯曲的低维平面（流形）上。
+- **拓扑保持**：UMAP 试图在二维平面上重现高维空间中的局部拓扑关系。
+
+**重要提醒**：
+- **UMAP 距离不具有定量意义**：两个点在 UMAP 图上离得远，不代表它们的进化距离远。
+- **分类依赖聚类而非 UMAP**：你应该根据 Leiden 聚类的颜色标签来识别细胞群，而不是仅仅盯着 UMAP 的图形形状。
+
+## 4. 细胞类型注释 (Annotation)
+
+聚类只是将细胞分成了“0, 1, 2...”号盒子。
+- **算法任务**：差异表达分析（Differential Expression）。寻找每个 cluster 特有的 **Marker Genes**。
+- **生物学解释**：如果 cluster 0 高表达 *CD3D*，我们就将其注释为“T 细胞”。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'scRNA-seq 总览', to: '/wiki-bioinfo/single-cell/scrna-seq-overview', description: '理解单细胞分析全流程' },
+    { title: 'Corrupted Cliques', to: '/wiki-bioinfo/phylogeny/corrupted-cliques-cast', description: '聚类算法的理论深度' },
+    { title: '轨迹推断', to: '/wiki-bioinfo/single-cell/trajectory-analysis', description: '当聚类界限模糊时的分化研究' }
+  ]}
+/>

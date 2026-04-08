@@ -1,0 +1,83 @@
+---
+description: 长读长组装的基本原理、OLC 策略流程、纠错方法与质量评估。
+title: "长读长组装"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="长读长组装的核心优势在于其能够直接跨越复杂的重复序列。不同于短读长的 de Bruijn 图策略，长读长通常采用 OLC (Overlap-Layout-Consensus) 范式，通过构建重叠图来恢复基因组的连续性。"
+  bullets={[
+    '掌握 OLC 组装的三阶段：重叠检测 (Overlap)、布局构建 (Layout) 与共识生成 (Consensus)',
+    '理解 String Graph（字符串图）如何通过约简技术简化重叠关系',
+    '了解 Polishing（磨光/校正）步骤在提升碱基准确性中的必要性',
+    '掌握组装质量评估的关键指标：N50、BUSCO 完整度与 QV 分数'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' },
+    { name: '组装与图算法', href: '/wiki-bioinfo/assembly' }
+  ]}
+/>
+
+## 1. 为什么长读长改变了组装？
+
+**短读长的困境**：如果基因组中有一段长度为 $1 \text{ kb}$ 的重复序列，而 Read 只有 $150 \text{ bp}$，算法将无法确定该 Read 来自哪个重复副本，导致组装图在此处断裂或形成复杂的“气泡”。
+
+**长读长的突破**：$20 \text{ kb}$ 的 Read 可以轻而易举地覆盖整个重复区及其两侧的独特序列（Flanking sequences），从而像拼图一样将基因组唯一地拼接起来。
+
+## 2. OLC 组装范式
+
+长读长组装通常遵循 **Overlap-Layout-Consensus** 流程：
+
+### 第一阶段：Overlap (重叠检测)
+寻找所有 Read 之间的重叠关系。
+- **算法挑战**：由于长读长数量巨大且存在错误，直接进行 $O(N^2)$ 的动态规划比对太慢。通常使用 **Minimap2** 等基于 Minimizer 的快速搜索算法。
+
+### 第二阶段：Layout (布局构建)
+将重叠关系组织成图（如 **String Graph**），并寻找代表基因组的最优路径。
+- **约简 (Reduction)**：删除传递边（Transitive edges），简化图结构。
+- **处理分叉**：识别并解决由于重复序列或测序错误引起的复杂拓扑。
+
+### 第三阶段：Consensus (共识生成)
+由于单条长 Read 可能含有 $5\% \text{--} 15\%$ 的错误，组装结果（Draft Assembly）需要通过覆盖在该区域的所有 Reads 进行“多方投票”，提取最准确的共识碱基。
+
+## 3. Polishing (磨光/校正)
+
+组装完成后，通常需要进行 **Polishing** 以达到 Q40（$99.99\%$ 准确率）以上的水平。
+- **方法**：将原始 Reads 重新比对回组装好的 Contigs，利用信号模型（如 Nanopore 的电信号）或高精度二代数据进行碱基级别的修正。
+
+## 4. 质量评估标准
+
+<DefinitionList
+  items={[
+    {
+      term: 'N50',
+      definition: '衡量连续性的核心指标。将组装片段按长度排序，累计到总长度 50% 时的那个片段的长度。',
+    },
+    {
+      term: 'BUSCO',
+      definition: '衡量完整性的指标。通过在组装结果中寻找保守的单拷贝同源基因，评估基因组覆盖是否完整。',
+    },
+    {
+      term: 'QV (Quality Value)',
+      definition: '衡量单碱基准确性的指标。反映了组装序列与真实序列的符合程度。',
+    },
+  ]}
+/>
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'PacBio 与 Nanopore', to: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '理解数据的物理来源' },
+    { title: '组装算法概览', to: '/wiki-bioinfo/assembly', description: '对比 OLC 与 de Bruijn 图' },
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '基于组装结果的变异挖掘' }
+  ]}
+/>

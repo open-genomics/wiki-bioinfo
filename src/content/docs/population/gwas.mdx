@@ -1,0 +1,77 @@
+---
+description: 全基因组关联研究（GWAS）的统计原理、多重检验校正、群体结构混杂控制与结果解读。
+title: "GWAS：全基因组关联研究"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="GWAS 是一种在全基因组范围内系统扫描遗传变异，寻找与复杂表型（如高度、疾病易感性）存在统计学关联的 SNP 的方法。它将基因定位从传统的家系连锁分析推向了大规模群体的病例-对照研究。"
+  bullets={[
+    '掌握 GWAS 的统计模型：线性回归（定量性状）与 Logistic 回归（二分类性状）',
+    '理解全基因组显著性阈值 $5 \times 10^{-8}$ 的多重检验背景',
+    '掌握主成分分析 (PCA) 与线性混合模型 (LMM) 如何控制群体结构混杂',
+    '理解曼哈顿图 (Manhattan Plot) 与 QQ 图的质量评估意义'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Hardy–Weinberg 平衡', href: '/wiki-bioinfo/population/hardy-weinberg' },
+    { name: '连锁不平衡', href: '/wiki-bioinfo/population/linkage-disequilibrium' },
+    { name: '变异检测总览', href: '/wiki-bioinfo/variants/variant-calling-overview' }
+  ]}
+/>
+
+## 1. 统计模型：寻找关联的刻度
+
+GWAS 的核心是针对每个 SNP 进行独立的统计检验。
+
+### 基因型编码
+通常采用**加性模型 (Additive Model)**，将基因型编码为次要等位基因的数量：$0, 1, 2$。
+
+### 回归分析
+- **定量性状**（如身高）：使用**线性回归**。
+- **分类性状**（如是否患病）：使用 **Logistic 回归**。
+    - 关键指标：**比值比 (Odds Ratio, OR)**。$OR > 1$ 表示该等位基因是风险因素。
+
+## 2. 统计挑战：多重检验与显著性
+
+由于一次性检验了数百万个位点，根据显著性水平 $\alpha=0.05$ 计算，会产生数万个假阳性。
+
+### 严苛的阈值
+为了严控假阳性，GWAS 领域采用 Bonferroni 校正后的标准：
+$$P < 5 \times 10^{-8}$$
+这意味着只有那些信号极强的位点才能被认定为“全基因组显著”。
+
+## 3. 混杂因素：群体结构 (Population Structure)
+
+群体结构是 GWAS 的“幽灵”。如果病例组和对照组在祖源背景上不匹配（例如病例组更多来自欧洲北部，对照组来自南部），那么任何在两个亚群间频率不同的 SNP 都会产生虚假的关联信号。
+
+### 校正策略
+1.  **PCA 校正**：利用主成分分析提取样本的前几个主成分（通常是 PC1-PC10），作为协变量放入回归模型中，吸收背景差异。
+2.  **LMM (线性混合模型)**：利用遗传亲缘关系矩阵（GRM）将样本间的亲缘关系建模为随机效应，比 PCA 更能处理近亲和精细的群体结构。
+
+## 4. 可视化与质量评估
+
+### 曼哈顿图 (Manhattan Plot)
+- **横轴**：染色体位置。
+- **纵轴**：$-\log_{10}(P)$ 值。
+- **直觉**：显著的位点会像曼哈顿的高楼大厦一样拔地而起。
+
+### QQ 图 (Quantile-Quantile Plot)
+- **作用**：检查观测到的 P 值分布是否偏离零假设。
+- **基因组膨胀因子 ($\lambda$)**：如果 $\lambda > 1.05$，说明模型可能存在未校正的群体结构或系统性偏差。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '群体结构', to: '/wiki-bioinfo/population/population-structure', description: '深入理解背景混杂' },
+    { title: '连锁不平衡', to: '/wiki-bioinfo/population/linkage-disequilibrium', description: '为什么关联信号是“块状”的' },
+    { title: '变异过滤与质控', to: '/wiki-bioinfo/variants/variant-filtering', description: 'GWAS 前的实验数据把关' }
+  ]}
+/>

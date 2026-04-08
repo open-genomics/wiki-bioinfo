@@ -1,0 +1,79 @@
+---
+description: 连锁不平衡的数学定义、度量指标、生物学起源及其在 GWAS 和精细定位中的应用。
+title: "连锁不平衡"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="Hardy–Weinberg 平衡描述了单个位点的稳定性，而连锁不平衡（Linkage Disequilibrium, LD）则描述了不同位点之间的非随机关联。LD 是理解基因组结构、单倍型块以及 GWAS 信号来源的核心概念。"
+  bullets={[
+    '掌握 LD 的数学度量：$D$, $D\'$ 和 $r^2$',
+    '理解重组 (Recombination) 如何作为“打散”LD 的核心力量',
+    '掌握单倍型块 (Haplotype Blocks) 的块状景观直觉',
+    '了解 LD 在基因型插补 (Imputation) 和精细定位中的关键作用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Hardy–Weinberg 平衡', href: '/wiki-bioinfo/population/hardy-weinberg' },
+    { name: '概率与图基础', href: '/wiki-bioinfo/foundations/probability-and-graphs' }
+  ]}
+/>
+
+## 1. 从独立到关联：什么是 LD？
+
+如果两个位点是独立遗传的，那么它们同时出现某种等位基因组合的频率应该等于各自频率的乘积。
+
+**连锁不平衡 (LD)** 是指在群体中，不同位点的等位基因之间存在**非随机的统计相关性**。
+- **直觉**：如果你知道位点 A 是 `G`，你就能以很高的概率猜到位点 B 是 `A`。这意味着这两个位点“连在一起”了。
+
+## 2. LD 的数学度量
+
+<DefinitionList
+  items={[
+    {
+      term: 'LD 系数 $D$',
+      definition: '观察到的单倍型频率与期望频率之差。$D = P_{AB} - p_A p_B$。',
+    },
+    {
+      term: '标准化系数 $D\'$',
+      definition: '将 $D$ 按其理论最大值缩放。$|D\'| = 1$ 表示完全连锁（即四个可能的单倍型中至少有一个从未出现过）。',
+    },
+    {
+      term: '相关系数 $r^2$',
+      definition: 'GWAS 中最常用的指标。反映了一个位点对另一个位点的预测能力。$r^2 = 1$ 表示两位点信息完全冗余。',
+    },
+  ]}
+/>
+
+## 3. LD 的生物学起源
+
+### 重组的限制
+LD 最根本的来源是物理距离。两个位点在染色体上离得越近，减数分裂时它们之间发生重组（交叉互换）的概率就越低，关联就维持得越久。
+
+### 群体历史的影响
+- **瓶颈效应 (Bottleneck)**：群体急剧缩小时，随机漂变会显著增强 LD。
+- **选择 (Selection)**：正向选择会带着周围的碱基一起扩散（选择性清扫 Selective Sweep），形成长距离的高 LD 区域。
+
+## 4. 单倍型块 (Haplotype Blocks)
+
+人类基因组的 LD 并不是平滑衰减的，而是呈现出**块状结构**。
+- **Block 内部**：高度关联，仅需少数几个 **Tag SNPs** 就能代表整个区域的变异信息。
+- **Block 边界**：通常是**重组热点 (Recombination Hotspots)**，关联在这里迅速瓦解。
+
+**算法应用**：这一特性是全基因组分型芯片设计的基础——我们不需要测序 30 亿碱基，只需检测几十万个精心挑选的 Tag SNPs 即可覆盖全基因组。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'GWAS 分析', to: '/wiki-bioinfo/population/gwas', description: 'LD 信号的统计捕捉' },
+    { title: '群体结构', to: '/wiki-bioinfo/population/population-structure', description: '亚群混合产生的假性 LD' },
+    { title: '单倍型分析', to: '/wiki-bioinfo/variants', description: '重建染色体的物理排列' }
+  ]}
+/>

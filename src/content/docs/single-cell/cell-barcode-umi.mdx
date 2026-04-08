@@ -1,0 +1,71 @@
+---
+description: 细胞 Barcode 与 UMI 的定义、原理、纠错策略，以及从原始测序数据到基因表达矩阵的定量流程。
+title: "细胞 Barcode 与 UMI"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="在单细胞测序中，我们面临两个核心挑战：如何识别 Read 来自哪个细胞？以及如何区分真实的分子与 PCR 重复？细胞 Barcode 与 UMI (Unique Molecular Identifier) 正是为此设计的分子标签。"
+  bullets={[
+    '掌握细胞 Barcode 的作用：细胞身份的“身份证”',
+    '理解 UMI 的统计原理：将 Read 计数转化为原始分子计数',
+    '掌握 UMI 去重算法如何校正 PCR 扩增偏差',
+    '了解 Barcode 纠错与白名单过滤的逻辑'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'scRNA-seq 总览', href: '/wiki-bioinfo/single-cell/scrna-seq-overview' },
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' }
+  ]}
+/>
+
+## 1. 细胞 Barcode：标记空间身份
+
+在液滴法（如 10x Genomics）中，每个液滴包含一个带有数百万条引物的凝胶珠。
+- **结构**：所有这些引物都共享同一个 16 bp 的序列，这就是 **Cell Barcode**。
+- **逻辑**：被该液滴捕获的细胞，其所有的 mRNA 在逆转录后都会带上这个相同的标签。
+- **计算分配**：在拆分 (Demultiplexing) 阶段，算法根据 Barcode 将海量的 Reads 重新归类到各自的细胞中。
+
+## 2. UMI：标记分子身份
+
+**UMI (Unique Molecular Identifier)** 是一段随机生成的短序列（通常 10-12 bp）。
+- **物理过程**：在逆转录之前，每个 mRNA 分子都会随机连接上一个独特的 UMI。
+- **PCR 扩增**：由于 PCR 扩增并不是均匀的，一个原始分子可能产生 10 个 Reads，而另一个只产生 2 个。
+- **去重逻辑**：如果多条具有相同 Barcode 的 Reads 映射到同一个基因且携带**相同的 UMI**，算法会将它们计为**一个原始分子**。
+
+### UMI Count vs Read Count
+- **Read Count**：受 PCR 偏好性影响大，不能真实反映表达量。
+- **UMI Count**：反映了逆转录前的原始分子数，是目前单细胞定量的标准度量。
+
+## 3. 算法挑战：纠错与过滤
+
+### 测序错误的处理
+如果 UMI 在测序中错了一个碱基，简单的完全匹配会将其计为两个分子。
+- **解决方案**：利用邻域聚类（如 UMI-tools 算法）。如果两个 UMI 的汉明距离为 1，且其中一个丰度远高于另一个，则将其合并。
+
+### 膝点图 (Knee Plot) 与空液滴过滤
+并不是所有检测到的 Barcode 都代表真实细胞。
+- **背景噪声**：液滴中可能只含有环境 RNA（Ambient RNA）。
+- **过滤直觉**：将所有 Barcode 按 UMI 总数降序排列。真实细胞通常位于曲线的“膝部”上方，而噪音则处于平缓的尾部。
+
+## 4. 表达矩阵 (Count Matrix) 的生成
+
+经过比对和去重，最终输出是一个**基因 $\times$ 细胞**的稀疏矩阵。
+- **维度**：通常为 $30,000$ 基因 $\times 10,000$ 细胞。
+- **稀疏性**：由于捕获效率限制，矩阵中 90% 以上的元素通常为 0（Dropout 现象）。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'scRNA-seq 总览', to: '/wiki-bioinfo/single-cell/scrna-seq-overview', description: '理解单细胞技术全景' },
+    { title: '聚类与 UMAP', to: '/wiki-bioinfo/single-cell/clustering-and-umap', description: '如何利用矩阵进行细胞分群' },
+    { title: 'k-mer 与序列表示', to: '/wiki-bioinfo/sequence/kmers', description: '理解短序列的匹配逻辑' }
+  ]}
+/>

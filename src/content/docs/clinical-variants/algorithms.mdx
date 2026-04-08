@@ -6,6 +6,8 @@ title: "临床变异解释算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 
 <SummaryBox
@@ -15,6 +17,30 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     'ACMG 算法化将证据规则转化为可计算的决策流程，但需处理证据冲突和基因特异性调整',
     '致病性预测算法（SIFT、PolyPhen、CADD、AlphaMissense）提供支持性证据，但不能单独决定分类',
     '算法是辅助工具而非替代：最终临床判断仍需结合家系背景、文献更新和患者沟通',
+  ]}
+/>
+
+## 算法驱动的解释工作流
+
+临床变异解释算法通常在以下关键节点发挥作用，将海量原始数据转化为可用的临床证据：
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '候选集压缩（Prioritization）',
+      description: '利用频率过滤、功能评分和表型匹配算法，将变异从数万个压缩至个位数。',
+      badge: '效率核心'
+    },
+    {
+      title: '致病性强度量化（Prediction）',
+      description: '使用 AlphaMissense 或 CADD 等算法，为每个变异提供功能破坏性的概率或排名分值。',
+      badge: '证据支持'
+    },
+    {
+      title: '规则驱动分类（ACMG Automation）',
+      description: '将收集到的证据喂入自动化 ACMG 规则引擎，输出初步的临床分类建议。',
+      badge: '标准化核心'
+    }
   ]}
 />
 
@@ -129,6 +155,30 @@ ACMG 算法化面临几个核心问题：
 - **解释性差**：深度学习模型难以解释预测依据。
 
 因此，**致病性预测只是 ACMG 中的 supporting 证据，不能单独决定分类**。
+
+### 致病性预测算法对比
+
+不同代际和原理的预测算法在临床应用中各有侧重：
+
+<ComparisonTable
+  rows={[
+    {
+      feature: 'SIFT / PolyPhen-2',
+      variant_a: '基于序列保守性和简单结构特征',
+      variant_b: '经典工具，但假阳性率较高，仅作为参考'
+    },
+    {
+      feature: 'CADD / REVEL',
+      variant_a: '集成学习方法，整合多维特征',
+      variant_b: '当前临床常用的共识得分，性能相对稳定'
+    },
+    {
+      feature: 'AlphaMissense',
+      variant_a: '基于蛋白质结构预测（AlphaFold）的深度学习',
+      variant_b: '在错义变异预测上具有极高的空间分辨率和准确度'
+    }
+  ]}
+/>
 
 ## 4. CNV/SV 检测算法
 

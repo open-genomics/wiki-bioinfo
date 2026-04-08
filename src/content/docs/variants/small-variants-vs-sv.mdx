@@ -1,0 +1,87 @@
+---
+description: 变异检测算法的选择取决于其尺度。本节对比 SNP/短 Indel 与结构变异（SV）的定义、检测信号与算法逻辑。
+title: "Small Variants 与结构变异 (SV)"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="变异检测（Variant Calling）在不同尺度上采用完全不同的算法。Small Variants 依赖局部堆叠（Pileup）的统计特征，而结构变异（SV）则需要整合全基因组范围的非正常比对信号。"
+  bullets={[
+    '掌握 Small Variants（SNP、短 Indel）的局部统计推断模型',
+    '掌握 SV 的五种核心检测信号：Read Pair, Split Read, Read Depth, Assembly, Breakends',
+    '了解基因组重排（Rearrangements）作为 SV 算法设计的数学背景',
+    '理解不同变异类型在临床解释与生物学功能上的差异'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { name: '基因组重排', href: '/wiki-bioinfo/foundations/genome-rearrangements' },
+    { name: '比对质量与多重比对', href: '/wiki-bioinfo/alignment/mapping-quality-and-multi-mapping' }
+  ]}
+/>
+
+## 1. 变异尺度的分界线
+
+| 类型 | 尺度 | 主要特征 |
+| :--- | :--- | :--- |
+| **Small Variants** | 1 bp - 50 bp | 包含 SNP 和短插入/缺失。能被单条 Read 完整覆盖。 |
+| **Structural Variants** | > 50 bp | 包含大片段缺失、重复、倒位和易位。通常涉及基因组结构的剧烈重排。 |
+
+## 2. Small Variants：局部堆叠模型
+
+这类变异主要通过 **Pileup (堆叠)** 信息来识别。
+- **算法核心**：贝叶斯推断。计算在给定观测碱基和质量值（Phred Score）的情况下，该位点属于某种基因型的概率。
+- **挑战**：区分真实的低频变异与背景测序噪音。
+
+## 3. 结构变异 (SV)：全局信号整合
+
+由于 SV 的尺度超出了单条 Read 的长度，算法必须寻找“非正常”的比对证据：
+
+<DefinitionList
+  items={[
+    {
+      term: 'Read Pair (RP)',
+      definition: '成对 Read 的间距（Insert Size）异常。间距过大暗示中间有缺失 (DEL)，过小暗示有插入 (INS)。',
+    },
+    {
+      term: 'Split Read (SR)',
+      definition: '单条 Read 被切断并比对到基因组不连续的两个位置。这直接定义了变异的精确断点 (Breakpoint)。',
+    },
+    {
+      term: 'Read Depth (RD)',
+      definition: '通过覆盖度的显著升高或降低来检测拷贝数变异 (CNV)。',
+    },
+    {
+      term: 'Assembly',
+      definition: '局部 de novo 组装。这是最精确的方法，特别适合检测含有复杂重复序列的变异。',
+    },
+  ]}
+/>
+
+## 4. SV 与基因组重排的联系
+
+结构变异在数学上可以抽象为**排列的变换**。
+- **倒位 (Inversion)** 对应于排列中的一个子串反转。
+- **易位 (Translocation)** 对应于子串在不同染色体（或同一染色体不同位置）间的移动。
+- **算法启发**：我们在[基因组重排](./genome-rearrangements)中讨论的“反转距离”和“断点分析”是理解大型 SV 演化机制的理论基础。
+
+## 5. 临床与功能意义
+
+- **剂量效应**：大片段缺失或重复（CNV）常导致基因拷贝数变化，引发发育疾病或癌症。
+- **基因融合**：易位可能将两个不相关的基因拼在一起（如 BCR-ABL），成为癌症的驱动因子。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '变异分析的标准流程' },
+    { title: '基因组重排', to: '/wiki-bioinfo/foundations/genome-rearrangements', description: 'SV 演化的数学模型' },
+    { title: '变异过滤与质控', to: '/wiki-bioinfo/variants/variant-filtering', description: '减少假阳性的统计方法' }
+  ]}
+/>

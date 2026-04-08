@@ -1,0 +1,55 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="400" fill="#ffffff" />
+  
+  <!-- DFS Visualization -->
+  <g transform="translate(50, 50)">
+    <text x="0" y="0" font-family="Arial" font-size="18" font-weight="bold" fill="#333">DFS (深度优先): 走到底再回溯</text>
+    
+    <circle cx="50" cy="60" r="15" fill="#4A90E2" stroke="#333" />
+    <text x="45" y="65" font-family="Arial" font-size="12" fill="white">1</text>
+    
+    <circle cx="50" cy="140" r="15" fill="#4A90E2" stroke="#333" />
+    <text x="45" y="145" font-family="Arial" font-size="12" fill="white">2</text>
+    
+    <circle cx="50" cy="220" r="15" fill="#4A90E2" stroke="#333" />
+    <text x="45" y="225" font-family="Arial" font-size="12" fill="white">3</text>
+    
+    <path d="M 50 75 L 50 125" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <path d="M 50 155 L 50 205" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <text x="80" y="100" font-family="Arial" font-size="12" fill="#E67E22" font-weight="bold">深度优先 (栈/递归)</text>
+  </g>
+
+  <!-- BFS Visualization -->
+  <g transform="translate(450, 50)">
+    <text x="0" y="0" font-family="Arial" font-size="18" font-weight="bold" fill="#333">BFS (广度优先): 逐层向外扩散</text>
+    
+    <circle cx="100" cy="60" r="15" fill="#2ECC71" stroke="#333" />
+    <text x="95" y="65" font-family="Arial" font-size="12" fill="white">1</text>
+    
+    <circle cx="50" cy="140" r="15" fill="#2ECC71" stroke="#333" />
+    <text x="45" y="145" font-family="Arial" font-size="12" fill="white">2</text>
+    
+    <circle cx="150" cy="140" r="15" fill="#2ECC71" stroke="#333" />
+    <text x="145" y="145" font-family="Arial" font-size="12" fill="white">2</text>
+    
+    <path d="M 85 75 L 60 125" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <path d="M 115 75 L 140 125" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    
+    <text x="100" y="180" font-family="Arial" font-size="12" fill="#27AE60" font-weight="bold" text-anchor="middle">广度优先 (队列)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(50, 320)">
+    <text x="0" y="0" font-family="Arial" font-size="14" font-weight="bold" fill="#333">组装中的意义:</text>
+    <text x="0" y="25" font-family="Arial" font-size="12" fill="#666">DFS: 常用于路径延伸和寻找 Contig</text>
+    <text x="0" y="45" font-family="Arial" font-size="12" fill="#666">BFS: 常用于识别 Bubble 和 Tip 的范围</text>
+  </g>
+
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+</svg>

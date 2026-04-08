@@ -29,6 +29,20 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 - 不同工具在效率、精度与内存使用间的权衡
 - 面对新问题时，如何选择或设计合适的算法
 
+## 算法全景地图
+
+在生物信息学的实际应用中，算法通常不是孤立存在的，而是相互嵌套、共同协作。下表展示了从原始序列到最终生物学结论的典型算法流转：
+
+| 阶段 | 核心任务 | 常用算法范式 | 视觉化逻辑 |
+| :--- | :--- | :--- | :--- |
+| **数据预处理** | 质量过滤、k-mer 频次统计 | 字符串算法、哈希表 | 序列窗口滑动与直方图分布 |
+| **参考比对** | Read Mapping | 字符串索引 (FM-index) + 局部 DP | 种子搜索 (Seeding) 与比对扩展 (Extension) |
+| **组装** | De novo 组装 | 图算法 (de Bruijn Graph) | 节点合并、路径遍历与气泡 (Bubble) 剪枝 |
+| **变异/定量** | SNP 调用、表达量统计 | 概率模型 (HMM, 贝叶斯) | 状态转移、发射概率与后验分布评分 |
+| **功能解释** | 系统发育、通路分析 | 树算法、聚类、随机化采样 | 层次聚类树、网络拓扑与 MCMC 空间搜索 |
+
+---
+
 ## 核心算法范式
 
 ### 1. 动态规划（Dynamic Programming）
@@ -184,13 +198,13 @@ $$
 
 **决策树示例**：
 
-| 问题特征 | 推荐算法范式 | 典型工具 |
-|---------|------------|---------|
-| 小规模序列精确比对 | 动态规划 | Needleman-Wunsch, Smith-Waterman |
-| 大规模 reads 比对 | 索引 + seed-and-extend | BWA, minimap2 |
-| 短读长组装 | 图算法 + 启发式 | de Bruijn graph (Velvet, SPAdes) |
-| motif 发现 | 概率模型 + 随机化 | MEME, Gibbs sampling |
-| 复杂统计推断 | 贝叶斯 + MCMC | BEAST, MrBayes |
+| 问题特征 | 推荐算法范式 | 决策逻辑 | 典型工具 |
+|---------|------------|---------|---------|
+| 小规模序列精确比对 | 动态规划 | 填充二维得分矩阵，回溯最优路径 | Needleman-Wunsch, Smith-Waterman |
+| 大规模 reads 比对 | 索引 + seed-and-extend | 用压缩索引定位，仅对局部执行精细 DP | BWA, minimap2 |
+| 短读长组装 | 图算法 + 启发式 | 将序列切为 k-mer 构建图，解析欧拉路径 | de Bruijn graph (Velvet, SPAdes) |
+| motif 发现 | 概率模型 + 随机化 | 通过 Gibbs 采样在概率分布中跳出局部最优 | MEME, Gibbs sampling |
+| 复杂统计推断 | 贝叶斯 + MCMC | 在高维空间中进行随机游走以逼近真实分布 | BEAST, MrBayes |
 
 ## 算法复杂度与可扩展性
 

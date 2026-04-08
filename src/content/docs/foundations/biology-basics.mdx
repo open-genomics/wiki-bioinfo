@@ -47,6 +47,19 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **中心法则 (Central Dogma)** 描述了遗传信息的标准流向：**DNA $\to$ RNA $\to$ 蛋白质**。
 
+```mermaid
+graph LR
+    DNA["DNA (Genome)"] -- "Transcription (转录)" --> RNA["RNA (Transcriptome)"]
+    RNA -- "Translation (翻译)" --> Protein["Protein (Proteome)"]
+    
+    DNA -.->|"Replication (复制)"| DNA
+    RNA -.->|"Reverse Transcription"| DNA
+    
+    style DNA fill:#f9f,stroke:#333
+    style RNA fill:#bbf,stroke:#333
+    style Protein fill:#bfb,stroke:#333
+```
+
 - **转录 (Transcription)**：DNA 模板合成 RNA。
 - **翻译 (Translation)**：mRNA 在核糖体上按密码子表（Codon Table）组装氨基酸。
 - **遗传密码的简并性**：多个密码子可对应同一种氨基酸（如 CGC 和 AGG 都编码精氨酸），这对基因预测算法中的统计偏好分析至关重要。

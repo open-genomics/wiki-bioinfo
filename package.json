@@ -1,8 +1,28 @@
 {
   "name": "wiki-bioinfo",
   "version": "0.2.0",
+  "description": "面向中文社区的开源生物信息学知识库",
   "private": true,
   "type": "module",
+  "author": "LessUp",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/LessUp/wiki-bioinfo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/LessUp/wiki-bioinfo/issues"
+  },
+  "homepage": "https://lessup.github.io/wiki-bioinfo/",
+  "keywords": [
+    "bioinformatics",
+    "wiki",
+    "knowledge-base",
+    "chinese",
+    "astro",
+    "starlight",
+    "documentation"
+  ],
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",

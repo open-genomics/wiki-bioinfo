@@ -107,15 +107,24 @@ $$
 
 信息含量越高，说明该位置越保守。
 
-### 中间字符串问题 (Median String Problem)
+## 4. Motif 寻找与中值字符串的对偶性
 
-Motif 寻找也可以转化为寻找一个**中间字符串 (Median String)** $v$，使得所有输入序列中与 $v$ 距离最近的 $l$-mer 的距离之和最小。
+Motif 寻找问题（寻找最优起始位置）与**中值字符串问题 (Median String Problem)** 在数学上是完全等价的对偶问题。
 
-$$d(v, \text{DNA}) = \sum_{i=1}^t \min_{s_i} d(v, s_i)$$
+### 核心直觉
+-   **Motif Finding**：目标是找到起始位置 $s$，使得共识得分 $Score(s)$ **最大化**。
+-   **Median String**：目标是找到一个长度为 $l$ 的字符串 $v$，使得它到所有序列的距离总和 $TotalDistance(v, DNA)$ **最小化**。
 
-这是一个穷举搜索问题，复杂度为 $O(4^l \cdot n \cdot t)$。
+### 数学等价性
+对于任何起始位置 $s$ 和由其产生的共识序列 $w$，它们之间满足：
+$$TotalDistance(w, DNA) = l \cdot t - Score(s, DNA)$$
+其中 $l$ 是 Motif 长度，$t$ 是序列条数。
 
-### 贪心 Motif 搜索 (Greedy Motif Search)
+**这意味着**：
+1.  解决了一个问题，就自动解决了另一个。
+2.  **搜索空间差异**：Motif Finding 的搜索空间是 $(n-l+1)^t$（取决于序列条数和长度），而 Median String 的搜索空间是 $4^l$（仅取决于 Motif 长度）。当序列很多时，从 Median String 入手往往更高效。
+
+## 5. 贪心 Motif 搜索 (Greedy Motif Search)
 
 由于穷举搜索速度较慢，实际常用贪心策略（如 CONSENSUS 算法）。它逐个扫描序列，每步选择能使当前 Profile 得分最大化的 $l$-mer。
 

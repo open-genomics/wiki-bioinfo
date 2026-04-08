@@ -96,6 +96,34 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 
 ## 核心数据格式的语义解析
 
+```mermaid
+graph TD
+    subgraph "Raw Data Layer"
+    FASTQ["FASTQ (Reads + Quality)"]
+    end
+
+    subgraph "Reference Layer"
+    FASTA["FASTA (Reference Genome)"]
+    GTF["GTF/GFF (Gene Annotation)"]
+    end
+
+    subgraph "Alignment Layer"
+    BAM["SAM/BAM/CRAM (Alignment)"]
+    end
+
+    subgraph "Inference Layer"
+    VCF["VCF/BCF (Variants)"]
+    COUNTS["Expression Counts/Matrix"]
+    end
+
+    FASTQ -->|"Alignment (BWA/Bowtie2)"| BAM
+    FASTA -->|"Reference Input"| BAM
+    BAM -->|"Variant Calling (GATK)"| VCF
+    BAM -->|"Quantification (FeatureCounts)"| COUNTS
+    GTF -->|"Annotation Input"| COUNTS
+    GTF -->|"Functional Annotation"| VCF
+```
+
 ### 1. FASTA：参考序列的计算表示
 
 **概念定义**
@@ -156,6 +184,28 @@ GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTC
 **概念定义**
 
 SAM（Sequence Alignment/Map）及其二进制形式 BAM、压缩形式 CRAM 编码的是**比对结果（alignment）**——将原始 reads 定位到参考序列坐标系中的计算产物。这是从原始观测到参考坐标空间的映射层。
+
+```mermaid
+graph LR
+    subgraph "Read Space"
+    R["Read: ATGC..."]
+    end
+    
+    subgraph "Alignment Process"
+    Map["Mapper"]
+    end
+    
+    subgraph "Reference Space"
+    Ref["Reference: ...NNNATGCNNN..."]
+    Pos["Position: chr1:1000"]
+    CIGAR["CIGAR: 4M"]
+    end
+    
+    R --> Map
+    Map --> Ref
+    Map --> Pos
+    Map --> CIGAR
+```
 
 **数据结构核心**
 

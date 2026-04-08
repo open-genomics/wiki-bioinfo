@@ -19,6 +19,51 @@ title: "术语表"
 
 ## 核心术语
 
+### 生物信息学对象层级关系
+
+为了直观理解这些核心术语之间的空间与逻辑关系，可以参考下图：
+
+```mermaid
+graph TD
+    subgraph RawData [原始数据层]
+        Read[测序读段 read]
+        Kmer[k-mer]
+    end
+
+    subgraph Assembly [组装层]
+        Contig[连续组装片段 contig]
+        Scaffold[骨架序列 scaffold]
+    end
+
+    subgraph Reference [参考层]
+        Ref[参考基因组 reference genome]
+        Coord[坐标系统 coordinate system]
+    end
+
+    subgraph Annotation [注释层]
+        Gene[基因 gene]
+        Trans[转录本 transcript]
+        Exon[外显子 exon]
+        Isoform[剪接形式 isoform]
+        Prot[蛋白质 protein]
+    end
+
+    Read -->|定位/比对| Ref
+    Read -->|组装| Contig
+    Contig -->|连接| Scaffold
+    Scaffold -->|建立参考| Ref
+    
+    Ref --- Coord
+    Coord --- Gene
+    Gene --> Trans
+    Trans --> Exon
+    Trans --> Isoform
+    Trans -->|翻译| Prot
+    
+    Read -->|拆解| Kmer
+    Kmer -->|构建索引| Ref
+```
+
 - **测序读段（read）**：测序仪直接产生的原始序列片段。
 - **参考基因组（reference genome）**：作为比对、变异检测和注释解释的参考序列背景。
 - **注释（annotation）**：描述基因（gene）、转录本（transcript）、外显子（exon）、编码区（CDS, Coding Sequence）等特征（feature）的位置与属性。

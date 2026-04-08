@@ -85,6 +85,11 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 最短超串问题可以转化为图论问题：
 
+<figure>
+  <img src="/wiki-bioinfo/img/illustrations/shortest-superstring-overlap-graph.svg" alt="最短超串重叠图示意图" />
+  <figcaption>重叠图表示：节点为字符串片段，边的权重代表前一个字符串后缀与后一个字符串前缀的最大重叠长度。</figcaption>
+</figure>
+
 1. 创建一个完全有向图，每个字符串对应一个顶点
 2. 从顶点 sᵢ 到 sⱼ 的边权重为 `-overlap(sᵢ, sⱼ)`
 3. 寻找访问所有顶点的路径，使边权重之和最大（即重叠之和最大）

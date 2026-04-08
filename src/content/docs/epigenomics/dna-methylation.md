@@ -53,7 +53,29 @@ CpG 位点并非均匀分布：
 
 ### 检测甲基化的化学基础
 
-亚硫酸氢盐测序（Bisulfite Sequencing）是目前检测 DNA 甲基化的金标准技术。其核心原理是化学选择性脱氨基：
+```mermaid
+graph TD
+    DNA["原始 DNA 序列"] --> Bisulfite["亚硫酸氢盐处理 (Bisulfite Treatment)"]
+    Bisulfite --> C_Unmeth["未甲基化胞嘧啶 (C)"]
+    Bisulfite --> C_Meth["甲基化胞嘧啶 (5mC)"]
+
+    C_Unmeth --> Deamination["脱氨基作用"]
+    Deamination --> Uracil["尿嘧啶 (U)"]
+    Uracil --> PCR["PCR 扩增"]
+    PCR --> Thymine["胸腺嘧啶 (T)"]
+
+    C_Meth --> Protected["甲基保护 (无变化)"]
+    Protected --> PCR_Meth["PCR 扩增"]
+    PCR_Meth --> Cytosine["胞嘧啶 (C)"]
+
+    style C_Unmeth fill:#ffebee,stroke:#b71c1c
+    style C_Meth fill:#e8f5e9,stroke:#2e7d32
+    style Thymine fill:#ffebee,stroke:#b71c1c,stroke-dasharray: 5 5
+    style Cytosine fill:#e8f5e9,stroke:#2e7d32
+```
+
+亚硫酸氢盐测序（Bisulfite Sequencing）是目前检测 DNA 甲基化的金标准技术。
+其核心原理是化学选择性脱氨基：
 
 **化学反应**：
 - **未甲基化的胞嘧啶（C）**：在亚硫酸氢盐作用下转化为尿嘧啶（U），测序时读作 T

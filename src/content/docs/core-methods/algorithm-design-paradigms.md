@@ -56,6 +56,31 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 当问题的解空间是有限的、可枚举的，且规模不大时，最直接的方法就是**尝试所有可能性**。
 
+### 视觉化直觉：分支定界
+
+```mermaid
+graph TD
+    Root((开始搜索)) --> A1[分支 1]
+    Root --> A2[分支 2]
+    Root --> A3[分支 3]
+    
+    A1 --> B1[子分支 1.1]
+    A1 --> B2[子分支 1.2]
+    
+    A2 -.->|剪枝: 估值 < 当前最佳| C1((终止搜索))
+    
+    subgraph "搜索空间 (Search Space)"
+    A1
+    A2
+    A3
+    B1
+    B2
+    end
+    
+    style C1 fill:#ffcccc,stroke:#ff0000
+    style A2 stroke-dasharray: 5 5
+```
+
 ```text
 BRUTEFORCEMOTIFSEARCH(DNA, t, n, l)
 1 bestMotif ← (1, 1, ..., 1)
@@ -97,6 +122,16 @@ BRUTEFORCEMOTIFSEARCH(DNA, t, n, l)
 
 基因组重排问题：给定两个基因排列，求最短的反转序列将一个变为另一个。
 
+### 视觉化直觉：贪心选择
+
+```mermaid
+graph LR
+    S1[6 1 2 3 4 5] --"反转 [1,5]"--> S2[5 4 3 2 1 6]
+    S2 --"反转 [1,5]"--> S3[1 2 3 4 5 6]
+    
+    style S3 fill:#e1f5fe,stroke:#01579b
+```
+
 ```text
 SIMPLEREVERSALSORT(π)
 1 for i ← 1 to n - 1
@@ -135,6 +170,23 @@ SIMPLEREVERSALSORT(π)
 ### 曼哈顿游客问题（Manhattan Tourist Problem）
 
 在加权网格中寻找从起点到终点的最长路径：
+
+### 视觉化直觉：子问题重叠与网格路径
+
+```mermaid
+grid-layout
+    [ (0,0) ] -- 1 --> [ (0,1) ] -- 3 --> [ (0,2) ]
+      |                |                |
+      2                4                1
+      v                v                v
+    [ (1,0) ] -- 2 --> [ (1,1) ] -- 5 --> [ (1,2) ]
+      |                |                |
+      3                1                2
+      v                v                v
+    [ (2,0) ] -- 4 --> [ (2,1) ] -- 1 --> [ (2,2) ]
+```
+
+*注：动态规划通过填充得分矩阵，利用 $s[i,j] = \max(s[i-1,j] + \text{down}, s[i,j-1] + \text{right})$ 递推求解。*
 
 ```text
 MANHATTANTOURIST(n, m, down, right)
@@ -180,6 +232,25 @@ D(i,j) = min {
 ### 核心思想
 
 **分解** → **解决** → **合并**：将问题拆分成相互独立的子问题，递归求解后合并结果。
+
+### 视觉化直觉：分治树
+
+```mermaid
+graph TD
+    P[大规模问题] --> P1[子问题 A]
+    P --> P2[子问题 B]
+    
+    P1 --> P11[原子问题 A1]
+    P1 --> P12[原子问题 A2]
+    
+    P2 --> P21[原子问题 B1]
+    P2 --> P22[原子问题 B2]
+    
+    P11 & P12 --> |合并| R1[子结果 A]
+    P21 & P22 --> |合并| R2[子结果 B]
+    
+    R1 & R2 --> |合并| Final[最终解]
+```
 
 ### 序列比对的空间优化
 

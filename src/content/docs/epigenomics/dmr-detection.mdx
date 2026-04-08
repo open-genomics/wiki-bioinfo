@@ -39,6 +39,26 @@ DNA 甲基化测序（如 WGBS、RRBS）可以在单碱基分辨率检测每个 
 
 ### 算法要解决的核心问题
 
+```mermaid
+graph TD
+    Input["甲基化数据 (C/T Reads)"] --> PerSite["单位点差异检验"]
+PerSite --> Region["区域推断 (Region Inference)"]
+    Region --> Filter["显著性/差异阈值过滤"]
+    Filter --> DMR["最终 DMR 列表"]
+
+    subgraph "核心策略"
+    Strategy1["滑动窗口 (Sliding Window)"]
+    Strategy2["平滑算法 (Smoothing)"]
+    Strategy3["分段常数 (Change-point)"]
+    end
+
+    Region --- Strategy1
+    Region --- Strategy2
+    Region --- Strategy3
+
+    style DMR fill:#f9f,stroke:#333,stroke-width:2px
+```
+
 给定两个条件（如肿瘤 vs. 正常）的甲基化测序数据，DMR 检测算法回答：
 
 > 基因组上哪些连续区域的甲基化状态在两条件间存在显著差异？

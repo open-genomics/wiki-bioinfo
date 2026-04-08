@@ -9,6 +9,8 @@ interface Props {
   rows: MatrixRow[];
 }
 
+import { Icon } from '@astrojs/starlight/components';
+
 const { rows } = Astro.props;
 ---
 
@@ -16,7 +18,7 @@ const { rows } = Astro.props;
   <table class="comparison-table">
     <thead>
       <tr>
-        <th>场景</th>
+        <th><Icon name="puzzle" size="1rem" /> 场景</th>
         <th>推荐选择</th>
         <th>原因</th>
       </tr>

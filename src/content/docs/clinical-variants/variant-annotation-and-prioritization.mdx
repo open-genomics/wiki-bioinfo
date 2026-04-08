@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
+import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 
 
 <SummaryBox
@@ -15,6 +17,39 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '多维证据框架优于单一分数：频率过滤、功能评估、遗传模式匹配、表型一致性需综合权衡',
     '罕见性是必要条件而非充分条件：绝大多数罕见变异仍是良性或意义不明',
     '优先级排序是连接原始数据与临床解释的桥梁，为 ACMG 分类提供高质量候选集',
+  ]}
+/>
+
+## 变异筛选的“漏斗”模型
+
+从数万个原始变异到最终的致病变异，是一个层层筛选的过程：
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '质量与频率过滤',
+      description: '排除测序质量差或在群体数据库（gnomAD）中高频出现的变异。',
+      badge: '第一步：粗筛',
+      hint: '这是最高效的排除步骤。'
+    },
+    {
+      title: '功能影响评估',
+      description: '识别 LoF 变异，或使用 CADD/REVEL 等工具预测 missense 变异的破坏性。',
+      badge: '第二步：精筛',
+      hint: '关注变异对蛋白结构的潜在影响。'
+    },
+    {
+      title: '遗传模式与家系验证',
+      description: '根据常显/常隐模式筛选，并验证变异是否与家系成员表型共分离。',
+      badge: '第三步：验证',
+      hint: 'de novo 变异是关键线索。'
+    },
+    {
+      title: '表型匹配度分析',
+      description: '评估变异基因的已知功能是否能解释患者当前的 HPO 表型。',
+      badge: '第四步：临床关联',
+      hint: '这是决定致病性的核心依据。'
+    }
   ]}
 />
 
@@ -257,11 +292,36 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 | 1 | 基因A frameshift | PVS1 + PS2 + PM2 + PP3 + ClinVar Pathogenic | Pathogenic |
 | 2 | 其他候选 | 证据不足或冲突 | VUS 或 Benign |
 
+### 临床优先级的决策矩阵
+
+在面对多个候选变异时，可以参考以下决策逻辑进行排序：
+
+<DecisionMatrix
+  rows={[
+    {
+      scenario: '已知致病基因 + 高匹配表型 + LoF 变异',
+      recommendation: '最高优先级',
+      rationale: '证据链条完整，极大概率为致病变异。'
+    },
+    {
+      scenario: 'de novo 变异 + 神经发育表型 + 功能预测有害',
+      recommendation: '高优先级',
+      rationale: '即使是非 LoF 变异，新发突变在神经系统疾病中意义重大。'
+    },
+    {
+      scenario: '罕见 missense + 弱表型相关基因 + 预测良性',
+      recommendation: '低优先级/VUS',
+      rationale: '缺乏核心证据支持致病性，需更多家系或实验数据。'
+    }
+  ]}
+/>
+
+---
+
 ### 关键决策点说明
 
 1. **为什么频率过滤是第一步？**
    - 频率是最快、最可靠的排除标准。gnomAD 的 25 万样本量使得频率数据非常可靠，远高于任何预测工具。
-   - 0.1% 的频率在常显遗传病中几乎不可能致病（假设疾病发病率 < 1/10000）。
 
 2. **为什么 frameshift 比 missense 优先级高？**
    - frameshift 是 loss-of-function，如果基因已知通过 LoF 致病，这是机制层面的确定性。

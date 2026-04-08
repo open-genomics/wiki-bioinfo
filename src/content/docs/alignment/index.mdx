@@ -126,6 +126,31 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   ]}
 />
 
+## 视觉化：如何选择比对算法？
+
+```mermaid
+graph TD
+    Start[开始] --> Q1{两条序列长度是否接近?}
+    Q1 -- 是 --> Q2{是否需要全长对齐?}
+    Q1 -- 否 --> Local[Smith-Waterman / 局部比对]
+    
+    Q2 -- 是 --> Global[Needleman-Wunsch / 全局比对]
+    Q2 -- 否 --> Q3{是否允许一端或两端自由?}
+    
+    Q3 -- 是 --> Semi[半全局比对 / Semi-global]
+    Q3 -- 否 --> Local
+    
+    subgraph Algorithms[算法选择建议]
+    Global
+    Local
+    Semi
+    end
+    
+    style Global fill:#f9f,stroke:#333
+    style Local fill:#dfd,stroke:#333
+    style Semi fill:#fff,stroke:#333
+```
+
 ## 视觉化：alignment 方法与 mapper 技术栈
 
 <figure>

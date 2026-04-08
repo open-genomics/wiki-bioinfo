@@ -21,3 +21,8 @@ yarn-error.log*
 # Local Claude Code metadata
 # Includes transient agent worktrees under .claude/worktrees/
 .claude/
+
+# Font files (copyright protected, users should download and convert themselves)
+/public/fonts/*.woff
+/public/fonts/*.woff2
+!/public/fonts/README.md

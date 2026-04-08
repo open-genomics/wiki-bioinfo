@@ -1,0 +1,69 @@
+---
+description: 蛋白质定量方法：Label-free、TMT/iTRAQ 等标记策略与差异蛋白统计分析。
+title: "定量蛋白质组学"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="定量蛋白质组学旨在比较不同生物条件下蛋白质的相对或绝对丰度。通过质谱技术，我们可以捕捉细胞在不同状态下蛋白水平的动态变化，这是理解生命过程的关键。"
+  bullets={[
+    '掌握 Label-free（无标记）定量的原理：峰面积与谱图计数',
+    '理解同位素标记策略（SILAC, TMT/iTRAQ）如何消除实验误差',
+    '掌握差异蛋白分析中的统计检验与 FDR 校正逻辑',
+    '认识“缺失值”与“比例压缩”对定量准确性的挑战'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '质谱基础', href: '/wiki-bioinfo/proteomics/mass-spectrometry-basics' },
+    { name: '数据库搜索与 FDR', href: '/wiki-bioinfo/proteomics/database-search-and-fdr' }
+  ]}
+/>
+
+## 1. 为什么蛋白质定量如此困难？
+
+与转录组相比，蛋白质定量面临更高的技术门槛：
+- **无扩增机制**：蛋白质不能像 DNA 那样通过 PCR 扩增，低丰度蛋白极难检测。
+- **巨大的动态范围**：血液中白蛋白与细胞因子之间的浓度差异可达 10^10 倍。
+- **缺失值 (Missing Values)**：由于质谱采样的随机性，同一个蛋白在样本 A 中被测到，在样本 B 中可能完全没有信号。
+
+## 2. 定量策略分类
+
+### 无标记定量 (Label-free)
+直接比较不同批次运行产生的质谱信号。
+- **依据**：MS1 提取离子色谱图 (XIC) 的峰面积，或鉴定到的二级谱图数量 (Spectral Counting)。
+- **优点**：操作简单，适合大规模样本。
+- **挑战**：对实验平行性要求极高，需要复杂的色谱对齐算法。
+
+### 同位素标记定量 (Isotopic Labeling)
+利用稳定同位素（如 $^{13}C, ^{15}N$）产生的质量偏移，将多个样本混合在同一次运行中。
+- **SILAC (代谢标记)**：在培养基中加入“重”氨基酸，使蛋白在合成时被标记。精度最高，但仅限细胞培养。
+- **TMT/iTRAQ (化学标记)**：在肽段水平通过化学反应挂上不同质量的标签。支持多路复用（如一次混合 16 个样本），效率极高。
+
+## 3. 从肽段到蛋白质：数据汇总
+
+由于我们实际测量的是肽段，最终需要将多个肽段的定量值汇总为蛋白丰度：
+- **独特肽段 (Unique Peptides)**：只属于一个蛋白的肽段，是最可靠的证据。
+- **共享肽段 (Shared Peptides)**：属于同源蛋白家族的肽段。通常采用“剃刀原则” (Razor Peptides) 分配，即分配给最可能存在的那个蛋白。
+
+## 4. 差异分析与统计显著性
+
+确定哪些蛋白发生了显著变化，需要结合：
+1.  **倍数变化 (Fold Change)**：丰度差异的绝对大小。
+2.  **统计检验 (P-value)**：判断这种差异是否由于随机误差引起。
+3.  **多重检验校正 (FDR)**：利用 Benjamini-Hochberg 等方法校正大规模检验带来的假阳性。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '数据库搜索与 FDR', to: '/wiki-bioinfo/proteomics/database-search-and-fdr', description: '蛋白鉴定的统计基础' },
+    { title: '质谱基础', to: '/wiki-bioinfo/proteomics/mass-spectrometry-basics', description: '理解 MS1/MS2 数据来源' },
+    { title: '差异表达分析', to: '/wiki-bioinfo/transcriptomics/differential-expression', description: '通用的组学统计逻辑' }
+  ]}
+/>

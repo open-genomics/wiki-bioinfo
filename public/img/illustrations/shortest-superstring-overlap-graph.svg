@@ -1,0 +1,54 @@
+<svg width="800" height="400" viewBox="0 0 800 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="800" height="400" fill="#ffffff" />
+  
+  <!-- Strings -->
+  <g transform="translate(100, 100)">
+    <!-- Nodes -->
+    <circle cx="0" cy="0" r="40" fill="#4A90E2" stroke="#333" stroke-width="2" />
+    <text x="0" y="5" font-family="Courier" font-size="14" font-weight="bold" fill="white" text-anchor="middle">ABC</text>
+    
+    <circle cx="200" cy="0" r="40" fill="#4A90E2" stroke="#333" stroke-width="2" />
+    <text x="200" y="5" font-family="Courier" font-size="14" font-weight="bold" fill="white" text-anchor="middle">BCD</text>
+    
+    <circle cx="400" cy="0" r="40" fill="#4A90E2" stroke="#333" stroke-width="2" />
+    <text x="400" y="5" font-family="Courier" font-size="14" font-weight="bold" fill="white" text-anchor="middle">CDE</text>
+    
+    <circle cx="200" cy="150" r="40" fill="#4A90E2" stroke="#333" stroke-width="2" />
+    <text x="200" y="155" font-family="Courier" font-size="14" font-weight="bold" fill="white" text-anchor="middle">DEA</text>
+
+    <!-- Edges with Overlap Weights -->
+    <!-- ABC -> BCD -->
+    <path d="M 40 0 L 160 0" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <text x="100" y="-10" font-family="Arial" font-size="12" fill="#E67E22" font-weight="bold" text-anchor="middle">2 (BC)</text>
+    
+    <!-- BCD -> CDE -->
+    <path d="M 240 0 L 360 0" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <text x="300" y="-10" font-family="Arial" font-size="12" fill="#E67E22" font-weight="bold" text-anchor="middle">2 (CD)</text>
+    
+    <!-- CDE -> DEA -->
+    <path d="M 370 30 L 230 130" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <text x="310" y="80" font-family="Arial" font-size="12" fill="#E67E22" font-weight="bold" text-anchor="middle">2 (DE)</text>
+    
+    <!-- DEA -> ABC -->
+    <path d="M 170 130 L 30 30" stroke="#333" stroke-width="2" marker-end="url(#arrowhead)" />
+    <text x="90" y="80" font-family="Arial" font-size="12" fill="#E67E22" font-weight="bold" text-anchor="middle">1 (A)</text>
+  </g>
+
+  <!-- Legend -->
+  <g transform="translate(550, 100)">
+    <rect x="0" y="0" width="200" height="100" fill="#f9f9f9" stroke="#ddd" rx="5" />
+    <text x="10" y="25" font-family="Arial" font-size="14" font-weight="bold" fill="#333">图例说明:</text>
+    <circle cx="25" cy="50" r="10" fill="#4A90E2" />
+    <text x="45" y="55" font-family="Arial" font-size="12" fill="#666">节点: 字符串片段</text>
+    <line x1="15" y1="80" x2="35" y2="80" stroke="#333" stroke-width="2" />
+    <text x="45" y="85" font-family="Arial" font-size="12" fill="#666">边: 重叠长度 (重叠字符)</text>
+  </g>
+
+  <!-- Defs -->
+  <defs>
+    <marker id="arrowhead" markerWidth="10" markerHeight="7" refX="0" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#333" />
+    </marker>
+  </defs>
+</svg>

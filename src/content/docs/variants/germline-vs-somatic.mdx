@@ -1,0 +1,74 @@
+---
+description: 胚系变异（Germline）与体细胞变异（Somatic）检测的差异、分析设计及其统计学背后的等位基因频率 (VAF) 直觉。
+title: "胚系变异与体细胞变异"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="区分变异的生物学来源对于选择正确的算法模型至关重要。胚系变异遵循孟德尔遗传规律，而体细胞变异则受克隆进化、肿瘤纯度和拷贝数变化的复杂驱动。"
+  bullets={[
+    '掌握 Germline 变异的合子型（Zygosity）与种群频率背景',
+    '掌握 Somatic 变异检测中的 VAF (Variant Allele Frequency) 统计直觉',
+    '理解“肿瘤-正常配对”设计在过滤胚系背景中的核心作用',
+    '认识克隆异质性（Heterogeneity）对突变频率分布的影响'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '变异检测总览', href: '/wiki-bioinfo/variants/variant-calling-overview' },
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' }
+  ]}
+/>
+
+## 1. 变异来源的二元划分
+
+| 特征 | Germline Variants (胚系变异) | Somatic Variants (体细胞变异) |
+| :--- | :--- | :--- |
+| **起源** | 遗传自父母，存在于受精卵中。 | 后天获得，由体细胞分裂错误引起。 |
+| **分布** | 存在于全身几乎所有细胞。 | 仅局限于特定的病变组织或细胞克隆。 |
+| **遗传性** | 可传递给后代。 | 不遗传。 |
+| **检测目标** | 遗传病诊断、单倍型分析。 | 癌症驱动基因识别、克隆演化研究。 |
+
+## 2. 统计直觉：VAF 告诉我们什么？
+
+**变异等位基因频率 (Variant Allele Frequency, VAF)** 是区分两者的关键指标。
+
+### Germline 的“确定性”
+在正常的二倍体生物中，胚系变异的 VAF 通常呈现“全或半”的特征：
+- **杂合 (Heterozygous)**：VAF $\approx 0.5$（理论上来自两条染色体中的一条）。
+- **纯合 (Homozygous)**：VAF $\approx 1.0$。
+- **算法逻辑**：如果一个位点的 VAF 偏离 0.5 或 1.0 太多，算法通常会将其视为测序错误或噪音。
+
+### Somatic 的“波动性”
+在肿瘤样本中，VAF 受到多种因素的剧烈干扰：
+$$VAF \approx \text{Purity} \times \text{Clone Fraction} \times \frac{\text{Local Copy Number}}{\text{Total Depth}}$$
+- **肿瘤纯度 (Purity)**：样本中混入了多少正常基质细胞。
+- **亚克隆 (Subclones)**：并非所有癌细胞都携带该突变。
+- **拷贝数 (CNV)**：变异位点可能发生了扩增或缺失。
+- **算法逻辑**：Somatic Caller（如 Mutect2）必须能够识别极低频率（甚至 $1\%$）的信号，并利用 **Panel of Normals (PON)** 来排除系统性的噪音。
+
+## 3. 分析设计：为什么要“配对”？
+
+为了精准识别体细胞变异，标准的做法是 **Tumor-Normal Pair**。
+- **逻辑**：将患者肿瘤组织的测序数据与同一人的外周血（正常对照）进行比对。
+- **过滤**：所有在正常对照中出现的变异都被标记为 Germline 变异并剔除，剩余的才是该患者特有的 Somatic 突变。
+
+## 4. 临床报告差异
+
+- **Germline**：参考 **ACMG 指南**，关注变异的致病性与家族遗传风险。
+- **Somatic**：关注 **AMP/ASCO 分级**，评估突变是否具有可药物靶向性（如 EGFR 突变）或预后意义。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '变异分析的标准管线' },
+    { title: 'Small Variants 与 SV', to: '/wiki-bioinfo/variants/small-variants-vs-sv', description: '变异尺度的算法区分' },
+    { title: '变异过滤与质控', to: '/wiki-bioinfo/variants/variant-filtering', description: '如何处理测序噪音' }
+  ]}
+/>

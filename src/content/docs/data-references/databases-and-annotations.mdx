@@ -59,6 +59,40 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 先分清你在查哪一类资源族
 
+### 视觉化直觉：核心生物学对象与数据库映射
+
+```mermaid
+graph TD
+    subgraph "注释层 (Annotation)"
+    GENE[Gene: 基因] --- TRANSCRIPT[Transcript: 转录本]
+    TRANSCRIPT --- EXON[Exon: 外显子]
+    end
+    
+    subgraph "变异层 (Variant)"
+    VAR[Variant: 位点/等位基因] --- FREQ[Frequency: 群体频率]
+    VAR --- CLIN[Clinical: 临床意义]
+    end
+    
+    subgraph "蛋白层 (Protein)"
+    PROT[Protein: 蛋白质] --- DOMAIN[Domain: 结构域]
+    PROT --- PATH[Pathway: 通路]
+    end
+    
+    TRANSCRIPT -->|翻译| PROT
+    VAR -->|影响| TRANSCRIPT
+    VAR -->|定位| EXON
+    
+    Ensembl[Ensembl / GENCODE] -.-> GENE
+    RefSeq[RefSeq] -.-> TRANSCRIPT
+    gnomAD[gnomAD] -.-> FREQ
+    ClinVar[ClinVar] -.-> CLIN
+    UniProt[UniProt] -.-> PROT
+    
+    style Ensembl fill:#e1f5fe,stroke:#01579b
+    style gnomAD fill:#e8f5e9,stroke:#2e7d32
+    style UniProt fill:#fff3e0,stroke:#ef6c00
+```
+
 <ComparisonTable
   leftTitle="中心对象"
   rightTitle="代表资源"

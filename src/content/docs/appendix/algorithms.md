@@ -24,7 +24,47 @@ title: "算法基础"
 - **问题诊断**：当分析流程出现问题时，算法知识帮助定位问题来源；
 - **方法创新**：在现有工具无法满足需求时，算法知识是开发新方法的基础。
 
-## 核心算法类别
+### 核心算法类别
+
+为了直观理解算法范式与生物学问题的关系，我们可以参考下图：
+
+```mermaid
+graph TD
+    BioProb[生物学问题] --> SeqAnal[序列分析]
+    BioProb --> Structural[结构与功能预测]
+    BioProb --> Evolution[进化推断]
+
+    SeqAnal --> StrAlgo[字符串算法]
+    SeqAnal --> GraphAlgo[图算法]
+    
+    Evolution --> TreeAlgo[树与聚类算法]
+    
+    StrAlgo --> DP[动态规划: 比对/搜索]
+    StrAlgo --> Indexing[索引结构: BWT/FM-index]
+    
+    GraphAlgo --> Assembly[组装: de Bruijn 图]
+    GraphAlgo --> Network[网络分析: 信号通路]
+    
+    TreeAlgo --> NJ[邻接法/UPGMA]
+    TreeAlgo --> Parsimony[简约法]
+    
+    ProbModel[概率模型: HMM/EM] -.-> SeqAnal
+    ProbModel -.-> Evolution
+    ML[机器学习: CNN/Transformer] -.-> Structural
+```
+
+### 算法复杂度速查
+
+不同复杂度随数据规模增长的直观对比：
+
+| 复杂度 | 名称 | 基因组规模 (n=10⁹) 时的可行性 | 典型例子 |
+| :--- | :--- | :--- | :--- |
+| **O(1)** | 常数 | 极快 | 散列表查询 |
+| **O(log n)** | 对数 | 极快 | 二分搜索、FM-index 查询 |
+| **O(n)** | 线性 | 可行 | 序列扫描、KMP 匹配 |
+| **O(n log n)** | 线性对数 | 可行 | 排序、后缀数组构建 |
+| **O(n²)** | 平方 | **不可行** | 原始 NW/SW 全局比对 |
+| **O(2ⁿ)** | 指数 | **仅限极小数据** | 穷举搜索、哈密顿路径 |
 
 ### 字符串算法
 

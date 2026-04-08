@@ -1,0 +1,86 @@
+---
+title: "仿射 Gap 罚分 (Affine Gap Penalty)"
+description: 比对打分中极其重要的改进：将 Gap 代价拆分为开启与延长两部分，更符合生物学演化直觉。
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="在简单的线性罚分模型中，每个 Gap 字符代价相同。但在生物学中，一次连续的插入或缺失（Indel）事件比多个离散事件更易发生。仿射 Gap 罚分通过区分“开启”和“延长”代价，完美解决了这一直觉问题。"
+  bullets={[
+    '掌握仿射罚分公式：$g(k) = g_o + k \cdot g_e$',
+    '理解为什么开启罚分（Gap Open）通常远大于延长罚分（Gap Extend）',
+    '掌握三矩阵动态规划（M, I, D）的状态转移逻辑',
+    '对比线性罚分与仿射罚分在实际比对结果中的差异'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '全局比对与局部比对', href: '/wiki-bioinfo/alignment/global-local' },
+    { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
+  ]}
+/>
+
+## 1. 核心数学模型
+
+仿射 Gap 代价函数定义为：
+$$g(k) = \rho + k \cdot \sigma$$
+其中：
+- **$\rho$ (Gap Opening Penalty)**：开启一个新 Gap 的固定代价。
+- **$\sigma$ (Gap Extension Penalty)**：每增加一个碱基的额外代价。
+- **$k$**：Gap 的长度。
+
+**直觉**：由于 $\rho \gg \sigma$，算法会倾向于让 Gap 尽量连续，而不是在序列中到处乱开小坑。
+
+## 2. 状态转移：三矩阵模型
+
+引入仿射罚分后，简单的二维 DP 矩阵已无法区分“当前是否处于 Gap 中”。我们需要维护三个平行的矩阵：
+
+<DefinitionList
+  items={[
+    {
+      term: '矩阵 $M_{i,j}$',
+      definition: '表示 $x_i$ 与 $y_j$ 对齐（匹配或错配）时的最高得分。',
+    },
+    {
+      term: '矩阵 $I_{i,j}$',
+      definition: '表示比对以 $y_j$ 处的插入（对 $x$ 而言是 Gap）结尾时的最高得分。',
+    },
+    {
+      term: '矩阵 $D_{i,j}$',
+      definition: '表示比对以 $x_i$ 处的删除（对 $y$ 而言是 Gap）结尾时的最高得分。',
+    },
+  ]}
+/>
+
+### 递推公式
+$$
+\begin{aligned}
+  M_{i,j} &= s(x_i, y_j) + \max \{ M_{i-1,j-1}, I_{i-1,j-1}, D_{i-1,j-1} \} \\
+  I_{i,j} &= \max \{ M_{i,j-1} - (\rho + \sigma), I_{i,j-1} - \sigma, D_{i,j-1} - (\rho + \sigma) \} \\
+  D_{i,j} &= \max \{ M_{i-1,j} - (\rho + \sigma), D_{i-1,j} - \sigma, I_{i-1,j} - (\rho + \sigma) \}
+\end{aligned}
+$$
+
+- **状态解释**：从 $M$ 转移到 $I$ 或 $D$ 需要支付“开启+延长”总代价；而从 $I$ 继续留在 $I$（或 $D$ 到 $D$）只需支付低廉的延长代价 $\sigma$。
+
+## 3. 生物学意义
+
+仿射罚分模型是现代生物信息学工具（如 BWA, BLAST, ClustalW）的标准配置。它能更准确地识别：
+- **同源蛋白中的保守结构域**。
+- **基因组重排或大型 Indel 事件**。
+- **cDNA 与基因组比对中的长内含子跳跃**。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '打分矩阵', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '理解替换得分的由来' },
+    { title: 'Gotoh 算法', to: '/wiki-bioinfo/alignment/gotoh', description: '仿射罚分的 $O(nm)$ 高效实现' },
+    { title: '全局比对', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '基础比对框架' }
+  ]}
+/>

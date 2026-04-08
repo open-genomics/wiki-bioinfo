@@ -1,8 +1,15 @@
 ---
 import StarlightHead from '@astrojs/starlight/components/Head.astro';
+const base = import.meta.env.BASE_URL;
 ---
 
-<StarlightHead {...Astro.props}><slot /></StarlightHead>
+<StarlightHead {...Astro.props}>
+  <slot />
+</StarlightHead>
+
+<!-- Preload critical fonts for better performance -->
+<link rel="preload" href={`${base}fonts/resource-han-rounded-cn-regular.woff2`} as="font" type="font/woff2" crossorigin>
+<link rel="preload" href={`${base}fonts/code-new-roman.woff2`} as="font" type="font/woff2" crossorigin>
 
 <script>
   interface ReadingProgressState {

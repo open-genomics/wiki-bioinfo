@@ -496,7 +496,18 @@ D [ 9  10   8   0 ]
 
 ## 相关页面
 
-- [de Bruijn graph 组装](../assembly/de-bruijn.md)
+- **视觉化构建逻辑**：
+
+1.  **节点拆分**：将每个长度为 $k$ 的序列 (k-mer) 视为连接两个 $(k-1)$-mer 的“边”。
+2.  **图合并**：由于节点是长度为 $k-1$ 的重叠前缀/后缀，相同的子串会自动塌陷为同一个节点。
+3.  **气泡 (Bubble) 产生**：当由于测序错误或 SNP 导致序列在中间位置出现微小差异时，图上会形成“闭合回路”，即气泡。
+4.  **死胡同 (Tip)**：测序末端的错误通常表现为从主路径分叉出的短枝条。
+
+**组装流程的视觉隐喻**：
+*   **de Bruijn Graph**：像拼图游戏，通过局部的边缘匹配（重叠 $k-1$）还原全局图案。
+*   **OLC (Overlap-Layout-Consensus)**：像通过长线段的重叠部分，将它们排列组合成最长的连续支架 (Scaffold)。
+
+详见：[de Bruijn graph 组装](../assembly/de-bruijn.md)
 - [OLC 组装](../assembly/olc.md)
 - [系统发育与进化](../phylogeny/index.md)
 - [算法总览](./algorithms-overview.md)

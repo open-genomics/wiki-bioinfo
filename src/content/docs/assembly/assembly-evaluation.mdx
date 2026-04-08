@@ -146,6 +146,11 @@ N50 很容易被误用。它能反映片段长度分布，但不能保证：
 
 #### N50 与 L50
 
+<figure>
+  <img src="/wiki-bioinfo/img/illustrations/assembly-n50-l50.svg" alt="N50 与 L50 指标示意图" />
+  <figcaption>N50 与 L50 的定义：将 contig 按长度降序排列，累计长度达到总长度 50% 时，当前 contig 的长度即为 N50，而所用的 contig 数量即为 L50。</figcaption>
+</figure>
+
 **定义**：
 - N50：将 contig 按长度从长到短排序后，使得累计长度达到总长度 50% 的最短 contig 长度
 - L50：达到 N50 所需的 contig 数量

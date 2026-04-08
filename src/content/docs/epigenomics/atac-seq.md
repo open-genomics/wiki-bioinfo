@@ -18,7 +18,19 @@ title: "ATAC-seq"
 
 ### ATAC-seq 的核心思想
 
-ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）由 Buenrostro 等人在 2013 年提出。它利用了**Tn5 转座酶**的特性：
+```mermaid
+graph LR
+    Tn5["Tn5 转座酶 (已装载接头)"] -- "偏好插入" --> Open["开放染色质 (无核小体)"]
+    Tn5 -- "被阻挡" --> Closed["紧密染色质 (有核小体)"]
+    Open --> Cut["切割 DNA 并连接接头"]
+    Cut --> Library["文库 DNA (准备测序)"]
+
+    style Open fill:#e1f5fe,stroke:#01579b
+    style Closed fill:#ffebee,stroke:#b71c1c
+```
+
+ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）由 Buenrostro 等人在 2013 年提出。
+它利用了**Tn5 转座酶**的特性：
 
 > Tn5 转座酶倾向于插入到无核小体的开放染色质区域，同时在插入过程中自动完成测序接头的连接。
 
@@ -35,7 +47,26 @@ ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）由 Bue
 
 ### 插入片段长度分布的生物学含义
 
-ATAC-seq 的一个独特优势是：插入片段长度本身携带了染色质结构信息。当 Tn5 转座酶切割开放染色质时，片段长度由以下因素决定：
+```mermaid
+graph TD
+    Fragment["ATAC-seq 片段"] --> NFR["无核小体片段 (NFR)"]
+    Fragment --> Mono["单核小体片段"]
+    Fragment --> Multi["多核小体片段"]
+
+    NFR --> NFR_Size["< 100 bp"]
+    Mono --> Mono_Size["~ 200 bp"]
+    Multi --> Multi_Size["> 400 bp"]
+
+    NFR_Size --> NFR_Bio["反映转录因子结合位点"]
+    Mono_Size --> Mono_Bio["反映核小体占据位置"]
+
+    style NFR fill:#c8e6c9,stroke:#2e7d32
+    style Mono fill:#fff9c4,stroke:#fbc02d
+    style Multi fill:#ffccbc,stroke:#d84315
+```
+
+ATAC-seq 的一个独特优势是：
+插入片段长度本身携带了染色质结构信息。当 Tn5 转座酶切割开放染色质时，片段长度由以下因素决定：
 
 - **片段 < 100 bp**：对应无核小体的开放区域，通常是转录因子结合位点或调控元件
 - **片段 ~180 bp**：对应单个核小体保护的区域，即有一个核小体占据该位点

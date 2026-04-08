@@ -11,6 +11,8 @@ interface Props {
   rows: ComparisonRow[];
 }
 
+import { Icon } from '@astrojs/starlight/components';
+
 const { leftTitle, rightTitle, rows } = Astro.props;
 ---
 
@@ -18,7 +20,7 @@ const { leftTitle, rightTitle, rows } = Astro.props;
   <table class="comparison-table">
     <thead>
       <tr>
-        <th>维度</th>
+        <th><Icon name="list-format" size="1rem" /> 维度</th>
         <th>{leftTitle}</th>
         <th>{rightTitle}</th>
       </tr>

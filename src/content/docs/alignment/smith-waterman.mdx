@@ -73,7 +73,21 @@ H[i][j-1] + g & \text{在 Y 中插入 gap（插入 } y_j \text{）}
 \end{cases}
 $$
 
-**关键区别**：与 Needleman-Wunsch 相比，Smith-Waterman 多了一个选项 `0`，表示如果当前前缀对齐已经不值得继续，就直接从这里重新开始。
+### 递推直觉：允许“止损”
+```mermaid
+graph TD
+    subgraph DP_Step_SW[Smith-Waterman 的决策]
+    Zero(0) -->|止损/重新开始| Current(H[i][j])
+    PrevDiag(H[i-1][j-1]) -->|"+s(xi, yj)"| Current
+    PrevUp(H[i-1][j]) -->|"+g"| Current
+    PrevLeft(H[i][j-1]) -->|"+g"| Current
+    end
+    
+    style Zero fill:#fff,stroke:#333,stroke-dasharray: 5 5
+    style Current fill:#6fb,stroke:#333,stroke-width:4px
+```
+
+**关键区别**：与 Needleman-Wunsch 相比，Smith-Waterman 多了一个选项 `0`，表示如果当前前缀对齐已经不值得继续（得分跌破 0），就直接从这里重新开始。
 
 ### 最优得分位置
 
@@ -101,6 +115,15 @@ $$
 ### 步骤 4：回溯
 
 从 `(i_max, j_max)` 开始回溯，直到遇到 `H[i][j] = 0`：
+
+```mermaid
+graph BT
+    MaxStart((H_max)) -->|寻找来源| Step1[...]
+    Step1 -->|...| ZeroStop((遇到 0 停止))
+    
+    style MaxStart fill:#6fb,stroke:#333
+    style ZeroStop fill:#eee,stroke:#333,stroke-dasharray: 5 5
+```
 
 1. 比较三个可能的来源，确定当前单元格的值来自哪个方向：
    - 若 `H[i][j] = H[i-1][j-1] + s(x_i, y_j)`：`x_i` 与 `y_j` 对齐，移动到 `H[i-1][j-1]`

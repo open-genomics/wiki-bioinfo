@@ -555,7 +555,15 @@ FindRepeats(SA, LCP, min_length):
 
 ## 相关页面
 
-- [FM-index](../sequence/fm-index.mdx)
+- **直观理解 BWT 变换**：
+BWT 的魔力在于它能够将文本中“具有相似语境”的字符排列在一起。例如在英文中，所有出现在 `the` 后面的 `h` 会因为排序而聚集。在 DNA 中，所有出现在相同前缀后的碱基也会聚集，这为数据压缩提供了极高的比率。
+
+**FM-index 搜索逻辑图解**：
+*   **Backward Search (后向搜索)**：与人类习惯相反，它从模式串的最后一个字符开始往前搜。
+*   **LF-mapping**：这是索引的“导航仪”，它告诉我们：BWT 中第 $i$ 个字符 $c$，在排序后的第一列（所有后缀的开头）对应的位置是哪里。
+*   **跳跃搜索**：通过简单的数组查表（C 数组和 Occ 数组），它能在常数时间内将搜索范围缩小，而不需要扫描基因组。
+
+详见：[FM-index 深度解析](../sequence/fm-index.mdx)
 - [BWA 与 minimap2](../alignment/bwa-minimap2.md)
 - [序列表示与索引](../sequence/index.md)
 - [算法总览](./algorithms-overview.md)

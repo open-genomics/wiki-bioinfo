@@ -76,6 +76,22 @@ F[i][j-1] + g & \text{在 Y 中插入 gap（插入 } y_j \text{）}
 \end{cases}
 $$
 
+### 递推直觉图解
+```mermaid
+graph TD
+    subgraph DP_Step[当前单元格 F[i][j] 的来源]
+    PrevDiag(F[i-1][j-1]) -->|"+s(xi, yj)"| Current(F[i][j])
+    PrevUp(F[i-1][j]) -->|"+g"| Current
+    PrevLeft(F[i][j-1]) -->|"+g"| Current
+    end
+    
+    PrevDiag -.->|对角线| Current
+    PrevUp -.->|垂直| Current
+    PrevLeft -.->|水平| Current
+
+    style Current fill:#f96,stroke:#333,stroke-width:4px
+```
+
 这个递推体现了动态规划的核心思想：当前位置的最优解来自三个更小子问题中的最优选择。
 
 ## 算法步骤
@@ -92,6 +108,19 @@ $$
 ### 步骤 3：回溯得到比对
 
 从 `F[m][n]` 开始，回溯到 `F[0][0]`：
+
+```mermaid
+graph BT
+    End((F[m][n])) -->|寻找来源| Step1[...]
+    Step1 -->|...| Start((F[0][0]))
+    
+    subgraph Backtrack_Logic[回溯逻辑]
+    Direction{哪个方向?}
+    Direction -->|对角线| Match[匹配/替换]
+    Direction -->|上方| GapX[X序列Gap]
+    Direction -->|左方| GapY[Y序列Gap]
+    end
+```
 
 1. 如果 `F[i][j]` 来自 `F[i-1][j-1] + s(x_i, y_j)`：
    - 将 `x_i` 和 `y_j` 对齐

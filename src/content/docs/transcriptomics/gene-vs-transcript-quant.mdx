@@ -1,0 +1,75 @@
+---
+description: 基因层（Gene-level）与转录本层（Transcript-level）表达定量的算法考量、聚合策略与层级选择逻辑。
+title: "基因层与转录本层表达定量"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="RNA-seq 定量可以在两个维度进行：转录本层（Isoform-level）提供了精细的剪接信息，而基因层（Gene-level）则在统计上更稳健。理解这两者的转化逻辑是差异表达分析的关键。"
+  bullets={[
+    '区分转录本层定量的“高维度不确定性”与基因层聚合的“信息损失”',
+    '掌握从转录本到基因的聚合算法：简单求和与长度加权',
+    '理解 Isoform Switching（转录本切换）在基因层分析中的不可见性',
+    '掌握不同分析任务（如功能富集 vs. 剪接分析）对层级的要求'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'TPM、FPKM 与有效长度', href: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm' },
+    { name: '伪比对与定量算法', href: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification' }
+  ]}
+/>
+
+## 1. 定量的“解析度”之争
+
+### 转录本层 (Transcript-level)
+直接估计每个具体 Isoform 的表达量。
+- **优点**：能捕捉选择性剪接（Alternative Splicing）和转录本切换现象。
+- **挑战**：由于不同 Isoform 共享大量外显子，Reads 往往具有**多重比对 (Multi-mapping)** 性质，导致估计结果具有较高的方差。
+
+### 基因层 (Gene-level)
+将属于同一个基因的所有转录本信号合并处理。
+- **优点**：抵消了 Isoform 间分配的不确定性，统计灵敏度（Sensitivity）更高，且与 GO/KEGG 等基因功能数据库直接兼容。
+- **缺点**：掩盖了复杂的剪接变化（如基因总表达量不变但 Isoform 比例发生了变化）。
+
+## 2. 聚合算法 (Aggregation)
+
+如果已经获得了转录本层的定量值，可以通过以下方式转化为基因层：
+
+### 简单求和 (Sum Aggregation)
+对于 TPM 指标，由于已经校正过长度，可以直接求和：
+$$\text{TPM}_{Gene} = \sum \text{TPM}_{Isoform}$$
+
+### 长度校正聚合 (Length-corrected Aggregation)
+对于原始计数 (Counts)，不能简单相加（因为 Isoform 长度不同）。常用工具（如 `tximport`）采用：
+$$\text{Counts}_{Gene} = \sum \text{Counts}_{Isoform} \cdot \frac{\text{MeanLength}_{Gene}}{\text{Length}_{Isoform}}$$
+这保证了聚合后的基因计数仍能反映出原本的丰度比例。
+
+## 3. 分析策略指导
+
+| 场景 | 推荐层级 | 原因 |
+| :--- | :--- | :--- |
+| **标准差异表达分析** | **基因层** | 统计模型（DESeq2）更稳健，假阳性低。 |
+| **寻找新生物标志物** | **转录本层** | 有些癌症特异性标志物仅在特定 Isoform 上体现。 |
+| **功能通路分析** | **基因层** | 绝大多数数据库是以 Gene ID 为核心构建的。 |
+| **剪接调控研究** | **转录本层** | 必须区分不同的剪接变体。 |
+
+## 4. 常见误区
+
+- **先做基因层比对再定量**：直接把 Reads 比对到基因区间会由于忽略了剪接结构而导致严重的错误。正确的流程通常是：**比对到转录组/基因组 $\to$ 转录本层定量 $\to$ 聚合到基因层**。
+- **忽略 Isoform Switching**：如果一个基因的 Isoform A 减少而 Isoform B 增加，基因层的总表达量可能显示“无显著变化”，从而漏掉重要的生物学发现。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: 'TPM、FPKM 与有效长度', to: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm', description: '理解归一化的底层逻辑' },
+    { title: '伪比对与定量算法', to: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification', description: '如何分离不同转录本的信号' },
+    { title: '差异表达分析', to: '/wiki-bioinfo/transcriptomics/differential-expression', description: '在基因层实施统计检验' }
+  ]}
+/>

@@ -35,7 +35,12 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 ## 基础遍历算法
 
-### 深度优先搜索（DFS）
+### 深度优先搜索（DFS）与广度优先搜索（BFS）
+
+<figure>
+  <img src="/wiki-bioinfo/img/illustrations/graph-traversal-dfs-bfs.svg" alt="DFS 与 BFS 遍历过程示意图" />
+  <figcaption>DFS（深度优先）沿着一条路径走到黑再回溯，适合路径延伸；BFS（广度优先）逐层扩散，适合寻找最短路径和识别局部结构（如 Bubble）。</figcaption>
+</figure>
 
 <DefinitionList
   items={[

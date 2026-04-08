@@ -130,6 +130,43 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 一个典型流程里格式如何流动
 
+### 视觉化直觉：数据格式的层级演进
+
+```mermaid
+graph TD
+    subgraph "参考层 (Reference)"
+    FASTA[FASTA: 参考序列]
+    GTF[GTF/GFF: 功能注释]
+    end
+    
+    subgraph "观测层 (Observation)"
+    FASTQ[FASTQ: 原始 Reads + 质量]
+    end
+    
+    subgraph "定位层 (Alignment)"
+    BAM[BAM/SAM: 比对位置 + 差异]
+    end
+    
+    subgraph "变异层 (Variant)"
+    VCF[VCF: 变异位点 + 基因型]
+    end
+    
+    subgraph "定量层 (Quantification)"
+    MATRIX[表达矩阵 / 覆盖度表]
+    end
+    
+    FASTA & FASTQ -->|比对 (Alignment)| BAM
+    BAM & GTF -->|定量 (Quant)| MATRIX
+    BAM -->|变异检测 (Calling)| VCF
+    VCF & GTF -->|注释 (Annotation)| FINAL[功能解释结果]
+    
+    style FASTA fill:#f9f,stroke:#333
+    style FASTQ fill:#fff4dd,stroke:#d4a017
+    style BAM fill:#e1f5fe,stroke:#01579b
+    style VCF fill:#e8f5e9,stroke:#2e7d32
+    style MATRIX fill:#fff3e0,stroke:#ef6c00
+```
+
 <WorkflowSteps
   steps={[
     {

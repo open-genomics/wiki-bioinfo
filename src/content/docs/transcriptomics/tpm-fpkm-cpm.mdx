@@ -1,0 +1,81 @@
+---
+description: RNA-seq 表达量归一化的数学定义：CPM、FPKM、TPM 与有效长度的公式推导、算法逻辑与统计性质。
+title: "TPM、FPKM、CPM 与有效长度"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<SummaryBox
+  summary="RNA-seq 表达量归一化是消除测序深度和基因长度偏差、实现跨样本可比性的关键步骤。本节对比 CPM、FPKM、TPM 的归一化逻辑，并引入有效长度的概念。"
+  bullets={[
+    '掌握 counts 到 CPM/FPKM/TPM 的公式转换与数学本质',
+    '理解为什么 TPM 在跨样本比较中具有更好的统计性质',
+    '掌握有效长度 (Effective Length) 的定义及其对定量的修正作用',
+    '辨析归一化数据与原始计数在差异表达分析中的不同角色'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { name: 'RNA-seq 工作流', href: '/wiki-bioinfo/workflows/rna-seq' }
+  ]}
+/>
+
+## 1. 为什么需要归一化？
+
+原始计数 (Raw Counts) 受到两个主要系统偏差的影响：
+1.  **测序深度 (Sequencing Depth)**：测序量越大的样本，所有基因的 Counts 都会普遍偏高。
+2.  **基因长度 (Gene Length)**：在相同表达水平下，更长的基因会产生更多的 Reads。
+
+## 2. 核心归一化指标
+
+<DefinitionList
+  items={[
+    {
+      term: 'CPM (Counts Per Million)',
+      definition: '仅校正测序深度。公式：$CPM = \frac{Counts}{N} \cdot 10^6$，其中 N 为样本总 Reads 数。适合同一样本内不同基因的粗略比较。',
+    },
+    {
+      term: 'FPKM (Fragments Per Kilobase Million)',
+      definition: '同时校正长度和深度。逻辑是：先按长度归一化，再按深度归一化。在双端测序中，一个 Fragment 可能对应两个 Reads。',
+    },
+    {
+      term: 'TPM (Transcripts Per Million)',
+      definition: '现代推荐指标。逻辑是：先按长度归一化，再确保样本内所有基因的 TPM 总和为 $10^6$。',
+    },
+  ]}
+/>
+
+### 为什么 TPM 优于 FPKM？
+- **FPKM 的缺陷**：每个样本的 FPKM 总和是不固定的，这导致在比较不同样本时，数值的比例关系会发生扭曲。
+- **TPM 的优势**：在任何样本中，$\sum TPM = 10^6$。这意味着 TPM 直接反映了**转录本池中的相对比例**，跨样本可比性极佳。
+
+## 3. 有效长度 (Effective Length)
+
+理想状态下，Read 可以落在转录本的任何位置。但现实中，受 Read 长度和文库构建限制，转录本两端可产生有效 Read 的区域会缩短。
+
+**有效长度 $\tilde{L}$** 的直觉：
+$$\tilde{L} = L - \text{Mean Frag Length} + 1$$
+Salmon 和 Kallisto 等现代工具利用 EM 算法估计有效长度，从而更精确地计算丰度。
+
+## 4. 实践建议
+
+| 任务 | 推荐指标 | 原因 |
+| :--- | :--- | :--- |
+| **差异表达分析** | **Raw Counts** | DESeq2/edgeR 等工具需要原始分布信息来建立统计模型。 |
+| **样本间趋势比较** | **TPM** | 比例关系固定，消除深度干扰。 |
+| **可视化（热图/箱线图）** | **log2(TPM + 1)** | 压缩动态范围，使分布更接近正态。 |
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    { title: '基因层与转录本层定量', to: '/wiki-bioinfo/transcriptomics/gene-vs-transcript-quant', description: '理解定量的解析层级' },
+    { title: '伪比对与定量算法', to: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification', description: 'Salmon/Kallisto 的底层逻辑' },
+    { title: '差异表达分析', to: '/wiki-bioinfo/transcriptomics/differential-expression', description: '统计检验的实施' }
+  ]}
+/>

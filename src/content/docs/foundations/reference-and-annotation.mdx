@@ -64,6 +64,25 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 它是一个被选定的序列框架，方便我们把 reads、变异、注释和功能信息放到统一背景下理解。
 
+```mermaid
+graph TD
+    subgraph "Reference Framework"
+    Ref["Reference Sequence (FASTA)"]
+    end
+    
+    subgraph "Observations & Annotations"
+    Reads["Sample Reads (BAM)"]
+    Vars["Variants (VCF)"]
+    Anno["Features (GTF)"]
+    end
+    
+    Reads -->|Mapped to| Ref
+    Vars -->|Located on| Ref
+    Anno -->|Overlaid on| Ref
+    
+    style Ref fill:#f9f,stroke:#333
+```
+
 它解决的问题是：
 
 - 序列应该对齐到哪里；
@@ -75,6 +94,21 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 ### 坐标系统
 
 坐标系统决定“某个区间到底从哪里开始、到哪里结束”。
+
+```mermaid
+graph LR
+    subgraph "0-based (BED/BAM)"
+    B_Start[0] --- B_End[100]
+    B_Note["Half-open [0, 100)"]
+    end
+    
+    subgraph "1-based (VCF/GFF)"
+    G_Start[1] --- G_End[100]
+    G_Note["Closed [1, 100]"]
+    end
+    
+    B_Note ---|"Length = 100"| G_Note
+```
 
 这包括多个层面的约定：
 

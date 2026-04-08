@@ -6,6 +6,8 @@ title: "CNV 与 SV 解释"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
+import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 
 <SummaryBox
   summary="CNV 和结构变异通常涉及更大的基因组区间和更多基因，其临床解释比 SNV 更为复杂。评估需要综合考虑区间大小、基因内容、剂量敏感性、复发性区域及表型匹配度，而非简单的'越大越危险'。"
@@ -13,6 +15,35 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     'CNV/SV 解释的核心挑战：区间大、基因多、断点不确定、平台差异明显',
     '关键评估维度：剂量敏感基因、复发性综合征区域、数据库记录、表型一致性',
     '小范围但打断关键基因的缺失，可能比大范围但基因稀疏的缺失更具致病性',
+  ]}
+/>
+
+## CNV 评估的核心逻辑
+
+临床评估 CNV 时，通常遵循从“基因内容”到“临床关联”的阶梯式路径：
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '基因内容梳理',
+      description: '确定 CNV 涉及的所有蛋白编码基因，特别关注首尾断点是否打断关键基因。',
+      badge: '基础环节'
+    },
+    {
+      title: '剂量敏感性查询',
+      description: '检索 ClinGen 数据库，判断涉及基因是否具有单倍剂量不足（HI）或三倍敏感（TS）证据。',
+      badge: '核心评估'
+    },
+    {
+      title: '重叠证据检索',
+      description: '在 DECIPHER、ClinVar 中寻找具有相似区间和表型的既往病例。',
+      badge: '证据整合'
+    },
+    {
+      title: '家系与表型拟合',
+      description: '结合患者 HPO 表型和家系共分离数据，给出最终致病性判定。',
+      badge: '临床决策'
+    }
   ]}
 />
 
@@ -77,6 +108,30 @@ CNV 的致病性不能仅用大小判断：
 | **大范围、基因稀疏区域的 CNV** | 可能良性 | 不影响剂量敏感基因，无明确表型关联 |
 | **小范围、打断关键基因的 CNV** | 可能致病 | 涉及剂量敏感基因或发育关键调控区 |
 | **相同大小的缺失 vs 重复** | 评估不同 | 某些基因对缺失敏感，对重复耐受，或反之 |
+
+### 临床场景下的评估建议
+
+根据 CNV 的特征，临床解释的优先级和方向有所不同：
+
+<DecisionMatrix
+  rows={[
+    {
+      scenario: 'CNV 完全覆盖已知的致病剂量敏感基因',
+      recommendation: '高优先级（Pathogenic）',
+      rationale: '单倍剂量不足（HI）或三倍敏感（TS）是致病性的直接证据。'
+    },
+    {
+      scenario: '较大规模 CNV 但不包含任何已知基因',
+      recommendation: '低优先级/VUS',
+      rationale: '基因稀疏区（Gene-poor regions）的变异致病性证据通常不足。'
+    },
+    {
+      scenario: 'CNV 断点位于已知致病基因内部',
+      recommendation: '高优先级',
+      rationale: '即使只是部分缺失，打断编码区或关键外显子往往导致蛋白功能丧失。'
+    }
+  ]}
+/>
 
 ## 技术局限性与验证
 

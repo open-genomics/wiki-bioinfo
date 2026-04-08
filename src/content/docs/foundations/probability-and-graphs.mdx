@@ -54,6 +54,25 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 ## 4. 三者的交织
 
 在真实的生物信息学工具中，这些模型往往是重叠的：
+
+```mermaid
+graph TD
+    subgraph "Core Models"
+    P["Probability (Uncertainty)"]
+    G["Graphs (Structure)"]
+    DP["Dynamic Programming (Optimization)"]
+    end
+    
+    P ---|"Viterbi Decoding"| DP
+    G ---|"Path Finding in DP Table"| DP
+    P ---|"Probabilistic Graph Paths"| G
+    
+    Example["HMM / Assembly / Alignment"]
+    DP --> Example
+    P --> Example
+    G --> Example
+```
+
 - **HMM** 既是概率模型（状态转移），又利用动态规划（Viterbi）进行求解。
 - **组装算法** 既是图问题（寻路），又需要利用概率模型（覆盖度统计）来修剪错误的边。
 - **比对软件** 既利用索引加速（图/树结构），又利用动态规划进行局部精化。

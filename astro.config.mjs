@@ -37,6 +37,16 @@ export default defineConfig({
         baseUrl: 'https://github.com/LessUp/wiki-bioinfo/tree/master/',
       },
       lastUpdated: true,
+      components: {
+        Head: './src/components/starlight/Head.astro',
+      },
+      tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
+      expressiveCode: {
+        themes: ['github-dark', 'github-light'],
+        styleOverrides: {
+          borderRadius: '0.5rem',
+        },
+      },
       customCss: [
         './src/styles/custom.css',
         './src/styles/katex.css',
@@ -57,12 +67,14 @@ export default defineConfig({
             { slug: 'intro' },
             { slug: 'intro/about' },
             { slug: 'intro/roadmap' },
+            { slug: 'intro/algorithms-intro' },
             { slug: 'intro/contributing' },
             { slug: 'intro/style-guide' },
           ],
         },
         {
           label: '基础与数学',
+          collapsed: false,
           items: [
             { slug: 'foundations' },
             { slug: 'foundations/biology-basics' },
@@ -71,18 +83,36 @@ export default defineConfig({
             { slug: 'foundations/reference-and-annotation' },
             { slug: 'foundations/probability-and-graphs' },
             { slug: 'foundations/algorithms-and-complexity' },
+            {
+              label: '算法专题',
+              collapsed: true,
+              items: [
+                { slug: 'foundations/graph-algorithms' },
+                { slug: 'foundations/string-pattern-matching' },
+                { slug: 'foundations/dynamic-programming-basics' },
+                { slug: 'foundations/divide-and-conquer' },
+                { slug: 'foundations/exhaustive-search' },
+                { slug: 'foundations/approximation-algorithms' },
+                { slug: 'foundations/randomized-algorithms' },
+                { slug: 'foundations/restriction-mapping' },
+                { slug: 'foundations/genome-rearrangements' },
+              ],
+            },
           ],
         },
         {
           label: '核心方法',
+          collapsed: false,
           items: [
             { slug: 'core-methods' },
             {
               label: '序列表示与索引',
+              collapsed: true,
               items: [
                 { slug: 'sequence' },
                 { slug: 'sequence/kmers' },
                 { slug: 'sequence/indexing' },
+                { slug: 'sequence/hash-tables' },
                 { slug: 'sequence/exact-string-matching' },
                 { slug: 'sequence/kmp-algorithm' },
                 { slug: 'sequence/boyer-moore-algorithm' },
@@ -95,21 +125,33 @@ export default defineConfig({
             },
             {
               label: '序列比对',
+              collapsed: true,
               items: [
                 { slug: 'alignment' },
                 { slug: 'alignment/edit-distance' },
                 { slug: 'alignment/global-local' },
+                { slug: 'alignment/needleman-wunsch' },
+                { slug: 'alignment/smith-waterman' },
                 { slug: 'alignment/scoring-matrices' },
                 { slug: 'alignment/semi-global-alignment' },
                 { slug: 'alignment/affine-gap-penalty' },
+                { slug: 'alignment/gotoh' },
+                { slug: 'alignment/hirschberg' },
+                { slug: 'alignment/banded-dp' },
                 { slug: 'alignment/seed-and-extend' },
+                { slug: 'alignment/blast' },
+                { slug: 'alignment/bwa-minimap2' },
+                { slug: 'alignment/mapping-quality-and-multi-mapping' },
                 { slug: 'alignment/multiple-sequence-alignment' },
               ],
             },
             {
               label: '组装与图算法',
+              collapsed: true,
               items: [
                 { slug: 'assembly' },
+                { slug: 'assembly/shortest-superstring' },
+                { slug: 'assembly/sequencing-by-hybridization' },
                 { slug: 'assembly/olc' },
                 { slug: 'assembly/de-bruijn' },
                 { slug: 'assembly/graph-traversal-algorithms' },
@@ -119,10 +161,12 @@ export default defineConfig({
             },
             {
               label: '概率模型与模式识别',
+              collapsed: true,
               items: [
                 { slug: 'models' },
                 { slug: 'models/motif-finding' },
                 { slug: 'models/motif-discovery-algorithms' },
+                { slug: 'models/median-string' },
                 { slug: 'models/pwm-pssm' },
                 { slug: 'models/hmm' },
                 { slug: 'models/viterbi-forward-backward' },
@@ -136,10 +180,23 @@ export default defineConfig({
         },
         {
           label: '分析方向与案例',
+          collapsed: false,
           items: [
             { slug: 'applications' },
             {
+              label: '算法应用专题',
+              collapsed: true,
+              items: [
+                { slug: 'applications/algorithms-overview' },
+                { slug: 'applications/dynamic-programming' },
+                { slug: 'applications/graph-algorithms' },
+                { slug: 'applications/string-algorithms' },
+                { slug: 'applications/probabilistic-algorithms' },
+              ],
+            },
+            {
               label: '工作流与案例',
+              collapsed: true,
               items: [
                 { slug: 'workflows' },
                 { slug: 'workflows/ngs-overview' },
@@ -151,6 +208,7 @@ export default defineConfig({
             },
             {
               label: '变异检测',
+              collapsed: true,
               items: [
                 { slug: 'variants' },
                 { slug: 'variants/variant-calling-overview' },
@@ -162,6 +220,7 @@ export default defineConfig({
             },
             {
               label: '转录组',
+              collapsed: true,
               items: [
                 { slug: 'transcriptomics' },
                 { slug: 'transcriptomics/pseudo-alignment-and-quantification' },
@@ -172,6 +231,7 @@ export default defineConfig({
             },
             {
               label: '单细胞组学',
+              collapsed: true,
               items: [
                 { slug: 'single-cell' },
                 { slug: 'single-cell/scrna-seq-overview' },
@@ -183,15 +243,20 @@ export default defineConfig({
             },
             {
               label: '表观基因组学',
+              collapsed: true,
               items: [
                 { slug: 'epigenomics' },
                 { slug: 'epigenomics/chip-seq-overview' },
                 { slug: 'epigenomics/atac-seq' },
                 { slug: 'epigenomics/dna-methylation' },
+                { slug: 'epigenomics/macs2-peak-calling' },
+                { slug: 'epigenomics/dmr-detection' },
+                { slug: 'epigenomics/footprinting-algorithms' },
               ],
             },
             {
               label: '群体遗传学',
+              collapsed: true,
               items: [
                 { slug: 'population' },
                 { slug: 'population/hardy-weinberg' },
@@ -202,15 +267,21 @@ export default defineConfig({
             },
             {
               label: '长读长测序',
+              collapsed: true,
               items: [
                 { slug: 'long-read' },
                 { slug: 'long-read/pacbio-nanopore' },
                 { slug: 'long-read/long-read-assembly' },
                 { slug: 'long-read/sv-detection' },
+                { slug: 'long-read/basecalling-algorithm' },
+                { slug: 'long-read/consensus-algorithm' },
+                { slug: 'long-read/minimap2-alignment' },
+                { slug: 'long-read/overlap-detection' },
               ],
             },
             {
               label: '空间转录组',
+              collapsed: true,
               items: [
                 { slug: 'spatial' },
                 { slug: 'spatial/spatial-transcriptomics-overview' },
@@ -220,24 +291,29 @@ export default defineConfig({
             },
             {
               label: '蛋白质组学',
+              collapsed: true,
               items: [
                 { slug: 'proteomics' },
                 { slug: 'proteomics/mass-spectrometry-basics' },
                 { slug: 'proteomics/database-search-and-fdr' },
                 { slug: 'proteomics/quantitative-proteomics' },
+                { slug: 'proteomics/spectrum-graphs' },
               ],
             },
             {
               label: '临床变异解释',
+              collapsed: true,
               items: [
                 { slug: 'clinical-variants' },
                 { slug: 'clinical-variants/variant-annotation-and-prioritization' },
                 { slug: 'clinical-variants/acmg-guidelines' },
                 { slug: 'clinical-variants/cnv-and-sv-interpretation' },
+                { slug: 'clinical-variants/algorithms' },
               ],
             },
             {
               label: '结构生物信息学',
+              collapsed: true,
               items: [
                 { slug: 'structure-bioinfo' },
                 { slug: 'structure-bioinfo/protein-structure-basics' },
@@ -247,27 +323,37 @@ export default defineConfig({
             },
             {
               label: '多组学整合',
+              collapsed: true,
               items: [
                 { slug: 'multi-omics' },
                 { slug: 'multi-omics/integration-strategies' },
                 { slug: 'multi-omics/batch-effect-and-harmonization' },
                 { slug: 'multi-omics/single-cell-multiome' },
+                { slug: 'multi-omics/canonical-correlation-analysis' },
+                { slug: 'multi-omics/joint-nmf' },
+                { slug: 'multi-omics/mofa-plus' },
+                { slug: 'multi-omics/similarity-network-fusion' },
+                { slug: 'multi-omics/integration-algorithms' },
               ],
             },
             {
               label: '系统发育与进化',
+              collapsed: true,
               items: [
                 { slug: 'phylogeny' },
                 { slug: 'phylogeny/hierarchical-clustering' },
                 { slug: 'phylogeny/k-means-bioinformatics' },
                 { slug: 'phylogeny/distance-methods' },
                 { slug: 'phylogeny/additive-phylogeny' },
+                { slug: 'phylogeny/upgma' },
+                { slug: 'phylogeny/neighbor-joining' },
                 { slug: 'phylogeny/parsimony' },
                 { slug: 'phylogeny/maximum-likelihood' },
               ],
             },
             {
               label: '机器学习与基础模型',
+              collapsed: true,
               items: [
                 { slug: 'ml-bioinfo' },
                 { slug: 'ml-bioinfo/deep-learning-for-sequences' },
@@ -281,10 +367,15 @@ export default defineConfig({
         },
         {
           label: '数据、注释与资源',
+          collapsed: false,
           items: [
             { slug: 'data-references' },
+            { slug: 'data-references/databases-and-annotations' },
+            { slug: 'data-references/common-formats-overview' },
+            { slug: 'data-references/reference-versions-and-liftover' },
             {
               label: '数据库与资源',
+              collapsed: true,
               items: [
                 { slug: 'databases' },
                 { slug: 'databases/common-resources' },
@@ -293,6 +384,7 @@ export default defineConfig({
             },
             {
               label: '常见数据格式',
+              collapsed: true,
               items: [
                 { slug: 'formats' },
                 { slug: 'formats/common-file-formats' },
@@ -302,10 +394,12 @@ export default defineConfig({
         },
         {
           label: '附录',
+          collapsed: true,
           items: [
             { slug: 'appendix' },
             { slug: 'appendix/glossary' },
             { slug: 'appendix/references' },
+            { slug: 'appendix/algorithms' },
           ],
         },
       ],

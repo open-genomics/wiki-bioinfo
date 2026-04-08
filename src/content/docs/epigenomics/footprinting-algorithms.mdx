@@ -1,0 +1,353 @@
+---
+description: ATAC-seq footprinting 算法的核心统计思想，包括 Tn5 插入偏好校正和足迹检测的教学性解释。
+title: "Footprinting 算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+
+<SummaryBox
+  summary="Footprinting 算法用于从 ATAC-seq 数据中推断转录因子的实际结合位点，通过检测 motif 区域内 Tn5 插入的显著下降来识别蛋白保护区域。"
+  bullets={[
+    '核心思想是转录因子结合会保护 DNA 免受 Tn5 切割',
+    '关键挑战是校正 Tn5 序列偏好和测序噪声',
+    '常用方法包括基于插入位点的统计检验和深度学习模型'
+  ]}
+/>
+
+## 是什么
+
+Footprinting 算法解决以下问题：
+
+> 给定 ATAC-seq 数据和已知的转录因子 motif，识别基因组上哪些 motif 位点实际被转录因子结合，从而形成"足迹"（footprint）。
+
+当转录因子结合到 DNA 上时，它会物理阻碍 Tn5 转座酶的插入，导致 motif 区域的插入信号显著低于两侧。Footprinting 算法通过检测这种模式来推断真实的蛋白结合。
+
+## 要解决什么生物信息学问题
+
+在实际应用中，footprinting 用于：
+
+- 从 ATAC-seq 数据中推断活跃的转录因子
+- 识别特定细胞类型的调控程序
+- 区分开放染色质区域中真正被占用的位点
+- 补充 motif 富集分析，提供结合证据
+
+## 统计模型（教学性解释）
+
+> **重要说明**：本节使用简化的数学模型帮助理解 footprinting 的核心思想。实际 footprinting 工具（如 TOBIAS、HINT、chromVAR）的实现包含复杂的偏好估计、统计模型和深度学习架构，与这里的简化描述存在显著差异。请不要将此处的公式和流程直接等同于源码实现。
+
+### 基本原理
+
+对于一个转录因子结合位点（motif），我们期望：
+
+- **motif 中心**：Tn5 插入率低（被蛋白保护）
+- **motif 两侧**：Tn5 插入率高（开放染色质）
+- **背景区域**：Tn5 插入率中等
+
+理想情况下，插入信号在 motif 位置形成"凹陷"（dip）。
+
+### 插入位点表示
+
+ATAC-seq 数据可以表示为插入位点：
+
+- 对于每个 read，其 5' 端对应一个 Tn5 插入事件
+- 正链 reads：插入位点 = read 起始位置 + 4（Tn5 offset）
+- 负链 reads：插入位点 = read 结束位置 - 5（Tn5 offset）
+
+因此，基因组每个位置有一个插入计数 `c_i`。
+
+### 偏好校正（概念性说明）
+
+Tn5 转座酶有序列偏好性，某些序列更容易被切割。需要校正观测的插入计数以消除这种偏好。
+
+**基本思路**：估计每个位置的偏好因子，然后用观测值除以偏好因子。
+
+> **注意**：实际 TOBIAS 等工具使用复杂的 k-mer 偏好模型、序列上下文考虑和迭代优化策略，远超此处的简化描述。
+
+### 统计检验模型
+
+#### 方法 1：基于局部背景的检验
+
+对于 motif 区域 `[L, R]`，定义：
+
+- `c_center`：motif 区域的插入计数
+- `c_flank`：两侧侧翼区域的插入计数（如 ±50 bp）
+
+检验假设：
+
+$$H_0: \lambda_\{center\} = \lambda_\{flank\}$$
+$$H_1: \lambda_\{center\} < \lambda_\{flank\}$$
+
+使用泊松检验：
+
+$$p = P(K \leq c_\{center\} | \lambda = \hat\{\lambda\}_\{flank\})$$
+
+其中：
+
+$$\hat\{\lambda\}_\{flank\} = \frac\{c_\{flank\}\}\{L_\{flank\}\} \times L_\{center\}$$
+
+#### 方法 2：基于窗口扫描的检验（HINT 风格，概念性说明）
+
+在 motif 周围滑动窗口，寻找插入率最低的区域作为 footprint。
+
+**基本思路**：比较每个窗口的插入率与背景率，标准化后寻找得分最低的窗口。
+
+> **注意**：实际 HINT 的实现考虑正负链分离、多尺度窗口、统计检验和复杂的合并策略，远比这里的简化描述复杂。
+
+#### 方法 3：深度学习方法
+
+使用 CNN 或 RNN 学习 footprint 模式：
+
+输入：motif 周围的插入信号序列
+输出：该 motif 是否被结合的概率
+
+模型结构：
+- 输入层：插入计数或归一化信号
+- 卷积层：检测局部模式
+- 池化层：提取特征
+- 全连接层：分类
+
+## 算法步骤
+
+### 步骤 1：数据预处理
+
+1. **Tn5 offset 修正**：正链 +4 bp，负链 -5 bp
+2. **去除线粒体 reads**：高污染来源
+3. **去除重复**：PCR 假象
+4. **生成插入位点文件**：每个插入事件记录为单 bp
+
+### 步骤 2：偏好校正（概念性说明）
+
+使用全基因组 k-mer 频率估计 Tn5 的序列偏好，然后校正插入信号。
+
+**基本思路**：
+1. 统计全基因组 k-mer 的出现频率
+2. 统计插入位点周围 k-mer 的频率
+3. 计算偏好因子（插入频率 / 背景频率）
+4. 用观测值除以偏好因子进行校正
+
+> **注意**：实际 TOBIAS 等工具使用更复杂的偏好模型、迭代估计和序列上下文考虑，远超此处的简化描述。
+
+### 步骤 3：Motif 扫描
+
+在开放染色质区域（ATAC-seq peaks）内扫描已知 motif：
+
+- 使用 FIMO 或类似工具
+- 输出：motif 位置、p-value、strand
+- 筛选：保留高置信度 motif（p-value < 1e-4）
+
+### 步骤 4：Footprint 检测（概念性说明）
+
+对每个 motif：
+
+1. 提取 motif 周围的插入信号（如 ±100 bp）
+2. 应用偏好校正
+3. 执行统计检验或深度学习预测
+4. 记录 footprint 得分和 p-value
+
+> **注意**：实际实现涉及背景估计策略、统计模型选择、多重检验校正等复杂步骤。
+
+### 步骤 5：聚合与过滤
+
+1. **聚合样本**：如果有 replicates，合并信号
+2. **过滤**：
+   - 最小插入深度（如 ≥ 20×）
+   - 最小 footprint 深度（如信号下降 ≥ 20%）
+   - 统计显著性（FDR < 0.05）
+3. **注释**：关联到最近的基因或增强子
+
+## Worked Example（简化示意）
+
+以下例子仅用于说明 footprint 检测的基本思路，数值和步骤均为简化。
+
+**场景设定**：
+- 某 motif 位置的 Tn5 插入率约为 0.9 inserts/bp
+- 侧翼区域的背景插入率约为 3.4 inserts/bp
+- motif 区域插入显著低于背景（约下降 73.5%）
+
+**核心思想**：
+1. 计算 motif 区域的观测插入率
+2. 估计侧翼区域的背景插入率
+3. 使用泊松检验判断 motif 区域插入是否显著低于背景
+4. 进行多重检验校正
+
+**关键点**：
+- 实际 footprinting 工具的实现远比此处的简化计算复杂
+- 真实的偏好校正涉及复杂的 k-mer 模型和迭代估计
+- motif 扫描、背景窗口选择、统计检验等步骤涉及大量参数调整
+
+本例的目的不是教你如何手工计算，而是帮助理解：**footprinting 检测本质上是通过比较 motif 区域与侧翼区域的插入率，识别转录因子结合保护导致的信号下降。**
+
+## 常见算法工具
+
+### TOBIAS
+
+特点：
+- 使用 ATAC-seq 数据
+- 结合偏好校正
+- 提供可视化
+
+核心算法：
+1. 估计 Tn5 偏好
+2. 校正插入信号
+3. 在 motif 周围计算 footprint 得分
+4. 统计检验
+
+### HINT
+
+特点：
+- 使用 ATAC-seq 或 DNase-seq
+- 基于窗口扫描
+- 考虑正负链 separately
+
+核心算法：
+1. 在 motif 周围滑动窗口
+2. 比较窗口与背景的插入率
+3. 识别信号最低的窗口作为 footprint
+
+### chromVAR
+
+特点：
+- 基于 motif 偏差（deviation）而非绝对 footprint
+- 适用于单细胞数据
+- 降维分析
+
+核心思想：
+- 计算每个样本中 motif 的插入偏差
+- 使用 PCA 降维
+- 识别变异模式
+
+### Wellington
+
+特点：
+- 早期 footprinting 工具
+- 基于 Wellington 检验
+- 适用于 DNase-seq
+
+核心算法：
+- 比较 motif 中心与两侧的切割频率
+- 使用 Wellington 统计量
+
+## 复杂度分析
+
+### 时间复杂度
+
+- 偏好估计：`O(G × k)`，G 是基因组长度，k 是 k-mer 大小
+- Motif 扫描：`O(P × M)`，P 是 peak 数，M 是 motif 数
+- Footprint 检测：`O(M × W)`，W 是窗口大小
+- 统计检验：`O(M)`
+
+总体时间复杂度主要由 motif 扫描决定：`O(P × M)`
+
+### 空间复杂度
+
+- 存储插入位点：`O(n)`，n 是插入数
+- 存储偏好矩阵：`O(4^k)`，k 是 k-mer 大小
+- 存储 motif 结果：`O(M)`
+
+总体空间复杂度：`O(n + 4^k + M)`
+
+## 与真实工具或流程的连接
+
+Footprinting 通常作为 ATAC-seq 分析的下游步骤：
+
+1. **标准 ATAC-seq 流程**：
+   - 质控 → 比对 → 峰调用 → motif 分析
+
+2. **Footprinting 流程**：
+   - 峰调用 → motif 扫描 → footprint 检测 → 转录因子活性推断
+
+3. **整合分析**：
+   - 结合 RNA-seq：验证转录因子靶基因表达
+   - 结合 ChIP-seq：验证特定转录因子结合
+   - 结合 scATAC-seq：细胞类型特异性调控
+
+## 常见误区
+
+### Footprint 存在就证明转录因子结合
+
+不一定。Footprint 是间接证据，可能由其他 DNA 结合蛋白或结构因素引起。需要其他证据（如 ChIP-seq）验证。
+
+### 没有 footprint 就没有转录因子结合
+
+不一定。某些因素可能导致 footprint 不可检测：
+- 数据深度不足
+- 转录因子结合时间短
+- 多个因子竞争结合
+- Tn5 偏好校正不充分
+
+### 所有 motif 都应该检测到 footprint
+
+不是。Motif 存在只是潜在结合位点，实际结合依赖于：
+- 细胞类型特异性
+- 转录因子表达水平
+- 协同因子存在
+- 染色质环境
+
+### Footprint 算法可以替代 ChIP-seq
+
+不能。Footprinting 提供的是推断证据，ChIP-seq 提供的是直接结合证据。两者互补，不能互相替代。
+
+## 算法挑战与限制
+
+### 数据深度要求
+
+Footprinting 需要高深度数据：
+- 通常要求 ≥ 50M reads（bulk）
+- 单细胞数据更困难，需要聚合
+
+### 偏好校正难度
+
+Tn5 偏好复杂：
+- 序列偏好
+- 染色质结构偏好
+- 实验批次效应
+
+不充分的校正会导致假阳性或假阴性。
+
+### Motif 质量依赖
+
+Footprinting 结果高度依赖于：
+- Motif 数据库的完整性
+- Motif 扫描的阈值设置
+- Motif 的准确性
+
+### 细胞异质性
+
+Bulk 数据中，不同细胞类型的信号混合：
+- Footprint 可能被稀释
+- 需要单细胞或解卷积方法
+
+## 算法优化方向
+
+### 深度学习方法
+
+- 使用 CNN/RNN 学习复杂模式
+- 整合多组学数据
+- 提高预测准确性
+
+### 单细胞扩展
+
+- 适应稀疏数据
+- 细胞类型特异性 footprint
+- 与 scRNA-seq 联合分析
+
+### 多因子模型
+
+- 考虑协同结合
+- 竞争结合模型
+- 组合 motif 分析
+
+## 参考资料
+
+- Gusmao, E. G., et al. (2016). Analysis of footprinting data with TOBIAS. *Bioinformatics*.
+- Gusmao, E. G., et al. (2016). HINT-ATAC: accurate nucleosome positioning and footprinting from ATAC-seq. *Bioinformatics*.
+- Schep, A. N., et al. (2017). chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. *Nature Methods*.
+- Neph, S., et al. (2012). An expansive human regulatory lexicon encoded in transcription factor footprints. *Nature*.
+
+## 相关页面
+
+- [ATAC-seq](./atac-seq.md)
+- [ChIP-seq 概览](./chip-seq-overview.md)
+- [PWM / PSSM](../models/pwm-pssm.md)
+- [统计检验与多重校正](../foundations/probability-and-graphs.md)

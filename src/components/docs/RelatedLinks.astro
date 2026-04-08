@@ -11,11 +11,18 @@ interface Props {
 }
 
 const { links } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function resolveHref(to: string): string {
+  if (to.startsWith('http')) return to;
+  const cleaned = to.replace(/^\/docs\//, '/');
+  return `${base}${cleaned}`;
+}
 ---
 
 <div class="related-grid">
   {links.map((link) => (
-    <a class="related-card" href={link.to}>
+    <a class="related-card" href={resolveHref(link.to)}>
       {link.label && <span class="related-label">{link.label}</span>}
       <h3>{link.title}</h3>
       <p>{link.description}</p>

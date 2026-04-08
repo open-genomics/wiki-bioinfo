@@ -1,0 +1,308 @@
+---
+description: Boyer-Moore算法详解：通过bad character和good suffix规则实现高效跳跃，理解实际应用中最快的字符串匹配算法。
+title: "Boyer-Moore算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="Boyer-Moore算法通过从右向左匹配和智能跳跃规则，在实际应用中往往是最快的字符串匹配算法，是理解启发式优化的经典案例。"
+  bullets={[
+    '重点理解bad character rule和good suffix rule如何实现跳跃',
+    'Boyer-Moore在生物信息学中虽不直接使用，但其跳跃思想影响了很多现代mapper',
+  ]}
+/>
+
+## 是什么
+
+Boyer-Moore算法是另一种经典的精确字符串匹配算法，由Robert Boyer和J Strother Moore在1977年提出。
+
+与KMP从左向右匹配不同，Boyer-Moore的创新在于：
+
+- **从右向左匹配**：先比较模式串的末尾字符
+- **智能跳跃**：当失配时，根据已匹配的信息进行大跨度跳跃
+- **最坏情况线性，实际中亚线性**：在很多实际应用中，甚至不需要检查文本的每个字符
+
+## 为什么重要
+
+在生物信息学中，Boyer-Moore的价值体现在：
+
+- **实际性能**：在实践中往往比KMP更快，特别是在模式串较长时
+- **启发式思想**：展示了如何利用"坏字符"和"好后缀"信息进行优化
+- **工具影响**：现代read mapper的seed-and-extend策略中，跳跃思想有类似之处
+
+虽然现代生物信息学工具主要使用基于索引的方法，但Boyer-Moore的核心思想——利用失配信息进行跳跃——在很多启发式算法中都有体现。
+
+## 核心思想
+
+### 从右向左匹配
+
+考虑在文本 `T` 中匹配模式串 `P = "EXAMPLE"`：
+
+```
+T: ... H E R E I S A N E X A M P L E ...
+P:             E X A M P L E
+                         ^ 从右向左比较
+```
+
+Boyer-Moore先比较模式串的最后一个字符 `E`，如果失配，就根据规则决定跳跃距离。
+
+### 为什么从右向左
+
+直觉是：如果模式串末尾字符都不匹配，那么整个模式串肯定不匹配，可以直接跳过很多位置。
+
+### 两个跳跃规则
+
+Boyer-Moore使用两个独立的跳跃规则，取较大的跳跃距离：
+
+1. **Bad Character Rule**：根据失配字符在模式串中的位置
+2. **Good Suffix Rule**：根据已匹配的后缀信息
+
+## Bad Character Rule
+
+<DefinitionList
+  items={[
+    {
+      term: 'bad character',
+      definition: '文本中导致失配的字符，该字符不在模式串的对应位置。',
+    },
+    {
+      term: '跳跃策略',
+      definition: '将模式串向右移动，使得模式串中最近的该字符与文本中的bad character对齐。',
+    },
+    {
+      term: '最坏情况',
+      definition: '如果bad character不在模式串中，则跳过整个模式串长度。',
+    },
+  ]}
+/>
+
+### 算法描述
+
+当在位置 `j` 失配，且文本字符 `T[i]` 不等于 `P[j]` 时：
+
+1. 在模式串 `P[0:j]` 中查找字符 `T[i]`
+2. 如果找到，将模式串向右移动，使得 `T[i]` 与模式串中最右边的该字符对齐
+3. 如果没找到，将模式串向右移动 `j+1` 位（跳过整个模式串）
+
+### worked example
+
+```
+T: ... A B C D E F G ...
+P:     X Y Z D E F
+               ^ 失配，T[i] = 'G'
+```
+
+字符 `'G'` 不在模式串 `P` 中，因此将模式串向右移动整个长度：
+
+```
+T: ... A B C D E F G ...
+P:             X Y Z D E F
+```
+
+### 预处理：bad character table
+
+**算法1：构建bad character table**
+
+```
+输入：模式串 P = p_0p_1...p_\{m-1\}，字母表 Σ
+输出：bad character table BC[|Σ| × m]
+
+1. 初始化 BC 为全 -1
+2. for j = 0 to m-1:
+   a. BC[P[j]][j] = j  // 记录每个字符在模式串中的最右位置
+3. return BC
+```
+
+**时间复杂度**：$O(m + |\Sigma|)$
+
+**空间复杂度**：$O(|\Sigma| \times m)$
+
+## Good Suffix Rule
+
+<DefinitionList
+  items={[
+    {
+      term: 'good suffix',
+      definition: '模式串中已经成功匹配的后缀部分。',
+    },
+    {
+      term: '跳跃策略',
+      definition: '寻找模式串中是否存在与good suffix匹配的子串，将模式串移动到该位置。',
+    },
+    {
+      term: '两种情况',
+      definition: '模式串内部有匹配子串，或模式串前缀与good suffix后缀匹配。',
+    },
+  ]}
+/>
+
+### 算法描述
+
+当模式串的后缀 `P[j+1:m]` 与文本匹配，但在位置 `j` 失配时：
+
+1. 在模式串中查找是否存在另一个子串等于 `P[j+1:m]`
+2. 如果找到，将模式串移动到该位置
+3. 如果没找到，查找模式串的前缀是否等于 `P[j+1:m]` 的后缀
+4. 根据匹配情况决定跳跃距离
+
+### worked example
+
+```
+T: ... A B C D E F G H ...
+P:     X Y Z D E F
+             ^^^^^ 匹配
+           ^ 失配
+```
+
+已匹配后缀为 `"DEF"`，在模式串中查找是否有其他 `"DEF"`：
+- 如果没有，查找前缀是否与 `"DEF"` 的后缀匹配
+- 根据匹配情况决定跳跃
+
+### 预处理：good suffix table
+
+**算法2：构建good suffix table**
+
+```
+输入：模式串 P = p_0p_1...p_\{m-1\}
+输出：good suffix table GS[0:m]
+
+1. 初始化 GS 为全 m
+2. // 情况1：模式串内部有匹配子串
+3. for j = 0 to m-1:
+   a. 寻找最大的 k < j，使得 P[k+1:j+1] = P[m-j:m]
+   b. 如果找到，GS[j] = m - k - 1
+4. // 情况2：前缀与后缀匹配
+5. for j = 0 to m-1:
+   a. 寻找最大的 k，使得 P[0:k] = P[m-k:m]
+   b. 对于所有 j >= m - k - 1，GS[j] = m - k - 1
+6. return GS
+```
+
+**时间复杂度**：$O(m)$
+
+**空间复杂度**：$O(m)$
+
+## Boyer-Moore匹配算法
+
+**算法3：Boyer-Moore字符串匹配**
+
+```
+输入：文本 T = t_0t_1...t_\{n-1\}，模式串 P = p_0p_1...p_\{m-1\}
+输出：所有匹配位置
+
+1. 预处理：构建bad character table BC和good suffix table GS
+2. i = 0  // 文本中的当前对齐位置
+3. while i <= n - m:
+   a. j = m - 1  // 从模式串末尾开始比较
+   b. while j >= 0 and P[j] == T[i + j]:
+      j = j - 1
+   c. if j < 0:
+      // 找到完整匹配
+      输出匹配位置 i
+      i = i + GS[0]  // 使用good suffix rule跳跃
+   d. else:
+      // 失配，计算跳跃距离
+      bad_char_shift = j - BC[T[i + j]][j]
+      good_suffix_shift = GS[j]
+      i = i + max(bad_char_shift, good_suffix_shift)
+```
+
+**时间复杂度**：最坏情况 $O(nm)$，平均情况 $O(n/m)$ 到 $O(n)$
+
+**空间复杂度**：$O(|\Sigma| \times m)$
+
+## 复杂度分析
+
+### 时间复杂度
+
+- **预处理**：$O(m + |\Sigma|)$
+- **匹配**：
+  - 最坏情况：$O(nm)$（如文本全为同一字符，模式串为不同字符）
+  - 平均情况：$O(n/m)$（特别是模式串较长且字母表较大时）
+  - 最好情况：$O(n/m)$（每次都跳过整个模式串）
+
+### 为什么实际中很快
+
+Boyer-Moore在实际中往往很快的原因：
+
+1. **从右向左匹配**：很多情况下末尾字符就会失配，避免大量比较
+2. **大跨度跳跃**：bad character rule经常能跳过整个模式串
+3. **字母表优势**：DNA字母表虽小（4个字符），但蛋白质字母表较大（20个字符），跳跃效果更好
+
+## worked example
+
+在文本 `T = "HERE_IS_A_SIMPLE_EXAMPLE"` 中匹配 `P = "EXAMPLE"`：
+
+```
+T: H E R E _ I S _ A _ S I M P L E _ E X A M P L E
+P: E X A M P L E
+               ^ 从右向左比较，'E' == 'E'
+             ^ 'L' == 'L'
+           ^ 'P' == 'P'
+         ^ 'M' == 'M'
+       ^ 'A' == 'A'
+     ^ 'X' == 'X'
+   ^ 'E' != 'S'，失配
+```
+
+失配字符为 `'S'`，在模式串中查找 `'S'`：
+- 不存在，使用bad character rule跳过整个模式串长度
+
+```
+T: H E R E _ I S _ A _ S I M P L E _ E X A M P L E
+P:                       E X A M P L E
+```
+
+继续匹配...
+
+## 与其他算法的比较
+
+| 算法 | 预处理时间 | 匹配时间（最坏） | 匹配时间（平均） | 空间 | 特点 |
+|------|-----------|----------------|----------------|------|------|
+| 朴素扫描 | $O(1)$ | $O(mn)$ | $O(mn)$ | $O(1)$ | 简单但慢 |
+| KMP | $O(m)$ | $O(n+m)$ | $O(n+m)$ | $O(m)$ | 最坏情况线性 |
+| Boyer-Moore | $O(m+|\Sigma|)$ | $O(nm)$ | $O(n/m)$ | $O(|\Sigma|m)$ | 实际中通常最快 |
+| Rabin-Karp | $O(m)$ | $O(n+m)$ | $O(n+m)$ | $O(1)$ | 哈希方法 |
+
+## 在生物信息学中的位置
+
+Boyer-Moore本身在现代生物信息学工具中不常直接使用，但：
+
+- **跳跃思想**：现代mapper的seed-and-extend策略中，extend阶段的启发式跳跃有类似思想
+- **启发式优化**：展示了如何利用失配信息进行优化，这是很多算法的共同主题
+- **实际性能**：在某些简单模式匹配场景下，Boyer-Moore仍然有实用价值
+
+在实际的生物序列搜索中，更常见的是：
+- 基于k-mer的索引（如BWA、minimap2）
+- 基于后缀的索引（如FM-index）
+- 这些方法通过预处理建立索引，查询时达到亚线性时间
+
+## 常见误区
+
+### Boyer-Moore总是比KMP快
+
+不一定。Boyer-Moore在最坏情况下可能比KMP慢，但在实际应用中往往更快。选择哪种算法取决于具体场景。
+
+### Boyer-Moore需要两个规则都实现
+
+实际上，简化版的Boyer-Moore可以只实现bad character rule，在很多情况下已经足够快。完整的Boyer-Moore同时使用两个规则以获得更好的性能。
+
+### Boyer-Moore适合小字母表
+
+Boyer-Moore在大字母表（如蛋白质序列）上效果更好，因为bad character rule更容易实现大跨度跳跃。在小字母表（如DNA）上，优势可能不明显。
+
+## 参考资料
+
+- Boyer, R. S., & Moore, J. S. (1977). "A fast string searching algorithm"
+- Cormen, T. H., et al. *Introduction to Algorithms*, Chapter 32
+- Gusfield, D. *Algorithms on Strings, Trees, and Sequences*
+
+## 相关页面
+
+- [精确字符串匹配](./exact-string-matching.md)
+- [KMP算法](./kmp-algorithm.md)
+- [Trie与多模式匹配](./trie-and-multi-pattern-matching.md)
+- [索引结构概览](./indexing.md)

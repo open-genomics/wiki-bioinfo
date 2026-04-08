@@ -12,11 +12,18 @@ interface Props {
 }
 
 const { items } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, '');
+
+function resolveHref(to: string): string {
+  if (to.startsWith('http')) return to;
+  const cleaned = to.replace(/^\/docs\//, '/');
+  return `${base}${cleaned}`;
+}
 ---
 
 <div class="section-nav-grid">
   {items.map((item) => (
-    <a class="section-nav-card" href={item.to}>
+    <a class="section-nav-card" href={resolveHref(item.to)}>
       <div class="section-nav-topline">
         {item.badge && <span class="card-badge">{item.badge}</span>}
         {item.meta && <span class="section-meta">{item.meta}</span>}

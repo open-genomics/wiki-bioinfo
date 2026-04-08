@@ -1,0 +1,434 @@
+---
+description: Minimap2 比对算法的详细实现，包括 seed-chain-align 流程、动态规划和完整 worked example。
+title: "Minimap2 比对算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="Minimap2 是当前最广泛使用的长读长比对工具，其核心 seed-chain-align 流程通过降维索引、链式聚类和动态规划实现高效准确的序列比对。"
+  bullets={[
+    'seed 阶段使用 minimizer 索引快速定位候选区域',
+    'chain 阶段通过动态规划找到最大共线性链',
+    'align 阶段使用带状动态规划进行精确比对',
+  ]}
+/>
+
+## 是什么
+
+Minimap2 算法解决以下问题：
+
+> 给定一条长 read 和一个参考基因组，找到 read 在参考上的最优比对位置。
+
+Minimap2 是 Minimap 的继承者，不仅支持长读长，还支持短读长、splice-aware 比对等多种模式。
+
+## 要解决什么生物信息学问题
+
+在实际生物信息学应用中，Minimap2 适合的场景包括：
+
+- **read mapping**：将测序 reads 比对到参考基因组
+- **组装 scaffolding**：将 contigs 比对到参考或彼此之间
+- **SV 检测**：通过比对模式识别结构变异
+- **转录本比对**：支持跨内含子的 splice-aware 比对
+- **重叠检测**：在无参考情况下进行 read-read 比对
+
+## 数学模型
+
+### 问题形式化
+
+设 read 序列为 R = r₁r₂...rₘ，参考基因组为 G = g₁g₂...gₙ。
+
+目标是找到位置 pos 和比对路径 π，使得：
+
+$$
+\pi^* = \arg\max_\{\pi\} \sum_\{(i,j) \in \pi\} s(r_i, g_j) - \sum_\{\text\{gaps\}\} \text\{penalty\}(\text\{gap\})
+$$
+
+其中 s(rᵢ, gⱼ) 是匹配/错配得分，penalty(gap) 是 gap 罚分。
+
+### Seed-Chain-Align 框架
+
+Minimap2 采用三阶段框架：
+
+1. **Seeding**：通过 minimizer 找到候选匹配位置（粗定位）
+2. **Chaining**：将 seeds 聚类成共线性链（筛选和排序）
+3. **Alignment**：对链进行精确动态规划比对（精细比对）
+
+## Seeding 阶段
+
+### Minimizer 索引
+
+参考基因组预处理：
+
+1. 对参考基因组提取所有 minimizers
+2. 构建倒排索引：minimizer → (chromosome, position)
+
+对于 read：
+
+1. 提取 read 的 minimizers
+2. 在索引中查找匹配的参考位置
+3. 这些位置称为 "seeds"
+
+### Seed 过滤
+
+并非所有 seeds 都保留，过滤条件包括：
+
+- **唯一性**：只保留在参考中出现次数 ≤ k 的 minimizers（k 通常为 10-100）
+- **间距一致性**：seeds 在 read 和参考上的相对位置应一致
+- **密度阈值**：区域内的 seeds 数量应超过阈值
+
+### 窗口策略
+
+Minimap2 使用窗口化 minimizer：
+
+- 窗口大小 w：控制 minimizer 密度
+- k-mer 大小 k：控制特异性
+
+参数选择权衡：
+- 大 w、小 k：更多 seeds，更高敏感性，更多候选
+- 小 w、大 k：更少 seeds，更高特异性，更快速度
+
+## Chaining 阶段
+
+### 问题定义
+
+给定 seeds 集合 $S = \{s_1, s_2, \ldots, s_n\}$，每个 seed $s_i$ 有：
+- read 位置 xᵢ
+- 参考位置 yᵢ
+- 长度 lᵢ
+
+目标是找到种子子集 $C \subseteq S$，使得：
+
+1. 种子按顺序排列：$x_1 < x_2 < \ldots < x_k$ 且 $y_1 < y_2 < \ldots < y_k$
+2. 最大化总得分
+
+### 动态规划公式
+
+定义 DP[i] 为：以 seed i 结尾的最优链得分。
+
+递推公式：
+
+$$
+DP[i] = \max_\{j < i, y_j < y_i\} \\{DP[j] + \alpha \cdot (x_i - x_j - l_j) - \beta \cdot |(y_i - y_j) - (x_i - x_j)|\\}
+$$
+
+其中：
+- α 是匹配奖励系数
+- β 是距离惩罚系数（惩罚非线性）
+
+边界条件：$DP[i] \ge l_i$（单个 seed 的得分）
+
+### 链得分解释
+
+得分包含两部分：
+1. **覆盖奖励**：α · (xᵢ - xⱼ - lⱼ) 奖励更长的覆盖
+2. **共线性惩罚**：β · |Δy - Δx| 惩罚 read 和参考上的距离不一致
+
+### 链选择
+
+1. 计算所有 seeds 的 DP 值
+2. 选择得分最高的链
+3. 通常保留 top-k 条链作为候选
+
+## Alignment 阶段
+
+### 带状动态规划
+
+对于选定的链，在链周围进行精确比对：
+
+1. 确定比对区域：链的起点和终点，加上边界 padding
+2. 使用带状动态规划（banded DP）进行比对
+3. 带宽 b 根据链的共线性程度自适应调整
+
+### 递推公式
+
+与标准 Needleman-Wunsch 类似，但限制在带宽 b 内：
+
+对于位置 (i, j)，只在 |i - j| ≤ b 时计算：
+
+$$
+F[i][j] = \max
+\begin\{cases\}
+F[i-1][j-1] + s(r_i, g_j) & \text\{匹配/错配\} \\
+F[i-1][j] + g & \text\{read gap\} \\
+F[i][j-1] + g & \text\{参考 gap\}
+\end\{cases\}
+$$
+
+### Affine Gap Penalty
+
+Minimap2 使用 affine gap penalty：
+
+- gap 开启罚分：g_open
+- gap 延伸罚分：g_extend
+
+需要额外的矩阵处理 gap 状态。
+
+### Splice-Aware 比对（可选）
+
+对于 RNA-seq 数据，Minimap2 支持 GT-AG 剪接位点：
+
+1. 在比对中允许大 gap（内含子）
+2. 大 gap 两端检测 GT-AG 信号
+3. 给予剪接位点额外奖励
+
+## 算法步骤
+
+### 完整流程
+
+#### 步骤 1：索引构建（一次性）
+
+```python
+def build_index(reference, k=15, w=10):
+    minimizers = extract_minimizers(reference, k, w)
+    index = build_inverted_index(minimizers)
+    return index
+```
+
+#### 步骤 2：Seeding
+
+```python
+def find_seeds(read, index, k=15, w=10):
+    read_minimizers = extract_minimizers(read, k, w)
+    seeds = []
+    for (minimizer, pos) in read_minimizers:
+        if minimizer in index:
+            for (ref_chrom, ref_pos) in index[minimizer]:
+                seeds.append(Seed(pos, ref_pos, k))
+    return filter_seeds(seeds)
+```
+
+#### 步骤 3：Chaining
+
+```python
+def chain_seeds(seeds, alpha=1, beta=0.1):
+    seeds.sort(by=read_position)
+    dp = [seed.length for seed in seeds]
+    predecessor = [None for seed in seeds]
+    
+    for i in range(len(seeds)):
+        for j in range(i):
+            if seeds[j].ref_pos < seeds[i].ref_pos:
+                score = (dp[j] + 
+                        alpha * (seeds[i].read_pos - seeds[j].read_pos) -
+                        beta * abs((seeds[i].ref_pos - seeds[j].ref_pos) - 
+                                  (seeds[i].read_pos - seeds[j].read_pos)))
+                if score > dp[i]:
+                    dp[i] = score
+                    predecessor[i] = j
+    
+    # 回溯得到最优链
+    best_chain = backtrack(dp, predecessor)
+    return best_chain
+```
+
+#### 步骤 4：Alignment
+
+```python
+def align_chain(read, reference, chain, bandwidth=100):
+    # 确定比对区域
+    start_ref = chain[0].ref_pos - bandwidth
+    end_ref = chain[-1].ref_pos + chain[-1].length + bandwidth
+    ref_region = reference[start_ref:end_ref]
+    
+    # 带状动态规划
+    alignment = banded_dp(read, ref_region, bandwidth)
+    return alignment
+```
+
+## Worked Example
+
+### 简化示例
+
+参考基因组：`ACGTACGTACGTACGT`（16 bp）
+Read：`CGTACGT`（7 bp）
+
+参数：k=3, w=5
+
+#### 步骤 1：Seeding
+
+参考 minimizers（简化）：
+- ACG: pos 0, 4, 8, 12
+- CGT: pos 1, 5, 9
+- GTA: pos 2, 6, 10
+- TAC: pos 3, 7, 11
+
+Read minimizers：
+- `CGTACGT` 提取 minimizers：CGT (pos 0), CGT (pos 4)
+
+Seeds：
+- Seed 1: read pos 0, ref pos 1
+- Seed 2: read pos 0, ref pos 5
+- Seed 3: read pos 0, ref pos 9
+- Seed 4: read pos 4, ref pos 1
+- Seed 5: read pos 4, ref pos 5
+- Seed 6: read pos 4, ref pos 9
+
+#### 步骤 2：Chaining
+
+筛选 seeds（假设只保留共线性的）：
+- Chain 1: Seed 1 (0→1) → Seed 5 (4→5)
+  - Δread = 4, Δref = 4
+  - 得分 = 3 + α·4 - β·0 = 3 + 4 = 7
+
+- Chain 2: Seed 2 (0→5) → Seed 6 (4→9)
+  - Δread = 4, Δref = 4
+  - 得分 = 3 + α·4 - β·0 = 7
+
+选择 Chain 1（得分相同，任选）。
+
+#### 步骤 3：Alignment
+
+比对区域：ref pos 1-5 附近
+Read: `CGTACGT`
+Ref:  `CGTACGT`（从 pos 1 开始）
+
+带状 DP 比对：
+```
+Read:  C G T A C G T
+Ref:   C G T A C G T
+       | | | | | | |
+```
+
+完美匹配，得分 = 7。
+
+## 复杂度分析
+
+### Seeding
+
+#### 时间复杂度
+
+- 索引构建：O(N)，N 为参考长度
+- Read seeding：O(L/w)，L 为 read 长度，w 为窗口大小
+- 候选查找：O(m · d)，m 为 seed 数，d 为平均倒排列表长度
+
+总时间复杂度：O(L/w + m · d)
+
+#### 空间复杂度
+
+- 索引存储：O(N/w)
+
+总空间复杂度：O(N/w)
+
+### Chaining
+
+#### 时间复杂度
+
+- Seeds 排序：O(m log m)，m 为 seed 数
+- DP 计算：O(m²) 或 O(m log m) 使用优化
+
+总时间复杂度：O(m²) 或 O(m log m)
+
+#### 空间复杂度
+
+- DP 表：O(m)
+
+总空间复杂度：O(m)
+
+### Alignment
+
+#### 时间复杂度
+
+- 带状 DP：O(b · L)，b 为带宽，L 为比对长度
+
+总时间复杂度：O(b · L)
+
+#### 空间复杂度
+
+- DP 矩阵：O(b · L) 或 O(b) 使用滚动数组
+
+总空间复杂度：O(b · L) 或 O(b)
+
+### 总体复杂度
+
+对于单条 read：
+- 时间：O(L/w + m·d + m² + b·L)
+- 空间：O(N/w + m + b·L)
+
+在实际情况中，$m \ll L$，$d \ll N$，因此接近线性。
+
+## 与真实工具或流程的连接
+
+### Minimap2 模式
+
+Minimap2 支持多种模式：
+
+- **Map-ont**：Oxford Nanopore mapping
+- **Map-pb**：PacBio mapping
+- **Map-hifi**：PacBio HiFi mapping
+- **Splice**：RNA-seq splice-aware mapping
+- **asm5/asm10/asm20**：assembly-to-assembly mapping（不同容错）
+
+### 应用场景
+
+- **SV 检测**：Sniffles2 使用 Minimap2 进行 read 比对
+- **Polishing**：Racon 使用 Minimap2 的重叠信息
+- **转录本分析**：StringTie、FLAIR 等使用 Minimap2 进行 RNA 比对
+- **基因组组装**：Flye、Canu 等使用 Minimap2 进行 read 比对
+
+### 参数调优
+
+常用参数：
+
+- `-k`：k-mer 大小（默认 15）
+- `-w`：窗口大小（默认 10）
+- `-r`：匹配/错配得分
+- `-A`：gap 开启罚分
+- `-B`：gap 延伸罚分
+
+## 常见误区
+
+### Minimap2 只用于长读长
+
+不是。Minimap2 也支持短读长比对，虽然 BWA-MEM2 在短读长上可能更快。
+
+### Seeding 阶段可以省略
+
+不能。Seeding 是降维的关键，没有 seeding 会导致 O(n²) 的复杂度。
+
+### 带宽越大越好
+
+不是。带宽增加会降低速度，应根据数据质量调整。高质量数据可以用小带宽。
+
+### Chaining 只有一条最优链
+
+不一定。可能存在多条得分相近的链，Minimap2 会保留多条候选。
+
+## 算法优化
+
+### SIMD 加速
+
+- 向量化 minimizer 哈希计算
+- 并行化 DP 计算
+
+### 多线程
+
+- 并行处理多条 reads
+- 并行计算多条链的 DP
+
+### 自适应参数
+
+- 根据数据质量自动调整带宽
+- 根据覆盖度调整 seed 筛选阈值
+
+### 索引优化
+
+- 压缩索引存储
+- 内存映射索引文件
+- 分区索引支持超大基因组
+
+## 参考资料
+
+- Li, H. (2018). Minimap2: pairwise alignment for nucleotide sequences. *Bioinformatics*, 34(18), 3094-3100.
+- Li, H. (2016). Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences. *Bioinformatics*, 32(14), 2103-2110.
+- Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
+
+## 相关页面
+
+- [重叠检测算法](./overlap-detection.md)
+- [Consensus 算法](./consensus-algorithm.md)
+- [PacBio 与 Nanopore](./pacbio-nanopore.md)
+- [序列比对基础](../alignment/index.md)
+- [序列比对](../alignment/index.md)

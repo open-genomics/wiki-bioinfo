@@ -1,0 +1,452 @@
+---
+description: Parsimony系统发育算法详解：通过动态规划计算Fitch算法和Sankoff算法，理解最小化进化变化的树推断方法。
+title: "Parsimony算法"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="Parsimony（简约法）通过寻找需要最少进化变化的系统发育树来推断物种关系，使用Fitch算法和Sankoff算法高效计算单个位点的最小变化数。"
+  bullets={[
+    '核心思想是在所有可能的树中选择需要最少替换事件的那一棵',
+    'Fitch算法处理无权重的字符状态，Sankoff算法处理带权重的替换模型',
+    '是理解位点级系统发育推断的经典方法，连接距离法和概率模型',
+  ]}
+/>
+
+## 是什么
+
+Parsimony（简约法）在系统发育中的核心思想非常直观：
+
+> 在所有可能的树中，优先选择需要"最少进化变化"的那一棵。
+
+换句话说，如果一组序列在若干位点上的状态变化可以用更少的替换事件解释，那么这棵树就更"简约"。
+
+## 要解决什么生物信息学问题
+
+Parsimony解决的是：
+- 给定一组序列（通常是多序列比对的结果），如何找到一棵树，使得解释所有位点所需的替换事件总数最少
+- 如何在没有显式概率模型的情况下，从字符状态推断进化关系
+
+## 为什么重要
+
+Parsimony的重要性体现在：
+- **直观性**：不需要复杂的概率模型，易于理解和实现
+- **教学价值**：是理解位点级系统发育推断的经典方法
+- **计算效率**：对于固定树，可以用动态规划高效计算
+- **历史地位**：在概率模型普及之前是主要的系统发育方法
+
+## 核心思想
+
+<DefinitionList
+  items={[
+    {
+      term: '简约性原则',
+      definition: '在所有能解释数据的假设中，选择最简单的那一个（奥卡姆剃刀）。',
+    },
+    {
+      term: '位点独立假设',
+      definition: '假设不同位点独立演化，可以分别计算每个位点的变化数，然后求和。',
+    },
+    {
+      term: '动态规划',
+      definition: '对于固定树，使用自底向上的动态规划高效计算最小变化数。',
+    },
+  ]}
+/>
+
+### 与距离法的区别
+
+- **距离法**：
+  - 先把序列压缩成两两距离
+  - 再根据距离矩阵构树
+  - 丢失位点级信息
+- **Parsimony**：
+  - 直接看每个位点的字符状态
+  - 问这组状态在某棵树上最少需要多少次变化
+  - 保留位点级信息
+
+## 数学模型
+
+### 问题定义
+
+给定：
+- n个序列，每个序列长度为L
+- 一棵有根或无根的二叉树T，n个叶子节点对应n个序列
+
+目标：找到树的内节点状态赋值，使得所有位点的状态变化总数最小。
+
+### 简约得分
+
+对于树T和序列数据D，简约得分定义为：
+
+$$
+Score(T, D) = \sum_\{k=1\}^\{L\} \min_\{\text\{内节点赋值\}\} \sum_\{e \in E(T)\} c(e, k)
+$$
+
+其中：
+- $c(e, k)$ 是第k个位点在边e上的变化数（0或1）
+- 内层最小化是在给定树拓扑下，寻找最优的内节点状态赋值
+
+## Fitch算法
+
+Fitch算法（1971）用于处理无权重的字符状态（如DNA的A、C、G、T）。
+
+### 算法思想
+
+Fitch算法使用动态规划，自底向上计算每个节点可能的状态集合。
+
+<DefinitionList
+  items={[
+    {
+      term: '状态集合S(v)',
+      definition: '节点v可以取的字符状态集合，使得从v的子树到v的变化数最小。',
+    },
+    {
+      term: '交集操作',
+      definition: '如果左右子节点的状态集合有交集，则取交集，不需要额外变化。',
+    },
+    {
+      term: '并集操作',
+      definition: '如果左右子节点的状态集合无交集，则取并集，需要一次变化。',
+    },
+  ]}
+/>
+
+### 算法步骤
+
+**算法1：Fitch算法（计算简约得分）**
+
+```
+输入：树T，第k个位点的叶子节点状态
+输出：最小变化数和内节点状态集合
+
+1. 后序遍历树T
+2. 对于每个节点v：
+   a. 如果v是叶子节点：
+      S(v) = \{state(v)\}
+      cost(v) = 0
+   b. 如果v是内节点，有子节点left和right：
+      if S(left) ∩ S(right) ≠ ∅:
+         S(v) = S(left) ∩ S(right)
+         cost(v) = cost(left) + cost(right)
+      else:
+         S(v) = S(left) ∪ S(right)
+         cost(v) = cost(left) + cost(right) + 1
+3. 返回 cost(root) 作为该位点的简约得分
+```
+
+**时间复杂度**：$O(n \cdot |\Sigma|)$，其中n是节点数，$|\Sigma|$是字母表大小
+**空间复杂度**：$O(n \cdot |\Sigma|)$
+
+### 状态赋值
+
+计算完简约得分后，可以自顶向下为每个内节点选择具体状态：
+
+```
+1. 为根节点选择 S(root) 中的任意状态
+2. 前序遍历树，对于每个内节点v和其子节点c：
+   if state(v) ∈ S(c):
+      state(c) = state(v)
+   else:
+      state(c) = S(c) 中的任意状态
+```
+
+## Worked Example（Fitch算法）
+
+考虑4个物种的某个位点，状态为：A、A、G、G
+
+树结构：
+```
+    root
+   /    \
+  n1     n2
+ / \    / \
+A   A  G   G
+```
+
+### 后序遍历计算
+
+**节点A（叶子）**：
+- `S(A) = {A}`
+- `cost(A) = 0`
+
+**节点A（叶子）**：
+- `S(A) = {A}`
+- `cost(A) = 0`
+
+**节点G（叶子）**：
+- `S(G) = {G}`
+- `cost(G) = 0`
+
+**节点G（叶子）**：
+- `S(G) = {G}`
+- `cost(G) = 0`
+
+**节点n1**：
+- `S(left) = {A}, S(right) = {A}`
+- `S(left) ∩ S(right) = {A} ≠ ∅`
+- `S(n1) = {A}`
+- `cost(n1) = 0 + 0 = 0`
+
+**节点n2**：
+- `S(left) = {G}, S(right) = {G}`
+- `S(left) ∩ S(right) = {G} ≠ ∅`
+- `S(n2) = {G}`
+- `cost(n2) = 0 + 0 = 0`
+
+**节点root**：
+- `S(left) = {A}, S(right) = {G}`
+- `S(left) ∩ S(right) = ∅`
+- `S(root) = {A, G}`
+- `cost(root) = 0 + 0 + 1 = 1`
+
+该位点的简约得分为1，需要1次变化。
+
+### 状态赋值
+
+**root**：选择 A（从 `{A, G}` 中任意选择）
+
+**n1**：`state(root) = A ∈ S(n1) = {A}`
+- `state(n1) = A`
+
+**n2**：`state(root) = A ∉ S(n2) = {G}`
+- `state(n2) = G`
+
+最终内节点状态：n1 = A, n2 = G, root = A
+
+树上的变化：
+- root → n2：A → G（1次变化）
+- 其他边无变化
+
+## Sankoff算法
+
+Sankoff算法（1975）是Fitch算法的推广，可以处理带权重的替换模型。
+
+### 算法思想
+
+Sankoff算法为每个节点和每个字符状态计算最小代价。
+
+<DefinitionList
+  items={[
+    {
+      term: '代价矩阵C(a, b)',
+      definition: '从状态a变化到状态b的代价。对于无权重情况，C(a,a)=0, C(a,b)=1 (a≠b)。',
+    },
+    {
+      term: 'dp[v][a]',
+      definition: '节点v的子树在v取状态a时的最小总代价。',
+    },
+    {
+      term: '权重替换',
+      definition: '允许不同类型的替换有不同的代价，反映生物学上的倾向性。',
+    },
+  ]}
+/>
+
+### 算法步骤
+
+**算法2：Sankoff算法（带权重的简约）**
+
+```
+输入：树T，第k个位点的叶子节点状态，代价矩阵C
+输出：最小变化数
+
+1. 初始化代价矩阵C（根据替换模型）
+2. 后序遍历树T
+3. 对于每个节点v：
+   a. 如果v是叶子节点：
+      for each state a:
+         if a == state(v):
+            dp[v][a] = 0
+         else:
+            dp[v][a] = ∞
+   b. 如果v是内节点，有子节点left和right：
+      for each state a:
+         dp[v][a] = min_\{b\} [dp[left][b] + C(a, b)] +
+                    min_\{b\} [dp[right][b] + C(a, b)]
+4. 返回 min_a dp[root][a]
+```
+
+**时间复杂度**：$O(n \cdot |\Sigma|^2)$
+**空间复杂度**：$O(n \cdot |\Sigma|)$
+
+## Worked Example（Sankoff算法）
+
+使用相同的例子，但考虑不同的替换代价：
+
+代价矩阵（A和G之间替换代价为2，其他为1）：
+
+|   | A | C | G | T |
+|---|---|---|---|---|
+| A | 0 | 1 | 2 | 1 |
+| C | 1 | 0 | 1 | 1 |
+| G | 2 | 1 | 0 | 1 |
+| T | 1 | 1 | 1 | 0 |
+
+### 后序遍历计算
+
+**叶子节点**：
+- dp[A][A] = 0, dp[A][其他] = ∞
+- dp[G][G] = 0, dp[G][其他] = ∞
+
+**节点n1（子节点都是A）**：
+- dp[n1][A] = dp[A][A] + C(A,A) + dp[A][A] + C(A,A) = 0 + 0 + 0 + 0 = 0
+- dp[n1][G] = dp[A][A] + C(G,A) + dp[A][A] + C(G,A) = 0 + 2 + 0 + 2 = 4
+- 类似计算其他状态...
+
+**节点n2（子节点都是G）**：
+- dp[n2][G] = dp[G][G] + C(G,G) + dp[G][G] + C(G,G) = 0 + 0 + 0 + 0 = 0
+- dp[n2][A] = dp[G][G] + C(A,G) + dp[G][G] + C(A,G) = 0 + 2 + 0 + 2 = 4
+
+**节点root**：
+- dp[root][A] = dp[n1][A] + C(A,A) + dp[n2][G] + C(A,G) = 0 + 0 + 0 + 2 = 2
+- dp[root][G] = dp[n1][A] + C(G,A) + dp[n2][G] + C(G,G) = 0 + 2 + 0 + 0 = 2
+
+最小代价：min(dp[root]) = 2
+
+与Fitch算法相比，由于A→G的代价是2，总代价从1增加到2。
+
+## 搜索最优树
+
+Fitch和Sankoff算法解决了"给定树，计算最小变化数"的问题。但真正的parsimony问题是：
+
+**在所有可能的树中，找到简约得分最小的那棵树。**
+
+### 搜索空间
+
+对于n个叶子，可能的有根二叉树数量是：
+- (2n-3)!! = (2n-3) × (2n-5) × ... × 3 × 1
+
+例如：
+- n=4: 15棵树
+- n=10: 约2百万棵树
+- n=20: 约2×10^20棵树
+
+穷举所有树是不可能的。
+
+### 启发式搜索
+
+实际工具使用启发式搜索：
+
+1. **Branch and Bound**：精确算法，但只能处理小规模数据
+2. **Stepwise Addition**：
+   - 从3个叶子开始
+   - 每次添加一个叶子到所有可能位置
+   - 选择使简约得分最小的位置
+3. **Tree Bisection and Reconnection (TBR)**：
+   - 随机切割树
+   - 重新连接子树
+   - 如果更好则接受
+4. **Simulated Annealing**：模拟退火算法
+
+## 复杂度分析
+
+### 固定树的情况
+
+- Fitch算法：$O(n \cdot |\Sigma|)$ 时间，$O(n \cdot |\Sigma|)$ 空间
+- Sankoff算法：$O(n \cdot |\Sigma|^2)$ 时间，$O(n \cdot |\Sigma|)$ 空间
+
+### 搜索最优树的情况
+
+- 穷举：$O((2n-3)!! \cdot n \cdot L)$，不可行
+- 启发式搜索：取决于具体策略，通常为多项式时间但不保证最优
+
+## 适用场景
+
+### 适合使用Parsimony的情况
+
+- 序列相似度较高，替换事件较少
+- 需要快速初步分析
+- 不想引入复杂的替换模型
+- 形态学数据分析（字符状态明确）
+
+### 不适合使用Parsimony的情况
+
+- 序列差异很大，多次替换掩盖真实历史
+- 不同分支演化速率差异很大（long-branch attraction）
+- 需要考虑位点间的速率变异
+- 需要统计置信度评估
+
+## 长枝吸引（Long-Branch Attraction）
+
+Parsimony的一个主要问题是长枝吸引：
+
+- 当两个长枝（演化快的序列）实际上不相关时，parsimony可能错误地将它们聚在一起
+- 这是因为长枝上发生了很多替换，随机产生的相似性被误认为同源性
+- Maximum Likelihood和Bayesian方法通过显式建模演化过程来缓解这个问题
+
+## 与Maximum Likelihood的比较
+
+| 特性 | Parsimony | Maximum Likelihood |
+|------|-----------|-------------------|
+| 优化目标 | 最少变化 | 最大似然 |
+| 模型 | 无显式模型 | 显式替换模型 |
+| 计算 | 较快 | 较慢 |
+| 长枝吸引 | 容易受影响 | 相对鲁棒 |
+| 统计框架 | 无 | 有 |
+
+## 优缺点总结
+
+### 优点
+
+- 直观易懂，不需要复杂的概率模型
+- 对于固定树，计算高效
+- 适合形态学数据和分子序列
+- 是理解系统发育推断的重要基础
+
+### 缺点
+
+- 不考虑替换概率，可能不准确
+- 容易受长枝吸引影响
+- 无法提供统计置信度
+- 搜索最优树是NP难问题
+
+## 常见误区
+
+### Parsimony总是选择最简单的树
+
+不是。Parsimony选择的是"需要最少替换事件"的树，这不一定是结构最简单的树。
+
+### Parsimony不需要任何假设
+
+不是。Parsimony隐含假设：
+- 位点独立演化
+- 不同类型的替换代价相同（除非使用Sankoff算法）
+- 替换事件是稀疏的
+
+### Parsimony已经过时
+
+不是。虽然Maximum Likelihood和Bayesian方法更流行，但Parsimony仍然：
+- 适合某些类型的数据（如形态学）
+- 是教学和理解的重要工具
+- 在某些快速分析场景中仍有价值
+
+## 与真实工具的连接
+
+Parsimony在真实工具中的应用：
+
+- **PHYLIP**：pars程序实现parsimony
+- **PAUP***：专门的系统发育分析软件，支持parsimony
+- **MEGA**：提供parsimony作为建树选项
+- **TNT**：专门用于形态学数据的parsimony分析
+
+现代应用中，parsimony常用于：
+- 形态学数据分析
+- 快速初步分析
+- 与ML/Bayesian方法的结果对比
+
+## 参考资料
+
+- Fitch, W. M. (1971). Toward defining the course of evolution: minimum change for a specific tree topology. *Systematic biology*, 20(4), 406-416.
+- Sankoff, D. (1975). Minimal mutation trees of sequences. *SIAM Journal on Applied Mathematics*, 28(1), 35-42.
+- Felsenstein, J. (2004). *Inferring phylogenies*. Sinauer associates.
+
+## 相关页面
+
+- [距离方法概览](./distance-methods.md)
+- [加法系统发育（Additive Phylogeny）](./additive-phylogeny.md)
+- [Maximum Likelihood](./maximum-likelihood.md)
+- [多序列比对（MSA）](../alignment/multiple-sequence-alignment.md)

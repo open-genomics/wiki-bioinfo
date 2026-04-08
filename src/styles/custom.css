@@ -14,27 +14,88 @@
   --sl-color-gray-6: #24272f;
   --sl-color-black: #17181c;
 
-  --bioinfo-card-radius: 16px;
+  --bioinfo-card-radius: 14px;
   --bioinfo-card-border: var(--sl-color-gray-5);
-  --bioinfo-card-bg: var(--sl-color-bg);
-  --bioinfo-card-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
-  --bioinfo-card-shadow-hover: 0 8px 28px rgba(15, 23, 42, 0.1);
+  --bioinfo-card-bg: rgba(36, 39, 47, 0.5);
+  --bioinfo-card-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  --bioinfo-card-shadow-hover: 0 12px 32px rgba(0, 0, 0, 0.16);
+  --bioinfo-transition: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+  --sl-font-system: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
+  --sl-text-lg: 1.05rem;
+  --sl-line-height: 1.8;
+  --sl-line-height-headings: 1.3;
 }
 
 :root[data-theme='light'] {
-  --sl-color-accent-low: #b3e8e9;
-  --sl-color-accent-high: #0d3d3e;
-  --sl-color-white: #17181c;
-  --sl-color-gray-1: #24272f;
-  --sl-color-gray-2: #353841;
-  --sl-color-gray-3: #545861;
-  --sl-color-gray-4: #888b96;
-  --sl-color-gray-5: #c0c2c7;
-  --sl-color-gray-6: #eceef2;
+  --sl-color-accent-low: #dff5f5;
+  --sl-color-accent-high: #0a5c5e;
+  --sl-color-white: #1a1c20;
+  --sl-color-gray-1: #2c2f36;
+  --sl-color-gray-2: #444850;
+  --sl-color-gray-3: #636872;
+  --sl-color-gray-4: #9498a1;
+  --sl-color-gray-5: #d0d3d8;
+  --sl-color-gray-6: #f0f1f4;
   --sl-color-black: #ffffff;
 
-  --bioinfo-card-border: var(--sl-color-gray-1);
+  --bioinfo-card-border: #e2e5ea;
   --bioinfo-card-bg: #ffffff;
+  --bioinfo-card-shadow: 0 1px 4px rgba(15, 23, 42, 0.06), 0 2px 12px rgba(15, 23, 42, 0.04);
+  --bioinfo-card-shadow-hover: 0 8px 28px rgba(15, 23, 42, 0.1);
+}
+
+/* --- Reading Progress Bar --- */
+.reading-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--sl-color-accent), var(--sl-color-accent-high));
+  z-index: 9999;
+  transition: width 0.1s linear;
+}
+
+/* --- Global Typography & Content Polish --- */
+.sl-markdown-content {
+  font-size: var(--sl-text-lg);
+}
+
+.sl-markdown-content h2 {
+  margin-top: 2.5rem;
+  padding-bottom: 0.4rem;
+  border-bottom: 1px solid var(--bioinfo-card-border);
+}
+
+.sl-markdown-content h3 {
+  margin-top: 1.8rem;
+}
+
+.sl-markdown-content blockquote {
+  border-left: 3px solid var(--sl-color-accent);
+  background: rgba(15, 139, 141, 0.04);
+  border-radius: 0 var(--bioinfo-card-radius) var(--bioinfo-card-radius) 0;
+  padding: 0.75rem 1rem;
+}
+
+/* --- Hero Section Enhancement --- */
+.hero {
+  padding-block: 3rem;
+}
+
+.hero .tagline {
+  max-width: 42ch;
+}
+
+/* --- Sidebar Polish --- */
+nav.sidebar .top-level>li>details>summary {
+  font-weight: 700;
+}
+
+nav.sidebar a[aria-current='page'] {
+  border-inline-start-color: var(--sl-color-accent);
+  background: rgba(15, 139, 141, 0.08);
 }
 
 /* --- Component: PageHeaderMeta --- */
@@ -163,15 +224,20 @@
   box-shadow: var(--bioinfo-card-shadow);
   color: inherit;
   text-decoration: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--bioinfo-transition), border-color var(--bioinfo-transition), box-shadow var(--bioinfo-transition);
 }
 
 .section-nav-card:hover {
   color: inherit;
   text-decoration: none;
-  transform: translateY(-4px);
+  transform: translateY(-3px) scale(1.01);
   border-color: var(--sl-color-accent);
   box-shadow: var(--bioinfo-card-shadow-hover);
+}
+
+.section-nav-card:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
 }
 
 .section-nav-card h3 {
@@ -183,6 +249,7 @@
   margin: 0;
   color: var(--sl-color-gray-2);
   line-height: 1.75;
+  font-size: 0.92rem;
 }
 
 .section-nav-topline {
@@ -210,15 +277,20 @@
   box-shadow: var(--bioinfo-card-shadow);
   color: inherit;
   text-decoration: none;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform var(--bioinfo-transition), border-color var(--bioinfo-transition), box-shadow var(--bioinfo-transition);
 }
 
 .related-card:hover {
   color: inherit;
   text-decoration: none;
-  transform: translateY(-4px);
+  transform: translateY(-3px) scale(1.01);
   border-color: var(--sl-color-accent);
   box-shadow: var(--bioinfo-card-shadow-hover);
+}
+
+.related-card:focus-visible {
+  outline: 2px solid var(--sl-color-accent);
+  outline-offset: 2px;
 }
 
 .related-card h3 {
@@ -230,6 +302,7 @@
   margin: 0;
   color: var(--sl-color-gray-2);
   line-height: 1.75;
+  font-size: 0.92rem;
 }
 
 /* --- Shared badges / labels --- */
@@ -386,4 +459,35 @@
   .workflow-card {
     grid-template-columns: 1fr;
   }
+}
+
+/* --- Smooth Scrolling --- */
+html {
+  scroll-behavior: smooth;
+}
+
+/* --- Anchor offset for fixed header --- */
+:target {
+  scroll-margin-top: 5rem;
+}
+
+/* --- Better link styling in content --- */
+.sl-markdown-content a:not([class]) {
+  text-decoration-color: rgba(15, 139, 141, 0.3);
+  text-underline-offset: 2px;
+  transition: text-decoration-color var(--bioinfo-transition);
+}
+
+.sl-markdown-content a:not([class]):hover {
+  text-decoration-color: var(--sl-color-accent);
+}
+
+/* --- Starlight Card overrides for homepage --- */
+.sl-link-card {
+  border-radius: var(--bioinfo-card-radius) !important;
+  transition: transform var(--bioinfo-transition), box-shadow var(--bioinfo-transition) !important;
+}
+
+.sl-link-card:hover {
+  transform: translateY(-2px);
 }

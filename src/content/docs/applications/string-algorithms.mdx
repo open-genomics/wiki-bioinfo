@@ -1,0 +1,562 @@
+---
+description: 字符串算法与索引结构：从 Trie、Suffix Array 到 FM-index，理解大规模序列搜索与映射的基础设施。
+title: "字符串算法与索引结构"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="字符串算法与索引结构是生物信息学的基础设施，它们使得在人类基因组（3Gb）甚至更大参考序列上进行快速搜索成为可能。"
+  bullets={[
+    '理解索引结构的设计权衡：查询速度 vs 索引大小 vs 构建时间',
+    '掌握从朴素搜索到高级索引的演进逻辑',
+  ]}
+/>
+
+## 为什么需要字符串算法与索引
+
+生物序列本质上是字符串（A、T、C、G 或 20 种氨基酸），因此：
+
+- **规模巨大**：人类基因组 3Gb，参考数据库更大
+- **查询频繁**：每次 NGS 分析需要映射数十亿 reads
+- **实时性要求**：临床诊断需要快速结果
+- **内存限制**：索引必须能装入内存
+
+朴素字符串搜索（逐字符比较）时间复杂度 O(nm)，其中 n 是文本长度，m 是模式长度。对于人类基因组，这种方法完全不可行。
+
+字符串算法与索引的目标是：
+
+- **加速搜索**：从 O(n) 降到 O(log n) 或 O(1)
+- **支持复杂查询**：近似匹配、通配符、间隙
+- **节省内存**：压缩索引以处理大规模数据
+- **支持更新**：增量式索引更新
+
+## 基础字符串算法
+
+### 1. 朴素字符串匹配（Naive String Matching）
+
+**算法**：
+```
+NaiveMatch(T, P):
+  for i = 0 to |T| - |P|:
+    for j = 0 to |P| - 1:
+      if T[i+j] ≠ P[j]:
+        break
+    if j == |P|:
+      报告匹配位置 i
+```
+
+**复杂度**：
+- 最坏情况：O(nm)
+- 平均情况：O(n)
+
+**问题**：对于大规模数据太慢。
+
+### 2. KMP 算法（Knuth-Morris-Pratt）
+
+**核心思想**：利用已经匹配的信息，避免不必要的回溯。
+
+**失败函数（Failure Function）**：
+```
+π[i] = P[0..i] 的最长真前缀同时也是后缀的长度
+```
+
+**Worked Example**：
+
+模式 P = `ABABAC`
+
+计算失败函数：
+```
+i = 0: π[0] = 0（空字符串）
+i = 1: π[1] = 0（"A" 无真前缀=后缀）
+i = 2: π[2] = 1（"AB" 中 "A" = "B" 不对，但 "A" 是前缀）
+i = 3: π[3] = 2（"ABA" 中 "AB" = "BA" 不对，但 "A" = "A"）
+i = 4: π[4] = 3（"ABAB" 中 "ABA" = "BAB" 不对，但 "AB" = "AB"）
+i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
+```
+
+**复杂度**：O(n + m)
+
+**优势**：保证线性时间，不需要预处理文本。
+
+**局限**：不适用于大规模参考序列（每次查询仍需扫描整个文本）。
+
+### 3. Boyer-Moore 算法
+
+**核心思想**：从右向左匹配，利用坏字符规则和好后缀规则跳过大量字符。
+
+**坏字符规则**：
+```
+当不匹配字符 c 不在模式中时，可以跳过整个模式长度
+```
+
+**好后缀规则**：
+```
+利用已经匹配的后缀信息决定跳过多少字符
+```
+
+**复杂度**：
+- 最坏情况：O(nm)
+- 实际性能：通常 O(n/m)，非常快
+
+**适用场景**：模式较长时性能优异。
+
+## 高级索引结构
+
+### 1. Trie（前缀树）
+
+**定义**：Trie 是一种树形结构，每个节点代表一个字符，从根到叶的路径代表一个字符串。
+
+**结构示例**：
+
+字符串集合：`{"cat", "car", "dog", "deer"}`
+
+```
+        root
+       /  \
+      c    d
+     / \   |
+    a   a  o
+   / \   \ |
+  t   r   g e
+           \
+            e
+             \
+              r
+```
+
+**操作复杂度**：
+- 插入：O(m)
+- 查询：O(m)
+- 删除：O(m)
+
+其中 m 是字符串长度。
+
+**应用**：
+- 前缀搜索
+- 自动补全
+- 拼写检查
+
+**局限**：空间开销大，每个字符需要单独节点。
+
+### 2. Suffix Trie（后缀 Trie）
+
+**定义**：包含文本所有后缀的 Trie。
+
+**Worked Example**：
+
+文本 T = `banana`
+
+后缀：
+- banana
+- anana
+- nana
+- ana
+- na
+- a
+
+Suffix Trie：
+```
+                root
+               / | \
+              a  b  n
+             /|  |  |\
+            n n  a  a a
+           /|   |  |  |
+          a a   n  n  n
+         /     /     /
+        n     a     a
+       /
+      a
+```
+
+**优势**：
+- 快速子串查询：O(m)
+- 支持复杂查询
+
+**问题**：空间复杂度 O(n²)，对于长序列不可行。
+
+### 3. Suffix Tree（后缀树）
+
+**定义**：Suffix Trie 的压缩版本，合并单分支路径。
+
+**构造**：
+- 压缩单分支
+- 添加终止符 $
+
+**复杂度**：
+- 空间：O(n)
+- 构建时间：O(n)（Ukkonen 算法）
+
+**应用**：
+- 最长重复子串
+- 最长公共子串
+- 模式匹配
+
+**局限**：实现复杂，内存开销仍较大。
+
+### 4. Suffix Array（后缀数组）
+
+**定义**：文本所有后缀的排序数组。
+
+**Worked Example**：
+
+文本 T = `banana$`
+
+后缀及其起始位置：
+```
+0: banana$
+1: anana$
+2: nana$
+3: ana$
+4: na$
+5: a$
+6: $
+```
+
+排序后的后缀数组：
+```
+[6, 5, 3, 1, 0, 4, 2]
+对应：
+$: $ (位置 6)
+a$: a$ (位置 5)
+ana$: ana$ (位置 3)
+anana$: anana$ (位置 1)
+banana$: banana$ (位置 0)
+na$: na$ (位置 4)
+nana$: nana$ (位置 2)
+```
+
+**构造算法**：
+- 朴素方法：O(n² log n)
+- SA-IS 算法：O(n)
+
+**查询**：
+- 二分搜索：O(m log n)
+- 配合 LCP 数组可优化到 O(m + log n)
+
+**优势**：
+- 空间紧凑：O(n)
+- 相对容易实现
+- 支持高效查询
+
+### 5. LCP 数组（Longest Common Prefix）
+
+**定义**：LCP[i] = SuffixArray[i] 和 SuffixArray[i-1] 的最长公共前缀长度。
+
+**Worked Example**：
+
+Suffix Array: [6, 5, 3, 1, 0, 4, 2]
+```
+位置 6 ($):      LCP[6] = 0（无前驱）
+位置 5 (a$):     LCP[5] = 0（$ 和 a$ 无公共前缀）
+位置 3 (ana$):   LCP[3] = 1（a$ 和 ana$ 公共前缀 "a"）
+位置 1 (anana$): LCP[1] = 3（ana$ 和 anana$ 公共前缀 "ana"）
+位置 0 (banana$): LCP[0] = 0（anana$ 和 banana$ 无公共前缀）
+位置 4 (na$):    LCP[4] = 0（banana$ 和 na$ 无公共前缀）
+位置 2 (nana$):  LCP[2] = 2（na$ 和 nana$ 公共前缀 "na"）
+```
+
+**应用**：
+- 加速模式匹配
+- 计算最长重复子串
+- 构造后缀树
+
+### 6. Burrows-Wheeler Transform (BWT)
+
+**定义**：BWT 是一种可逆的文本变换，使相同字符聚集在一起，利于压缩。
+
+**构造算法**：
+1. 将文本 T 循环旋转得到所有旋转
+2. 对旋转进行字典序排序
+3. 取每行的最后一个字符组成 BWT
+
+**Worked Example**：
+
+文本 T = `banana$`
+
+所有旋转：
+```
+banana$
+anana$
+nana$
+ana$
+na$
+a$
+$
+```
+
+排序后：
+```
+$
+a$
+ana$
+anana$
+banana$
+na$
+nana$
+```
+
+BWT（取最后一列）：`annb$aa`
+
+**逆变换**：
+BWT 是可逆的，可以从 BWT 恢复原文本。
+
+**性质**：
+- 可逆
+- 相同字符聚集
+- 适合压缩
+
+**应用**：
+- 数据压缩（bzip2）
+- FM-index 的基础
+
+### 7. FM-index
+
+**定义**：基于 BWT 的压缩全文索引。
+
+**核心数据结构**：
+1. **BWT**：压缩的文本表示
+2. **C 数组**：C[c] = 文本中比字符 c 小的字符总数
+3. **Occ 数组**：Occ(c, i) = BWT[1..i] 中字符 c 的出现次数
+
+**查询算法（LF-mapping）**：
+```
+LF(c, i) = C[c] + Occ(c, i)
+```
+
+**模式搜索**：
+```
+后向搜索：
+  从模式末尾开始
+  反向应用 LF-mapping
+  得到模式在文本中的所有出现位置
+```
+
+**Worked Example**：
+
+搜索模式 P = `ana`
+
+文本 T = `banana$`
+BWT = `annb$aa`
+C 数组：C[$] = 0, C[a] = 1, C[b] = 4, C[n] = 5
+
+步骤 1：搜索 'a'
+- 范围：[C[a], C[n]-1] = [1, 4]
+- 位置：1, 2, 3, 4
+
+步骤 2：搜索 'na'
+- 对每个位置应用 LF-mapping
+- 缩小范围
+
+步骤 3：搜索 'ana'
+- 继续应用 LF-mapping
+- 得到最终范围
+
+**复杂度**：
+- 查询：O(m)
+- 空间：O(n)（可压缩）
+
+**优势**：
+- 极其节省内存
+- 查询速度快
+- 支持近似匹配
+
+**应用**：
+- BWA、Bowtie 等 aligner 的核心
+- 压缩全文搜索
+
+## 生物信息学应用
+
+### 1. 序列映射（Read Mapping）
+
+**问题**：将 reads 映射到参考基因组。
+
+**流程**：
+1. **索引构建**：对参考基因组构建 FM-index
+2. **Seed 搜索**：使用索引快速找到候选位置
+3. **扩展**：使用动态规划进行精确比对
+4. **评分**：计算比对质量
+
+**工具示例**：
+- **BWA**：基于 FM-index，支持短读长
+- **Bowtie**：基于 FM-index，超快速度
+- **minimap2**：基于 minimizer，支持长读长
+
+### 2. k-mer 计数
+
+**问题**：统计文本中所有 k-mer 的出现频率。
+
+**方法**：
+- **Hash 表**：简单但内存密集
+- **Bloom filter**：概率性，可能误报
+- **Count-min sketch**：概率性，适合大规模
+- **基于排序**：排序后统计，内存友好
+
+**应用**：
+- 基因组特征分析
+- 错误校正
+- 物种鉴定
+
+### 3. 重复序列检测
+
+**问题**：找到文本中的重复模式。
+
+**方法**：
+- 使用 Suffix Array + LCP 数组
+- 长的 LCP 值对应长重复
+
+**算法**：
+```
+FindRepeats(SA, LCP, min_length):
+  for i = 1 to n:
+    if LCP[i] >= min_length:
+      报告重复序列
+```
+
+### 4. 最长公共子串
+
+**问题**：找到两个或多个序列的最长公共子串。
+
+**方法**：
+- 构建连接串的 Suffix Array
+- 使用 LCP 数组找到跨边界的最大 LCP
+
+**Worked Example**：
+
+序列 1: `ABABC`
+序列 2: `BABCA`
+
+连接串：`ABABC#BABCA$`
+
+构建 Suffix Array 和 LCP，找到跨越 # 的最大 LCP。
+
+## 索引结构比较
+
+| 索引 | 空间 | 构建时间 | 查询时间 | 应用 |
+|-----|------|---------|---------|------|
+| Trie | O(n·σ) | O(n) | O(m) | 前缀搜索 |
+| Suffix Tree | O(n) | O(n) | O(m) | 通用 |
+| Suffix Array | O(n) | O(n log n) | O(m log n) | 平衡 |
+| FM-index | O(n) | O(n) | O(m) | 压缩 |
+
+其中 σ 是字母表大小。
+
+## 性能优化
+
+### 1. Minimizer
+
+**思想**：用 k-mer 的最小签名代表窗口。
+
+**优势**：
+- 减少索引大小
+- 加速查询
+- 适用于长读长
+
+**应用**：minimap2 的核心。
+
+### 2. 采样
+
+**思想**：只存储部分信息，通过采样恢复。
+
+**示例**：
+- Suffix Array 采样
+- LCP 数组采样
+
+### 3. 并行化
+
+**策略**：
+- 索引构建并行化
+- 查询并行化
+- 分布式索引
+
+### 4. 缓存优化
+
+**方法**：
+- 数据局部性
+- 预取
+- 缓存友好的数据结构
+
+## 实现考虑
+
+### 内存管理
+
+- **压缩存储**：使用位压缩
+- **外部内存**：处理超大规模数据
+- **内存映射**：高效文件访问
+
+### 字母表处理
+
+- **DNA**：4 字母（A、T、C、G）
+- **蛋白质**：20 字母
+- **通用**：支持任意字符
+
+### 错误处理
+
+- **测序错误**：支持近似匹配
+- **变异**：处理 SNP、indel
+- **质量控制**：过滤低质量 reads
+
+## 常见误区
+
+### 索引越大越好
+
+不是。索引应该在查询速度和内存使用之间平衡。FM-index 通过压缩实现了很好的权衡。
+
+### Suffix Array 总是比 Suffix Tree 好
+
+不一定。Suffix Tree 支持某些操作（如最长公共子串查询）更直接，但实现更复杂。
+
+### BWT 只用于压缩
+
+不是。BWT 的可逆性和 LF-mapping 使其成为强大的索引结构基础。
+
+### 近似匹配只能用启发式
+
+不是。某些索引结构（如 FM-index）支持精确的近似匹配搜索。
+
+## 学习路径
+
+### 初学者
+
+1. 理解朴素字符串匹配
+2. 掌握 Trie 的基本概念
+3. 理解 Suffix Array 的构造和查询
+4. 学习 BWT 和 FM-index
+
+### 进阶
+
+1. 实现 Suffix Array 构造算法
+2. 实现 FM-index 查询
+3. 理解近似匹配扩展
+4. 研究具体工具的实现
+
+### 实践
+
+1. 用 Python 实现简单的 Trie
+2. 实现后缀数组的朴素构造
+3. 使用现有库（如 pysuffix）进行实验
+4. 阅读 BWA 源码
+
+## 练习
+
+1. 手动构造 "mississippi$" 的后缀数组
+2. 实现 KMP 算法的失败函数计算
+3. 构造 "banana$" 的 BWT 并验证可逆性
+4. 比较不同索引结构在相同数据上的性能
+
+## 参考资料
+
+- Gusfield, D. (1997). *Algorithms on strings, trees, and sequences: computer science and computational biology*. Cambridge university press.
+- Ferragina, P., & Manzini, G. (2000). Opportunistic data structures with applications. *Proceedings of the 41st Annual Symposium on Foundations of Computer Science*.
+- Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows–Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
+
+## 相关页面
+
+- [FM-index](../sequence/fm-index.mdx)
+- [BWA 与 minimap2](../alignment/bwa-minimap2.md)
+- [序列表示与索引](../sequence/index.md)
+- [算法总览](./algorithms-overview.md)
+- [动态规划算法](./dynamic-programming.md)

@@ -1,0 +1,605 @@
+---
+description: MOFA+详解：基于贝叶斯因子分析的多组学整合方法，理解如何处理缺失数据和不确定性估计。
+title: "MOFA+（Multi-Omics Factor Analysis）"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="MOFA+ 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，可处理缺失数据并提供不确定性估计。"
+  bullets={[
+    '核心是贝叶斯因子分析框架，每组学对共享因子有不同敏感度',
+    '可自然处理缺失数据，这是相比 NMF 和 CCA 的关键优势',
+    '提供不确定性估计，适合小样本或噪声大的场景',
+  ]}
+/>
+
+## 是什么
+
+MOFA+（Multi-Omics Factor Analysis Plus）是用于多组学数据整合的贝叶斯因子分析方法。
+
+其核心假设是：观测到的多组学数据由一组共享的潜在因子（latent factors）驱动，每组学对这些因子有不同的敏感度（权重）。
+
+模型结构：
+
+$$
+X^\{(k)\} = W^\{(k)\} Z + \epsilon^\{(k)\}, \quad \epsilon^\{(k)\} \sim \mathcal\{N\}(0, \tau^\{(k)\})
+$$
+
+其中：
+- $X^{(k)} \in \mathbb{R}^{n \times p_k}$ 是组学 $k$ 的观测数据
+- $Z \in \mathbb{R}^{r \times n}$ 是共享潜在因子矩阵（$r$ 个因子，$n$ 个样本）
+- $W^{(k)} \in \mathbb{R}^{p_k \times r}$ 是组学 $k$ 的因子载荷矩阵
+- $\tau^{(k)}$ 是组学 $k$ 的噪声参数
+- $\epsilon^{(k)}$ 是观测噪声
+
+## 为什么重要
+
+在生物信息学中，MOFA+ 的价值体现在：
+
+- **缺失数据处理**：可自然处理部分组学缺失的数据，这是实际研究中的常见情况
+- **不确定性估计**：贝叶斯框架提供后验分布，可量化估计的不确定性
+- **自动权重学习**：通过 ARD（Automatic Relevance Determination）先验自动学习组学权重
+- **可解释性**：因子可以标注为已知的生物学过程或临床变量
+- **灵活性**：支持不同数据类型（连续、二值、计数）
+
+相比 Joint NMF 和 CCA，MOFA+ 在处理缺失数据和提供不确定性方面有显著优势。
+
+## 核心思想
+
+### 因子分析回顾
+
+标准因子分析假设观测变量由潜在因子线性组合而成：
+
+$$
+X = W Z + \epsilon
+$$
+
+其中 $Z$ 是潜在因子，$W$ 是载荷矩阵。
+
+### MOFA+ 的扩展
+
+MOFA+ 将因子分析扩展到多组学场景：
+- **共享因子**：所有组学共享同一组潜在因子 $Z$
+- **组学特异载荷**：每组学有自己的载荷矩阵 $W^{(k)}$
+- **组学特异噪声**：每组学有自己的噪声参数 $\tau^{(k)}$
+
+### 贝叶斯框架
+
+MOFA+ 使用贝叶斯推断：
+- 对 $Z$ 和 $W^{(k)}$ 设置先验分布
+- 通过观测数据推断后验分布
+- 使用变分推断近似后验
+
+## 数学模型
+
+### 生成模型
+
+对于组学 $k$，生成过程为：
+
+1. 从先验采样潜在因子：
+   $$
+   Z_r \sim \mathcal\{N\}(0, 1), \quad r = 1, ..., R
+   $$
+
+2. 从先验采样载荷矩阵：
+   $$
+   W^\{(k)\}_\{pr\} \sim \mathcal\{N\}(0, \theta_\{kr\}^\{-1\})
+   $$
+   其中 $\theta_{kr}$ 是 ARD 先验的精度参数。
+
+3. 生成观测数据：
+   $$
+   X^\{(k)\}_\{ij\} \sim \mathcal\{N\}(\sum_\{r=1\}^\{R\} W^\{(k)\}_\{jr\} Z_\{ri\}, \tau_\{kj\}^\{-1\})
+   $$
+
+### 先验分布
+
+**潜在因子先验**：
+$$
+Z \sim \mathcal\{N\}(0, I_R)
+$$
+
+**载荷矩阵先验（ARD）**：
+$$
+W^\{(k)\}_\{jr\} \sim \mathcal\{N\}(0, \alpha_\{kr\}^\{-1\})
+$$
+
+其中 $\alpha_{kr}$ 控制因子 $r$ 在组学 $k$ 中的重要性：
+- $\alpha_{kr}$ 大 $\rightarrow$ $W^{(k)}_{jr}$ 小 $\rightarrow$ 因子 $r$ 对组学 $k$ 不重要
+- $\alpha_{kr}$ 小 $\rightarrow$ $W^{(k)}_{jr}$ 大 $\rightarrow$ 因子 $r$ 对组学 $k$ 重要
+
+**噪声先验**：
+$$
+\tau_\{kj\} \sim \text\{Gamma\}(a, b)
+$$
+
+### 变分推断
+
+由于后验分布 $p(Z, W | X)$ 难以精确计算，MOFA+ 使用变分推断：
+
+假设后验的近似形式：
+$$
+q(Z, W) = q(Z) \prod_\{k=1\}^\{K\} q(W^\{(k)\})
+$$
+
+通过优化 ELBO（Evidence Lower BOund）：
+$$
+\mathcal\{L\} = \mathbb\{E\}_q[\log p(X, Z, W)] - \mathbb\{E\}_q[\log q(Z, W)]
+$$
+
+<DefinitionList
+  items={[
+    {
+      term: 'ELBO（Evidence Lower Bound）',
+      definition: '证据下界，变分推断优化的目标函数，最大化 ELBO 等价于最小化 KL 散度。',
+    },
+    {
+      term: 'ARD 先验',
+      definition: 'Automatic Relevance Determination 先验，通过超参数自动控制因子的相关性。',
+    },
+    {
+      term: '因子重要性',
+      definition: '通过 ARD 参数 $\alpha_{kr}$ 衡量，值越小表示因子越重要。',
+    },
+  ]}
+/>
+
+## 算法步骤
+
+### 步骤 1：数据预处理
+
+**算法1：MOFA+ 数据预处理**
+
+```
+输入：K个组学矩阵 X^\{(1)\}, ..., X^\{(K)\}
+输出：预处理后的数据
+
+1. 对每个组学 k：
+   a. 根据数据类型选择变换：
+      - 连续数据：标准化（z-score）
+      - 计数数据：log(x + 1) 后标准化
+      - 二值数据：保持原样
+   b. 特征选择：
+      - 保留高变异特征（top 5000）
+      - 或保留生物学相关特征
+
+2. 处理缺失值：
+   - MOFA+ 可直接处理缺失值，标记为 NA
+   - 不需要填充
+
+3. return 预处理后的数据
+```
+
+### 步骤 2：模型初始化
+
+**算法2：MOFA+ 初始化**
+
+```
+输入：预处理后的数据，潜在因子数 R
+输出：初始化的变分参数
+
+1. 初始化潜在因子分布：
+   q(Z) = N(μ_Z, Σ_Z)
+   - μ_Z 使用 PCA 初始化
+   - Σ_Z = I（对角协方差）
+
+2. 初始化载荷矩阵分布：
+   对每个组学 k：
+   q(W^\{(k)\}) = N(μ_W^\{(k)\}, Σ_W^\{(k)\})
+   - μ_W^\{(k)\} 使用随机初始化或 PCA 载荷
+   - Σ_W^\{(k)\} = I
+
+3. 初始化 ARD 参数：
+   α_\{kr\} = 1 for all k, r
+
+4. return 初始化参数
+```
+
+### 步骤 3：变分推断
+
+**算法3：MOFA+ 变分推断**
+
+```
+输入：数据 X，初始化参数，最大迭代次数 T
+输出：优化后的变分参数
+
+for iteration = 1 to T:
+  1. 更新 q(Z)：
+     μ_Z ← Σ_Z × (∑_k (W^\{(k)\})^T τ^\{(k)\} X^\{(k)\})
+     Σ_Z ← (I + ∑_k (W^\{(k)\})^T τ^\{(k)\} W^\{(k)\})^\{-1\}
+  
+  2. 对每个组学 k，更新 q(W^\{(k)\})：
+     μ_W^\{(k)\} ← Σ_W^\{(k)\} × τ^\{(k)\} X^\{(k)\} Z^T
+     Σ_W^\{(k)\} ← (diag(α_k) + τ^\{(k)\} Z Z^T)^\{-1\}
+  
+  3. 更新 ARD 参数 α：
+     α_\{kr\} ← (1 + p_k) / (1 + ∑_j (W^\{(k)\}_\{jr\})^2)
+  
+  4. 更新噪声参数 τ：
+     τ_\{kj\} ← (a + 1/2) / (b + 1/2 × E[(X^\{(k)\}_\{ij\} - μ_\{ij\})^2])
+  
+  5. 计算 ELBO：
+     L = E_q[log p(X, Z, W)] - E_q[log q(Z, W)]
+  
+  6. 检查收敛：
+     if |L - L_prev| < ε:
+       break
+
+return 优化后的参数
+```
+
+**时间复杂度**：每次迭代 $O(n r \sum_k p_k)$，总复杂度 $O(T \cdot n r \sum_k p_k)$
+
+### 步骤 4：后验分析
+
+**算法4：MOFA+ 后验分析**
+
+```
+输入：优化后的变分参数
+输出：分析结果
+
+1. 提取因子值：
+   Z_mean = μ_Z  # 因子均值
+   Z_var = diag(Σ_Z)  # 因子方差
+
+2. 提取载荷矩阵：
+   W_mean^\{(k)\} = μ_W^\{(k)\}
+
+3. 计算因子重要性：
+   importance_\{kr\} = 1 / α_\{kr\}
+
+4. 可视化：
+   - 因子散点图（Z_mean 的前两维）
+   - 载荷热图（W_mean）
+   - 因子重要性条形图
+
+5. 因子解释：
+   - 与已知标签的相关性
+   - 与生物学通路的富集分析
+
+return 分析结果
+```
+
+## Worked Example
+
+考虑两个组学数据：
+- 基因表达：3 个样本，4 个基因
+- 甲基化：3 个样本，3 个位点
+
+$$
+X^\{(1)\} = \begin\{bmatrix\}
+5 & 3 & 0 & 0 \\
+4 & 2 & 0 & 0 \\
+0 & 0 & 4 & 5
+\end\{bmatrix\}, \quad
+X^\{(2)\} = \begin\{bmatrix\}
+3 & 0 & 0 \\
+2 & 0 & 0 \\
+0 & 4 & 3
+\end\{bmatrix\}
+$$
+
+选择潜在因子数 $R = 2$。
+
+### 步骤 1：数据预处理
+
+标准化后（假设）：
+
+$$
+X^\{(1)'\} = \begin\{bmatrix\}
+1.2 & 0.8 & -1.0 & -1.0 \\
+0.8 & 0.2 & -1.0 & -1.0 \\
+-1.0 & -1.0 & 0.8 & 1.2
+\end\{bmatrix\}, \quad
+X^\{(2)'\} = \begin\{bmatrix\}
+1.0 & -0.8 & -0.8 \\
+0.4 & -0.8 & -0.8 \\
+-1.0 & 1.0 & 1.0
+\end\{bmatrix\}
+$$
+
+### 步骤 2：模型初始化
+
+使用 PCA 初始化因子：
+
+假设 PCA 得到：
+$$
+Z_\{init\} = \begin\{bmatrix\}
+1.1 & -0.3 \\
+0.9 & -0.2 \\
+-1.0 & 0.5
+\end\{bmatrix\}
+$$
+
+### 步骤 3：变分推断（简化）
+
+经过几次迭代后，假设收敛到：
+
+**因子均值**：
+$$
+Z_\{mean\} = \begin\{bmatrix\}
+1.05 & -0.28 \\
+0.92 & -0.22 \\
+-0.97 & 0.50
+\end\{bmatrix\}
+$$
+
+**载荷矩阵（基因表达）**：
+$$
+W^\{(1)\}_\{mean\} = \begin\{bmatrix\}
+0.85 & 0.10 \\
+0.72 & 0.15 \\
+0.05 & 0.80 \\
+0.02 & 0.88
+\end\{bmatrix\}
+$$
+
+**载荷矩阵（甲基化）**：
+$$
+W^\{(2)\}_\{mean\} = \begin\{bmatrix\}
+0.78 & 0.05 \\
+0.65 & 0.08 \\
+0.03 & 0.75
+\end\{bmatrix\}
+$$
+
+### 步骤 4：结果解释
+
+**因子 1**：
+- 在样本 1 和 2 中高表达（1.05, 0.92）
+- 在样本 3 中低表达（-0.97）
+- 主要由基因 1, 2 和甲基化位点 1, 2 驱动
+- 可能对应某种细胞类型或疾病状态
+
+**因子 2**：
+- 在样本 3 中高表达（0.50）
+- 在样本 1 和 2 中低表达（-0.28, -0.22）
+- 主要由基因 3, 4 和甲基化位点 3 驱动
+- 可能对应另一种生物学状态
+
+**ARD 参数**：
+假设 $\alpha_{11} = 0.5$（小，因子 1 对组学 1 重要）
+$\alpha_{12} = 2.0$（大，因子 2 对组学 1 不太重要）
+
+## 复杂度分析
+
+### 时间复杂度
+
+每次迭代：
+- 更新 $q(Z)$：$O(n r^2 + n r \sum_k p_k)$
+- 更新所有 $q(W^{(k)})$：$O(\sum_k (p_k r^2 + p_k r n))$
+- 更新 ARD 参数：$O(\sum_k p_k r)$
+- 总计：$O(n r \sum_k p_k + r^2 (n + \sum_k p_k))$
+
+假设迭代 $T$ 次，总时间复杂度：$O(T \cdot n r \sum_k p_k)$
+
+### 空间复杂度
+
+- 存储因子：$O(n r)$
+- 存储所有载荷矩阵：$O(r \sum_k p_k)$
+- 存储协方差矩阵：$O(r^2 + \sum_k p_k r^2)$
+- 总计：$O(n r + r^2 (1 + \sum_k p_k))$
+
+## 参数选择
+
+### 潜在因子数 R
+
+**方法 1：ELBO 曲线**
+- 绘制 ELBO 随 R 的变化
+- 选择拐点（边际收益递减）
+
+**方法 2：方差解释**
+- 计算每个因子解释的方差比例
+- 累积解释方差达到阈值（如 80%）
+
+**方法 3：下游任务**
+- 在下游任务（分类、聚类）上交叉验证
+- 选择任务性能最优的 R
+
+**经验值**：通常 $R \in [5, 50]$
+
+### ARD 先验参数
+
+通常使用默认值（Gamma 先验的参数），模型会自动学习。
+
+### 数据类型参数
+
+根据数据类型设置似然函数：
+- 连续：高斯分布
+- 二值：伯努利分布
+- 计数：泊松分布
+
+## 适用场景
+
+### 适合使用 MOFA+ 的情况
+
+- 存在缺失数据（部分组学缺失）
+- 需要不确定性估计
+- 样本量较小
+- 数据类型多样（连续、二值、计数混合）
+- 需要自动学习组学权重
+- 可解释性要求高
+
+### 不适合使用 MOFA+ 的情况
+
+- 超大规模数据（计算开销大）
+- 复杂非线性关系（考虑深度学习方法）
+- 实时应用（推断速度较慢）
+- 所有组学都完整且无噪声（NMF 或 CCA 可能更简单）
+
+## 与其他方法的比较
+
+| 方法 | 缺失数据 | 不确定性 | 自动权重 | 非线性 | 计算效率 |
+|------|---------|---------|---------|--------|---------|
+| MOFA+ | 好 | 好 | 好 | 否 | 中 |
+| Joint NMF | 差 | 否 | 否 | 否 | 高 |
+| CCA | 差 | 否 | 否 | 否 | 高 |
+| VAE | 好 | 好 | 中 | 是 | 低 |
+| SNF | 差 | 否 | 否 | 否 | 中 |
+
+## 在真实工具中的实现
+
+### Python 实现（使用 MOFA2 包）
+
+```python
+import mofax
+import pandas as pd
+import numpy as np
+
+# 假设我们有多个组学数据
+rna_data = pd.DataFrame(...)  # 基因表达
+meth_data = pd.DataFrame(...)  # 甲基化
+
+# 创建 MultiAssayExperiment 对象
+from muon import MuData
+mdata = MuData(\{
+    'rna': rna_data,
+    'meth': meth_data
+\})
+
+# 训练 MOFA+ 模型
+from mofapy2.run.entry_point import entry_point
+
+ent = entry_point()
+ent.set_data_options(
+    scale_views=False,
+    center_views=True
+)
+ent.set_model_options(
+    factors=10,
+    likelihoods=['gaussian', 'gaussian']
+)
+ent.set_train_options(
+    convergence_mode='slow',
+    seed=42
+)
+ent.set_data_from_mudata(mdata)
+ent.build()
+ent.run()
+
+# 获取结果
+factors = ent.model.get_factors()
+loadings = ent.model.get_loadings()
+```
+
+### R 实现
+
+```r
+library(MOFA2)
+
+# 创建 MultiAssayExperiment 对象
+library(MultiAssayExperiment)
+# 假设 rna_assay 和 meth_assay 已经定义
+mae <- MultiAssayExperiment(
+  assays = list(RNA = rna_assay, Methylation = meth_assay)
+)
+
+# 训练 MOFA+ 模型
+MOFAobject <- create_mofa(mae)
+MOFAobject <- prepare_mofa(MOFAobject)
+MOFAobject <- run_mofa(MOFAobject, factors = 10)
+
+# 提取结果
+factors <- get_factors(MOFAobject)
+loadings <- get_loadings(MOFAobject)
+```
+
+## 后续分析
+
+### 因子解释
+
+**与已知标签的相关性**：
+```python
+# 计算因子与临床变量的相关性
+import scipy.stats as stats
+
+for factor_idx in range(n_factors):
+    corr, pval = stats.pearsonr(factors[:, factor_idx], clinical_variable)
+    print(f"Factor \{factor_idx\}: r=\{corr:.3f\}, p=\{pval:.3f\}")
+```
+
+**通路富集分析**：
+- 根据载荷矩阵识别每个因子的重要特征
+- 对这些特征进行通路富集分析
+- 将因子标注为生物学过程
+
+### 可视化
+
+**因子散点图**：
+- 展示样本在因子空间中的分布
+- 用颜色标注已知标签
+
+**载荷热图**：
+- 展示每个因子在各特征上的权重
+- 识别驱动因子
+
+**方差解释**：
+- 展示每个因子解释的方差比例
+- 评估因子重要性
+
+## 常见误区
+
+### MOFA+ 总是比 NMF 好
+
+不一定。如果：
+- 数据完整无缺失
+- 不需要不确定性估计
+- 计算资源有限
+
+NMF 可能更合适。
+
+### 因子数越多越好
+
+不是。过多因子会导致：
+- 过拟合
+- 因子难以解释
+- 计算成本增加
+
+### ARD 参数可以完全自动选择因子
+
+ARD 有帮助，但仍需要：
+- 结合 ELBO 曲线
+- 考虑可解释性
+- 下游任务验证
+
+### MOFA+ 只能用于连续数据
+
+不是。MOFA+ 支持多种数据类型：
+- 连续：高斯似然
+- 二值：伯努利似然
+- 计数：泊松似然
+
+### 因子可以直接解释为生物学过程
+
+需要验证：
+- 与已知标签的相关性
+- 通路富集分析
+- 稳定性分析
+
+## 扩展方法
+
+### MOFA+ 的变体
+
+**MultiVI**：专门为单细胞多模态数据设计，整合 scRNA-seq 和 scATAC-seq。
+
+**totalVI**：整合 RNA 和蛋白质数据（CITE-seq）。
+
+**scVI**：单细胞 RNA-seq 的变分自编码器，MOFA+ 的深度学习版本。
+
+## 参考资料
+
+- Argelaguet, R., et al. (2020). "Multi-Omics Factor Analysis-a framework for unsupervised integration of multi-omics data sets". *Molecular systems biology*, 16(6).
+- Argelaguet, R., et al. (2018). "Multi-Omics Factor Analysis: a framework for unsupervised integration of multi-omics data sets".
+- R. Argelaguet, et al. (2019). "MOFA+: a statistical framework for comprehensive integration of multi-omics data".
+
+## 相关页面
+
+- [整合算法概览](./integration-algorithms.md)
+- [联合NMF](./joint-nmf.md)
+- [典型相关分析](./canonical-correlation-analysis.md)
+- [相似性网络融合](./similarity-network-fusion.md)
+- [单细胞 multiome](./single-cell-multiome.md)
+- [机器学习基础](../ml-bioinfo/index.md)

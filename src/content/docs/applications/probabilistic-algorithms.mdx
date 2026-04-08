@@ -1,0 +1,634 @@
+---
+description: 概率算法与统计推断：从 HMM、贝叶斯方法到 MCMC 采样，理解生物信息学中处理噪声与不确定性的核心方法。
+title: "概率算法与统计推断"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="概率算法是处理生物数据中噪声与不确定性的核心工具，它们不给出确定性的答案，而是量化不同解释的可能性。"
+  bullets={[
+    '理解概率模型如何表示生物学知识先验',
+    '掌握从观测数据推断隐藏状态的统计方法',
+  ]}
+/>
+
+## 为什么需要概率方法
+
+生物数据本质上是不确定和有噪声的：
+
+- **测序错误**：NGS reads 错误率 0.1-1%
+- **生物变异**：SNP、indel、结构变异是自然存在的
+- **采样噪声**：RNA-seq 表达量受采样深度影响
+- **未知因素**：许多生物学过程尚未完全理解
+
+确定性方法（如简单的规则匹配）难以处理这些问题。概率方法的优势：
+
+- **量化不确定性**：给出置信度而非二值判断
+- **整合先验知识**：将生物学背景纳入计算
+- **处理缺失数据**：在信息不完整时仍能推断
+- **提供概率解释**：结果具有统计意义
+
+## 基础概率概念
+
+### 1. 条件概率
+
+**定义**：在事件 B 发生的条件下，事件 A 发生的概率。
+
+$$
+P(A|B) = \frac\{P(A \cap B)\}\{P(B)\}
+$$
+
+**生物信息学应用**：
+- 给定基因表达量，推断疾病状态
+- 给定序列，预测其功能
+
+### 2. 贝叶斯定理
+
+**公式**：
+$$
+P(H|D) = \frac\{P(D|H) \cdot P(H)\}\{P(D)\}
+$$
+
+其中：
+- $P(H|D)$：后验概率（Posterior），观测数据 D 后假设 H 成立的概率
+- $P(D|H)$：似然（Likelihood），假设 H 下观测到 D 的概率
+- $P(H)$：先验概率（Prior），假设 H 的初始概率
+- $P(D)$：证据（Evidence），观测数据的总概率
+
+**Worked Example**：
+
+疾病检测：
+- 疾病发病率 P(Disease) = 0.01（先验）
+- 检测准确率：P(Positive|Disease) = 0.99，P(Negative|Healthy) = 0.99
+- 检测结果为阳性，求患病概率
+
+计算：
+$$
+\begin\{aligned\}
+P(Disease|Positive) &= \frac\{P(Positive|Disease) \cdot P(Disease)\}\{P(Positive)\} \\
+P(Positive) &= P(Positive|Disease) \cdot P(Disease) + P(Positive|Healthy) \cdot P(Healthy) \\
+&= 0.99 \times 0.01 + 0.01 \times 0.99 = 0.0198 \\
+P(Disease|Positive) &= \frac\{0.99 \times 0.01\}\{0.0198\} = 0.5
+\end\{aligned\}
+$$
+
+即使检测准确率很高，阳性结果只有 50% 概率真正患病（因为疾病罕见）。
+
+### 3. 最大似然估计（MLE）
+
+**思想**：找到使观测数据概率最大的参数。
+
+**公式**：
+$$
+\hat\{\theta\}_\{MLE\} = \arg\max_\theta P(D|\theta)
+$$
+
+**应用**：
+- 估计 HMM 参数
+- 拟合分布参数
+- 系统发育树构建
+
+### 4. 最大后验估计（MAP）
+
+**思想**：结合似然和先验，找到后验概率最大的参数。
+
+**公式**：
+$$
+\hat\{\theta\}_\{MAP\} = \arg\max_\theta P(\theta|D) = \arg\max_\theta P(D|\theta) \cdot P(\theta)
+$$
+
+**与 MLE 的区别**：MAP 考虑先验知识，MLE 不考虑。
+
+## 隐马尔可夫模型（HMM）
+
+### 基本概念
+
+**组成**：
+1. **隐状态（Hidden States）**：$S = \{s_1, s_2, ..., s_N\}$
+2. **观测符号（Observations）**：$O = \{o_1, o_2, ..., o_M\}$
+3. **状态转移概率**：$A = \{a_{ij}\}$，$a_{ij} = P(q_{t+1} = s_j | q_t = s_i)$
+4. **发射概率**：$B = \{b_j(k)\}$，$b_j(k) = P(o_t = k | q_t = s_j)$
+5. **初始状态概率**：$\pi = \{\pi_i\}$，$\pi_i = P(q_1 = s_i)$
+
+**生物信息学应用**：
+- 基因预测（编码区 vs 非编码区）
+- CpG 岛检测
+- 蛋白质结构域识别
+
+### 三个基本问题
+
+#### 问题 1：评估（Evaluation）
+
+**问题**：给定模型 $\lambda$ 和观测序列 $O$，计算 $P(O|\lambda)$。
+
+**Forward 算法**：
+
+定义 $\alpha_t(i) = P(o_1, o_2, ..., o_t, q_t = s_i | \lambda)$
+
+**初始化**：
+$$
+\alpha_1(i) = \pi_i \cdot b_i(o_1)
+$$
+
+**递推**：
+$$
+\alpha_\{t+1\}(j) = \left[\sum_\{i=1\}^N \alpha_t(i) \cdot a_\{ij\}\right] \cdot b_j(o_\{t+1\})
+$$
+
+**终止**：
+$$
+P(O|\lambda) = \sum_\{i=1\}^N \alpha_T(i)
+$$
+
+**复杂度**：O(N²T)，其中 N 是状态数，T 是序列长度。
+
+#### 问题 2：解码（Decoding）
+
+**问题**：给定模型 $\lambda$ 和观测序列 $O$，找到最可能的隐状态序列 $Q$。
+
+**Viterbi 算法**：
+
+定义 $\delta_t(i) = \max_{q_1, ..., q_{t-1}} P(q_1, ..., q_{t-1}, q_t = s_i, o_1, ..., o_t | \lambda)$
+
+**初始化**：
+$$
+\delta_1(i) = \pi_i \cdot b_i(o_1)
+$$
+$$
+\psi_1(i) = 0
+$$
+
+**递推**：
+$$
+\delta_t(j) = \max_i [\delta_\{t-1\}(i) \cdot a_\{ij\}] \cdot b_j(o_t)
+$$
+$$
+\psi_t(j) = \arg\max_i [\delta_\{t-1\}(i) \cdot a_\{ij\}]
+$$
+
+**终止**：
+$$
+P^* = \max_i \delta_T(i)
+$$
+$$
+q_T^* = \arg\max_i \delta_T(i)
+$$
+
+**回溯**：
+$$
+q_t^* = \psi_\{t+1\}(q_\{t+1\}^*)
+$$
+
+**复杂度**：O(N²T)
+
+**Worked Example**：
+
+简化 HMM：两个状态（CpG 岛 C，非 CpG 岛 N）
+
+观测序列：`CGCG`
+
+转移概率：
+```
+    C     N
+C [0.7   0.3]
+N [0.2   0.8]
+```
+
+发射概率（简化）：
+```
+    A     C     G     T
+C [0.1   0.4   0.4   0.1]
+N [0.25  0.25  0.25  0.25]
+```
+
+初始概率：$\pi_C = 0.5, \pi_N = 0.5$
+
+计算 Viterbi 路径（简化演示）...
+
+#### 问题 3：学习（Learning）
+
+**问题**：给定观测序列 $O$，估计模型参数 $\lambda = (A, B, \pi)$。
+
+**Baum-Welch 算法（EM 算法的特例）**：
+
+**E-step**：计算期望
+- 使用 Forward 和 Backward 算法计算 $\xi_t(i,j)$ 和 $\gamma_t(i)$
+
+**M-step**：最大化期望
+- 更新转移概率：$a_{ij} = \frac{\sum_t \xi_t(i,j)}{\sum_t \gamma_t(i)}$
+- 更新发射概率：$b_j(k) = \frac{\sum_{t: o_t = k} \gamma_t(j)}{\sum_t \gamma_t(j)}$
+
+**收敛**：迭代直到参数收敛。
+
+## 贝叶斯推断
+
+### 1. 贝叶斯网络
+
+**定义**：用有向无环图（DAG）表示变量间的依赖关系。
+
+**组成**：
+- **节点**：随机变量
+- **边**：依赖关系
+- **条件概率表（CPT）**：每个节点的条件概率
+
+**应用**：
+- 基因调控网络
+- 疾病诊断
+- 系统发育分析
+
+### 2. 马尔可夫链蒙特卡洛（MCMC）
+
+**思想**：通过构造马尔可夫链，从复杂分布中采样。
+
+**Metropolis-Hastings 算法**：
+
+**步骤**：
+1. 从当前状态 $\theta$ 提议新状态 $\theta'$
+2. 计算接受概率：
+   $$
+   \alpha = \min\left(1, \frac\{P(\theta'|D) \cdot q(\theta|\theta')\}\{P(\theta|D) \cdot q(\theta'|\theta)\}\right)
+   $$
+3. 以概率 $\alpha$ 接受 $\theta'$，否则保留 $\theta$
+4. 重复
+
+**Gibbs 采样**（Metropolis-Hastings 的特例）：
+
+每次只更新一个变量，从条件分布中采样。
+
+**应用**：
+- 系统发育贝叶斯推断（MrBayes, BEAST）
+- motif 发现
+- 参数估计
+
+### 3. 贝叶斯模型选择
+
+**方法**：
+- **贝叶斯因子（Bayes Factor）**：比较两个模型的证据
+- **BIC（Bayesian Information Criterion）**：近似贝叶斯因子
+- **交叉验证**：评估预测性能
+
+## 位置权重矩阵（PWM/PSSM）
+
+### 基本概念
+
+**定义**：PWM 表示 motif 在每个位置对不同碱基/氨基酸的偏好。
+
+**构造**：
+
+给定一组对齐的 motif 序列：
+```
+Position:  1  2  3  4  5
+Seq1:      A  C  G  T  A
+Seq2:      A  C  G  T  G
+Seq3:      G  C  G  T  A
+Seq4:      A  T  G  T  A
+```
+
+计数矩阵：
+```
+    1  2  3  4  5
+A   3  0  0  0  3
+C   0  3  0  0  0
+G   1  0  4  0  1
+T   0  1  0  4  0
+```
+
+频率矩阵（除以序列数 4）：
+```
+    1    2    3    4    5
+A  0.75 0.0  0.0  0.0  0.75
+C  0.0  0.75 0.0  0.0  0.0
+G  0.25 0.0  1.0  0.0  0.25
+T  0.0  0.25 0.0  1.0  0.0
+```
+
+**PWM（对数似然比）**：
+$$
+PWM_\{i,b\} = \log_2 \frac\{f_\{i,b\} + \epsilon\}\{p_b\}
+$$
+
+其中 $f_{i,b}$ 是频率，$p_b$ 是背景频率，$\epsilon$ 是伪计数（避免 log 0）。
+
+**评分**：
+序列 $S$ 的 PWM 得分：
+$$
+Score(S) = \sum_\{i=1\}^L PWM_\{i, S_i\}
+$$
+
+### 应用
+
+- **motif 搜索**：在基因组中寻找转录因子结合位点
+- **motif 发现**：从序列中识别保守 motif
+- **序列功能预测**：基于 motif 组成
+
+## 统计检验与多重假设检验
+
+### 1. p 值
+
+**定义**：在零假设下，观测到当前或更极端结果的概率。
+
+**解释**：
+- p < 0.05：拒绝零假设（传统阈值）
+- p 值越小，证据越强
+
+**局限**：
+- 依赖样本量
+- 不衡量效应大小
+- 可被操纵
+
+### 2. 错误发现率（FDR）
+
+**问题**：同时检验多个假设时，假阳性率会累积。
+
+**定义**：
+- FDR = 假阳性数 / 总阳性数
+
+**Benjamini-Hochberg 方法**：
+
+1. 将 p 值排序：$p_{(1)} \leq p_{(2)} \leq ... \leq p_{(m)}$
+2. 找到最大的 k 使得 $p_{(k)} \leq \frac{k}{m} \cdot \alpha$
+3. 拒绝前 k 个假设
+
+**应用**：
+- RNA-seq 差异表达分析
+- GWAS 关联分析
+- ChIP-seq 峰值检测
+
+### 3. 置信区间
+
+**定义**：包含真实参数的概率区间。
+
+**构造**：
+- 参数估计 ± 标准误差 × 临界值
+
+**意义**：
+- 提供不确定性范围
+- 比 p 值更直观
+
+## EM 算法（期望最大化）
+
+### 基本思想
+
+**问题**：当数据有缺失或隐变量时，直接 MLE 困难。
+
+**策略**：
+1. **E-step**：给定当前参数，计算隐变量的期望
+2. **M-step**：基于期望，最大化似然更新参数
+3. 迭代直到收敛
+
+### 应用
+
+- **HMM 参数估计**（Baum-Welch）
+- **混合模型聚类**
+- **缺失数据填补**
+
+### 收敛性
+
+- 保证收敛到局部最优
+- 不保证全局最优
+- 初始值很重要
+
+## 随机化算法
+
+### 基本概念
+
+随机化算法在执行过程中做出随机决策。乍看之下这似乎是"灾难性的配方"，但实际上随机化算法在很多情况下非常有用。
+
+**优势**：
+- 避免最坏情况性能
+- 在大搜索空间中更聪明地探索
+- 实现简单，性能好
+
+**两类随机化算法**：
+
+#### Las Vegas 算法
+
+**特点**：总是返回正确答案，但运行时间是随机的。
+
+**示例**：Randomized Quicksort
+- 每次随机选择 pivot
+- 期望运行时间 O(n log n)
+- 最坏情况 O(n²)，但概率很低
+
+**优点**：结果可靠
+**缺点**：运行时间不确定
+
+#### Monte Carlo 算法
+
+**特点**：可能返回不正确（近似）答案，但运行时间有保证。
+
+**示例**：某些近似算法、启发式方法
+
+**优点**：运行时间可控
+**缺点**：结果可能不准确
+
+### 生物信息学中的应用
+
+#### 1. Randomized Quicksort
+
+**问题**：快速排序的性能依赖于 pivot 的选择。
+
+**确定性版本的问题**：
+- 如果每次选择第一个元素，对已排序数组性能最差 O(n²)
+- 特定输入会触发最坏情况
+
+**随机化改进**：
+```
+RANDOMIZEDQUICKSORT(array)
+1 if array has one element
+2   return array
+3 Choose element m uniformly at random
+4 Partition into smaller and larger
+5 Recursively sort
+6 Combine
+```
+
+**性能**：期望时间 O(n log n)，无论输入分布如何。
+
+#### 2. Gibbs Sampling for Motif Discovery
+
+**问题**：在 DNA 序列中寻找保守 motif。
+
+**Greedy 方法的局限**：
+- 从随机种子开始，贪心策略容易陷入局部最优
+- 搜索空间巨大，很难找到全局最优
+
+**Gibbs Sampling 策略**：
+1. 随机选择初始 motif 位置
+2. 每次迭代：
+   - 随机选择一条序列
+   - 用其余序列构建 profile
+   - 根据概率分布采样选择新位置（而非贪心选择）
+3. 重复直到收敛
+
+**优势**：
+- 每次只改变一个位置，移动更谨慎
+- 概率采样避免局部最优
+- 可以处理背景序列有偏的情况
+
+详见 [Motif Discovery算法](../models/motif-discovery-algorithms.md)。
+
+#### 3. 随机投影（Random Projections）
+
+**思想**：通过随机投影将高维问题映射到低维空间，然后求解。
+
+**应用**：
+- 近似模式匹配
+- 大规模序列搜索
+- 降维和特征提取
+
+### 采样方法
+
+### 1. 拒绝采样（Rejection Sampling）
+
+**思想**：从简单分布采样，按概率接受或拒绝。
+
+**步骤**：
+1. 从提议分布 $q(x)$ 采样
+2. 计算接受概率 $\alpha = \frac{p(x)}{M \cdot q(x)}$
+3. 以概率 $\alpha$ 接受，否则重试
+
+**局限**：高维时效率低。
+
+### 2. 重要性采样（Importance Sampling）
+
+**思想**：从提议分布采样，用权重校正。
+
+**公式**：
+$$
+E[f(x)] = \sum_x f(x) p(x) = \sum_x f(x) \frac\{p(x)\}\{q(x)\} q(x)
+$$
+
+**权重**：$w(x) = \frac{p(x)}{q(x)}$
+
+### 3. Gibbs 采样
+
+**思想**：每次更新一个变量，从条件分布采样。
+
+**优势**：
+- 不需要接受率
+- 适合高维
+
+**应用**：
+- motif 发现（Gibbs sampler）
+- 贝叶斯推断
+- 缺失数据填补
+
+## 生物信息学具体应用
+
+### 1. 变异检测
+
+**贝叶斯变异检测**：
+
+给定 reads 数据 R，计算变异的后验概率：
+$$
+P(Variant|R) = \frac\{P(R|Variant) \cdot P(Variant)\}\{P(R|Variant) \cdot P(Variant) + P(R|Reference) \cdot P(Reference)\}
+$$
+
+**工具**：GATK 使用贝叶斯框架进行变异评分。
+
+### 2. RNA-seq 差异表达
+
+**统计模型**：
+- 负二项分布建模 read count
+- 离散度估计
+- FDR 控制
+
+**工具**：DESeq2, edgeR, limma-voom
+
+### 3. Motif 发现
+
+**方法**：
+- **MEME**：EM 算法
+- **Gibbs sampler**：MCMC 采样
+- **PWM/PSSM**：表示 motif
+
+### 4. 系统发育推断
+
+**贝叶斯方法**：
+- **MrBayes**：MCMC 采样树空间
+- **BEAST**：考虑时间尺度
+- **后验概率**：评估树的支持度
+
+## 复杂度与优化
+
+### 计算复杂度
+
+| 方法 | 时间复杂度 | 空间复杂度 |
+|-----|-----------|-----------|
+| Forward/Backward | O(N²T) | O(NT) |
+| Viterbi | O(N²T) | O(NT) |
+| Baum-Welch | O(N²T × iterations) | O(N²T) |
+| MCMC | 依赖收敛 | O(N) |
+
+### 优化策略
+
+- **并行化**：Forward/Backward 可并行
+- **剪枝**：低概率状态剪枝
+- **近似**：变分推断近似 MCMC
+- **预处理**：缓存中间结果
+
+## 常见误区
+
+### p < 0.05 就显著
+
+不一定。需要考虑多重检验、效应大小、先验知识。
+
+### 贝叶斯方法总是更好
+
+不是。贝叶斯方法需要先验，计算成本高。在某些场景下，频率方法更合适。
+
+### MCMC 总是收敛
+
+不是。MCMC 可能陷入局部最优，需要诊断收敛性。
+
+### 模型越复杂越好
+
+不是。复杂模型容易过拟合，需要模型选择。
+
+## 实践建议
+
+### 模型选择
+
+1. **问题性质**：是否有隐变量？是否有先验知识？
+2. **数据规模**：小数据适合贝叶斯，大数据适合频率方法
+3. **计算资源**：MCMC 需要大量计算
+4. **可解释性**：概率模型更易解释
+
+### 实现技巧
+
+1. **数值稳定性**：使用 log 概率避免下溢
+2. **初始化**：合理的初始值加速收敛
+3. **诊断**：检查收敛性（trace plot, Gelman-Rubin statistic）
+4. **验证**：用模拟数据验证算法
+
+### 工具推荐
+
+- **HMM**：hmmlearn（Python），GHMM
+- **贝叶斯**：PyMC3, Stan
+- **统计检验**：scipy.stats, statsmodels
+- **MCMC**：emcee
+
+## 练习
+
+1. 手动计算简单 HMM 的 Forward 概率
+2. 实现 Metropolis-Hastings 采样正态分布
+3. 构造一个 PWM 并计算序列得分
+4. 应用 Benjamini-Hochberg 方法控制 FDR
+
+## 参考资料
+
+- Durbin, R., Eddy, S., Krogh, A., & Mitchison, G. (1998). *Biological sequence analysis: probabilistic models of proteins and nucleic acids*. Cambridge university press.
+- MacKay, D. J. (2003). *Information theory, inference and learning algorithms*. Cambridge university press.
+- Gelman, A., et al. (2013). *Bayesian data analysis* (3rd ed.). CRC press.
+
+## 相关页面
+
+- [概率模型与模式识别](../models/index.md)
+- [HMM 与 Viterbi 算法](../models/viterbi-forward-backward.md)
+- [PWM/PSSM 与 motif](../models/pwm-pssm.md)
+- [算法总览](./algorithms-overview.md)
+- [动态规划算法](./dynamic-programming.md)

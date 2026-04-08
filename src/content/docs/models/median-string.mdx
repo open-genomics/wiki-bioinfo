@@ -1,0 +1,184 @@
+---
+description: Median String问题：motif finding的另一种表述，寻找与一组DNA序列总Hamming距离最小的字符串，以及它与Motif Finding问题的等价性。
+title: "Median String问题"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+
+<SummaryBox
+  summary="Median String问题是Motif Finding问题的等价表述。给定一组DNA序列，目标是找到一个长度为l的字符串，使其与所有序列中某个l-mer的总Hamming距离最小。"
+  bullets={[
+    '理解Median String问题的形式化定义',
+    '掌握它与Motif Finding问题的等价性',
+    '了解基于搜索树的求解方法'
+  ]}
+/>
+
+## 问题定义
+
+### Hamming距离
+
+两个等长字符串的**Hamming距离**是它们在对应位置上不同字符的个数。
+
+**示例**：
+```
+dH(ATGCC, ATGTC) = 1  (只有第4个位置不同)
+dH(AAAT, AAGC) = 2  (第3、4个位置不同)
+```
+
+### TotalDistance
+
+给定一个字符串 v 和一组DNA序列 DNA，定义：
+
+```
+TotalDistance(v, DNA) = min Σ dH(v, DNAᵢ[sᵢ : sᵢ+l-1])
+                        s₁,...,sₜ
+```
+
+即：在每条序列中选择一个起始位置 sᵢ，计算 v 与所选 l-mer 的Hamming距离之和，然后最小化这个和。
+
+### Median String问题
+
+**输入**：
+- t 条DNA序列组成的矩阵 DNA（每条长度为 n）
+- 整数 l（要找的模式长度）
+
+**输出**：
+- 长度为 l 的字符串 v，使 TotalDistance(v, DNA) 最小
+
+**示例**：
+假设有3条序列：
+```
+序列1: AACT
+序列2: AACT  
+序列3: AACT
+```
+
+对于 l=4，median string 就是 "AACT"，TotalDistance = 0。
+
+## 与Motif Finding的关系
+
+### Motif Finding回顾
+
+Motif Finding问题要找到一组起始位置 s = (s₁, ..., sₜ)，使consensus score最大。
+
+**Consensus score**：选择位置后，构建profile，计算所有列的频率之和。
+
+### 等价性证明
+
+设 s 是一组起始位置，w 是对应的consensus string。
+
+则有：
+```
+dH(w, s) = l·t - Score(s, DNA)
+```
+
+因为：
+- 每个位置最多贡献 l 分（所有序列在该位置字符相同）
+- Hamming距离 = 最大可能分数 - 实际分数
+
+因此：
+```
+min TotalDistance(v, DNA) = l·t - max Score(s, DNA)
+v                       s
+```
+
+左边是Median String问题，右边是Motif Finding问题。
+
+### 实际意义
+
+这意味着：
+1. **解决其中一个就解决了另一个**
+2. **Motif Finding的consensus string就是Median String问题的解**
+3. **可以用Median String方法生成profile来解决Motif Finding**
+
+## 求解方法
+
+### 穷举法
+
+最直接的方法是枚举所有可能的 4^l 个长度为 l 的字符串。
+
+```
+BRUTEFORCEMEDIANSTRING(DNA, t, n, l)
+1 bestDistance ← ∞
+2 bestString ← null
+3 for each string v of length l over \{A, T, G, C\}
+4   currentDistance ← TotalDistance(v, DNA)
+5   if currentDistance < bestDistance
+6     bestDistance ← currentDistance
+7     bestString ← v
+8 return bestString
+```
+
+**问题**：4^l 增长极快，对于 l=15，需要检查超过 10^9 个字符串。
+
+### 分支定界
+
+使用搜索树结构，可以应用分支定界策略剪枝。
+
+**搜索树结构**：
+- 每个节点代表部分字符串的前缀
+- 叶子节点代表完整的 l-mer
+- 树的高度为 l，每个节点有 4 个子节点（A, T, G, C）
+
+**分支定界思路**：
+1. 计算部分前缀的最小可能距离
+2. 如果已经超过当前最优解，剪枝
+3. 使用下界估计加速剪枝
+
+### 启发式方法
+
+由于穷举法不实用，实际中使用启发式方法：
+
+1. **随机搜索**：随机采样字符串，保留最好的
+2. **贪心方法**：从某个初始字符串开始，逐步改进
+3. **Gibbs采样**：使用概率采样方法（详见motif-discovery-algorithms.md）
+
+## 改进的下界估计
+
+### 基于分割的下界
+
+将 l-mer w 分成两部分 u 和 v，利用：
+```
+TotalDistance(w, DNA) ≥ TotalDistance(u, DNA) + TotalDistance(v, DNA)
+```
+
+这提供了更紧的下界，可以更有效地剪枝。
+
+### 示例
+
+对于 l=8，可以分成两个长度为4的部分：
+- 先计算前4个字符的最小距离
+- 再计算后4个字符的最小距离
+- 如果两者之和已经超过当前最优，则剪枝
+
+## 实际应用
+
+### Motif发现
+
+Median String问题是motif发现的核心计算问题之一。找到median string后：
+1. 可以用它构建profile
+2. 在每条序列中搜索最接近的l-mer
+3. 得到完整的motif alignment
+
+### 序列比对
+
+在多重序列比对中，median string概念可以用于：
+- 寻找保守区域
+- 构建consensus序列
+- 评估比对质量
+
+## 计算复杂性
+
+Median String问题是NP-困难的，这意味着：
+- 不存在已知的多项式时间精确算法
+- 对于大问题必须使用启发式方法
+- 近似算法是实际选择
+
+## 相关页面
+
+- [Motif Finding](/docs/models/motif-finding)
+- [Motif Discovery算法](/docs/models/motif-discovery-algorithms)
+- [Profile HMM](/docs/models/profile-hmm)
+- [PWM/PSSM](/docs/models/pwm-pssm)

@@ -1,0 +1,22 @@
+---
+import type { Props } from '@astrojs/starlight/props';
+import StarlightHead from '@astrojs/starlight/components/Head.astro';
+---
+
+<StarlightHead {...Astro.props}><slot /></StarlightHead>
+
+<div class="reading-progress" id="reading-progress"></div>
+
+<script>
+  function updateProgress() {
+    const el = document.getElementById('reading-progress');
+    if (!el) return;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight <= 0) { el.style.width = '0%'; return; }
+    const pct = Math.min((window.scrollY / docHeight) * 100, 100);
+    el.style.width = `${pct}%`;
+  }
+  window.addEventListener('scroll', updateProgress, { passive: true });
+  updateProgress();
+  document.addEventListener('astro:page-load', updateProgress);
+</script>

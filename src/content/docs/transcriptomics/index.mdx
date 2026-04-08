@@ -1,0 +1,105 @@
+---
+description: 转录组分析板块入口，串联 RNA-seq 工作流、pseudo-alignment、TPM/FPKM/CPM 和基因/转录本层定量。
+title: "转录组"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+
+
+<PageHeaderMeta
+  section="Applications"
+  audience="已经接触 RNA-seq 或想理解表达定量、isoform 归属与统计建模的读者"
+  startWith="先理解 RNA-seq 工作流和 pseudo-alignment，再看 TPM/FPKM/CPM 与 gene/isoform 定量差异。"
+/>
+
+转录组分析关注的是：给定 RNA-seq 等数据，如何理解基因和转录本的表达、剪接、条件差异以及这些变化背后的生物学含义。
+
+## 这一部分在全站中的位置
+
+这一节位于“分析方向与案例”之下，承接索引、比对和概率模型，把它们重新放回 RNA-seq 的定量与表达解释问题中。
+
+## 为什么这一节重要
+
+RNA-seq 看起来像是“把 reads 比到转录组上再数一数”，但真正困难的地方在于：
+
+- 一个 read 可能兼容多个 isoform；
+- 基因层与转录本层的问题并不相同；
+- 定量和差异分析都依赖统计假设；
+- 注释版本变化会直接改变结果解释。
+
+## 推荐阅读顺序
+
+1. [RNA-seq 工作流概览](../workflows/rna-seq.md)
+2. [Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)
+3. [TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)
+4. [基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)
+5. [差异表达：从 counts 到统计检验](./differential-expression.mdx)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: 'RNA-seq 工作流概览',
+      to: '/docs/workflows/rna-seq',
+      badge: '起点',
+      meta: 'workflow',
+      description: '从 reads、质控、mapping/pseudo-alignment 到定量、归一化与差异分析的主线。',
+    },
+    {
+      title: 'Pseudo-alignment 与表达定量',
+      to: '/docs/transcriptomics/pseudo-alignment-and-quantification',
+      badge: '定量模型',
+      meta: 'quantification',
+      description: '理解为什么 RNA-seq 中常见的“更快路线”依赖索引和概率分配思想。',
+    },
+    {
+      title: 'TPM、FPKM、CPM 与有效长度',
+      to: '/docs/transcriptomics/tpm-fpkm-cpm',
+      badge: '单位与归一化',
+      meta: 'TPM/FPKM/CPM',
+      description: '区分 counts、CPM、FPKM、TPM 以及有效长度在定量中的作用。',
+    },
+    {
+      title: '基因层与转录本层表达定量',
+      to: '/docs/transcriptomics/gene-vs-transcript-quant',
+      badge: '解析层级',
+      meta: 'gene vs transcript',
+      description: '理解何时使用 gene-level，何时需要 transcript-level 表达量。',
+    },
+    {
+      title: '差异表达：从 counts 到统计检验',
+      to: '/docs/transcriptomics/differential-expression',
+      badge: '统计建模',
+      meta: 'DE analysis',
+      description: '理解为什么差异分析通常从 counts 出发，以及归一化、离散度和多重检验分别在解决什么问题。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: 'RNA-seq 工作流概览',
+      to: '/docs/workflows/rna-seq',
+      label: '应用入口',
+      description: '先看整个 RNA-seq 分析链路，再回头理解定量与转录本归属的核心难点。',
+    },
+    {
+      title: '序列表示与索引',
+      to: '/docs/sequence/',
+      label: '方法依赖',
+      description: 'pseudo-alignment 和定量算法高度依赖底层索引和 k-mer 表示。',
+    },
+    {
+      title: '数据库与资源',
+      to: '/docs/databases/common-resources',
+      label: '注释依赖',
+      description: '转录本注释版本直接影响 isoform 集合和表达矩阵形状。',
+    },
+  ]}
+/>

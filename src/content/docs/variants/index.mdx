@@ -1,0 +1,111 @@
+---
+description: 变异检测板块入口，串联 reads、BAM、VCF、过滤与解释逻辑在 DNA-seq 中的位置。
+title: "变异检测"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+
+
+<PageHeaderMeta
+  section="Applications"
+  audience="已经理解比对与参考基因组，希望把方法放回 DNA-seq 任务中的读者"
+  startWith="先看 reads/coverage、常见文件格式与序列比对，再进入 variant calling"
+/>
+
+变异检测关注的是：给定样本 reads 与参考基因组，如何识别 SNP、InDel 乃至更复杂的结构变异，并判断这些差异是否足够可信、是否具有生物学意义。
+
+## 这一部分在全站中的位置
+
+这一节位于“分析方向与案例”之下，承接序列比对、参考基因组、错误模型与文件格式，最终把这些方法放回 DNA-seq 任务中。
+
+## 为什么这一节重要
+
+很多读者会把 variant calling 理解成“跑一个 caller 然后看 VCF”。
+
+但真正关键的问题是：
+
+- 证据来自哪些 reads；
+- 比对不确定性如何影响判断；
+- 测序错误和真实变异如何区分；
+- 过滤标准、重复区域和参考版本如何改变结果解释；
+- small variants 与结构变异、germline 与 somatic 之间如何区分和建模。
+
+## 推荐阅读顺序
+
+1. [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+2. [常见文件格式概览](../formats/common-file-formats.mdx)
+3. [序列比对](../alignment/index.md)
+4. [DNA-seq 变异检测总览](./variant-calling-overview.mdx)
+5. [DNA-seq 变异过滤与质量控制](./variant-filtering.mdx)
+6. [重复与低复杂度区域的变异检测](./repeats-and-low-complexity.mdx)
+7. [Small variants 与结构变异（SV）](./small-variants-vs-sv.mdx)
+8. [Germline 与 somatic 变异](./germline-vs-somatic.mdx)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      badge: '起点',
+      meta: 'workflow overview',
+      description: '从 FASTQ、BAM、VCF 和过滤逻辑出发，理解 variant calling 的主流程。',
+    },
+    {
+      title: 'DNA-seq 变异过滤与质量控制',
+      to: '/docs/variants/variant-filtering',
+      badge: '过滤逻辑',
+      meta: 'filtering',
+      description: '理解 QUAL、DP、AF、FILTER 等字段如何帮助你筛选更可信的候选变异。',
+    },
+    {
+      title: '重复与低复杂度区域',
+      to: '/docs/variants/repeats-and-low-complexity',
+      badge: '困难区域',
+      meta: 'repeats',
+      description: '理解在重复与低复杂度区域中，multi-mapping 和复杂 CIGAR 给变异解释带来的挑战。',
+    },
+    {
+      title: 'Small variants 与结构变异（SV）',
+      to: '/docs/variants/small-variants-vs-sv',
+      badge: '变异类型',
+      meta: 'small vs SV',
+      description: '区分 SNP/短 indel 与大尺度结构变异，并理解它们对应的 caller 与证据。',
+    },
+    {
+      title: 'Germline 与 somatic 变异',
+      to: '/docs/variants/germline-vs-somatic',
+      badge: '生物学背景',
+      meta: 'germline vs somatic',
+      description: '从研究设计、caller 选择和解释角度区分 germline 与 somatic 分析思路。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '测序 reads、coverage 与错误模型',
+      to: '/docs/foundations/sequencing-reads-coverage',
+      label: '前置',
+      description: '理解变异检测中的观察证据为什么会受到测序误差与覆盖度影响。',
+    },
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      label: '方法依赖',
+      description: '变异检测的可信度很大程度取决于 read 被定位得是否稳定。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      label: '流程总览',
+      description: '从 BAM、VCF 和过滤逻辑出发理解真实流程。',
+    },
+  ]}
+/>

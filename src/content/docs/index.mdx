@@ -1,0 +1,84 @@
+---
+title: BioInfo Wiki
+description: 面向中文社区的开源生物信息学知识库
+template: splash
+hero:
+  tagline: 从序列、比对、组装到 HMM，围绕稳定的知识主干组织内容。面向中文社区的系统性生物信息学知识库。
+  image:
+    file: ../../assets/bioinfo-logo.svg
+  actions:
+    - text: 开始阅读
+      link: ./intro/
+      icon: right-arrow
+      variant: primary
+    - text: 核心方法
+      link: ./core-methods/
+      icon: open-book
+    - text: GitHub
+      link: https://github.com/LessUp/wiki-bioinfo
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+## 为什么选择 BioInfo Wiki
+
+<CardGrid>
+  <Card title="结构优先" icon="document">
+    从序列、比对、组装到 HMM，围绕稳定的知识主干组织内容，而非罗列工具命令。
+  </Card>
+  <Card title="方法到应用" icon="puzzle">
+    算法、数据格式、数据库和工作流联动：从教材公式到真实分析流程一线贯通。
+  </Card>
+  <Card title="中文优先" icon="translate">
+    面向中文社区的系统性生物信息学知识库，术语首次出现附英文与缩写。
+  </Card>
+  <Card title="开放协作" icon="github">
+    通过 GitHub 和统一模板持续完善，像 Wiki 一样让内容和结构同步成熟。
+  </Card>
+</CardGrid>
+
+## 全站知识地图
+
+六个主入口覆盖从基础到应用的完整链路。
+
+<CardGrid>
+  <LinkCard title="🚀 开始这里" description="项目简介、学习路线、贡献方式与写作规范。" href="./intro/" />
+  <LinkCard title="🧮 基础与数学" description="序列、reads、coverage、坐标系统与概率——后续一切的基石。" href="./foundations/" />
+  <LinkCard title="⚙️ 核心方法" description="索引、比对、组装与概率模型，收敛到同一个方法主轴。" href="./core-methods/" />
+  <LinkCard title="🔬 分析方向与案例" description="DNA-seq、RNA-seq、单细胞、长读长、空间组学等分析入口。" href="./applications/" />
+  <LinkCard title="📚 数据、注释与资源" description="参考基因组、注释系统、文件格式和数据库入口。" href="./data-references/" />
+  <LinkCard title="📝 附录" description="术语表、参考资料与索引，承担 Wiki 的查阅收束功能。" href="./appendix/" />
+</CardGrid>
+
+## 推荐学习路线
+
+<CardGrid>
+  <Card title="🎯 初学者路线" icon="rocket">
+    **零基础入门** — 先理解对象与流程地图，再进入索引、比对、组装和应用案例。
+
+    1. 开始这里 → 2. 基础与数学 → 3. 数据与资源 → 4. 分析方向
+  </Card>
+  <Card title="🧠 算法路线" icon="setting">
+    **理论驱动** — 从字符串、DP、图和概率模型切入，再看它们在真实工具里的位置。
+
+    1. 基础与数学 → 2. 核心方法 → 3. 应用案例
+  </Card>
+  <Card title="🛠️ 实战路线" icon="laptop">
+    **任务驱动** — 从 DNA-seq、RNA-seq、单细胞出发，回溯其依赖的方法和数据结构。
+
+    1. 数据与资源 → 2. 分析方向 → 3. 回看核心方法
+  </Card>
+</CardGrid>
+
+## 从教材到实践
+
+把字符串、图、概率模型和工作流放进同一套知识坐标系，是 BioInfo Wiki 区别于零散教程的关键。
+
+<CardGrid>
+  <LinkCard title="📐 字符串与动态规划" description="编辑距离、全局/局部比对到 affine gap，read mapping 背后的数学骨架。" href="./alignment/" />
+  <LinkCard title="🔍 索引与快速搜索" description="k-mer、suffix array、BWT 到 FM-index——巨大参考序列上的快速定位。" href="./sequence/" />
+  <LinkCard title="🕸️ 图算法与组装" description="OLC 到 de Bruijn graph，重复与错误处理，把片段恢复成整体。" href="./assembly/" />
+  <LinkCard title="🎲 概率模型与推断" description="HMM、PWM/PSSM 到 gene prediction，不确定性如何被形式化。" href="./models/" />
+</CardGrid>

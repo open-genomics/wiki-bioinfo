@@ -1,0 +1,131 @@
+---
+description: FM-index 概览，解释 BWT 之上的压缩全文索引如何支持高效 exact matching。
+title: "FM-index"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+
+<SummaryBox
+  summary="FM-index 是理解‘为什么 read mapper 能在巨大参考基因组上快速查找’的关键一页：它把 BWT 的可压缩性和 backward search 的区间更新结合起来。"
+  bullets={[
+    '先理解 suffix array 和 BWT，再看 FM-index 会更自然。',
+    '这页的重点是索引骨架和搜索思路，不是完整比对算法。',
+  ]}
+/>
+
+## 是什么
+
+FM-index 是建立在 BWT 之上的压缩全文索引。它的重要特点是：在保存较少空间的同时，仍然能支持快速 exact matching。
+
+在生物信息学里，它常被理解为“为什么 read mapper 可以在巨大参考基因组上做高效查找”的核心答案之一。
+
+## 要解决什么生物信息学问题
+
+如果我们有：
+
+- 非常长的参考序列；
+- 大量短 reads 需要搜索；
+- 对内存占用又比较敏感；
+
+那么直接保存所有匹配位置或庞大索引会很昂贵。FM-index 的价值就在于：
+
+- 利用 BWT 的可压缩性；
+- 通过 backward search 逐步收缩候选区间；
+- 在较低空间成本下完成大规模 exact matching。
+
+<PrerequisitesBox
+  items={[
+    '先理解 suffix array 和 BWT 的基本动机。',
+    '理解 exact matching 与 approximate matching 解决的是不同层次的问题。',
+  ]}
+/>
+
+## 输入与输出
+
+- 输入：参考序列及其 BWT 表示
+- 辅助结构：C 数组、Occ / rank 查询等
+- 输出：pattern 在参考中的候选出现区间
+
+## 核心思想 / 数学模型
+
+FM-index 允许我们从 pattern 的最后一个字符开始做 backward search：
+
+1. 先找到最后一个字符在 BWT 中对应的区间；
+2. 再逐步把前面的字符往左“接回去”；
+3. 每加入一个字符，候选区间进一步收缩；
+4. 若区间最终非空，就说明 pattern 在参考中存在匹配。
+
+它并不是逐字符扫描参考，而是在索引区间上做更新。
+
+## worked example
+
+对于 pattern `ACT`，FM-index 的思路可以粗略理解成：
+
+- 先找所有末尾为 `T` 的候选区间；
+- 再约束这些候选前面必须是 `C`；
+- 再约束更前面必须是 `A`；
+- 如果区间还存在，那么 `ACT` 就在参考中出现。
+
+这种“从后往前缩区间”的方式，是它高效的关键。
+
+## 复杂度与适用前提
+
+FM-index 特别适合：
+
+- exact matching 非常频繁的场景；
+- 需要在大参考上做重复查询的场景；
+- 希望把空间成本控制在合理范围内的场景。
+
+但真实比对任务通常还要允许 mismatch 和 gap，因此 FM-index 往往只是前端候选搜索的一部分，而不是全部流程。
+
+## 与真实工具或流程的连接
+
+在 read mapping 里，FM-index 常用于：
+
+- 快速找到 seed 或精确匹配片段；
+- 缩小候选位置范围；
+- 为后续局部精细比对提供入口。
+
+因此它是“索引结构”和“比对算法”之间最重要的桥梁之一。
+
+## 常见误区
+
+### FM-index 等于完整比对算法
+
+不是。它主要解决快速搜索与候选定位，后续仍常需要局部比对和评分模型。
+
+### 只要用了 FM-index，搜索就没有代价
+
+也不对。它只是把代价从朴素扫描转移到更高效的索引区间更新。
+
+### 有了 FM-index 就不需要 seed-and-extend
+
+不一定。真实工具通常仍会结合 seeding、过滤和局部扩展策略。
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'Suffix Array、BWT 与索引压缩',
+      to: '/docs/sequence/suffix-array-bwt',
+      label: '前置',
+      description: '先理解 FM-index 建立在什么结构之上。',
+    },
+    {
+      title: '精确匹配与近似匹配',
+      to: '/docs/sequence/exact-vs-approximate',
+      label: '概念对照',
+      description: '理解为什么 exact matching 只是 read mapping 的前半段。',
+    },
+    {
+      title: 'Seed-and-extend',
+      to: '/docs/alignment/seed-and-extend',
+      label: '方法延伸',
+      description: '查看 FM-index 如何在真实比对流程中与扩展策略结合。',
+    },
+  ]}
+/>

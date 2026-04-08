@@ -1,0 +1,371 @@
+---
+title: "组装评估"
+---
+
+
+## 是什么
+
+组装评估关注的是：得到 contig 或 scaffold 之后，怎样判断结果是否足够连续、完整、正确，以及这些指标是否真的符合你的分析目标。它不是在问“能不能拼出来”，而是在问“拼出来的结果值不值得相信、能不能用于下游分析”。
+
+## 要解决什么生物信息学问题
+
+一个组装结果看起来“很长”并不一定就更好。我们真正关心的是：
+
+- 连续性如何；
+- 是否存在明显错组装；
+- 目标区域是否被覆盖；
+- 对下游注释、比较分析或变异分析是否足够可靠；
+- 在当前研究目标下，错误类型是否可接受。
+
+因此，组装评估的核心不是追求单一分数，而是同时回答“长不长、全不全、对不对、够不够用”。
+
+## 输入与输出
+
+### 输入
+
+组装评估通常会接收：
+
+- contig 或 scaffold 序列；
+- 原始 reads 或其他支持证据；
+- 可选的参考基因组或保守基因集；
+- 当前研究目标，例如 de novo 组装、比较基因组、功能注释或变异分析。
+
+### 输出
+
+常见输出包括：
+
+- 长度分布统计；
+- 连续性指标，如 N50；
+- 完整性线索，如目标基因或保守基因是否被恢复；
+- 正确性线索，如潜在错组装、重复塌陷或局部错误连接；
+- 对“是否适合当前下游任务”的判断。
+
+## 核心思想 / 评估维度
+
+### 连续性（contiguity）
+
+连续性关心组装是否被碎片化。常见代表指标包括：
+
+- contig/scaffold 数量；
+- 总长度；
+- 最大 contig 长度；
+- N50、L50 等长度分布指标。
+
+这些指标有用，因为它们能告诉你结果是否被大量短片段打断。但连续并不等于正确：一个错误拼接出的超长 contig 也会让 N50 变得很好看。
+
+### 完整性（completeness）
+
+完整性关心的是：目标基因组或转录组里“应该存在的内容”是否被恢复。
+
+可以从几个角度理解：
+
+- 预期总长度是否大致合理；
+- 关键基因、保守基因或已知功能区域是否存在；
+- 低复杂度区、重复区或高 GC 区域是否系统性缺失；
+- 在研究目标相关的区域上，是否存在明显空缺。
+
+完整性并不是“拼得越长越完整”，而是“该有的内容有没有回来”。
+
+### 正确性（correctness）
+
+正确性关心的是组装路径是否真实反映了原始序列，而不是被错误连接或错误压缩。
+
+典型问题包括：
+
+- 错组装（misassembly）；
+- 重复区域被错误合并（repeat collapse）；
+- 局部顺序或方向错误；
+- 复杂区域中产生 chimeric contig。
+
+一个组装可以在连续性上很好，但在正确性上很差；也可以较碎，但对关键区域更保真。
+
+### 可用性（fitness for purpose）
+
+最终还要回到任务目标：
+
+- 如果目标是 gene finding，可能更关心 coding region 是否被完整恢复；
+- 如果目标是比较基因组，可能更关心宏观结构和同线性；
+- 如果目标是后续长距离结构分析，可能更关心 scaffold 层级的正确连接；
+- 如果目标是功能注释，可能更关心基因空间是否完整而不是极致 N50。
+
+## 为什么不能只看一个数字
+
+N50 很容易被误用。它能反映片段长度分布，但不能保证：
+
+- 路径是否正确；
+- 重复区域是否被错误合并；
+- 生物学上重要的区域是否被完整保留；
+- 当前研究目标真正需要的信息是否已经恢复。
+
+因此，组装评估本质上是多维度判断：你需要同时看连续性、完整性、正确性，以及任务适配性。
+
+## worked example
+
+假设有两个组装结果：
+
+- **Assembly A**：N50 很大，contig 数量较少；
+- **Assembly B**：更碎一些，但与参考比较时结构更稳定，关键基因区域恢复更完整。
+
+如果只看 N50，你可能会选 A；但如果进一步发现：
+
+- A 在重复区域有明显错误合并；
+- 某些关键功能区被错误连接；
+- B 虽然更碎，但关键基因与注释区域更可靠；
+
+那么在很多下游任务中，B 反而更可用。
+
+这个例子说明：组装评估不是“挑最长的结果”，而是“挑最适合当前问题的结果”。
+
+## 与真实工具或流程的连接
+
+真实组装流程中，评估通常会结合：
+
+- 长度统计；
+- reads 回贴（read mapping back）后的一致性；
+- 与参考基因组的比较（如果有）；
+- 与保守基因集或功能注释结果的比较；
+- 特定研究问题的关键区域是否被恢复。
+
+很多组装工作流实际上是“建图 / 拼接”和“评估 / 迭代修正”交替进行，而不是只跑一次组装就结束。
+
+## 算法细节
+
+### 连续性指标计算
+
+#### N50 与 L50
+
+**定义**：
+- N50：将 contig 按长度从长到短排序后，使得累计长度达到总长度 50% 的最短 contig 长度
+- L50：达到 N50 所需的 contig 数量
+
+**算法 1：N50 和 L50 计算**
+
+```
+输入：contig 长度数组 L = [l₁, l₂, ..., l_n]
+输出：N50, L50
+
+1. 将 L 按降序排序：L_sorted = sort_desc(L)
+2. 计算总长度：total = Σ L_sorted[i]
+3. target = 0.5 × total
+4. cumulative = 0
+5. 对于 i = 1 到 n：
+   a. cumulative += L_sorted[i]
+   b. 如果 cumulative ≥ target：
+      - N50 = L_sorted[i]
+      - L50 = i
+      - break
+6. 返回 N50, L50
+```
+
+**时间复杂度**：$O(n \log n)$，主要来自排序
+
+**空间复杂度**：$O(n)$，存储排序后的数组
+
+#### 推广：N75, N90, L75, L90
+
+同样的算法可以计算 Nx 和 Lx，只需将 target 改为 $x \times total$。
+
+#### NG50 与 LG50（针对参考基因组）
+
+当有参考基因组时，使用参考基因组长度作为分母：
+
+**算法 2：NG50 和 LG50 计算**
+
+```
+输入：contig 长度数组 L，参考基因组长度 G_ref
+输出：NG50, LG50
+
+1. 将 L 按降序排序：L_sorted = sort_desc(L)
+2. target = 0.5 × G_ref
+3. cumulative = 0
+4. 对于 i = 1 到 n：
+   a. cumulative += L_sorted[i]
+   b. 如果 cumulative ≥ target：
+      - NG50 = L_sorted[i]
+      - LG50 = i
+      - break
+5. 如果累计长度始终 < target：
+   - NG50 = 0（未达到 50% 覆盖）
+   - LG50 = n（需要所有 contig）
+6. 返回 NG50, LG50
+```
+
+### 完整性评估算法
+
+#### 基于 Read Mapping 的完整性
+
+**算法 3：Read Mapping 覆盖率评估**
+
+```
+输入：contig 集合 C，read 集合 R
+输出：映射覆盖率，未映射 read 比例
+
+1. 将所有 contig 拼接为参考序列 Ref
+2. 使用 read mapper 将 R 映射到 Ref
+3. mapped_reads = {r ∈ R | r 成功映射到 Ref}
+4. coverage_rate = |mapped_reads| / |R|
+5. 对于每个 contig c ∈ C：
+   a. 计算覆盖 c 的 read 数
+   b. 如果 coverage < 阈值（如 5×），标记为低覆盖
+6. 返回 coverage_rate，低覆盖 contig 列表
+```
+
+**时间复杂度**：取决于使用的 read mapper，通常为 $O(|R| \cdot \log |Ref|)$
+
+#### 基于保守基因的完整性
+
+**算法 4：单拷贝直系同源基因（SCO）评估**
+
+```
+输入：contig 集合 C，保守基因集 G = {g₁, g₂, ..., g_m}
+输出：完整性分数，缺失基因列表
+
+1. 对于每个基因 g ∈ G：
+   a. 在 C 中搜索 g 的同源序列（使用 BLAST 或 HMM）
+   b. 如果找到匹配且 E-value < 阈值：
+      - 标记 g 为存在
+   c. 否则：
+      - 标记 g 为缺失
+2. completeness = |存在基因| / |G|
+3. 返回 completeness，缺失基因列表
+```
+
+**常用基因集**：
+- 细菌：单拷贝直系同源基因（如 BUSCO 数据库）
+- 真核生物：核心基因集（如 CEGMA）
+
+**时间复杂度**：$O(|C| \cdot |G| \cdot L_{avg})$，其中 $L_{avg}$ 为平均序列长度
+
+### 正确性评估算法
+
+#### 基于 Read Consistency 的错误检测
+
+**算法 5：Read Consistency 检查**
+
+```
+输入：contig 集合 C，read 集合 R，映射结果 M
+输出：错误位点列表
+
+1. errors = ∅
+2. 对于每个 contig c ∈ C：
+   a. 对于位置 p = 1 到 |c|：
+      - 收集覆盖位置 p 的所有 reads
+      - 统计各碱基计数：count[A], count[C], count[G], count[T]
+      - 计算一致性分数：
+        consistency = max(count) / Σ count
+      - 如果 consistency < 阈值（如 0.8）：
+         * 将 (c, p, 碱基分布) 加入 errors
+3. 返回 errors
+```
+
+**时间复杂度**：$O(|C| \cdot \text{avg_coverage})$
+
+#### 基于 k-mer 频率的错误检测
+
+**算法 6：k-mer 频率异常检测**
+
+```
+输入：contig 集合 C，k-mer 频率表 F（从 reads 构建）
+      k-mer 长度 k，频率阈值 f_min
+输出：异常区域列表
+
+1. abnormal_regions = ∅
+2. 对于每个 contig c ∈ C：
+   a. 对于每个 k-mer k' ∈ extract_kmers(c, k)：
+      - 如果 F[k'] < f_min 或 F[k'] = 0：
+         * 标记 k' 为异常
+   b. 合并连续的异常 k-mer 为区域
+   c. 将区域加入 abnormal_regions
+3. 返回 abnormal_regions
+```
+
+**时间复杂度**：$O(\Sigma |c|)$，遍历所有 contig 的 k-mer
+
+### 结构正确性评估
+
+#### 基于 Paired-end 的插入大小检查
+
+**算法 7：Paired-end 一致性检查**
+
+```
+输入：contig 集合 C，paired-end reads P = {(r₁, r₂, d)}
+      其中 d 为期望插入大小
+输出：不一致的 paired-end 对
+
+1. inconsistent_pairs = ∅
+2. 对于每个 paired-end (r₁, r₂, d) ∈ P：
+   a. 将 r₁ 和 r₂ 分别映射到 C
+   b. 如果都成功映射：
+      - 计算实际距离 d_actual
+      - 如果 |d_actual - d| > 阈值（如 3σ）：
+         * 将 (r₁, r₂, d, d_actual) 加入 inconsistent_pairs
+      - 如果方向不正确（如应为 inward 但为 outward）：
+         * 标记为方向错误
+3. 返回 inconsistent_pairs
+```
+
+**时间复杂度**：$O(|P|)$，假设映射已经完成
+
+### 复杂度总结
+
+| 评估类型 | 主要算法 | 时间复杂度 | 空间复杂度 |
+|---------|---------|-----------|-----------|
+| 连续性 | N50 计算 | $O(n \log n)$ | $O(n)$ |
+| Read 覆盖率 | Mapping 统计 | $O(|R| \log |C|)$ | $O(|C|)$ |
+| 保守基因 | 基因搜索 | $O(|C| \cdot |G|)$ | $O(|G|)$ |
+| Read 一致性 | 位点统计 | $O(|C| \cdot \text{cov})$ | $O(|C|)$ |
+| k-mer 频率 | k-mer 查找 | $O(\Sigma |c|)$ | $O(|F|)$ |
+| Paired-end | 距离统计 | $O(|P|)$ | $O(1)$ |
+
+其中 $n$ 为 contig 数量，$|R|$ 为 read 数量，$|C|$ 为 contig 总长度，$|G|$ 为基因集大小，$|P|$ 为 paired-end 对数量，$|F|$ 为 k-mer 频率表大小。
+
+### 综合评分框架
+
+**算法 8：多维度综合评分**
+
+```
+输入：连续性分数 S_contig，完整性分数 S_comp，正确性分数 S_corr
+      权重 w_contig, w_comp, w_corr（满足 w_contig + w_comp + w_corr = 1）
+输出：综合分数 S_total
+
+1. 归一化各分数到 [0, 1] 区间
+2. S_total = w_contig × S_contig + w_comp × S_comp + w_corr × S_corr
+3. 返回 S_total
+```
+
+**权重选择建议**：
+- de novo 组装：$w_{contig} = 0.4$, $w_{comp} = 0.4$, $w_{corr} = 0.2$
+- 变异检测：$w_{contig} = 0.2$, $w_{comp} = 0.3$, $w_{corr} = 0.5$
+- 功能注释：$w_{contig} = 0.3$, $w_{comp} = 0.5$, $w_{corr} = 0.2$
+
+## 常见误区
+
+### N50 越大，组装一定越好
+
+不对。更大的 N50 可能来自错误拼接，尤其在重复区域或 coverage 不稳定时。
+
+### 只要能出 contig，就说明组装已经成功
+
+也不对。组装结果是否可用于下游分析，取决于它是否真实、完整、稳定。
+
+### 有参考基因组时才需要评估
+
+不对。即使没有高质量参考，也仍然需要从 reads 一致性、保守基因、长度分布和研究目标等角度评估结果。
+
+### 连续性、完整性和正确性总会一起提升
+
+并不一定。很多优化会在这三者之间产生取舍。
+
+## 参考资料
+
+- 《An Introduction to Bioinformatics Algorithms》
+- 常见组装评估工具和组装工作流文档
+- 与 reads、coverage、repeat handling 相关的教材与综述资料
+
+## 相关页面
+
+- [de Bruijn graph 组装](./de-bruijn.md)
+- [重复序列、分叉与图清理](./repeats-and-graph-cleaning.md)
+- [OLC：Overlap-Layout-Consensus](./olc.md)
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [NGS 流程总览](../workflows/ngs-overview.md)

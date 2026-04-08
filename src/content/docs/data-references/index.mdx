@@ -1,0 +1,82 @@
+---
+description: 数据、注释与资源板块入口，串联参考版本、注释系统、数据库与常见数据格式。
+title: "数据、注释与资源"
+---
+
+import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+
+这一部分把参考基因组、注释系统、数据库对象和常见文件格式放到同一层理解，因为它们共同决定了“输入输出到底是什么、结果最终如何解释”。
+
+## 这一部分在全站中的位置
+
+它连接对象层、方法层和应用层，是整站中最容易被低估、但最影响实际分析稳定性的板块之一。
+
+## 为什么重要
+
+很多流程问题并不是算法不会，而是：
+
+- 参考版本不一致；
+- 注释版本和坐标系统混乱；
+- 文件格式层级没分清；
+- 数据库对象无法正确映射到结果解释。
+
+## 推荐阅读顺序
+
+1. [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+2. [参考版本、构建号与 liftover](./reference-versions-and-liftover.mdx)
+3. [数据库与注释系统一览](./databases-and-annotations.mdx)
+4. [常见数据格式总览](./common-formats-overview.mdx)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      description: '先理解坐标系和版本体系，避免后续流程在基础层面出错。',
+    },
+    {
+      title: '参考版本、构建号与 liftover',
+      to: '/docs/data-references/reference-versions-and-liftover',
+      description: '学习如何在不同基因组版本之间转换坐标，并保持注释与数据库的一致性。',
+    },
+    {
+      title: '数据库与注释系统一览',
+      to: '/docs/data-references/databases-and-annotations',
+      description: '梳理 Ensembl/RefSeq/GENCODE、ClinVar、gnomAD 等常见资源及其版本差异。',
+    },
+    {
+      title: '常见数据格式总览',
+      to: '/docs/data-references/common-formats-overview',
+      description: '从 FASTA/FASTQ 到 BAM/GTF/VCF，把不同层级的数据格式放回具体流程理解。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '基础与数学',
+      to: '/docs/foundations/',
+      label: '对象层',
+      description: '对象和模型需要被编码到具体的参考、注释和文件格式中。',
+    },
+    {
+      title: '核心方法',
+      to: '/docs/core-methods/',
+      label: '方法层',
+      description: '所有方法的输入输出都依赖这里定义的数据对象和坐标系统。',
+    },
+    {
+      title: '分析方向与案例',
+      to: '/docs/applications/',
+      label: '应用层',
+      description: '变异检测、RNA-seq 和 metagenomics 的稳定性都依赖数据与资源层的配置。',
+    },
+  ]}
+/>

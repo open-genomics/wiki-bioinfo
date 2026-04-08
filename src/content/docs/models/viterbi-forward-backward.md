@@ -1,0 +1,311 @@
+---
+description: HMM 中 forward、backward、Viterbi 三类核心算法的详细实现，包括数学公式、算法伪ocode、worked examples 和复杂度分析。
+title: "Viterbi、Forward 与 Backward"
+---
+
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
+
+<SummaryBox
+  summary="Viterbi、Forward 和 Backward 是 HMM 中三个核心推断算法：Viterbi 找最可能状态路径，Forward 计算观测概率，Backward 提供后向信息用于 posterior 推断。"
+  bullets={[
+    'Viterbi 用 max 操作找最优路径，Forward 用 sum 操作计算总概率',
+    'Forward-backward 结合可以计算每个位点的 posterior 概率',
+    '它们是 HMM 在基因预测、序列分段等应用中的基础算法'
+  ]}
+/>
+
+## 是什么
+
+在 HMM 中，最常见的三个核心问题是：
+
+- **Evaluation**：给定模型和观测序列，这段观测出现的概率有多大？
+- **Decoding**：最可能的隐藏状态路径是什么？
+- **Posterior inference**：某个位置属于某个状态的概率有多大？
+
+对应地，最经典的算法是：
+
+- **Forward algorithm**：解决 evaluation；
+- **Backward algorithm**：从反方向补充概率信息；
+- **Viterbi algorithm**：解决最可能路径的 decoding；
+- **Forward-backward**：把前向和后向信息结合起来，得到位点级的 posterior 解释。
+
+## 为什么不能只看局部最优
+
+如果只看某一个位置最像哪个状态，很容易忽略“整条路径的结构约束”：
+
+- 当前状态是否容易从上一个状态转移而来；
+- 未来观测是否支持这次选择；
+- 整体路径是否比局部最优更重要。
+
+这就是为什么 HMM 的推断通常要靠动态规划，而不是逐位独立判断。
+
+## 数学模型
+
+### Forward 算法
+
+Forward 变量 $\alpha_t(j)$ 定义为：
+
+$$
+\alpha_t(j) = P(o_1, o_2, ..., o_t, z_t = j)
+$$
+
+表示到时刻 t 为止，观察到前 t 个符号且当前处于状态 j 的联合概率。
+
+**初始化**：
+
+$$
+\alpha_1(j) = \pi_j \cdot b_j(o_1)
+$$
+
+**递推**（对于 t = 2, 3, ..., T）：
+
+$$
+\alpha_t(j) = \left[ \sum_{i=1}^{K} \alpha_{t-1}(i) \cdot a_{ij} \right] \cdot b_j(o_t)
+$$
+
+**终止**：
+
+$$
+P(O|\lambda) = \sum_{j=1}^{K} \alpha_T(j)
+$$
+
+### Backward 算法
+
+Backward 变量 $\beta_t(i)$ 定义为：
+
+$$
+\beta_t(i) = P(o_{t+1}, o_{t+2}, ..., o_T \mid z_t = i)
+$$
+
+表示在时刻 t 处于状态 i 的条件下，从 t+1 到结尾剩余观测出现的概率。
+
+**初始化**：
+
+$$
+\beta_T(i) = 1
+$$
+
+**递推**（对于 t = T-1, T-2, ..., 1）：
+
+$$
+\beta_t(i) = \sum_{j=1}^{K} a_{ij} \cdot b_j(o_{t+1}) \cdot \beta_{t+1}(j)
+$$
+
+### Viterbi 算法
+
+Viterbi 变量 $\delta_t(j)$ 定义为：
+
+$$
+\delta_t(j) = \max_{z_1, ..., z_{t-1}} P(z_1, ..., z_{t-1}, z_t = j, o_1, ..., o_t | \lambda)
+$$
+
+表示到时刻 t 为止，沿着单条最佳路径到达状态 j 的最大概率。
+
+**初始化**：
+
+$$
+\delta_1(j) = \pi_j \cdot b_j(o_1)
+$$
+$$
+\psi_1(j) = 0
+$$
+
+**递推**（对于 t = 2, 3, ..., T）：
+
+$$
+\delta_t(j) = \max_{1 \leq i \leq K} \left[ \delta_{t-1}(i) \cdot a_{ij} \right] \cdot b_j(o_t)
+$$
+$$
+\psi_t(j) = \arg\max_{1 \leq i \leq K} \left[ \delta_{t-1}(i) \cdot a_{ij} \right]
+$$
+
+**终止**：
+
+$$
+P^* = \max_{1 \leq j \leq K} \delta_T(j)
+$$
+$$
+z_T^* = \arg\max_{1 \leq j \leq K} \delta_T(j)
+$$
+
+**回溯**（对于 t = T-1, T-2, ..., 1）：
+
+$$
+z_t^* = \psi_{t+1}(z_{t+1}^*)
+$$
+
+### Posterior 概率
+
+结合 Forward 和 Backward 可以计算每个位置的后验概率：
+
+$$
+\gamma_t(i) = P(z_t = i | O, \lambda) = \frac{\alpha_t(i) \cdot \beta_t(i)}{\sum_{j=1}^{K} \alpha_t(j) \cdot \beta_t(j)}
+$$
+
+## Worked Example
+
+### 问题设定
+
+假设我们有两个状态：
+- H：高 GC 区域
+- L：低 GC 区域
+
+观测序列：`G C G A`
+
+HMM 参数：
+- 初始概率：π_H = 0.5, π_L = 0.5
+- 转移概率：
+  - a_HH = 0.7, a_HL = 0.3
+  - a_LH = 0.4, a_LL = 0.6
+- 发射概率：
+  - b_H(G) = 0.4, b_H(C) = 0.3, b_H(A) = 0.1, b_H(T) = 0.2
+  - b_L(G) = 0.1, b_L(C) = 0.2, b_L(A) = 0.4, b_L(T) = 0.3
+
+### Forward 算法计算
+
+**初始化（t=1, o₁=G）**：
+- α₁(H) = π_H · b_H(G) = 0.5 · 0.4 = 0.2
+- α₁(L) = π_L · b_L(G) = 0.5 · 0.1 = 0.05
+
+**t=2, o₂=C**：
+- α₂(H) = [α₁(H) · a_HH + α₁(L) · a_LH] · b_H(C)
+         = [0.2 · 0.7 + 0.05 · 0.4] · 0.3
+         = [0.14 + 0.02] · 0.3 = 0.048
+- α₂(L) = [α₁(H) · a_HL + α₁(L) · a_LL] · b_L(C)
+         = [0.2 · 0.3 + 0.05 · 0.6] · 0.2
+         = [0.06 + 0.03] · 0.2 = 0.018
+
+**t=3, o₃=G**：
+- α₃(H) = [0.048 · 0.7 + 0.018 · 0.4] · 0.4
+         = [0.0336 + 0.0072] · 0.4 = 0.01632
+- α₃(L) = [0.048 · 0.3 + 0.018 · 0.6] · 0.1
+         = [0.0144 + 0.0108] · 0.1 = 0.00252
+
+**t=4, o₄=A**：
+- α₄(H) = [0.01632 · 0.7 + 0.00252 · 0.4] · 0.1
+         = [0.011424 + 0.001008] · 0.1 = 0.0012432
+- α₄(L) = [0.01632 · 0.3 + 0.00252 · 0.6] · 0.4
+         = [0.004896 + 0.001512] · 0.4 = 0.0025632
+
+**终止**：
+- P(O|λ) = α₄(H) + α₄(L) = 0.0012432 + 0.0025632 = 0.0038064
+
+### Viterbi 算法计算
+
+**初始化（t=1, o₁=G）**：
+- δ₁(H) = 0.5 · 0.4 = 0.2, ψ₁(H) = 0
+- δ₁(L) = 0.5 · 0.1 = 0.05, ψ₁(L) = 0
+
+**t=2, o₂=C**：
+- δ₂(H) = max[0.2·0.7, 0.05·0.4] · 0.3 = max[0.14, 0.02] · 0.3 = 0.042
+  ψ₂(H) = H
+- δ₂(L) = max[0.2·0.3, 0.05·0.6] · 0.2 = max[0.06, 0.03] · 0.2 = 0.012
+  ψ₂(L) = H
+
+**t=3, o₃=G**：
+- δ₃(H) = max[0.042·0.7, 0.012·0.4] · 0.4 = max[0.0294, 0.0048] · 0.4 = 0.01176
+  ψ₃(H) = H
+- δ₃(L) = max[0.042·0.3, 0.012·0.6] · 0.1 = max[0.0126, 0.0072] · 0.1 = 0.00126
+  ψ₃(L) = H
+
+**t=4, o₄=A**：
+- δ₄(H) = max[0.01176·0.7, 0.00126·0.4] · 0.1 = max[0.008232, 0.000504] · 0.1 = 0.0008232
+  ψ₄(H) = H
+- δ₄(L) = max[0.01176·0.3, 0.00126·0.6] · 0.4 = max[0.003528, 0.000756] · 0.4 = 0.0014112
+  ψ₄(L) = H
+
+**终止**：
+- P* = max[0.0008232, 0.0014112] = 0.0014112
+- z₄* = L
+
+**回溯**：
+- z₃* = ψ₄(L) = H
+- z₂* = ψ₃(H) = H
+- z₁* = ψ₂(H) = H
+
+最优路径：H → H → H → L
+
+### Forward-Backward Posterior
+
+使用前面计算的 α 和 β，可以计算每个位置的后验概率。例如，位置 2 属于状态 H 的概率：
+
+$$
+\gamma_2(H) = \frac{\alpha_2(H) \cdot \beta_2(H)}{\alpha_2(H) \cdot \beta_2(H) + \alpha_2(L) \cdot \beta_2(L)}
+$$
+
+（完整 β 计算省略）
+
+## 复杂度分析
+
+### 时间复杂度
+
+- **Forward 算法**：O(T · K²)，T 是观测长度，K 是状态数
+- **Backward 算法**：O(T · K²)
+- **Viterbi 算法**：O(T · K²)
+- **Forward-Backward**：O(T · K²)
+
+### 空间复杂度
+
+- **存储 α/β/δ 矩阵**：O(T · K)
+- **存储回溯指针**：O(T · K)
+- **可优化到**：O(K)（只保留当前行，但 Viterbi 回溯需要存储完整路径）
+- 即便这条状态不在整体最优路径中，它也可能在该位置上具有很高局部概率。
+
+这就引出了一个很重要的概念区分：
+
+- **最可能路径**（Viterbi path）
+- **每个位点最可能状态**（posterior decoding）
+
+它们并不一定一样。
+
+## 一个直观例子
+
+假设我们想判断一条 DNA 序列中的位置更像：
+
+- `H`：高 GC 区域；
+- `L`：低 GC 区域；
+
+对于序列：
+
+```text
+G C G A
+```
+
+- Forward 会告诉我们：这整段观测在模型下整体有多可能；
+- Viterbi 会告诉我们：最可能的一整条状态路径是什么，例如 `H H H L`；
+- Forward-backward 则可能告诉我们：
+  - 第 1 位有 0.9 概率是 `H`；
+  - 第 4 位有 0.6 概率是 `L`；
+
+这两种解释都很有用，但回答的是不同问题。
+
+## 与 gene prediction / profile HMM 的关系
+
+- **Gene prediction**：
+  - Viterbi 常用于输出最可能的 exon/intron 结构路径；
+- **Profile HMM**：
+  - Forward/Backward 常用于评估一条序列与某个 profile 的匹配程度；
+- **一般 HMM 分析**：
+  - 需要根据任务目标选择“整体路径”还是“位点后验”。
+
+## 常见误区
+
+### Viterbi 等于 HMM 的全部
+
+不是。它只是 decoding 问题的经典解法之一；Forward 和 Backward 处理的是不同问题。
+
+### 每个位点最可能状态拼起来，就是最可能路径
+
+不一定。局部最优的逐位选择不一定构成全局最优路径。
+
+### Forward / Backward 只是理论公式，没有实际作用
+
+不是。它们是评估模型和做 posterior 推断的核心，也是很多学习算法的基础。
+
+## 相关页面
+
+- [隐马尔可夫模型](./hmm.md)
+- [Profile HMM](./profile-hmm.md)
+- [Gene prediction](./gene-prediction.md)

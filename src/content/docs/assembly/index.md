@@ -1,0 +1,78 @@
+---
+title: "组装与图算法"
+---
+
+import SectionNavigator from '@site/src/components/docs/SectionNavigator';
+import RelatedLinks from '@site/src/components/docs/RelatedLinks';
+
+
+组装问题关注如何从大量短片段或长读段重建原始基因组或转录本序列。
+
+这是从“局部观测恢复整体结构”的经典计算问题。
+
+## 这一部分在全站中的位置
+
+这一节位于“核心方法”大板块内部，连接 reads、coverage、错误模型与图算法，重点回答：为什么局部读段信息会在图里形成路径问题，以及这些路径为什么难解。
+
+## 推荐阅读顺序
+
+1. [OLC：Overlap-Layout-Consensus](./olc.md)
+2. [de Bruijn graph 组装](./de-bruijn.md)
+3. [图遍历算法](./graph-traversal-algorithms.md)
+4. [重复序列、分叉与图清理](./repeats-and-graph-cleaning.md)
+5. [组装评估](./assembly-evaluation.md)
+
+## 子主题导航
+
+<SectionNavigator
+  items={[
+    {
+      title: 'OLC：Overlap-Layout-Consensus',
+      to: '/docs/assembly/olc',
+      description: '从 read-read overlap 出发理解经典组装思路。',
+    },
+    {
+      title: 'de Bruijn graph 组装',
+      to: '/docs/assembly/de-bruijn',
+      description: '通过 k-mer 建图，把序列恢复问题转成图上的路径问题。',
+    },
+    {
+      title: '图遍历算法',
+      to: '/docs/assembly/graph-traversal-algorithms',
+      badge: '图算法',
+      description: '从DFS、BFS到Hamiltonian path，理解组装中的图搜索问题。',
+    },
+    {
+      title: '重复序列、分叉与图清理',
+      to: '/docs/assembly/repeats-and-graph-cleaning',
+      description: '理解为什么真实图结构需要错误识别、分叉判断与清理。',
+    },
+    {
+      title: '组装评估',
+      to: '/docs/assembly/assembly-evaluation',
+      description: '从 N50 之外理解连续性、完整性与正确性的平衡。',
+    },
+  ]}
+/>
+
+## 与其他板块的连接
+
+<RelatedLinks
+  links={[
+    {
+      title: '基础与数学',
+      to: '/docs/foundations/',
+      description: 'reads、coverage 和错误模型决定了图结构会如何偏离理想情况。',
+    },
+    {
+      title: '序列表示与索引',
+      to: '/docs/sequence/',
+      description: 'k-mer 等表示同时连接索引与组装两条方法主线。',
+    },
+    {
+      title: '工作流与案例',
+      to: '/docs/workflows/',
+      description: '组装方法最终要回到 de novo 和宏基因组等真实任务中理解。',
+    },
+  ]}
+/>

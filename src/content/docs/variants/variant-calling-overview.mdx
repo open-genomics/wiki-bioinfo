@@ -1,0 +1,117 @@
+---
+title: "DNA-seq 变异检测总览"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+
+<SummaryBox
+  summary="这是一页把 DNA-seq variant calling 放回完整分析链路的概览：你需要同时看 BAM、VCF、参考版本、过滤逻辑和证据质量，而不是把 caller 当成黑箱。"
+  bullets={[
+    '如果你刚开始接触变异检测，先把 FASTQ → BAM → VCF 的层级关系理顺。',
+    '这页重点是流程和判断逻辑，不是具体软件命令。',
+  ]}
+/>
+
+## 是什么
+
+DNA-seq 变异检测要回答的是：样本和参考基因组相比，哪些位置发生了可信的碱基替换、插入、缺失或更复杂的结构变化。
+
+## 为什么重要
+
+变异检测不是单纯“找不同”，而是要在技术噪声和真实信号之间做区分。分析者需要同时看：
+
+- FASTQ、BAM、VCF 之间的层级关系；
+- 比对质量和定位不确定性；
+- 候选位点的覆盖、质量与偏好性；
+- 过滤逻辑和数据库注释。
+
+如果忽略这些层次，就很容易把 caller 的输出误当成“自动得到的真变异”。
+
+## 前置知识
+
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [常见文件格式概览](../formats/common-file-formats.mdx)
+- [序列比对](../alignment/index.md)
+- [参考基因组、坐标系统与注释](../foundations/reference-and-annotation.md)
+
+## 核心概念
+
+### 1. 原始数据与质控
+
+从 FASTQ 出发，需要先检查：
+
+- read 质量；
+- 接头污染；
+- 覆盖度；
+- 批次和样本污染问题。
+
+低质量输入会直接影响后续候选位点证据。
+
+### 2. 比对到参考基因组
+
+变异检测高度依赖比对质量：
+
+- 重复区域容易产生多重比对；
+- indel 周围局部比对容易错位；
+- 参考版本选错会让“变异”其实只是坐标系差异。
+
+### 3. 候选位点生成
+
+caller 要在以下因素之间做区分：
+
+- 真正的生物学变异；
+- 测序错误；
+- PCR / 文库偏好；
+- 低复杂度区域导致的定位假象。
+
+### 4. 过滤与注释
+
+最后得到的 VCF 往往已经包含过滤逻辑。分析者需要知道：
+
+- 某个位点为什么被保留或剔除；
+- 质量值和深度到底反映什么；
+- 注释字段和数据库版本是否一致。
+
+## worked example
+
+一个简化 DNA-seq variant workflow 可以写成：
+
+```text
+FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annotation -> interpretation
+```
+
+如果某个候选 SNP 只被极少数 reads 支持，而且这些 reads 的位置质量较差，那么它更可能是：
+
+- 测序错误；
+- 比对错位；
+- 低复杂度区域产生的假阳性。
+
+因此变异检测的关键并不是“有差异就算变异”，而是评估证据质量。
+
+## 与真实工具或流程的连接
+
+- 比对：索引结构、seed-and-extend、动态规划；
+- 候选位点生成：局部证据聚合、错误建模；
+- 过滤：统计阈值、经验规则、群体频率与功能注释；
+- 解释：数据库映射、转录本 / 蛋白水平影响分析。
+
+<figure>
+  <img src="/wiki-bioinfo/img/figures/dnaseq-variant-workflow.png" alt="DNA-seq variant calling pipeline from FASTQ through QC, alignment to BAM, candidate variants, filtering, and annotated VCF/interpretation" />
+  <figcaption>DNA-seq 变异检测的典型流程：从原始 FASTQ，到比对得到 BAM，再到候选变异、过滤、注释与解释。</figcaption>
+</figure>
+
+## 常见误区
+
+- caller 跑完就等于得到了真实变异；
+- 只看 VCF，不看 BAM 和覆盖背景；
+- 参考版本和注释版本不一致也无所谓；
+- PASS 位点在重复区域和低复杂度区域里也一定可靠。
+
+## 相关页面
+
+- [DNA-seq 变异过滤与质量控制](./variant-filtering.mdx)
+- [序列比对](../alignment/index.md)
+- [常见文件格式概览](../formats/common-file-formats.mdx)
+- [数据库与资源](../databases/index.md)
+- [长读长 SV 检测](../long-read/sv-detection.md)

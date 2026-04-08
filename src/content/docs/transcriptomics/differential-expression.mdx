@@ -1,0 +1,198 @@
+---
+description: RNA-seq 差异表达分析入口，说明为什么从 counts 出发，以及归一化、离散度和多重检验分别在做什么。
+title: "差异表达：从 counts 到统计检验"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+
+<PageHeaderMeta
+  section="Applications"
+  audience="已经理解 RNA-seq 定量流程，但还不清楚差异表达统计建模在解决什么问题的读者"
+  startWith="先区分 counts、TPM 与归一化的角色，再理解离散度估计和多重检验为什么是差异分析的核心。"
+/>
+
+<SummaryBox
+  summary="差异表达分析不是把两个样本的 TPM 做个 t-test，而是要在 count 数据、样本变异、归一化和多重比较之间建立一个更合理的统计模型。"
+  bullets={[
+    '对 RNA-seq 来说，表达量可视化和差异检验常常使用不同的数据表示。',
+    '真正困难的地方不是算 fold change，而是判断观察到的差异是否超过了技术与生物学波动。',
+  ]}
+/>
+
+## 是什么
+
+差异表达（differential expression, DE）分析关注的是：在两个或多个条件下，哪些 gene 或 transcript 的表达量发生了系统性变化，这些变化是否足够稳定，能否被统计上区分于随机波动。
+
+它通常发生在 RNA-seq 工作流的定量之后、功能解释之前，是从“表达矩阵”走向“生物学结论”的关键一步。
+
+## 为什么重要
+
+RNA-seq 的表达矩阵里，表面上每个基因都有一个数字，但这些数字并不自动等价于“可以直接比较”。差异表达分析要处理的是：
+
+- 样本总测序深度不同；
+- 样本组成不同；
+- 生物学重复之间天然存在波动；
+- 同时检验成千上万个基因时，假阳性会迅速累积。
+
+因此，差异分析的关键并不是“看谁的均值更大”，而是判断一个差异在当前数据条件下是否可信。
+
+## 任务目标
+
+差异表达分析通常要回答：
+
+- 哪些基因在条件 A 和条件 B 下显著不同；
+- 差异方向是什么；
+- 变化幅度有多大；
+- 统计显著性是否在多重检验后仍然成立；
+- 这些差异是否具有稳定的生物学解释价值。
+
+## 输入输出
+
+### 输入
+
+常见输入包括：
+
+- gene-level 或 transcript-level 的原始 counts；
+- 样本分组信息与实验设计；
+- 生物学重复；
+- 可选的批次、协变量或其他设计矩阵信息。
+
+### 输出
+
+常见输出包括：
+
+- 每个基因或转录本的 log fold change；
+- p-value 与调整后的 p-value / FDR；
+- 差异基因列表；
+- 用于后续富集分析、通路分析或可视化的候选集合。
+
+## 为什么通常从 counts 出发，而不是直接用 TPM
+
+在 RNA-seq 里，TPM、FPKM、CPM 更适合表达“相对表达量”或做可视化，但差异检验往往从原始 counts 出发。原因在于：
+
+- counts 更接近测序观测过程本身；
+- 统计模型可以显式处理均值与方差关系；
+- TPM 经过样本内 rescaling，更适合描述组成而不是直接作为检验输入；
+- 直接对 TPM 做简单 t-test，往往忽略了 RNA-seq 数据的离散度结构与 library composition 问题。
+
+所以，差异分析里的一个基本分工是：
+
+- **counts**：更适合做统计建模；
+- **TPM / log-TPM**：更适合做展示、解释和样本内相对表达观察。
+
+## 核心统计直觉
+
+### 归一化
+
+归一化不是为了把所有样本“弄得一样”，而是为了消除那些与生物学差异无关、却会系统性影响计数的因素，例如：
+
+- library size 不同；
+- 样本组成偏差；
+- 少数超高表达基因把总体分布拉偏。
+
+如果归一化做得不好，后面的差异结果可能只是技术偏差，而不是生物学信号。
+
+### 离散度（dispersion）
+
+RNA-seq 计数不是纯粹的固定比例数据。即使在同一条件下，不同重复之间也会出现波动。离散度建模要处理的正是：
+
+- 技术噪声；
+- 生物学重复之间的自然变异；
+- 不同表达水平下方差并不相同。
+
+如果不估计离散度，你就很难判断“这个差异只是噪声”还是“这个差异足够异常”。
+
+### 多重检验
+
+RNA-seq 常常一次检验上万基因。如果按单个 p-value 理解显著性，就会得到大量假阳性。因此需要做多重检验校正，例如控制 FDR。
+
+这一步的直觉是：
+
+- 不是只看“某个基因单独显不显著”；
+- 而是要在成千上万个同时检验的背景下，控制整体错误发现率。
+
+## worked example
+
+假设有两组 RNA-seq 样本：control 与 treatment。某个基因在 treatment 组 counts 明显更高，但在解释前还要先问：
+
+1. 两组样本的测序深度是否一致？
+2. 是否存在某些高表达基因导致整体组成偏差？
+3. 该基因在组内重复之间是否本来就波动很大？
+4. 在同时检验上万基因的情况下，这个差异是否还能在 FDR 控制后保留？
+
+只有这些问题都被纳入模型，这个“更高”才更接近真正可报告的差异表达信号。
+
+## 与 RNA-seq 工作流的连接
+
+差异表达并不是孤立步骤，它依赖前面多个环节：
+
+- 定量结果是否稳定；
+- reference 与 annotation 版本是否匹配；
+- gene-level 与 transcript-level 的分析目标是否一致；
+- 样本设计、重复数和批次信息是否合理。
+
+因此，一个“差异表达结果不合理”的问题，根源未必在统计检验本身，也可能来自：
+
+- 前处理或 QC 不足；
+- counts 构建方式不合适；
+- 样本设计存在混杂；
+- transcript 层与 gene 层目标混用。
+
+## 常见误区
+
+### 直接对 TPM 做 t-test 就能得到 DE 结果
+
+通常不合适。TPM 更适合表达量展示，而不是直接作为 count-based 差异模型的输入。
+
+### fold change 大就一定显著
+
+不对。显著性还依赖样本波动、重复数、离散度和多重检验校正。
+
+### p-value 小就说明结果一定重要
+
+也不对。统计显著性不等于生物学重要性，还要结合效应大小、背景知识和功能解释。
+
+### 只要跑完 DE 工具，结果就可以直接解释
+
+不对。差异表达结果仍需要结合实验设计、注释版本、基因层级以及下游富集分析来理解。
+
+## 后续阅读
+
+- [RNA-seq 工作流概览](../workflows/rna-seq.md)
+- [TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)
+- [基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)
+- [数据库与资源](../databases/common-resources.md)
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'RNA-seq 工作流概览',
+      to: '/docs/workflows/rna-seq',
+      label: '流程入口',
+      description: '先看整个 RNA-seq 主线，再把差异表达放回 workflow 中理解。',
+    },
+    {
+      title: 'TPM、FPKM、CPM 与有效长度',
+      to: '/docs/transcriptomics/tpm-fpkm-cpm',
+      label: '单位与归一化',
+      description: '先区分 counts 与 TPM 的角色，再理解为什么 DE 常从 counts 出发。',
+    },
+    {
+      title: '基因层与转录本层表达定量',
+      to: '/docs/transcriptomics/gene-vs-transcript-quant',
+      label: '分析层级',
+      description: '差异表达前要先明确你的分析单位是 gene 还是 transcript。',
+    },
+    {
+      title: '常用数据库与资源',
+      to: '/docs/databases/common-resources',
+      label: '解释层',
+      description: '差异基因列表的下游解释通常要回到数据库、通路与公开资源。',
+    },
+  ]}
+/>

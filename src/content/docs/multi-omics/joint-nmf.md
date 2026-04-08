@@ -1,0 +1,464 @@
+---
+description: 联合非负矩阵分解详解：通过共享基矩阵实现多组学数据的低维对齐，理解多组学整合的经典矩阵分解方法。
+title: "联合非负矩阵分解（Joint NMF）"
+---
+
+import SummaryBox from '@site/src/components/docs/SummaryBox';
+import DefinitionList from '@site/src/components/docs/DefinitionList';
+
+
+<SummaryBox
+  summary="Joint NMF 通过在多个组学矩阵间共享基矩阵，强制它们在低维空间对齐，是多组学整合中最直观的矩阵分解方法。"
+  bullets={[
+    '核心思想是假设不同组学共享某些潜在的生物学因子',
+    '非负约束使结果具有生物学可解释性',
+    '是理解多组学矩阵分解方法的入门算法',
+  ]}
+/>
+
+## 是什么
+
+联合非负矩阵分解（Joint Non-negative Matrix Factorization, Joint NMF）是标准 NMF 在多组学场景下的扩展。
+
+给定 $K$ 个组学数据矩阵 $X^{(1)}, X^{(2)}, ..., X^{(K)}$，Joint NMF 将它们分解为：
+
+$$
+X^{(k)} \approx W H^{(k)}, \quad k = 1, 2, ..., K
+$$
+
+其中：
+- $W \in \mathbb{R}^{n \times r}$ 是**共享基矩阵**，所有组学共用
+- $H^{(k)} \in \mathbb{R}^{r \times p_k}$ 是组学 $k$ 的**特异系数矩阵**
+- $n$ 是样本数，$r$ 是潜在因子数，$p_k$ 是组学 $k$ 的特征数
+
+关键约束：$W \geq 0$，$H^{(k)} \geq 0$（所有元素非负）
+
+## 为什么重要
+
+在生物信息学中，Joint NMF 的价值体现在：
+
+- **生物学直觉**：共享基矩阵可以解释为共同的生物学过程（如通路、细胞类型），各组学对这些过程有不同的激活模式
+- **可解释性**：非负约束使分解结果具有"部分组成整体"的可解释性
+- **对齐机制**：通过强制共享 $W$，自动实现不同组学在样本维度的对齐
+- **计算效率**：相比深度学习方法，NMF 类方法计算开销小，适合中小规模数据
+
+虽然现代深度学习方法在灵活性上更强，但 Joint NMF 仍然是理解多组学矩阵分解思想的重要基础。
+
+## 核心思想
+
+### 标准 NMF 回顾
+
+对于单个矩阵 $X \in \mathbb{R}^{n \times p}$，NMF 求解：
+
+$$
+\min_{W \geq 0, H \geq 0} \|X - WH\|_F^2
+$$
+
+其中 $\|\cdot\|_F$ 是 Frobenius 范数。
+
+直观理解：$X$ 的每一列是 $W$ 列的非负线性组合。
+
+### Joint NMF 的扩展
+
+Joint NMF 的关键创新是：假设不同组学共享某些基向量。
+
+考虑两个组学：
+- 基因表达 $X^{(1)} \in \mathbb{R}^{n \times p_1}$
+- 甲基化 $X^{(2)} \in \mathbb{R}^{n \times p_2}$
+
+Joint NMF 假设它们都由同一组 $r$ 个潜在因子驱动，但每个因子在两组学中的表现不同：
+
+$$
+\begin{aligned}
+X^{(1)} &\approx W H^{(1)} \\
+X^{(2)} &\approx W H^{(2)}
+\end{aligned}
+$$
+
+其中 $W$ 的列可以解释为：
+- 细胞类型
+- 生物学通路
+- 疾病亚型
+
+而 $H^{(1)}$ 和 $H^{(2)}$ 表示这些因子在基因和甲基化位点上的不同激活模式。
+
+## 数学模型
+
+### 优化目标
+
+Joint NMF 求解以下优化问题：
+
+$$
+\min_{W \geq 0, H^{(1)} \geq 0, ..., H^{(K)} \geq 0} \sum_{k=1}^{K} \|X^{(k)} - W H^{(k)}\|_F^2 + \lambda \mathcal{R}(W, H)
+$$
+
+其中：
+- $\lambda$ 是正则化系数
+- $\mathcal{R}(W, H)$ 是正则项，常见的有：
+  - L2 正则：$\|W\|_F^2 + \sum_k \|H^{(k)}\|_F^2$
+  - 稀疏正则：$\|W\|_1 + \sum_k \|H^{(k)}\|_1$
+  - 组间一致性正则：$\sum_{k < l} \|H^{(k)} - H^{(l)}\|_F^2$
+
+### Frobenius 范数展开
+
+$$
+\|X^{(k)} - W H^{(k)}\|_F^2 = \sum_{i=1}^{n} \sum_{j=1}^{p_k} (X^{(k)}_{ij} - [W H^{(k)}]_{ij})^2
+$$
+
+### 优化性质
+
+- **非凸问题**：由于非负约束，目标函数是非凸的
+- **局部最优**：通常使用交替迭代找到局部最优
+- **初始化敏感**：结果依赖初始值，通常多次运行取最优
+
+## 算法步骤
+
+### 步骤 1：初始化
+
+**算法1：Joint NMF 初始化**
+
+```
+输入：K个组学矩阵 X^{(1)}, ..., X^{(K)}，潜在维度 r
+输出：初始 W, H^{(1)}, ..., H^{(K)}
+
+1. 对每个组学 k：
+   a. 使用标准 NMF 分解 X^{(k)} = W^{(k)} H^{(k)}
+   b. 得到组学特异的基矩阵 W^{(k)}
+
+2. 融合基矩阵：
+   W = 平均(W^{(1)}, W^{(2)}, ..., W^{(K)})
+
+3. 归一化：
+   a. 对 W 的每一列除以其 L2 范数
+   b. 对 H^{(k)} 的每一行乘以对应的缩放因子
+
+4. return W, H^{(1)}, ..., H^{(K)}
+```
+
+### 步骤 2：交替迭代更新
+
+**算法2：Joint NMF 交替最小化**
+
+```
+输入：K个组学矩阵 X^{(1)}, ..., X^{(K)}，初始 W, H^{(1)}, ..., H^{(K)}
+输出：优化后的 W, H^{(1)}, ..., H^{(K)}
+
+重复直到收敛：
+1. 固定 H^{(1)}, ..., H^{(K)}，更新 W：
+   a. 计算梯度：∇_W = -2 ∑_k X^{(k)} (H^{(k)})^T + 2 W ∑_k H^{(k)} (H^{(k)})^T
+   b. 使用乘法更新规则：
+      W_{ij} ← W_{ij} × 
+      [∑_k (X^{(k)} (H^{(k)})^T)_{ij}] / [∑_k (W H^{(k)} (H^{(k)})^T)_{ij}]
+   c. 归一化 W 的列
+
+2. 固定 W，依次更新每个 H^{(k)}：
+   对每个组学 k：
+   a. 计算梯度：∇_{H^{(k)}} = -2 W^T X^{(k)} + 2 W^T W H^{(k)}
+   b. 使用乘法更新规则：
+      H^{(k)}_{ij} ← H^{(k)}_{ij} × 
+      [(W^T X^{(k)})_{ij}] / [(W^T W H^{(k)})_{ij}]
+
+3. 检查收敛：
+   a. 计算目标函数变化量 Δ
+   b. 如果 Δ < ε 或达到最大迭代次数，停止
+
+4. return W, H^{(1)}, ..., H^{(K)}
+```
+
+**收敛判断**：目标函数变化量小于阈值 `ε = 10^-6` 或达到最大迭代次数（如 1000）
+
+### 步骤 3：后处理
+
+- **因子解释**：分析 $W$ 的列与已知标签的相关性
+- **特征选择**：根据 $H^{(k)}$ 识别每个因子的重要特征
+- **可视化**：使用 $W$ 进行 t-SNE 或 UMAP 降维可视化
+
+## Worked Example
+
+考虑两个组学数据：
+- 基因表达：3 个样本，4 个基因
+- 甲基化：3 个样本，3 个位点
+
+$$
+X^{(1)} = \begin{bmatrix}
+5 & 3 & 0 & 0 \\
+4 & 2 & 0 & 0 \\
+0 & 0 & 4 & 5
+\end{bmatrix}, \quad
+X^{(2)} = \begin{bmatrix}
+3 & 0 & 0 \\
+2 & 0 & 0 \\
+0 & 4 & 3
+\end{bmatrix}
+$$
+
+选择潜在维度 $r = 2$。
+
+### 初始化
+
+假设初始化得到：
+
+$$
+W = \begin{bmatrix}
+0.8 & 0.1 \\
+0.7 & 0.2 \\
+0.1 & 0.9
+\end{bmatrix}, \quad
+H^{(1)} = \begin{bmatrix}
+4 & 3 & 0 & 0 \\
+0 & 0 & 3 & 4
+\end{bmatrix}, \quad
+H^{(2)} = \begin{bmatrix}
+3 & 0 & 0 \\
+0 & 3 & 2
+\end{bmatrix}
+$$
+
+### 第一次迭代（简化演示）
+
+**更新 W**：
+
+计算 $W H^{(1)}$ 和 $W H^{(2)}$：
+
+$$
+W H^{(1)} = \begin{bmatrix}
+3.2 & 2.4 & 0.3 & 0.4 \\
+2.8 & 2.1 & 0.6 & 0.8 \\
+0.4 & 0.3 & 2.7 & 3.6
+\end{bmatrix}, \quad
+W H^{(2)} = \begin{bmatrix}
+2.4 & 0.3 & 0.2 \\
+2.1 & 0.6 & 0.4 \\
+0.3 & 2.7 & 1.8
+\end{bmatrix}
+$$
+
+使用乘法更新规则更新 $W$（具体数值省略）。
+
+**更新 H^{(1)} 和 H^{(2)}**：
+
+类似地使用乘法更新规则。
+
+### 收敛后的结果
+
+假设收敛后得到：
+
+$$
+W = \begin{bmatrix}
+0.85 & 0.12 \\
+0.72 & 0.18 \\
+0.08 & 0.88
+\end{bmatrix}
+$$
+
+解释：
+- 第 1 列（因子 1）：在样本 1 和 2 中高表达，样本 3 中低
+- 第 2 列（因子 2）：在样本 3 中高表达，样本 1 和 2 中低
+
+这可能对应两种不同的细胞类型或生物学状态。
+
+## 复杂度分析
+
+### 时间复杂度
+
+每次迭代：
+- 更新 $W$：$O(n r \sum_k p_k)$
+- 更新所有 $H^{(k)}$：$O(r n \sum_k p_k)$
+- 总计：$O(n r \sum_k p_k)$
+
+假设迭代 $T$ 次，总时间复杂度：$O(T \cdot n r \sum_k p_k)$
+
+### 空间复杂度
+
+- 存储 $W$：$O(n r)$
+- 存储所有 $H^{(k)}$：$O(r \sum_k p_k)$
+- 总计：$O(n r + r \sum_k p_k)$
+
+### 优化技巧
+
+- **稀疏矩阵**：如果输入矩阵稀疏，可以利用稀疏运算加速
+- **并行化**：不同 $H^{(k)}$ 的更新可以并行
+- **早停**：监控重构误差，提前停止
+
+## 算法变体
+
+### iNMF（integrative NMF）
+
+专门为单细胞多模态数据设计，加入：
+- 对齐约束：鼓励匹配细胞在潜在空间接近
+- 缺失数据处理：可处理部分模态缺失
+
+### MultiNMF
+
+加入组学权重：
+$$
+\min \sum_{k=1}^{K} w_k \|X^{(k)} - W H^{(k)}\|_F^2
+$$
+
+其中 $w_k$ 是组学 $k$ 的权重，可自动学习。
+
+### SNF-R（Similarity Network Fusion with NMF）
+
+先构建相似性网络，再用 NMF 融合网络。
+
+## 参数选择
+
+### 潜在维度 r
+
+- **肘部法则**：绘制重构误差随 r 的变化，选择拐点
+- **稳定性分析**：多次运行，选择稳定的 r
+- **生物学解释**：选择能产生可解释因子的 r
+- **经验值**：通常 $r \in [5, 50]$
+
+### 正则化系数 λ
+
+- **交叉验证**：在下游任务上交叉验证
+- **信息准则**：使用 AIC 或 BIC
+- **网格搜索**：尝试 $\lambda \in \{0.001, 0.01, 0.1, 1, 10\}$
+
+## 适用场景
+
+### 适合使用 Joint NMF 的情况
+
+- 样本匹配的多组学数据
+- 数据规模中等（n < 10000）
+- 需要可解释的因子
+- 特征维度较高（降维需求）
+- 非负数据（如计数数据、丰度数据）
+
+### 不适合使用 Joint NMF 的情况
+
+- 数据包含负值（需先变换）
+- 样本不匹配（需要对齐算法）
+- 大规模数据（考虑深度学习方法）
+- 复杂非线性关系（考虑核方法或神经网络）
+- 需要不确定性估计（考虑贝叶斯方法）
+
+## 与其他方法的比较
+
+| 方法 | 共享机制 | 可解释性 | 计算效率 | 非线性 | 缺失数据 |
+|------|---------|---------|---------|--------|---------|
+| Joint NMF | 共享 W | 高 | 高 | 否 | 差 |
+| CCA | 最大化相关 | 中 | 高 | 否 | 差 |
+| MOFA+ | 共享因子 Z | 高 | 中 | 否 | 好 |
+| VAE | 共享潜在空间 | 低 | 低 | 是 | 好 |
+| SNF | 网络融合 | 中 | 中 | 否 | 差 |
+
+## 在真实工具中的实现
+
+### Python 实现
+
+```python
+import numpy as np
+from sklearn.decomposition import NMF
+
+def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
+    """
+    Joint NMF 实现
+    
+    参数:
+        X_list: 组学矩阵列表 [X1, X2, ..., XK]
+        r: 潜在维度
+        max_iter: 最大迭代次数
+        tol: 收敛阈值
+    
+    返回:
+        W: 共享基矩阵
+        H_list: 系数矩阵列表
+    """
+    K = len(X_list)
+    n = X_list[0].shape[0]
+    
+    # 初始化：平均各组学的 NMF 结果
+    W_list = []
+    H_list = []
+    for X in X_list:
+        model = NMF(n_components=r, init='random', random_state=42)
+        W_k = model.fit_transform(X)
+        H_k = model.components_
+        W_list.append(W_k)
+        H_list.append(H_k)
+    
+    # 平均 W
+    W = np.mean(W_list, axis=0)
+    
+    # 归一化
+    for k in range(K):
+        norms = np.linalg.norm(W, axis=0)
+        W = W / norms
+        H_list[k] = H_list[k] * norms[:, np.newaxis]
+    
+    # 交替迭代（简化版，实际应使用乘法更新）
+    for iteration in range(max_iter):
+        W_prev = W.copy()
+        
+        # 更新 W（简化：最小化平方误差）
+        # 实际应使用乘法更新规则
+        numerator = np.zeros_like(W)
+        denominator = np.zeros_like(W)
+        for k in range(K):
+            numerator += X_list[k] @ H_list[k].T
+            denominator += W @ (H_list[k] @ H_list[k].T)
+        W = W * (numerator / (denominator + 1e-10))
+        
+        # 归一化
+        norms = np.linalg.norm(W, axis=0)
+        W = W / norms
+        for k in range(K):
+            H_list[k] = H_list[k] * norms[:, np.newaxis]
+        
+        # 检查收敛
+        if np.linalg.norm(W - W_prev) < tol:
+            break
+    
+    return W, H_list
+```
+
+### R 实现
+
+使用 `NMF` 包或 `MultiAssayExperiment` 生态系统。
+
+## 常见误区
+
+### Joint NMF 总能得到生物学有意义的因子
+
+不一定。需要结合：
+- 先验知识验证
+- 下游任务性能
+- 稳定性分析
+
+### 非负约束总是合理的
+
+对于某些数据（如标准化后的 z-score），非负约束可能不合适。需要先进行数据变换。
+
+### 潜在维度越大越好
+
+不是。过大的 r 会导致：
+- 过拟合
+- 因子难以解释
+- 计算成本增加
+
+### 不同组学必须共享完全相同的因子
+
+不一定。有些变体允许部分共享、部分特异的因子。
+
+### Joint NMF 可以处理缺失数据
+
+标准 Joint NMF 不能直接处理缺失数据。需要：
+- 填充缺失值
+- 使用加权版本
+- 改用 MOFA+ 等贝叶斯方法
+
+## 参考资料
+
+- Wang, Y., et al. (2017). "Joint non-negative matrix factorization for integrating multiple omics data sets"
+- Yang, Z., & Michailidis, G. (2016). "A non-negative matrix factorization method for detecting modules in heterogeneous multi-omics data"
+- Argelaguet, R., et al. (2018). "Multi-Omics Factor Analysis-a framework for unsupervised integration of multi-omics data sets"
+
+## 相关页面
+
+- [整合算法概览](./integration-algorithms.md)
+- [典型相关分析](./canonical-correlation-analysis.md)
+- [MOFA+](./mofa-plus.md)
+- [相似性网络融合](./similarity-network-fusion.md)
+- [机器学习基础](../ml-bioinfo/index.md)

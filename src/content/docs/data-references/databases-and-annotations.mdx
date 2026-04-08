@@ -1,0 +1,235 @@
+---
+description: 常见基因组数据库与注释系统的对象类型、ID 体系与版本差异概览。
+title: "数据库与注释系统一览"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+
+<SummaryBox
+  summary="这页把数据库看成一张上层地图：先分清你面对的是 gene / transcript / protein / variant / dataset 哪一类对象，再看对应的资源族、ID 体系和版本背景。"
+  bullets={[
+    '数据库之间最关键的差别，往往不是网页入口，而是它们围绕什么对象组织信息。',
+    '很多整合失败并不是工具问题，而是对象层级、ID 类型或版本体系没对齐。',
+  ]}
+/>
+
+## 是什么
+
+在 BioInfo 工作流中，我们经常接触到很多数据库和注释系统，但它们并不处在同一层：
+
+- **注释系统**：围绕 gene、transcript、exon、assembly 等对象组织信息；
+- **变异数据库**：围绕 variant、临床意义、群体频率等对象组织信息；
+- **蛋白/功能资源**：围绕 protein、structure、pathway 等对象组织信息；
+- **公共数据与队列资源**：围绕 sample、study、原始 reads、处理结果和元信息组织信息。
+
+因此，这页的重点不是把数据库当成平铺列表，而是建立一个更高层的问题意识：**我当前在解释什么对象，它在什么版本和 ID 体系里存在？**
+
+## 为什么重要
+
+很多结果解释错误并不是“数据库没查到”，而是查到了错误层的对象：
+
+- 想解释 transcript，却只看 gene symbol；
+- 想判断变异常见不常见，却混用临床数据库和群体频率数据库；
+- 想复用公开数据，却没先分清是原始 reads 还是处理后的矩阵；
+- 想整合多个资源，却忽略了 assembly、release 和 ID 体系不一致。
+
+如果对象层级、命名规则和版本背景没有先理清，后面看到的每一条数据库记录都可能被误读。
+
+<PrerequisitesBox
+  items={[
+    '先理解参考基因组、坐标系统与注释，因为很多数据库对象都绑定在特定 assembly 和注释版本上。',
+    'gene、transcript、protein、variant、sample / dataset 是不同层次的对象，不应直接互换。',
+    '很多数据库页面同时显示多个交叉引用，但交叉引用并不等于对象本体完全相同。',
+  ]}
+/>
+
+## 先分清你在查哪一类资源族
+
+<ComparisonTable
+  leftTitle="中心对象"
+  rightTitle="代表资源"
+  rows={[
+    {
+      aspect: '注释系统',
+      left: 'gene / transcript / exon / assembly / 注释版本',
+      right: 'Ensembl、RefSeq、GENCODE',
+    },
+    {
+      aspect: '变异知识库',
+      left: 'variant / rsID / 临床意义 / 群体频率',
+      right: 'dbSNP、ClinVar、gnomAD',
+    },
+    {
+      aspect: '蛋白与功能资源',
+      left: 'protein / domain / structure / pathway',
+      right: 'UniProt、PDB、KEGG',
+    },
+    {
+      aspect: '公共数据与队列',
+      left: 'sample / study / raw reads / processed matrices / metadata',
+      right: 'GEO、SRA、TCGA',
+    },
+  ]}
+/>
+
+## 常见资源族的角色
+
+### 注释系统：Ensembl、RefSeq、GENCODE
+
+这类资源最适合回答的是：
+
+- 一个 gene 在当前 assembly 上有哪些 transcript；
+- transcript / exon / CDS 的结构如何；
+- 当前分析所依赖的注释对象究竟来自哪套体系。
+
+它们的差别往往体现在：
+
+- ID 命名规则不同；
+- release / version 更新节奏不同；
+- 注释策略和覆盖范围不同；
+- 与特定物种或分析场景的耦合程度不同。
+
+### 变异数据库：dbSNP、ClinVar、gnomAD
+
+这类资源看起来都“和变异有关”，但回答的问题并不一样：
+
+- **dbSNP**：更偏“这个变异是否是已知记录”；
+- **ClinVar**：更偏“这个变异是否有临床解释与审阅状态”；
+- **gnomAD**：更偏“这个变异在人群中常见还是罕见”。
+
+因此，把它们视为同义资源会直接导致解释偏差。
+
+### 蛋白与功能资源：UniProt、PDB、KEGG
+
+这类资源不一定定义“坐标上的注释对象”，但它们对解释层非常重要：
+
+- UniProt 把 gene / transcript 进一步接到 protein 层功能上；
+- PDB 提供结构层线索；
+- KEGG 帮助把结果放回 pathway 或功能网络。
+
+如果一个结果只停留在 transcript 或 variant 层而不继续走向蛋白/通路层，解释往往还不完整。
+
+### 公共数据与队列资源：GEO、SRA、TCGA
+
+这类资源的关键不是“有没有数据”，而是先判断你需要哪一种对象：
+
+- 原始测序 reads；
+- 项目或样本元信息；
+- 处理后的表达矩阵或队列结果；
+- 统一整理后的大型项目数据。
+
+因此，查公开数据时最容易踩的坑，不是搜不到，而是找到了错误层的数据对象。
+
+## 选择资源时，先问自己什么问题
+
+<DecisionMatrix
+  rows={[
+    {
+      scenario: '我要确认 gene / transcript 注释与坐标背景',
+      recommendation: '先去注释系统',
+      rationale: '这一步解决的是 assembly、transcript 结构和注释对象边界问题。',
+    },
+    {
+      scenario: '我要判断一个变异在人群中是否常见',
+      recommendation: '先去群体频率数据库',
+      rationale: '频率问题和临床意义问题不是同一类判断。',
+    },
+    {
+      scenario: '我要判断一个变异是否已有临床解释',
+      recommendation: '先去临床变异数据库',
+      rationale: '临床审阅状态与群体频率不能互相替代。',
+    },
+    {
+      scenario: '我要把结果连到蛋白功能或通路层面',
+      recommendation: '再接蛋白/功能资源',
+      rationale: '这一步解决的是 protein、structure、pathway 层的解释。',
+    },
+    {
+      scenario: '我要复用公开实验或项目数据',
+      recommendation: '先区分 raw data 与 processed data',
+      rationale: 'GEO、SRA、TCGA 这类资源里最先要分清的是对象层，而不是站点名称。',
+    },
+  ]}
+/>
+
+## ID、命名与版本为什么不是细节
+
+数据库之间真正难整合的地方，往往不是能否打开页面，而是下面这些差异：
+
+- **ID 类型不同**：例如 Ensembl ID、RefSeq accession、rsID、蛋白 accession 各自代表不同对象；
+- **版本更新不同**：release、build、annotation version 可能并不同步；
+- **命名规则不同**：同一个基因 symbol 可能对应多个 transcript、不同历史别名或不同数据库映射；
+- **参考背景不同**：变异和注释记录常绑定在特定 assembly 或 liftover 前后的坐标体系上。
+
+因此，整合资源时比“有没有这个记录”更重要的是：**这个记录在什么对象层、什么版本背景下成立。**
+
+## worked example
+
+假设你在 GRCh38 背景下得到一个候选变异，想判断它是否值得继续解释。一个更稳妥的思路通常是：
+
+1. 先到注释系统确认它落在哪个 gene / transcript 上，以及当前分析使用的注释背景；
+2. 再看它是否有 **dbSNP** 记录，区分“已知变异”与“完全陌生位点”；
+3. 接着查 **gnomAD**，判断它在人群中是常见还是罕见；
+4. 如果需要临床解释，再看 **ClinVar** 的结论和审阅状态；
+5. 如果它影响编码区或蛋白功能，再继续连到 **UniProt / PDB / KEGG** 做蛋白或通路层解释。
+
+这个例子说明：数据库整合不是“找一个最权威网站”，而是按对象层和问题类型，一层一层把解释接起来。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '结果注释流程的核心，不是某个数据库单独给出答案，而是多个资源族在对象和版本上能否接得起来。',
+    'variant annotation、RNA-seq 结果解释、功能富集等任务，本质上都依赖数据库对象映射。',
+    '当你在文件里看到一个坐标或 ID 时，后续很多工具只是把它接回适当的数据库对象层。',
+  ]}
+/>
+
+## 常见误区
+
+<PitfallsBox
+  items={[
+    '把 gene symbol 当成稳定、唯一且跨数据库可直接互换的主键。',
+    '把群体频率数据库和临床数据库混为一谈。',
+    '查到数据库记录后，就默认它和当前 analysis 的 assembly、annotation version 自动一致。',
+    '把公共数据门户、原始测序存档和处理后结果仓库视为完全相同的东西。',
+  ]}
+/>
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: '常用数据库与资源',
+      to: '/docs/databases/common-resources',
+      label: '实战入口',
+      description: '如果你更想按具体分析任务选择资源入口，去看这页。',
+    },
+    {
+      title: '参考版本、构建号与 liftover',
+      to: '/docs/data-references/reference-versions-and-liftover',
+      label: '版本背景',
+      description: '理解为什么数据库记录往往和特定 assembly 与坐标转换绑定。',
+    },
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      label: '对象边界',
+      description: '先打稳参考与注释基础，再看数据库对象如何接入结果解释。',
+    },
+    {
+      title: '常见文件格式概览',
+      to: '/docs/formats/common-file-formats',
+      label: '文件接口',
+      description: '数据库对象最终往往通过 FASTA、GTF、VCF 等文件格式进入实际流程。',
+    },
+  ]}
+/>

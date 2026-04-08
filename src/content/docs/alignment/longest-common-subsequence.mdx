@@ -1,0 +1,252 @@
+---
+description: 最长公共子序列（LCS）是序列相似性分析的最简形式，理解动态规划在序列比对中的基础应用。
+title: "最长公共子序列（LCS）"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+
+<SummaryBox
+  summary="最长公共子序列（Longest Common Subsequence, LCS）是理解序列相似性分析的最简形式。它只允许插入和删除操作，不允许替换，为理解更复杂的编辑距离和序列比对算法提供基础。"
+  bullets={[
+    'LCS 是最简化的序列相似性度量，只考虑匹配、插入和删除',
+    '通过动态规划求解，与曼哈顿游客问题有相似的递推结构',
+    'LCS 长度与编辑距离有直接数学关系：d(v,w) = n + m - 2·s(v,w)',
+  ]}
+/>
+
+## 是什么
+
+**最长公共子序列（LCS）** 问题旨在找到两个字符串共有的最长子序列。
+
+<DefinitionList
+  items={[
+    {
+      term: '子序列（Subsequence）',
+      definition: '从字符串中按顺序选取的字符序列，不要求连续。例如，对于 v = ATTGCTA，AGCA 和 ATTA 都是子序列，但 TGTT 不是（顺序不对）。',
+    },
+    {
+      term: '公共子序列（Common Subsequence）',
+      definition: '同时是两个字符串子序列的字符序列。',
+    },
+    {
+      term: '最长公共子序列（LCS）',
+      definition: '所有公共子序列中最长的那个。',
+    },
+  ]}
+/>
+
+**注意区分**：子序列（subsequence）与子串（substring）不同。子串必须是连续的字符片段，而子序列可以跳过中间字符。
+
+## 数学模型
+
+### 问题定义
+
+给定两个字符串：
+- v = v₁v₂...vₙ（长度为 n）
+- w = w₁w₂...wₘ（长度为 m）
+
+**目标**：找到最长的序列，使得它是 v 和 w 的共同子序列。
+
+### 与编辑距离的关系
+
+如果只用插入和删除操作（不允许替换），编辑距离与 LCS 长度有直接关系：
+
+$$
+d(v, w) = n + m - 2 \cdot s(v, w)
+$$
+
+其中：
+- d(v, w) 是编辑距离（仅允许插入/删除）
+- s(v, w) 是 LCS 的长度
+- n 和 m 分别是两个字符串的长度
+
+这个关系表明：最小编辑操作次数等于将两个字符串都删减到它们的 LCS 所需的总删除次数。
+
+## 动态规划解法
+
+### 核心思想
+
+定义 `s[i][j]` 为 v 的前 i 个字符与 w 的前 j 个字符的 LCS 长度。
+
+### 递推关系
+
+```
+                { s[i-1][j]                  (删除 vi)
+s[i][j] = max   { s[i][j-1]                  (插入 wj)
+                { s[i-1][j-1] + 1  如果 vi = wj  (匹配)
+```
+
+用更统一的形式表达：
+
+$$
+s[i,j] = \max \begin{cases}
+s[i-1, j] & \text{（vi 不在 LCS 中）} \\
+s[i, j-1] & \text{（wj 不在 LCS 中）} \\
+s[i-1, j-1] + 1 & \text{（如果 } v_i = w_j \text{）}
+\end{cases}
+$$
+
+### 边界条件
+
+```
+s[i, 0] = 0  对于所有 i（空串的 LCS 长度为 0）
+s[0, j] = 0  对于所有 j
+```
+
+### 算法实现
+
+```text
+LCS(v, w)
+1  for i ← 0 to n
+2      s[i, 0] ← 0
+3  for j ← 1 to m
+4      s[0, j] ← 0
+5  for i ← 1 to n
+6      for j ← 1 to m
+7          if vi = wj
+8              s[i, j] ← s[i-1, j-1] + 1
+9              b[i, j] ← "↘"    // 对角线，表示匹配
+10         else if s[i-1, j] ≥ s[i, j-1]
+11             s[i, j] ← s[i-1, j]
+12             b[i, j] ← "↑"    // 向上，表示删除 vi
+13         else
+14             s[i, j] ← s[i, j-1]
+15             b[i, j] ← "←"    // 向左，表示插入 wj
+16  return (s[n, m], b)
+```
+
+### 回溯重构 LCS
+
+```text
+PRINTLCS(b, v, i, j)
+1  if i = 0 or j = 0
+2      return
+3  if b[i, j] = "↘"
+4      PRINTLCS(b, v, i-1, j-1)
+5      print vi
+6  else if b[i, j] = "↑"
+7      PRINTLCS(b, v, i-1, j)
+8  else
+9      PRINTLCS(b, v, i, j-1)
+```
+
+## 与曼哈顿游客问题的联系
+
+LCS 问题可以转化为一个特殊的曼哈顿网格问题：
+
+| LCS 问题 | 曼哈顿游客对应 |
+|---------|---------------|
+| 水平移动 | 插入 wj（权重 0）|
+| 垂直移动 | 删除 vi（权重 0）|
+| 对角移动 | 匹配 vi = wj（权重 +1）|
+
+这种对应关系说明了动态规划的通用性：许多看似不同的问题都有相同的底层结构。
+
+## 复杂度分析
+
+| 维度 | 复杂度 | 说明 |
+|------|--------|------|
+| 时间 | O(nm) | 需要填充整个 DP 表 |
+| 空间 | O(nm) | 存储得分表和回溯指针 |
+
+如果只关心 LCS 长度而不关心具体序列，空间可以优化到 O(min(n, m))。
+
+## worked example
+
+**示例**：v = ATCTGAT，w = TGCATA
+
+**DP 表填充过程**：
+
+初始化：
+```
+    ε  T  G  C  A  T  A
+ε   0  0  0  0  0  0  0
+A   0  ?  ?  ?  ?  ?  ?
+T   0  ?  ?  ?  ?  ?  ?
+C   0  ?  ?  ?  ?  ?  ?
+T   0  ?  ?  ?  ?  ?  ?
+G   0  ?  ?  ?  ?  ?  ?
+A   0  ?  ?  ?  ?  ?  ?
+T   0  ?  ?  ?  ?  ?  ?
+```
+
+逐步填充（部分）：
+- s[1,4]：v₁=A, w₄=A，匹配！s[1,4] = s[0,3] + 1 = 1
+- s[2,1]：v₂=T, w₁=T，匹配！s[2,1] = s[1,0] + 1 = 1
+- ...继续填充...
+
+最终结果：s[7,6] = 4
+
+**一个 LCS 是**：TCTA 或 TGAT 或 GCAT 等（可能有多个最优解）
+
+**对应的对齐**：
+```
+v: AT-CTGAT
+w: -TGCAT-A
+   -TCTA--  （公共子序列）
+```
+
+## 与编辑图的对应
+
+LCS 问题对应一个**编辑图**（Edit Graph）：
+
+- 顶点：(i, j) 表示 v 的前 i 个字符和 w 的前 j 个字符
+- 水平边：(i, j-1) → (i, j)，权重 0（插入）
+- 垂直边：(i-1, j) → (i, j)，权重 0（删除）
+- 对角边：(i-1, j-1) → (i, j)，当 vi = wj 时权重 +1（匹配）
+
+在这个图中，LCS 对应**最长路径**问题。
+
+## 常见误区
+
+### LCS 就是最佳比对
+
+不一定。LCS 只考虑匹配，不考虑错配的代价。在生物学应用中，我们通常需要更复杂的打分方案来反映真实的进化或功能关系。
+
+### 只有一个 LCS
+
+可能有多个不同的序列都是最长公共子序列。例如，v = ABCBDAB，w = BDCABA，可能有多个长度为 4 的公共子序列。
+
+### LCS 长度直接反映生物学相似性
+
+LCS 忽略了错配的位置和类型。在蛋白质序列中，某些氨基酸替换比其他替换更"保守"，这些细节在 LCS 中被完全忽略。
+
+## 与真实工具或流程的连接
+
+LCS 虽然是简化模型，但在实际中有直接应用：
+
+- **差异文件（diff）算法**：Unix diff 工具的核心就是 LCS
+- **版本控制**：Git 等工具使用 LCS 思想来显示代码差异
+- **生物序列的初步筛选**：快速判断两个序列是否有显著相似性
+- **多序列比对的种子**：某些 MSA 工具使用 LCS 作为构建比对的起点
+
+对于更精确的生物学分析，LCS 通常被推广为：
+- **全局比对**（Needleman-Wunsch）：引入错配罚分和间隙罚分
+- **局部比对**（Smith-Waterman）：寻找最佳局部相似区域
+- **仿射间隙罚分**：区分开启间隙和延伸间隙的不同代价
+
+## 总结
+
+LCS 是理解序列相似性分析的最佳起点：
+
+1. **最简模型**：只允许插入/删除，没有替换
+2. **清晰递推**：与曼哈顿游客问题共享相同的 DP 结构
+3. **数学联系**：与编辑距离有直接数量关系
+4. **可扩展性**：是全局比对、局部比对等更复杂模型的基础
+
+掌握 LCS 后，理解更复杂的比对算法（Needleman-Wunsch、Smith-Waterman）会变得更容易，因为它们只是在 LCS 的基础上增加了更灵活的打分机制。
+
+## 相关页面
+
+- [编辑距离](./edit-distance.mdx) - 允许替换操作的扩展
+- [全局比对与 Needleman-Wunsch](./needleman-wunsch.mdx) - 引入打分矩阵的全局比对
+- [局部比对与 Smith-Waterman](./smith-waterman.mdx) - 寻找最佳局部相似性
+- [曼哈顿游客问题](../foundations/manhattan-tourist-problem.md) - 理解 DP 的几何直观
+- [动态规划基础](../foundations/dynamic-programming-basics.mdx) - DP 的核心思想
+
+## 参考资料
+
+- Jones, N. C., & Pevzner, P. A. (2004). *An Introduction to Bioinformatics Algorithms*. MIT Press. (Chapter 6.5)
+- Cormen, T. H., et al. (2022). *Introduction to Algorithms* (4th ed.). MIT Press. (Chapter 14.4)

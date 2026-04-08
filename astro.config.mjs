@@ -129,6 +129,7 @@ export default defineConfig({
               items: [
                 { slug: 'alignment' },
                 { slug: 'alignment/edit-distance' },
+                { slug: 'alignment/longest-common-subsequence' },
                 { slug: 'alignment/global-local' },
                 { slug: 'alignment/needleman-wunsch' },
                 { slug: 'alignment/smith-waterman' },

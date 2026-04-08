@@ -194,6 +194,70 @@ BACKTRACK(s, n, m)
 10 return path
 ```
 
+## 另一个经典例子：找零问题
+
+除了网格类问题，动态规划也适用于一维的优化问题。找零问题（Change Problem）展示了 DP 如何优化递归解法。
+
+### 问题描述
+
+给定金额 M 和硬币面额 c = (c₁, c₂, ..., cₐ)，用最少数量的硬币凑出金额 M。
+
+### 朴素递归解法的问题
+
+```text
+RECURSIVECHANGE(M, c, d)
+1  if M = 0
+2      return 0
+3  bestNumCoins ← ∞
+4  for i ← 1 to d
+5      if M ≥ cᵢ
+6          numCoins ← RECURSIVECHANGE(M − cᵢ, c, d)
+7          if numCoins + 1 < bestNumCoins
+8              bestNumCoins ← numCoins + 1
+9  return bestNumCoins
+```
+
+**问题**：大量重复计算。例如，计算 77 美分时，70 美分的最优解会被重复计算 9 次。
+
+### DP 优化
+
+关键观察：求解金额 m 的最优解，只需要知道 m - c₁, m - c₂, ..., m - cₐ 的最优解。
+
+**递推关系**：
+
+```
+bestNumCoins[m] = min(
+    bestNumCoins[m - c₁] + 1,
+    bestNumCoins[m - c₂] + 1,
+    ...,
+    bestNumCoins[m - cₐ] + 1
+)  对于所有 m ≥ cᵢ
+```
+
+**自底向上算法**：
+
+```text
+DPCHANGE(M, c, d)
+1  bestNumCoins[0] ← 0
+2  for m ← 1 to M
+3      bestNumCoins[m] ← ∞
+4      for i ← 1 to d
+5          if m ≥ cᵢ
+6              if bestNumCoins[m - cᵢ] + 1 < bestNumCoins[m]
+7                  bestNumCoins[m] ← bestNumCoins[m - cᵢ] + 1
+8  return bestNumCoins[M]
+```
+
+**复杂度**：
+- 时间：O(M × d)
+- 空间：O(M)
+
+### 为什么这个转换有效
+
+1. **反向计算顺序**：从 0 开始递增计算到 M，保证计算 bestNumCoins[m] 时，所有需要的子问题都已解决
+2. **避免重复计算**：每个子问题只计算一次
+3. **表格存储**：用数组 bestNumCoins[] 存储已计算的解
+
 ## 实际应用中的考虑
 
 ### 1. 局部比对 vs 全局比对

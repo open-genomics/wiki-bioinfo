@@ -1,0 +1,29 @@
+---
+interface SectionCard {
+  title: string;
+  to: string;
+  description: string;
+  badge?: string;
+  meta?: string;
+}
+
+interface Props {
+  items: SectionCard[];
+}
+
+const { items } = Astro.props;
+---
+
+<div class="section-nav-grid">
+  {items.map((item) => (
+    <a class="section-nav-card" href={item.to}>
+      <div class="section-nav-topline">
+        {item.badge && <span class="card-badge">{item.badge}</span>}
+        {item.meta && <span class="section-meta">{item.meta}</span>}
+      </div>
+      <h3>{item.title}</h3>
+      <p>{item.description}</p>
+      <span class="primary-action">进入子主题</span>
+    </a>
+  ))}
+</div>

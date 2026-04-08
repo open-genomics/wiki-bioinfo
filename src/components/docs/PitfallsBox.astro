@@ -1,0 +1,15 @@
+---
+interface Props {
+  title?: string;
+  items: string[];
+}
+
+const { title = '常见误区', items } = Astro.props;
+---
+
+<aside class="note-card pitfalls-card">
+  <strong>{title}</strong>
+  <ul>
+    {items.map((item) => <li>{item}</li>)}
+  </ul>
+</aside>

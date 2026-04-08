@@ -1,0 +1,34 @@
+---
+interface MatrixRow {
+  scenario: string;
+  recommendation: string;
+  rationale: string;
+}
+
+interface Props {
+  rows: MatrixRow[];
+}
+
+const { rows } = Astro.props;
+---
+
+<div class="table-wrapper">
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>场景</th>
+        <th>推荐选择</th>
+        <th>原因</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          <th scope="row">{row.scenario}</th>
+          <td>{row.recommendation}</td>
+          <td>{row.rationale}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

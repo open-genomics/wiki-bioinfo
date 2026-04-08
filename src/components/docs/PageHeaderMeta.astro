@@ -1,0 +1,24 @@
+---
+interface Props {
+  section: string;
+  audience: string;
+  startWith: string;
+}
+
+const { section, audience, startWith } = Astro.props;
+---
+
+<div class="header-meta-grid">
+  <div class="header-meta-card">
+    <span class="meta-label">所属板块</span>
+    <strong>{section}</strong>
+  </div>
+  <div class="header-meta-card">
+    <span class="meta-label">适合谁读</span>
+    <strong>{audience}</strong>
+  </div>
+  <div class="header-meta-card">
+    <span class="meta-label">建议起点</span>
+    <strong>{startWith}</strong>
+  </div>
+</div>

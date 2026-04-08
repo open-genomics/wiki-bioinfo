@@ -1,0 +1,36 @@
+---
+interface ComparisonRow {
+  aspect: string;
+  left: string;
+  right: string;
+}
+
+interface Props {
+  leftTitle: string;
+  rightTitle: string;
+  rows: ComparisonRow[];
+}
+
+const { leftTitle, rightTitle, rows } = Astro.props;
+---
+
+<div class="table-wrapper table-scroll">
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th>维度</th>
+        <th>{leftTitle}</th>
+        <th>{rightTitle}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          <th scope="row">{row.aspect}</th>
+          <td>{row.left}</td>
+          <td>{row.right}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

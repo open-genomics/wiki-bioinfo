@@ -1,0 +1,25 @@
+---
+interface RelatedLink {
+  title: string;
+  to: string;
+  description: string;
+  label?: string;
+}
+
+interface Props {
+  links: RelatedLink[];
+}
+
+const { links } = Astro.props;
+---
+
+<div class="related-grid">
+  {links.map((link) => (
+    <a class="related-card" href={link.to}>
+      {link.label && <span class="related-label">{link.label}</span>}
+      <h3>{link.title}</h3>
+      <p>{link.description}</p>
+      <span class="secondary-action">延伸阅读</span>
+    </a>
+  ))}
+</div>

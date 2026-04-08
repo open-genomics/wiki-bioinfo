@@ -1,0 +1,15 @@
+---
+interface Props {
+  title?: string;
+  items: string[];
+}
+
+const { title = '与真实工具或流程的连接', items } = Astro.props;
+---
+
+<aside class="note-card tool-mapping-card">
+  <strong>{title}</strong>
+  <ul>
+    {items.map((item) => <li>{item}</li>)}
+  </ul>
+</aside>

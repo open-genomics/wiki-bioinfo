@@ -1,0 +1,21 @@
+---
+interface DefinitionItem {
+  term: string;
+  definition: string;
+}
+
+interface Props {
+  items: DefinitionItem[];
+}
+
+const { items } = Astro.props;
+---
+
+<dl class="definition-list">
+  {items.map((item) => (
+    <div class="definition-card">
+      <dt>{item.term}</dt>
+      <dd>{item.definition}</dd>
+    </div>
+  ))}
+</dl>

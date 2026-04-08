@@ -1,0 +1,274 @@
+---
+description: Four Russians 加速技术通过预计算块对齐得分，将序列比对的时间复杂度从 O(n²) 降至 O(n²/log n)，是生物信息学中重要的算法优化技巧。
+title: "Four Russians 加速技术"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+<SummaryBox
+  summary="Four Russians 加速技术通过预计算小块的比对得分，将全局序列比对的时间复杂度从 O(n²) 优化到 O(n²/log n)，是动态规划加速的经典方法。"
+  bullets={[
+    '将序列分割为大小为 t ≈ log n 的块',
+    '预计算所有可能的块对齐得分',
+    '利用查找表避免重复计算',
+    '时间复杂度：O(n² / log n)'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '序列比对', href: '/wiki/alignment/needleman-wunsch' },
+    { name: '分治算法', href: '/wiki/foundations/divide-and-conquer' },
+    { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
+  ]}
+/>
+
+## 是什么
+
+**Four Russians 加速技术**（得名于其四位发明者 Arlazarov, Dinic, Kronrod, Faradzev）是一种将序列比对时间复杂度从 $O(n^2)$ 降低到 $O(n^2 / \log n)$ 的算法优化技巧。
+
+### 核心思想
+
+传统动态规划比对需要计算 $n \times n$ 的整个得分矩阵。Four Russians 技术的洞察是：
+
+1. **分块**：将序列分割为大小为 $t$ 的小块
+2. **预计算**：预先计算所有可能的 $t \times t$ 块对齐结果
+3. **查表**：用查找表替代重复计算
+
+## 要解决什么生物信息学问题
+
+### 长序列比对的速度瓶颈
+
+对于长度为 $n$ 的序列：
+- **传统动态规划**：$O(n^2)$ 时间和空间
+- **当 $n = 10^6$**（如全基因组比对）：需要 $10^{12}$ 次操作
+
+### 应用场景
+
+1. **全基因组比对**：人类基因组级别的大规模比对
+2. **重复区域分析**：快速识别基因组重复
+3. **数据库搜索**：加速 BLAST 等工具的底层算法
+4. **多序列比对**：减少计算瓶颈
+
+## 算法原理
+
+### 块对齐问题
+
+将两个序列 $u$ 和 $v$ 分割为大小为 $t$ 的块：
+
+$$u = |u_1...u_t| |u_{t+1}...u_{2t}| ... |u_{n-t+1}...u_n|$$
+
+**块对齐定义**：每个块要么整体对齐到另一个块，要么整体插入/删除。块内部的具体对齐路径可以是任意的，但必须通过块的角落（入口和出口）。
+
+### 预计算策略
+
+**关键观察**：对于大小为 $t$ 的块，可能的输入/输出组合是有限的。
+
+**预计算步骤**：
+1. 枚举所有可能的 $t$-长度序列（共 $4^t$ 种对于 DNA）
+2. 计算每对序列块的最优对齐得分
+3. 存储在查找表 `Score` 中
+
+**查找表大小**：
+- 表大小 = $4^t \times 4^t = 4^{2t} = 16^t$
+- 设 $t = \frac{\log_2 n}{4}$，则表大小 = $n^{1.5}$（可管理）
+
+### 动态规划步骤
+
+有了预计算的查找表后，在块级别进行动态规划：
+
+```
+设 s[i,j] 为前 i 个 u-块和前 j 个 v-块的最优得分
+
+递推关系：
+s[i,j] = max {
+    s[i-1,j] - σ_block,        // 删除块 u[i]
+    s[i,j-1] - σ_block,        // 插入块 v[j]
+    s[i-1,j-1] + Score(u[i], v[j])  // 对齐两个块
+}
+```
+
+其中 $σ_{block}$ 是块插入/删除的惩罚（通常 $σ_{block} = σ \cdot t$）。
+
+## 完整算法
+
+### 阶段一：预计算
+
+```
+PRECOMPUTE(t):
+    Score = 空表
+    
+    // 枚举所有可能的 t-长度序列
+    for each sequence a in {A,C,G,T}^t:
+        for each sequence b in {A,C,G,T}^t:
+            Score[a,b] = ALIGN_BLOCKS(a, b)
+    
+    return Score
+
+ALIGN_BLOCKS(a, b):
+    // 使用标准动态规划计算 t×t 块的比对
+    // 但只记录入口→出口的得分
+    return 最优块对齐得分
+```
+
+### 阶段二：块级别动态规划
+
+```
+FOURRUSSIANS_ALIGN(u, v, t):
+    n = length(u), m = length(v)
+    Score = PRECOMPUTE(t)
+    
+    // 将序列分割为块
+    num_u_blocks = n / t
+    num_v_blocks = m / t
+    
+    // 初始化
+    s[0,0] = 0
+    for i = 1 to num_u_blocks:
+        s[i,0] = s[i-1,0] - σ_block
+    for j = 1 to num_v_blocks:
+        s[0,j] = s[0,j-1] - σ_block
+    
+    // 块级别动态规划
+    for i = 1 to num_u_blocks:
+        for j = 1 to num_v_blocks:
+            block_u = u[(i-1)*t + 1 : i*t]
+            block_v = v[(j-1)*t + 1 : j*t]
+            
+            s[i,j] = max(
+                s[i-1,j] - σ_block,
+                s[i,j-1] - σ_block,
+                s[i-1,j-1] + Score[block_u, block_v]
+            )
+    
+    return s[num_u_blocks, num_v_blocks]
+```
+
+## 复杂度分析
+
+### 时间复杂度
+
+| 阶段 | 复杂度 | 说明 |
+|------|--------|------|
+| 预计算 | $O(4^{2t} \cdot t^2)$ | 计算所有可能的块对齐 |
+| 主算法 | $O((n/t)^2)$ | 块级别动态规划 |
+| **总时间** | $O(n^2 / \log n)$ | 当 $t = \Theta(\log n)$ |
+
+**参数选择**：
+- 设 $t = \frac{\log_2 n}{4}$
+- 预计算时间：$O(n \cdot (\log n)^2)$ —— 可接受
+- 主算法时间：$O(n^2 / \log n)$ —— 比 $O(n^2)$ 更快
+
+### 空间复杂度
+
+- **查找表**：$O(4^{2t}) = O(n^{1.5})$（当 $t = \frac{\log_2 n}{4}$）
+- **动态规划表**：$O((n/t)^2) = O(n^2 / (\log n)^2)$
+- **总空间**：$O(n^{1.5})$（主要由查找表决定）
+
+### 与传统方法对比
+
+| 方法 | 时间复杂度 | 空间复杂度 | 适用场景 |
+|------|-----------|-----------|----------|
+| 标准动态规划 | $O(n^2)$ | $O(n^2)$ | 短序列 |
+| Hirschberg 线性空间 | $O(n^2)$ | $O(n)$ | 空间受限 |
+| **Four Russians** | $O(n^2 / \log n)$ | $O(n^{1.5})$ | 长序列，速度优先 |
+
+## 实例说明
+
+### 简化示例
+
+假设：
+- 序列 $u$ = "ACGTACGT"（长度 8）
+- 序列 $v$ = "AGCTAGCT"（长度 8）
+- 块大小 $t = 2$
+
+**步骤 1：分块**
+```
+u = |AC| |GT| |AC| |GT|
+v = |AG| |CT| |AG| |CT|
+```
+
+**步骤 2：预计算（部分）**
+```
+Score 表（部分条目）：
+Score["AC", "AG"] = 1  (A匹配，C≠G)
+Score["AC", "CT"] = 0  (无匹配)
+Score["GT", "CT"] = 1  (T匹配，G≠C)
+...
+```
+
+**步骤 3：块级别动态规划**
+```
+块对齐矩阵（4×4）：
+
+     |AG| |CT| |AG| |CT|
+|AC|  1    0    1    0
+|GT|  1    2    2    3
+|AC|  2    2    3    3
+|GT|  2    3    3    4  <- 最优得分 = 4
+```
+
+## 扩展：最长公共子序列 (LCS)
+
+Four Russians 技术同样适用于 LCS 问题：
+
+### LCS 的特殊优化
+
+对于 LCS，可以进一步压缩状态表示：
+- LCS 的得分矩阵具有单调性和差分限制
+- 可以将得分差异编码为二进制向量
+- 查找表大小从 $4^{2t}$ 减少到 $2^{6t}$（对于 DNA）
+
+### 最终复杂度
+
+- **LCS 的 Four Russians 算法**：$O(n^2 / \log n)$ 时间
+- **当 $n = 10^6$ 时**：比标准算法快约 20 倍
+
+## 局限性与注意事项
+
+### 实际应用考虑
+
+1. **块大小选择**：
+   - $t$ 太小：加速效果不明显
+   - $t$ 太大：查找表过大，缓存不友好
+   - 实际最优 $t$ 通常在 4-8 之间（与理论分析的 $\log n$ 不同）
+
+2. **查找表开销**：
+   - 预计算可以复用于多次比对
+   - 对于单次比对，预计算成本可能超过收益
+
+3. **内存访问模式**：
+   - 查找表随机访问可能影响缓存性能
+   - 现代 CPU 的缓存层次结构可能抵消理论优势
+
+### 现代替代方案
+
+| 方法 | 优势 | 劣势 |
+|------|------|------|
+| Four Russians | 确定性保证，理论优美 | 缓存不友好，实现复杂 |
+| SIMD 加速 | 实用性强，硬件支持 | 依赖特定指令集 |
+| GPU 并行 | 适合超大规模数据 | 数据传输开销 |
+
+<RelatedLinks
+  links={[
+    { title: '分治算法', to: '/wiki/foundations/divide-and-conquer', description: '算法基础' },
+    { title: 'Needleman-Wunsch', to: '/wiki/alignment/needleman-wunsch', description: '全局比对基础' },
+    { title: '最长公共子序列', to: '/wiki/alignment/longest-common-subsequence', description: 'LCS 问题' }
+  ]}
+/>
+
+## 历史注记
+
+Four Russians 加速技术于 1970 年由 **Arlazarov, Dinic, Kronrod, Faradzev** 提出，最初用于布尔矩阵乘法。1980 年 **Masek 和 Paterson** 首次将其应用于序列比对问题。尽管现代硬件架构（缓存、SIMD、GPU）改变了算法优化的格局，Four Russians 技术仍是理解**算法加速原理**的经典案例，其**预计算-查表**的思想在生物信息学中广泛应用。
+
+## 总结
+
+- **Four Russians 技术通过预计算块对齐得分，实现次二次时间复杂度**
+- **时间复杂度从 $O(n^2)$ 降至 $O(n^2 / \log n)$**
+- **关键思想：用空间（预计算表）换时间**
+- **适用于长序列比对和 LCS 等问题**
+- **是现代序列比对算法优化的理论基础**
+

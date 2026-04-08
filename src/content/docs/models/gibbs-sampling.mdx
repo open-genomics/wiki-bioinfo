@@ -1,0 +1,393 @@
+---
+description: Gibbs Sampling 是用于 Motif Finding 的马尔可夫链蒙特卡洛方法，通过随机采样在庞大的搜索空间中寻找保守序列模式。
+title: "Gibbs Sampling"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+<SummaryBox
+  summary="Gibbs Sampling 是用于 Motif Finding 的随机化算法，通过马尔可夫链蒙特卡洛方法在庞大的搜索空间中高效寻找保守序列模式。"
+  bullets={[
+    '马尔可夫链蒙特卡洛（MCMC）方法',
+    '每次迭代只改变一个序列的 motif 位置',
+    '逐步收敛到高得分 motif',
+    '避免陷入局部最优'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: 'Motif Finding', href: '/wiki/models/motif-finding' },
+    { name: '随机算法', href: '/wiki/foundations/randomized-algorithms' },
+    { name: '位置权重矩阵', href: '/wiki/models/pwm-pssm' }
+  ]}
+/>
+
+## 是什么
+
+**Gibbs Sampling** 是一种用于 Motif Finding 的随机化算法，由 Charles Lawrence 等人于 1993 年提出。它属于**马尔可夫链蒙特卡洛（MCMC）**方法家族，通过巧妙的随机采样策略在庞大的搜索空间中寻找保守的 DNA 序列模式（motif）。
+
+### 核心思想
+
+**问题背景**：Motif Finding 的搜索空间巨大——对于 $t$ 条长度为 $n$ 的序列，寻找长度为 $l$ 的 motif，共有 $(n-l+1)^t$ 种可能的起始位置组合。
+
+**Gibbs Sampling 洞察**：
+1. **逐步优化**：每次只改变一条序列的 motif 位置
+2. **概率采样**：基于当前 profile 质量，随机选择新位置
+3. **马尔可夫链**：形成一个状态转移链，逐步收敛到高得分 motif
+
+## 要解决什么生物信息学问题
+
+### Motif Finding 的挑战
+
+**穷举搜索的问题**：
+- 10 条序列，每条 500bp，motif 长度 10
+- 搜索空间：$(491)^{10} \approx 10^{27}$ —— 不可行
+
+**贪心算法的局限**：
+- 容易陷入局部最优
+- 一旦选择错误位置，后续难以纠正
+
+### Gibbs Sampling 的优势
+
+1. **避免局部最优**：随机性允许"跳出"局部最优
+2. **渐进改进**：每次只改一条序列，保持已有好的选择
+3. **概率保证**：在适当条件下，理论上会收敛到全局最优附近
+4. **实践效果好**：在实际生物数据中表现优异
+
+## 算法原理
+
+### 问题设置
+
+**输入**：
+- $t$ 条 DNA 序列 $DNA = \{DNA_1, DNA_2, ..., DNA_t\}$
+- 每条序列长度 $n$
+- motif 长度 $l$
+
+**输出**：
+- 起始位置向量 $s = (s_1, s_2, ..., s_t)$
+- 对应的 profile 矩阵
+
+### 核心迭代步骤
+
+```
+GIBBS_SAMPLING(DNA, t, n, l, max_iter):
+    // 随机初始化
+    s = 随机选择 t 个起始位置
+    
+    for iter = 1 to max_iter:
+        // 步骤 1：随机选择一条序列 i 暂时移除
+        i = random(1, t)
+        
+        // 步骤 2：用剩余 t-1 条序列构建 profile
+        profile = BUILD_PROFILE(DNA, s, i)  // 不包含序列 i
+        
+        // 步骤 3：计算序列 i 每个位置的匹配概率
+        probabilities = CALC_PROBABILITIES(DNA[i], profile)
+        
+        // 步骤 4：根据概率随机采样新位置
+        s[i] = SAMPLE_POSITION(probabilities)
+    
+    return s, BUILD_PROFILE(DNA, s, -1)
+```
+
+### 详细步骤解析
+
+#### 步骤 1 & 2：构建 Profile（不包含序列 i）
+
+```
+BUILD_PROFILE(DNA, s, exclude_i):
+    profile = 4 × l 的零矩阵（A,C,G,T × motif 位置）
+    
+    for j = 1 to t, j ≠ exclude_i:
+        motif = DNA[j][s[j] : s[j]+l-1]
+        for pos = 1 to l:
+            nucleotide = motif[pos]
+            profile[nucleotide][pos] += 1
+    
+    // 归一化为频率（加伪计数避免零概率）
+    for pos = 1 to l:
+        for each nucleotide:
+            profile[nucleotide][pos] = (count + 1) / (t-1 + 4)
+    
+    return profile
+```
+
+**伪计数（pseudocount）**：通常加 1 或更小的值，避免零概率问题。
+
+#### 步骤 3：计算位置概率
+
+```
+CALC_PROBABILITIES(DNA_i, profile, l):
+    probabilities = 长度为 n-l+1 的数组
+    
+    for pos = 1 to n-l+1:
+        lmer = DNA_i[pos : pos+l-1]
+        
+        // 计算该 l-mer 在 profile 下的概率
+        prob = 1.0
+        for k = 1 to l:
+            nucleotide = lmer[k]
+            prob *= profile[nucleotide][k]
+        
+        probabilities[pos] = prob
+    
+    // 归一化
+    total = sum(probabilities)
+    for pos = 1 to n-l+1:
+        probabilities[pos] /= total
+    
+    return probabilities
+```
+
+**概率解释**：$P(pos) \propto \prod_{k=1}^{l} p_{DNA_i[pos+k-1], k}$
+
+#### 步骤 4：概率采样
+
+```
+SAMPLE_POSITION(probabilities):
+    // 轮盘赌采样
+    r = random(0, 1)
+    cumsum = 0
+    
+    for pos = 1 to length(probabilities):
+        cumsum += probabilities[pos]
+        if r <= cumsum:
+            return pos
+    
+    return last_position
+```
+
+采样概率与 profile 匹配程度成正比：
+- 高匹配位置 → 高概率被选中
+- 低匹配位置 → 低概率，但仍有可能
+
+## 完整算法
+
+```
+GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
+    // 随机初始化
+    s = random_positions(t, n, l)
+    best_s = s
+    best_score = SCORE(s, DNA)
+    
+    for iter = 1 to max_iter:
+        // 选择要更新的序列
+        i = iter mod t  // 或随机选择
+        
+        // 移除序列 i 的贡献，构建临时 profile
+        profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
+        
+        // 计算序列 i 所有可能位置的概率
+        for pos = 1 to n-l+1:
+            lmer = DNA[i][pos:pos+l-1]
+            Q[pos] = 1.0
+            for k = 1 to l:
+                Q[pos] *= profile[lmer[k]][k]
+        
+        // 归一化 Q
+        total = sum(Q)
+        for pos = 1 to n-l+1:
+            Q[pos] /= total
+        
+        // 根据 Q 采样新位置
+        s[i] = SAMPLE(Q)
+        
+        // 评估新解
+        current_score = SCORE(s, DNA)
+        if current_score > best_score:
+            best_score = current_score
+            best_s = s
+    
+    return best_s, best_score
+```
+
+## 收敛性与参数选择
+
+### 收敛性
+
+Gibbs Sampling 形成一条**马尔可夫链**：
+- **状态空间**：所有可能的起始位置组合
+- **转移概率**：由 profile 匹配概率决定
+- **平稳分布**：理论上会收敛到与 motif 质量相关的分布
+
+**实践考虑**：
+- 算法理论上会收敛，但可能需要很长时间
+- 实际运行固定迭代次数（如 1000-10000 次）
+- 多次随机重启，选择最佳结果
+
+### 关键参数
+
+| 参数 | 作用 | 典型值 |
+|------|------|--------|
+| max_iter | 最大迭代次数 | 1000-10000 |
+| burn_in | 预热期（丢弃的初期迭代） | 100-500 |
+| pseudocount | 避免零概率 | 0.1-1.0 |
+| restarts | 随机重启次数 | 10-100 |
+
+### 预热期（Burn-in）
+
+```
+带预热的 Gibbs Sampling:
+    for iter = 1 to max_iter:
+        // 执行一次 Gibbs 迭代
+        ...
+        
+        // 预热期不记录结果
+        if iter > burn_in:
+            RECORD_SAMPLE(s)
+    
+    // 返回出现频率最高的 motif
+    return MOST_FREQUENT(samples)
+```
+
+## 实例说明
+
+### 简化示例
+
+**输入序列**（3条，每条20bp）：
+```
+Seq1: A T G C G T A C G T A G C T A G C T G
+Seq2: C T A G C T G A C G T C G A T C G A T
+Seq3: G A T C G A T C G A T C G T A C G A
+```
+
+**迭代过程示例**：
+
+**初始**：$s = (3, 5, 2)$（随机）
+
+**迭代 1**（更新 Seq1）：
+- Profile（由 Seq2+Seq3 构建）：
+  ```
+  Pos:   1    2    3    4    5    6
+  A:   0.3  0.4  0.1  0.2  ...
+  C:   0.2  0.1  0.4  0.3  ...
+  G:   0.4  0.3  0.3  0.3  ...
+  T:   0.1  0.2  0.2  0.2  ...
+  ```
+- Seq1 各位置概率：
+  - pos=1 (ATGCGT): P = 0.3×0.4×0.3×0.3×0.2×0.2 = 0.00043
+  - pos=8 (CGTAGC): P = 0.2×0.4×0.2×0.4×0.1×0.4 = 0.00026
+  - ...
+- 采样：假设选中 pos=8
+- 新状态：$s = (8, 5, 2)$
+
+**迭代 2**（更新 Seq2）：
+- Profile（由 Seq1+Seq3 构建）...
+- 继续迭代 ...
+
+## 变体与改进
+
+### 贪婪 Gibbs Sampling
+
+标准 Gibbs Sampling 是完全随机的，贪婪变体选择概率最高的位置：
+
+```
+GREEDY_GIBBS(DNA, t, n, l, max_iter):
+    s = random_positions()
+    
+    for iter = 1 to max_iter:
+        i = random(1, t)
+        profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
+        
+        // 贪婪选择：概率最高的位置
+        best_pos = argmax_{pos} P(lmer_i(pos) | profile)
+        s[i] = best_pos
+    
+    return s
+```
+
+**权衡**：
+- 标准版：更好的全局探索，可能找到更优解
+- 贪婪版：更快收敛，但可能陷入局部最优
+
+### 温度调度
+
+模拟退火风格的温度参数：
+
+```
+TEMPERED_GIBBS(DNA, t, n, l, max_iter):
+    s = random_positions()
+    temperature = 1.0
+    
+    for iter = 1 to max_iter:
+        i = random(1, t)
+        profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
+        
+        // 使用温度调整概率
+        for pos:
+            Q[pos] = exp(log(P(pos)) / temperature)
+        
+        s[i] = SAMPLE(Q)
+        temperature *= 0.99  // 降温
+    
+    return s
+```
+
+## 与其他 Motif Finding 方法的比较
+
+| 方法 | 类型 | 优势 | 劣势 |
+|------|------|------|------|
+| 穷举搜索 | 确定性 | 保证找到最优 | 只能处理小规模 |
+| 贪心算法 | 确定性 | 快速 | 容易局部最优 |
+| **Gibbs Sampling** | 随机 | 避免局部最优 | 收敛时间不确定 |
+| EM 算法 | 迭代 | 数学基础扎实 | 对初始化敏感 |
+| 随机投影 | 随机 | 适合高突变 motif | 参数调优复杂 |
+
+## 应用场景
+
+### 1. 转录因子结合位点预测
+
+```
+输入：
+- 共表达基因的启动子序列
+- 假设这些基因被同一转录因子调控
+
+输出：
+- 转录因子的保守结合 motif
+```
+
+### 2. 蛋白质家族保守区域
+
+```
+输入：
+- 同源蛋白质序列
+
+输出：
+- 功能重要的保守氨基酸模式
+```
+
+### 3. RNA 结构 motif
+
+```
+输入：
+- 非编码 RNA 序列
+
+输出：
+- 保守的结构或序列 motif
+```
+
+<RelatedLinks
+  links={[
+    { title: 'Motif Finding', to: '/wiki/models/motif-finding', description: 'Motif 寻找问题' },
+    { title: 'PWM/PSSM', to: '/wiki/models/pwm-pssm', description: '位置权重矩阵' },
+    { title: '随机算法', to: '/wiki/foundations/randomized-algorithms', description: '随机算法基础' },
+    { title: '随机投影', to: '/wiki/foundations/randomized-algorithms', description: '另一种随机 motif 寻找方法' }
+  ]}
+/>
+
+## 历史注记
+
+Gibbs Sampling 算法由 **Charles Lawrence**、**Stephen Altschul**、**Mark Boguski**、**Jun Liu**、**Andrew Neuwald** 和 **John Wootton** 于 **1993 年**提出，发表在 Science 上。该方法将统计学中的 MCMC 方法引入生物信息学，开创了随机化算法在序列分析中的应用。算法名字来源于物理学家 **Josiah Willard Gibbs**，他在统计力学中奠定了相关理论基础。
+
+## 总结
+
+- **Gibbs Sampling 是用于 Motif Finding 的 MCMC 随机算法**
+- **每次迭代只更新一条序列的 motif 位置，逐步收敛**
+- **通过概率采样避免陷入局部最优**
+- **在实践中表现优异，是生物信息学中的标准工具**
+- **理解 MCMC 原理对于掌握现代生物信息学方法至关重要**
+

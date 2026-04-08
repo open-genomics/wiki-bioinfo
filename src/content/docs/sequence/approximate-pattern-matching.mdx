@@ -1,0 +1,369 @@
+---
+description: 近似模式匹配（Approximate Pattern Matching）允许在文本中查找与模式串有少量差异的匹配，是生物信息学中处理测序错误和变异的核心算法。
+title: "近似模式匹配"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+
+<SummaryBox
+  summary="近似模式匹配（Approximate Pattern Matching）允许在文本中查找与模式串有最多 k 个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
+  bullets={[
+    '定义：允许最多 k 个错配/插入/删除的匹配',
+    '汉明距离：只允许替换操作',
+    '编辑距离：允许替换、插入、删除',
+    '是 BLAST 等数据库搜索工具的理论基础'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '精确模式匹配', href: '/wiki/sequence/exact-string-matching' },
+    { name: '编辑距离', href: '/wiki/alignment/global-local' },
+    { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
+  ]}
+/>
+
+## 是什么
+
+**近似模式匹配（Approximate Pattern Matching）** 是在文本 $T$ 中查找与模式串 $P$ 相似但不完全相同的所有出现位置的问题。与精确匹配不同，它允许一定数量的"差异"（错配、插入、删除）。
+
+### 形式化定义
+
+**输入**：
+- 文本 $T = t_1t_2...t_n$
+- 模式 $P = p_1p_2...p_m$
+- 差异阈值 $k$
+
+**输出**：所有位置 $i$，使得 $T[i..j]$ 与 $P$ 的**编辑距离**（或汉明距离）不超过 $k$。
+
+### 与精确匹配的关系
+
+| 匹配类型 | 允许的操作 | 应用场景 |
+|---------|-----------|----------|
+| **精确匹配** | 无 | 参考序列比对、酶切位点定位 |
+| **汉明距离** | 替换 | SNP 检测、点突变 |
+| **编辑距离** | 替换、插入、删除 | 测序错误修正、剪接变异、Indel 检测 |
+
+## 要解决什么生物信息学问题
+
+### 测序数据分析
+
+**问题**：二代测序（NGS）reads 包含约 0.1%-1% 的错误率。
+
+**应用**：
+- 将 reads 比对到参考基因组时允许测序错误
+- 识别真正的变异 vs 测序错误
+- 处理同源区域的多态性
+
+### 变异检测
+
+**SNP 检测**：
+- 允许 1 个错配的近似匹配
+- 找到与参考序列单碱基差异的位置
+
+**Indel 检测**：
+- 需要编辑距离（允许插入/删除）
+- 检测小的插入和缺失
+
+### 进化分析
+
+**同源基因识别**：
+- 远缘物种的序列可能有较多差异
+- 近似匹配允许识别高度分化但仍功能相关的基因
+
+**保守区域识别**：
+- 在多个物种中搜索保守但非完全相同的序列模式
+
+## 距离度量
+
+### 汉明距离（Hamming Distance）
+
+**定义**：两个等长字符串在相同位置上有多少个字符不同。
+
+$$d_H(P, T[i..i+m-1]) = \sum_{j=1}^{m} \mathbb{1}[p_j \neq t_{i+j-1}]$$
+
+**特性**：
+- 只考虑替换（substitution）
+- 要求字符串等长
+- 计算简单：$O(m)$
+
+**生物信息学应用**：
+- SNP 检测
+- 点突变分析
+- DNA 条码匹配
+
+### 编辑距离（Edit Distance / Levenshtein Distance）
+
+**定义**：将一个字符串转换为另一个字符串所需的最少编辑操作数。
+
+**允许的操作**：
+1. **替换**（Substitution）：A → C
+2. **插入**（Insertion）：在位置 $i$ 插入字符
+3. **删除**（Deletion）：删除位置 $i$ 的字符
+
+**特性**：
+- 可以处理不等长字符串
+- 更通用的相似性度量
+- 计算更复杂：$O(m^2)$ 使用动态规划
+
+**生物信息学应用**：
+- 测序 reads 比对（含插入缺失）
+- RNA 剪接分析
+- 蛋白质序列比对
+
+### 广义编辑距离
+
+可以定义带权重的编辑距离，反映不同操作的生物学代价：
+
+| 操作 | 典型权重 | 生物学依据 |
+|------|---------|-----------|
+| 匹配 | 0 | 无变化 |
+| 转换（A↔G, C↔T）| +1 | 常见突变 |
+| 颠换（其他替换）| +2 | 较少见 |
+| 插入/删除 | -2 ~ -5 | 移码突变，通常有害 |
+
+## 算法方法
+
+### 1. 动态规划方法
+
+**基于编辑距离的近似匹配**：
+
+扩展标准的编辑距离 DP 表，记录每个文本位置与模式的距离。
+
+```
+APPROXIMATE_MATCH_DP(T, P, n, m, k):
+    // DP 表：(n+1) × (m+1)
+    // D[i,j] = T[1..i] 与 P[1..j] 的编辑距离
+    
+    // 初始化
+    for i = 0 to n:
+        D[i, 0] = i  // 删除 i 个字符
+    for j = 0 to m:
+        D[0, j] = j  // 插入 j 个字符
+    
+    // 填表
+    for i = 1 to n:
+        for j = 1 to m:
+            match_cost = 0 if T[i] == P[j] else 1
+            
+            D[i,j] = min(
+                D[i-1, j] + 1,      // 删除 T[i]
+                D[i, j-1] + 1,      // 插入 P[j]
+                D[i-1, j-1] + match_cost  // 匹配/替换
+            )
+    
+    // 查找所有满足条件的结束位置
+    matches = []
+    for i = 1 to n:
+        if D[i, m] <= k:
+            matches.append(i - m + 1)  // 计算起始位置
+    
+    return matches
+```
+
+**时间复杂度**：$O(n \cdot m)$
+
+**空间优化**：
+- 只保存当前行和上一行：$O(m)$ 空间
+- Hirschberg 技巧：$O(m)$ 空间同时重构对齐
+
+### 2. 基于自动机的方法
+
+**Levenshtein 自动机**：
+- 构建 NFA（非确定性有限自动机）接受与模式距离 ≤ k 的所有字符串
+- 在文本上模拟自动机运行
+- 当到达接受状态时，报告匹配
+
+**优势**：
+- 对于小 k 和固定模式，预处理后可快速匹配
+- 适合多模式匹配
+
+**劣势**：
+- 自动机状态数随 k 指数增长
+- 实现复杂
+
+### 3. 基于索引的方法
+
+对于大规模文本（如整个基因组），需要索引加速：
+
+#### 后缀树/后缀数组 + 近似匹配
+
+**方法**：
+1. 构建文本的后缀树或后缀数组
+2. 从根节点开始，允许最多 k 个错误遍历
+3. 收集所有到达叶节点的路径
+
+**复杂性**：
+- 构建索引：$O(n)$ 或 $O(n \log n)$
+- 查询：$O(m^k \cdot \Sigma^k)$ 或更优（使用高级技巧）
+
+#### q-gram 索引
+
+**核心思想**：
+- 将模式分割为 $k+1$ 个片段
+- 至少有一个片段必须完全匹配（鸽巢原理）
+
+**算法**：
+```
+QGRAM_APPROXIMATE_MATCH(T, P, m, k):
+    // 将模式分割为 k+1 个片段
+    // 每个片段长度 ≈ m/(k+1)
+    
+    // 构建 T 中所有 q-gram 的索引
+    index = BUILD_QGRAM_INDEX(T, q)
+    
+    matches = empty set
+    
+    for each piece p_i of P:
+        // 查找 p_i 在 T 中的所有精确匹配位置
+        positions = EXACT_MATCH(index, p_i)
+        
+        for pos in positions:
+            // 验证扩展区域的总编辑距离
+            start = pos - offset_of_p_i_in_P
+            end = start + m
+            
+            if EDIT_DISTANCE(T[start..end], P) <= k:
+                matches.add(start)
+    
+    return matches
+```
+
+**复杂度**：
+- 预处理：$O(n)$
+- 查询：平均 $O(m)$，最坏 $O(n)$
+
+## BLAST：实用的近似匹配
+
+BLAST（Basic Local Alignment Search Tool）是生物信息学中最广泛使用的近似匹配工具。
+
+### BLAST 的核心思想
+
+1. **种子（Seed）**：
+   - 寻找短精确匹配（如 11-mer）
+   - 这些是"锚点"，提示可能的相似区域
+
+2. **扩展（Extension）**：
+   - 从种子向两端扩展
+   - 使用动态规划寻找高分局部比对
+
+3. **过滤（Filtering）**：
+   - 忽略低复杂度区域（避免假阳性）
+   - 使用统计显著性阈值（E-value）
+
+### BLAST 算法流程
+
+```
+BLAST(query, database):
+    // 1. 预处理查询序列
+    seeds = EXTRACT_SHORT_WORDS(query, word_size)
+    
+    // 2. 查找种子匹配
+    for seed in seeds:
+        hit_positions = LOOKUP_NEIGHBORHOOD(seed, database_index)
+        
+        for pos in hit_positions:
+            // 3. 单向或双向扩展
+            alignment = EXTEND_ALIGNMENT(query, database, seed, pos)
+            
+            // 4. 评估显著性
+            if alignment.score > threshold:
+                e_value = CALCULATE_E_VALUE(alignment)
+                REPORT(alignment, e_value)
+```
+
+### BLAST vs 精确算法的权衡
+
+| 特性 | 精确 DP | BLAST |
+|------|---------|-------|
+| 速度 | 慢（$O(nm)$）| 快（启发式）|
+| 敏感性 | 100% | 可能遗漏弱相似性 |
+| 显著性评估 | 无 | E-value |
+| 适用场景 | 短序列、精确需求 | 大数据库搜索 |
+
+## 实际应用案例
+
+### 案例 1：测序 reads 比对
+
+**问题**：将 100bp 的 Illumina reads 比对到人类基因组（3Gb），允许最多 2 个错配。
+
+**方法**：
+1. 使用 BWA、Bowtie 等基于 BWT/FM-index 的工具
+2. 这些工具本质上是高效的近似匹配算法
+3. 使用种子-扩展策略加速
+
+### 案例 2：CRISPR 脱靶预测
+
+**问题**：预测 CRISPR guide RNA 可能在基因组的哪些位置产生脱靶效应。
+
+**方法**：
+- 允许最多 3-4 个错配的近似匹配
+- 考虑 PAM 序列限制
+- 评估每个潜在脱靶位点的编辑距离
+
+### 案例 3：病原体检测
+
+**问题**：从宏基因组测序数据中识别病原体，允许物种内变异。
+
+**方法**：
+- 对病原体标记基因进行近似匹配
+- 允许少量错配以覆盖种内多样性
+- 结合覆盖度和一致性进行判断
+
+## 局限性与注意事项
+
+### 计算复杂度
+
+近似匹配本质上比精确匹配更昂贵：
+- 精确匹配：$O(n)$ 或 $O(n \log n)$（有索引）
+- 近似匹配（编辑距离）：$O(n \cdot m)$（DP）或 $O(n \cdot \text{poly}(k))$（索引）
+
+**实际策略**：
+- 先用精确匹配找到候选区域
+- 再在这些区域内进行精确的 DP 验证
+
+### 参数选择
+
+**k 值选择**：
+- 太小：遗漏真正的相似序列
+- 太大：假阳性爆炸
+- 经验法则：对于长度 $m$ 的模式，通常 $k \leq 0.1m$（10% 差异）
+
+**生物合理性**：
+- 不同应用场景需要不同的 k 值
+- 蛋白质比对：考虑 BLOSUM/PAM 矩阵
+- DNA 比对：考虑转换/颠换偏好
+
+<RelatedLinks
+  links={[
+    { title: '精确模式匹配', to: '/wiki/sequence/exact-string-matching', description: '基础匹配算法' },
+    { title: 'BLAST', to: '/wiki/sequence/blast', description: '实用的近似匹配工具' },
+    { title: '编辑距离', to: '/wiki/alignment/global-local', description: '距离度量基础' },
+    { title: 'Suffix Tree', to: '/wiki/sequence/suffix-tree', description: '索引结构' }
+  ]}
+/>
+
+## 历史注记
+
+近似模式匹配算法的发展与生物信息学紧密相连：
+
+- **1965**：Levenshtein 提出编辑距离
+- **1970s**：动态规划算法成熟
+- **1980s**：Myers 和 Miller 开发线性空间算法
+- **1990**：BLAST 算法发布，革命性地加速了数据库搜索
+- **1990s-2000s**：后缀数组、BWT/FM-index 用于高效近似匹配
+- **2009**：BWA 等工具将 BWT 引入 NGS 比对
+
+这些算法的演进使得现代生物信息学能够处理海量的基因组数据。
+
+## 总结
+
+- **近似模式匹配允许最多 k 个差异的匹配，是生物信息学的核心算法**
+- **汉明距离适合 SNP/点突变分析，编辑距离适合更一般的变异检测**
+- **动态规划方法保证最优但较慢，索引方法（如 BLAST）快但可能遗漏**
+- **实际工具（BWA, Bowtie, BLAST）都是近似匹配算法的高效实现**
+- **理解这些算法有助于正确选择和使用生物信息学工具**
+

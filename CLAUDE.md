@@ -9,6 +9,16 @@
 - 优先解释“是什么、为什么重要、与哪些对象/方法/流程相连”，而不是只堆术语、参数或命令。
 - 不要随意重做顶层信息架构；默认维持现有 6 个主入口。
 
+## 技术与目录事实
+
+- 站点基于 `Astro 6` + `@astrojs/starlight`。
+- 文档内容主目录是 `src/content/docs/`。
+- 首页入口是 `src/content/docs/index.mdx`。
+- 导航事实来源是 `astro.config.mjs` 中的 `sidebar`。
+- 站内可复用文档组件位于 `src/components/docs/`。
+- 全站样式主要位于 `src/styles/custom.css` 与 `src/styles/katex.css`。
+- 静态资源优先放在 `public/img/` 下。
+
 ## 写作与内容约束
 
 - 正文默认使用简体中文。
@@ -25,13 +35,15 @@
 - 优先使用 Markdown；只有在确实需要复用组件或版式时才使用 MDX。
 - 优先复用 `src/components/docs/` 中已有 Astro 组件，不要轻易发明一次性组件或页面局部样式。
 - 新 section landing page 默认参考现有成熟模式：`description`、`PageHeaderMeta`、`SectionNavigator`、`RelatedLinks`。
+- 修改首页、landing page 或导航时，优先保持“先建立知识地图，再进入专题”的阅读路径。
 
 ## 图片与图示
 
 - 解释性示意图优先放在 `public/img/illustrations/`。
+- 成品流程图或总结性大图可放在 `public/img/figures/`。
 - 图片应服务于具体解释目标，而不是纯装饰。
 - 为图片提供有意义的 `alt` 文本；需要时补充 caption。
-- 保持与当前站点的路径和 Astro 约定兼容。
+- 保持与当前站点的路径和 Astro `base` 约定兼容；不要在新内容里随意写死与部署环境强耦合的路径形式。
 
 ## 验证要求
 

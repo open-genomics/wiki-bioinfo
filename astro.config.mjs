@@ -3,11 +3,11 @@ import starlight from '@astrojs/starlight';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
-const isProd = process.env.CI === 'true';
+const siteBase = '/wiki-bioinfo/';
 
 export default defineConfig({
   site: 'https://lessup.github.io',
-  base: isProd ? '/wiki-bioinfo/' : '/',
+  base: siteBase,
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],

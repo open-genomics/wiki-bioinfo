@@ -10,11 +10,13 @@
 
 1. `CLAUDE.md`
 2. `README.md`
-3. `src/content/docs/intro/about.md`
-4. `src/content/docs/intro/contributing.md`
-5. `src/content/docs/intro/style-guide.md`
-6. `astro.config.mjs`
-7. `package.json`
+3. `src/content/docs/index.mdx`
+4. `src/content/docs/intro/about.md`
+5. `src/content/docs/intro/contributing.md`
+6. `src/content/docs/intro/style-guide.md`
+7. `astro.config.mjs`
+8. `src/styles/custom.css`
+9. `package.json`
 
 这些文件已经定义了项目目标、写作风格、目录结构、导航事实来源和验证方式。
 
@@ -119,18 +121,27 @@
   - `PageHeaderMeta`
   - `SectionNavigator`
   - `RelatedLinks`
+- 首页 `src/content/docs/index.mdx` 也属于关键入口；修改时优先保持“先建立知识地图，再进入专题”的阅读路径。
 
 不要轻易发明新的顶层板块；默认维持 README 和 sidebar 中的 6 个主入口。
 
 ## 9. 图片与图示
 
 - 解释性示意图优先放 `public/img/illustrations/`
+- 成品流程图、知识地图或总结性配图可放 `public/img/figures/`
 - 图应服务于解释，不要用装饰图替代内容
 - 提供清晰的 `alt` 文本
 - 需要时使用 `<figure>` / `<figcaption>`
 - 保持与当前 Astro 路径约定兼容
+- 修改图片、链接或资源路径时，优先使用与当前 `base` 兼容的写法，避免引入只在单一部署环境可用的路径形式
 
-## 10. 链接与知识图谱
+## 10. 组件与样式边界
+
+- 文档表现层优先复用 `src/components/docs/` 中已有组件与 `src/styles/custom.css` 中已有样式约定。
+- 如果只是 landing page、卡片、提示框、表格或 workflow 样式优化，优先在现有组件和样式基础上扩展，而不是新增一次性实现。
+- 对全站视觉体验的改动，优先做小而清晰的统一优化，例如 figure、卡片、间距、层次，而不是重写整套主题。
+
+## 11. 链接与知识图谱
 
 - 站内优先建立交叉链接
 - landing page 要主动链接子页面，不能只依赖 sidebar
@@ -139,7 +150,7 @@
 
 目标是让页面成为知识网络的一部分，而不是孤立节点。
 
-## 11. 改动边界
+## 12. 改动边界
 
 除非用户明确要求，否则不要：
 
@@ -151,7 +162,7 @@
 
 优先做小而清晰、可验证、与现有模式一致的改动。
 
-## 12. 验证
+## 13. 验证
 
 修改 docs、sidebar、配置、组件后，默认运行：
 

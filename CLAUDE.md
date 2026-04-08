@@ -21,17 +21,17 @@
 ## 结构与实现约束
 
 - 新内容必须适配现有 sidebar 驱动的信息架构；不要随意新增顶层分类。
-- 新增或重命名 docs 页面时，检查是否需要同步更新 `sidebars.ts`。
+- 新增或重命名 docs 页面时，检查是否需要同步更新 `astro.config.mjs` 中的 sidebar 配置。
 - 优先使用 Markdown；只有在确实需要复用组件或版式时才使用 MDX。
-- 优先复用 `src/components/docs/` 中已有组件，不要轻易发明一次性组件或页面局部样式。
-- 新 section landing page 默认参考现有成熟模式：`description`、`pagination_label`、`PageHeaderMeta`、`SectionNavigator`、`RelatedLinks`。
+- 优先复用 `src/components/docs/` 中已有 Astro 组件，不要轻易发明一次性组件或页面局部样式。
+- 新 section landing page 默认参考现有成熟模式：`description`、`PageHeaderMeta`、`SectionNavigator`、`RelatedLinks`。
 
 ## 图片与图示
 
-- 解释性示意图优先放在 `static/img/illustrations/`。
+- 解释性示意图优先放在 `public/img/illustrations/`。
 - 图片应服务于具体解释目标，而不是纯装饰。
 - 为图片提供有意义的 `alt` 文本；需要时补充 caption。
-- 保持与当前站点的路径和 Docusaurus 约定兼容。
+- 保持与当前站点的路径和 Astro 约定兼容。
 
 ## 验证要求
 
@@ -44,9 +44,8 @@
 
 - `AGENTS.md`
 - `README.md`
-- `docs/intro/about.md`
-- `docs/intro/contributing.md`
-- `docs/intro/style-guide.md`
-- `sidebars.ts`
-- `docusaurus.config.ts`
+- `src/content/docs/intro/about.md`
+- `src/content/docs/intro/contributing.md`
+- `src/content/docs/intro/style-guide.md`
+- `astro.config.mjs`
 - `package.json`

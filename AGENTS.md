@@ -10,12 +10,11 @@
 
 1. `CLAUDE.md`
 2. `README.md`
-3. `docs/intro/about.md`
-4. `docs/intro/contributing.md`
-5. `docs/intro/style-guide.md`
-6. `sidebars.ts`
-7. `docusaurus.config.ts`
-8. `package.json`
+3. `src/content/docs/intro/about.md`
+4. `src/content/docs/intro/contributing.md`
+5. `src/content/docs/intro/style-guide.md`
+6. `astro.config.mjs`
+7. `package.json`
 
 这些文件已经定义了项目目标、写作风格、目录结构、导航事实来源和验证方式。
 
@@ -50,7 +49,7 @@
 
 ## 4. 选对页面类型
 
-优先复用 `docs/intro/style-guide.md` 中已有模板：
+优先复用 `src/content/docs/intro/style-guide.md` 中已有模板：
 
 - **Concept page**：对象、术语、数据库、文件格式
 - **Algorithm page**：索引、比对、图算法、概率算法
@@ -111,13 +110,11 @@
 
 ## 8. 导航、frontmatter 与 landing page
 
-- 本仓库导航是**手工维护**的，`sidebars.ts` 是事实来源。
-- 新增或重命名页面时，检查是否需要同步调整 sidebar。
+- 本仓库导航是**手工维护**的，`astro.config.mjs` 中的 `sidebar` 配置是事实来源。
+- 新增或重命名页面时，检查是否需要同步调整 sidebar 配置。
 - 新 section landing page 默认应补齐：
-  - `sidebar_position`
-  - `slug`
+  - `title`
   - `description`
-  - `pagination_label`
 - 新 landing page 默认参考现有成熟模式：
   - `PageHeaderMeta`
   - `SectionNavigator`
@@ -127,11 +124,11 @@
 
 ## 9. 图片与图示
 
-- 解释性示意图优先放 `static/img/illustrations/`
+- 解释性示意图优先放 `public/img/illustrations/`
 - 图应服务于解释，不要用装饰图替代内容
 - 提供清晰的 `alt` 文本
 - 需要时使用 `<figure>` / `<figcaption>`
-- 保持与当前 Docusaurus 路径约定兼容
+- 保持与当前 Astro 路径约定兼容
 
 ## 10. 链接与知识图谱
 

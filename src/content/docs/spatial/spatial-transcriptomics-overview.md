@@ -191,5 +191,5 @@ UMI 计数 → gene × spot 矩阵
 
 - **[spot 与单细胞](./spot-vs-single-cell.md)** — 深入理解空间数据与单细胞数据的差异与互补性
 - **[去卷积与细胞映射](./deconvolution-and-mapping.md)** — 学习如何从混合 spot 解析细胞组成
-- **[单细胞组学](../single-cell/index.md)** — 建立单细胞分析基础
-- **[RNA-seq 工作流](../workflows/rna-seq.md)** — 理解转录组测序的基础流程
+- **[单细胞组学](../single-cell/index.mdx)** — 建立单细胞分析基础
+- **[RNA-seq 工作流](../workflows/rna-seq.mdx)** — 理解转录组测序的基础流程

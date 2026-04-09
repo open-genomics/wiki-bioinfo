@@ -34,7 +34,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 <PrerequisitesBox>
 - 已理解基础算法概念（循环、递归、数组）
 - 了解生物信息学中的基本对象（序列、基因组、reads）
-- 推荐阅读：[算法与复杂度](../foundations/algorithms-and-complexity.md)
+- 推荐阅读：[算法与复杂度](../foundations/algorithms-and-complexity.mdx)
 </PrerequisitesBox>
 
 ## 六种核心范式

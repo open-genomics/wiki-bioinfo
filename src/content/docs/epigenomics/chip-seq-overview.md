@@ -126,7 +126,7 @@ macs2 callpeak \
 **已知 motif 富集**：与数据库（JASPAR、HOCOMOCO）比较
 - 推断：协同作用的转录因子
 
-序列模型基础见 [PWM / PSSM](../models/pwm-pssm.md)。
+序列模型基础见 [PWM / PSSM](../models/pwm-pssm.mdx)。
 
 ## 统计视角与差异分析
 
@@ -258,6 +258,6 @@ ChIP-seq 技术的发展经历了从低通量到高通量的演进：
 
 - **技术互补**：ChIP-seq 与 [ATAC-seq](./atac-seq.md) 是研究基因调控的两种核心方法，分别回答"哪个蛋白结合"和"哪里开放"
 - **算法深入**：峰调用的统计原理见 [MACS2 峰调用算法](./macs2-peak-calling.mdx)
-- **序列模型**：motif 分析涉及 [PWM / PSSM](../models/pwm-pssm.md) 的概率模型
+- **序列模型**：motif 分析涉及 [PWM / PSSM](../models/pwm-pssm.mdx) 的概率模型
 - **表观遗传整合**：与 [DNA 甲基化](./dna-methylation.md) 数据联合分析可全面理解调控状态
-- **基础参考**：基因注释信息见 [参考基因组与注释](../foundations/reference-and-annotation.md)
+- **基础参考**：基因注释信息见 [参考基因组与注释](../foundations/reference-and-annotation.mdx)

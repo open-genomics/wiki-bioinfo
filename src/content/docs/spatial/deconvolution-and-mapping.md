@@ -266,6 +266,6 @@ scRNA-seq 参考数据
 
 - **[空间转录组总览](./spatial-transcriptomics-overview.md)** — 理解空间数据的产生与技术背景
 - **[spot 与单细胞](./spot-vs-single-cell.md)** — 深入理解为什么要进行去卷积
-- **[单细胞组学](../single-cell/index.md)** — 构建参考图谱的基础
-- **[概率模型](../algorithms/probabilistic-models.md)** — 理解贝叶斯去卷积的统计基础
-- **[矩阵分解](../algorithms/matrix-factorization.md)** — 理解 NMF 去卷积的数学原理
+- **[单细胞组学](../single-cell/index.mdx)** — 构建参考图谱的基础
+- **[概率模型](../models/index.mdx)** — 理解贝叶斯去卷积的统计基础
+- **[矩阵分解](../multi-omics/joint-nmf.mdx)** — 理解 NMF 去卷积的数学原理

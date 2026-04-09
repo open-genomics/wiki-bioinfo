@@ -167,5 +167,5 @@ scRNA-seq 数据
 
 - **[空间转录组总览](./spatial-transcriptomics-overview.md)** — 理解空间技术的原理与数据结构
 - **[去卷积与细胞映射](./deconvolution-and-mapping.md)** — 学习如何整合 scRNA-seq 与空间数据的具体方法
-- **[单细胞组学](../single-cell/index.md)** — 建立单细胞分析基础
-- **[概率模型](../algorithms/probabilistic-models.md)** — 理解去卷积的统计基础
+- **[单细胞组学](../single-cell/index.mdx)** — 建立单细胞分析基础
+- **[概率模型](../models/index.mdx)** — 理解去卷积的统计基础

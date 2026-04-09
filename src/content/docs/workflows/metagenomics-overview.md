@@ -15,10 +15,10 @@ title: "Metagenomics 流程总览"
 
 ## 前置知识
 
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
 - [常见文件格式概览](../formats/common-file-formats.mdx)
-- [组装与图算法](../assembly/index.md)
-- [数据库与资源](../databases/index.md)
+- [组装与图算法](../assembly/index.mdx)
+- [数据库与资源](../databases/index.mdx)
 
 ## 步骤总览
 
@@ -66,5 +66,5 @@ FASTQ -> QC -> host removal -> taxonomic classification -> optional assembly -> 
 ## 相关页面
 
 - [NGS 流程总览](./ngs-overview.md)
-- [组装与图算法](../assembly/index.md)
-- [数据库与资源](../databases/index.md)
+- [组装与图算法](../assembly/index.mdx)
+- [数据库与资源](../databases/index.mdx)

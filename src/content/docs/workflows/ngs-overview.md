@@ -117,7 +117,7 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
 ## 相关页面
 
 - [质量控制（QC）总览](./qc-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.md)
-- [序列比对](../alignment/index.md)
-- [基因组组装](../assembly/index.md)
-- [数据库与资源](../databases/index.md)
+- [RNA-seq 工作流概览](./rna-seq.mdx)
+- [序列比对](../alignment/index.mdx)
+- [基因组组装](../assembly/index.mdx)
+- [数据库与资源](../databases/index.mdx)

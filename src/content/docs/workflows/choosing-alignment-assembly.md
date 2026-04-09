@@ -16,8 +16,8 @@ title: "如何选择 alignment、assembly 或 pseudo-alignment"
 
 ## 前置知识
 
-- [序列比对](../alignment/index.md)
-- [组装与图算法](../assembly/index.md)
+- [序列比对](../alignment/index.mdx)
+- [组装与图算法](../assembly/index.mdx)
 - [转录组](../transcriptomics/index.mdx)
 - [NGS 流程总览](./ngs-overview.md)
 
@@ -52,6 +52,6 @@ title: "如何选择 alignment、assembly 或 pseudo-alignment"
 ## 相关页面
 
 - [DNA-seq 变异检测总览](../variants/variant-calling-overview.mdx)
-- [RNA-seq 工作流概览](./rna-seq.md)
+- [RNA-seq 工作流概览](./rna-seq.mdx)
 - [Pseudo-alignment 与表达定量](../transcriptomics/pseudo-alignment-and-quantification.mdx)
-- [de Bruijn graph 组装](../assembly/de-bruijn.md)
+- [de Bruijn graph 组装](../assembly/de-bruijn.mdx)

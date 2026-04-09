@@ -187,7 +187,7 @@ UMAP 图中批次混合良好**不**等同于整合成功。可能的情况：
 
 ## 相关页面
 
-- [整合策略](./integration-strategies.md)：多组学整合的策略选择
+- [整合策略](./integration-strategies.mdx)：多组学整合的策略选择
 - [单细胞 multiome](./single-cell-multiome.md)：单细胞多模态数据整合
-- [单细胞组学](../single-cell/index.md)：单细胞分析基础
-- [MOFA+](./mofa-plus.md)：基于贝叶斯因子分析的多组学整合
+- [单细胞组学](../single-cell/index.mdx)：单细胞分析基础
+- [MOFA+](./mofa-plus.mdx)：基于贝叶斯因子分析的多组学整合

@@ -287,8 +287,8 @@ title: "算法基础"
 
 - [术语表](./glossary.md)
 - [参考资料](./references.md)
-- [编辑距离](../alignment/edit-distance.md)
-- [全局比对与局部比对](../alignment/global-local.md)
-- [序列组装基础](../assembly/index.md)
-- [De Bruijn 图](../assembly/de-bruijn.md)
-- [隐马尔可夫模型](../models/hmm.md)
+- [编辑距离](../alignment/edit-distance.mdx)
+- [全局比对与局部比对](../alignment/global-local.mdx)
+- [序列组装基础](../assembly/index.mdx)
+- [De Bruijn 图](../assembly/de-bruijn.mdx)
+- [隐马尔可夫模型](../models/hmm.mdx)

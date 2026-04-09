@@ -156,7 +156,7 @@ Seurat 的 WNN 方法：
 
 ## 相关页面
 
-- [单细胞组学](../single-cell/index.md)：单细胞分析基础
-- [表观基因组学](../epigenomics/index.md)：ATAC-seq 原理
-- [整合策略](./integration-strategies.md)：多组学整合策略选择
-- [MOFA+](./mofa-plus.md)：贝叶斯多组学因子分析
+- [单细胞组学](../single-cell/index.mdx)：单细胞分析基础
+- [表观基因组学](../epigenomics/index.mdx)：ATAC-seq 原理
+- [整合策略](./integration-strategies.mdx)：多组学整合策略选择
+- [MOFA+](./mofa-plus.mdx)：贝叶斯多组学因子分析

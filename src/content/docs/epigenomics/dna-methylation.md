@@ -265,5 +265,5 @@ DNA 甲基化研究经历了从现象观察到分子机制的深入：
 
 - **技术互补**：DNA 甲基化与 [ChIP-seq 概览](./chip-seq-overview.md) 的组蛋白修饰、以及 [ATAC-seq](./atac-seq.md) 的染色质可及性共同构成表观遗传调控的三维图景
 - **算法深入**：差异甲基化区域的统计检测见 [DMR 检测算法](./dmr-detection.mdx)
-- **基础参考**：CpG 岛注释和基因组坐标系统见 [参考基因组与注释](../foundations/reference-and-annotation.md)
+- **基础参考**：CpG 岛注释和基因组坐标系统见 [参考基因组与注释](../foundations/reference-and-annotation.mdx)
 - **多组学整合**：甲基化数据常与 RNA-seq 表达数据联合分析，见 [转录组学](../transcriptomics/index.mdx)

@@ -149,14 +149,14 @@ QC 并不是独立步骤，而是后续决策的前提：
 ## 后续阅读
 
 - [NGS 流程总览](./ngs-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.md)
+- [RNA-seq 工作流概览](./rna-seq.mdx)
 - [常见文件格式概览](../formats/common-file-formats.mdx)
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
 
 ## 相关页面
 
 - [NGS 流程总览](./ngs-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.md)
+- [RNA-seq 工作流概览](./rna-seq.mdx)
 - [差异表达：从 counts 到统计检验](../transcriptomics/differential-expression.mdx)
 - [常见文件格式概览](../formats/common-file-formats.mdx)
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.md)
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)

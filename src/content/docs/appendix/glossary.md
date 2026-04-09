@@ -65,8 +65,8 @@ title: "术语表"
 
 ## 相关页面
 
-- [生物信息学中的基础对象](../foundations/biology-basics.md)
-- [序列、字符串与坐标系统](../foundations/sequences-and-strings.md)
-- [参考基因组与注释](../foundations/reference-and-annotation.md)
+- [生物信息学中的基础对象](../foundations/biology-basics.mdx)
+- [序列、字符串与坐标系统](../foundations/sequences-and-strings.mdx)
+- [参考基因组与注释](../foundations/reference-and-annotation.mdx)
 - [常见数据格式总览](../formats/common-file-formats.mdx)
 - [数据库与注释系统一览](../data-references/databases-and-annotations.mdx)

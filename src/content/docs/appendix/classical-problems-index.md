@@ -64,7 +64,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 | **Overlap Alignment** | 一个后缀与另一个前缀的最优比对 | 网格 DP，特殊边界 | - |
 | **Semiglobal Alignment** | 不计末端间隙的全局比对 | 网格 DP，特殊边界 | [半全局比对](../alignment/semi-global-alignment.mdx) |
 | **Affine Gap Penalty Alignment** | 带仿射间隙惩罚的比对 | 三维 DP 状态 | [Gotoh 算法](../alignment/gotoh.mdx) |
-| **Multiple Alignment** | 多个序列的同时比对 | 多维 DP（NP-hard，启发式） | [多序列比对](../alignment/multiple-sequence-alignment.md) |
+| **Multiple Alignment** | 多个序列的同时比对 | 多维 DP（NP-hard，启发式） | [多序列比对](../alignment/multiple-sequence-alignment.mdx) |
 | **Spliced Alignment** | 考虑剪接的外显子链比对 | DAG 上的路径 DP | [基因预测](../models/gene-prediction.mdx) |
 | **Exon Chaining** | 选择非重叠外显子使总权重最大 | 加权区间调度 DP | [基因预测](../models/gene-prediction.mdx) |
 | **Block Alignment** | 块比对（Four Russians 技术） | 分块 DP | [分治算法](../foundations/divide-and-conquer.mdx) |
@@ -100,11 +100,11 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [层次聚类](../phylogeny/hierarchical-clustering.md) |
-| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [k-Means](../phylogeny/k-means-bioinformatics.md) |
+| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [层次聚类](../phylogeny/hierarchical-clustering.mdx) |
+| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [k-Means](../phylogeny/k-means-bioinformatics.mdx) |
 | **Corrupted Cliques** | 在噪声中寻找紧密子图 | 启发式搜索 | - |
 | **Distance-Based Phylogeny** | 从距离矩阵构建进化树 | 邻接法、UPGMA | [邻接法](../phylogeny/neighbor-joining.mdx), [UPGMA](../phylogeny/upgma.mdx) |
-| **Additive Phylogeny** | 从可加矩阵构建树 | 递归降维 | [可加性系统发育](../phylogeny/additive-phylogeny.md) |
+| **Additive Phylogeny** | 从可加矩阵构建树 | 递归降维 | [可加性系统发育](../phylogeny/additive-phylogeny.mdx) |
 | **Small Parsimony Problem** | 给定树结构，求最节俭标签 | Fitch、Sankoff 算法 | [简约法](../phylogeny/parsimony.mdx) |
 | **Large Parsimony Problem** | 同时优化树结构和标签 | NP-hard，启发式 | [简约法](../phylogeny/parsimony.mdx) |
 
@@ -136,10 +136,10 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Exact Pattern Matching** | 精确字符串匹配 | KMP、Boyer-Moore、Rabin-Karp | [精确匹配](../sequence/exact-string-matching.md) |
-| **Multiple Pattern Matching** | 多模式同时匹配 | Aho-Corasick、后缀树 | [多模式匹配](../sequence/trie-and-multi-pattern-matching.md) |
+| **Exact Pattern Matching** | 精确字符串匹配 | KMP、Boyer-Moore、Rabin-Karp | [精确匹配](../sequence/exact-string-matching.mdx) |
+| **Multiple Pattern Matching** | 多模式同时匹配 | Aho-Corasick、后缀树 | [多模式匹配](../sequence/trie-and-multi-pattern-matching.mdx) |
 | **Approximate Pattern Matching** | 允许错误的匹配 | DP、索引过滤 | [近似模式匹配](../alignment/) |
-| **Suffix Tree Construction** | 构建后缀树 | Ukkonen 算法 | [后缀树](../sequence/suffix-tree.md) |
+| **Suffix Tree Construction** | 构建后缀树 | Ukkonen 算法 | [后缀树](../sequence/suffix-tree.mdx) |
 | **Tandem Repeat Finding** | 发现串联重复 | 后缀树、过滤 | - |
 | **Repeat Finding** | 发现序列重复 | 散列表、后缀结构 | - |
 

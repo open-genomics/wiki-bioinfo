@@ -247,7 +247,7 @@ $$
 
 ## 相关页面
 
-- [整合策略](./integration-strategies.md)
+- [整合策略](./integration-strategies.mdx)
 - [批次效应与 harmonization](./batch-effect-and-harmonization.md)
 - [单细胞 multiome](./single-cell-multiome.md)
-- [机器学习](../ml-bioinfo/index.md)
+- [机器学习](../ml-bioinfo/index.mdx)

@@ -187,7 +187,7 @@ Doublet 检测应在分析流程的**早期**进行：
 
 ## 相关页面
 
-- [scRNA-seq 总览](./scrna-seq-overview.md)
-- [聚类与 UMAP 降维](./clustering-and-umap.md)
-- [轨迹推断](./trajectory-analysis.md)
-- [细胞 Barcode 与 UMI](./cell-barcode-umi.md)
+- [scRNA-seq 总览](./scrna-seq-overview.mdx)
+- [聚类与 UMAP 降维](./clustering-and-umap.mdx)
+- [轨迹推断](./trajectory-analysis.mdx)
+- [细胞 Barcode 与 UMI](./cell-barcode-umi.mdx)

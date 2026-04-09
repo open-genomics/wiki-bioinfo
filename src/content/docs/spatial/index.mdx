@@ -11,8 +11,8 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 空间转录组位于**对象层**（空间位置的基因表达测量）与**流程层**（空间数据分析流程）之间。理解本章需要的前置知识包括：
 
-- [RNA-seq 基础](../workflows/rna-seq.md)
-- [单细胞 RNA-seq](../single-cell/index.md)
+- [RNA-seq 基础](../workflows/rna-seq.mdx)
+- [单细胞 RNA-seq](../single-cell/index.mdx)
 
 本章的核心概念将支撑后续空间变异的检测、细胞微环境分析等高级主题。
 
@@ -66,6 +66,6 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 与其他板块的连接
 
-- **上游对象层**：理解空间数据需要熟悉 [FASTQ](../objects/fastq.md)、[SAM/BAM](../objects/sam-bam.md) 等序列格式
-- **下游流程层**：空间数据常作为 [RNA-seq 流程](../workflows/rna-seq.md) 的扩展或 [单细胞分析](../single-cell/index.md) 的补充
-- **相关算法**：空间去卷积涉及 [概率模型](../algorithms/probabilistic-models.md) 与 [矩阵分解](../algorithms/matrix-factorization.md) 的思想
+- **上游对象层**：理解空间数据需要熟悉 [常见数据格式](../formats/common-file-formats.mdx) 等
+- **下游流程层**：空间数据常作为 [RNA-seq 流程](../workflows/rna-seq.mdx) 的扩展或 [单细胞分析](../single-cell/index.mdx) 的补充
+- **相关算法**：空间去卷积涉及 [概率模型](../models/index.mdx) 与 [矩阵分解](../multi-omics/joint-nmf.mdx) 的思想

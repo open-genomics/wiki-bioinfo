@@ -1,6 +1,6 @@
 ---
 title: "精确匹配与近似匹配"
-description: 理解精确字符串匹配与允许误差（错配、插入缺失）的近似匹配之间的区别，以及“种子-延伸”架构如何连接这两者。
+description: 理解精确字符串匹配与允许误差（错配、插入缺失）的近似匹配之间的区别，以及"种子-延伸"架构如何连接这两者。
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
@@ -12,8 +12,8 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   summary="在理想的数学世界中，我们寻找精确匹配。但在充满变异和错误的生物学现实中，近似匹配（Approximate Matching）才是常态。这两者的区别决定了算法的设计是从简单的索引查询走向复杂的动态规划。"
   bullets={[
     '区分精确匹配的确定性与近似匹配的容错性',
-    '理解生物学中的三种基本“编辑操作”：替换、插入、删除',
-    '掌握“种子-延伸” (Seed-and-Extend) 架构如何兼顾效率与敏感性',
+    '理解生物学中的三种基本"编辑操作"：替换、插入、删除',
+    '掌握"种子-延伸" (Seed-and-Extend) 架构如何兼顾效率与敏感性',
     '认识鸽巢原理 (Pigeonhole Principle) 在近似匹配中的妙用'
   ]}
 />
@@ -26,22 +26,93 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 1. 为什么“精确”还不够？
+## 1. 为什么"精确"还不够？
 
 在生物信息学中，查询序列（Query）与参考序列（Reference）几乎永远不会完全相同：
-- **测序错误**：仪器可能会误读碱基（错配）或漏读、多读碱基（Indel）。
-- **生物变异**：SNP、插入和缺失是进化的本质。
-- **物种差异**：同源基因在不同物种间存在天然的序列漂移。
+- **测序错误**：仪器可能会误读碱基（错配）或漏读、多读碱基（Indel）。Illumina 平台的典型错误率为 $10^{-2}\text{--}10^{-3}$（原始数据），经校正后可达 $10^{-4}$ 以下。
+- **生物变异**：SNP、插入和缺失是进化的本质。任意两个个体之间大约每 1000 个碱基就有一个 SNP。
+- **物种差异**：同源基因在不同物种间存在天然的序列漂移。人与小鼠的同源蛋白序列一致性约为 85%。
+
+### 形式化对比
+
+**精确匹配**：寻找所有位置 $i$ 使得 $T[i..i+m-1] = P$。
+
+**近似匹配**：给定阈值 $k$，寻找所有位置 $i$ 和对齐方式，使得 $T$ 的某个子串与 $P$ 之间的编辑距离 $\leq k$。
+
+两者之间的鸿沟在于：精确匹配可以用哈希表或后缀索引在 $O(m)$ 内完成，而直接求解近似匹配的动态规划需要 $O(nm)$ 时间。
 
 ## 2. 近似匹配的定义
+
+<DefinitionList
+  items={[
+    {
+      term: '编辑距离 (Edit Distance / Levenshtein Distance)',
+      definition: '将一个字符串转换为另一个字符串所需的最少编辑操作（替换、插入、删除）次数。',
+    },
+    {
+      term: 'Hamming 距离',
+      definition: '两个等长字符串之间对应位置字符不同的数量。仅计算替换，不允许插入和删除。',
+    },
+    {
+      term: '种子-延伸 (Seed-and-Extend)',
+      definition: '一种混合策略：先用精确匹配找到短种子片段（Seeds），再在种子周围用动态规划进行近似匹配延伸。',
+    },
+  ]}
+/>
 
 **近似匹配问题 (Approximate Pattern Matching)**：
 给定模式串 $P$ 和文本 $T$，以及允许的最大错误数 $k$。寻找 $T$ 中的所有子串 $S$，使得 $P$ 与 $S$ 之间的**编辑距离**（或 Hamming 距离）不超过 $k$。
 
 ### 基本编辑操作
+
 1.  **替换 (Substitution)**：`A` 变成 `G`。
 2.  **插入 (Insertion)**：多出一个碱基。
 3.  **删除 (Deletion)**：缺失一个碱基。
+
+插入和删除统称为 **Indel (INsertion-DELetion)**。
+
+### 编辑距离 vs Hamming 距离
+
+| 距离度量 | 允许 Indel | 字符串可不等长 | 计算方法 |
+|:---:|:---:|:---:|:---:|
+| Hamming 距离 | 否 | 否 | 逐位比较 |
+| 编辑距离 | 是 | 是 | 动态规划 $O(mn)$ |
+
+当仅允许替换（不允许 Indel）且要求等长时，Hamming 距离是编辑距离的特殊情况，计算更简单。
+
+### worked example：编辑距离计算
+
+计算 $P = \text{ACGT}$ 与 $T' = \text{AGT}$ 之间的编辑距离：
+
+```
+方式一（替换 + 删除）：
+ACGT
+ | \
+AG-T  → 2 次操作（C→G，删除 T）不对
+
+方式二（删除 + 替换）：
+ACGT → 删除 C → AGT → 替换 T→? 不需要
+A-CGT → AGT：删除 C
+ACGT → AGT：删除 C，替换 T→T（不变）
+实际上：
+ACGT
+|  \
+AGT? → 
+A-C-G-T
+A---G-T
+删除 C，保持 G 和 T → 编辑距离 = 1
+
+更准确的对齐：
+ACGT
+AG-T
+A = A ✓
+- (C deleted) → cost 1
+G = G ✓
+T = T ✓
+总编辑距离 = 1
+```
+
+编辑距离为 1（一次删除）。
 
 ## 3. 桥梁：种子-延伸 (Seed-and-Extend)
 
@@ -49,10 +120,36 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 > **直觉**：如果你允许一个长度为 30 的 Read 有 2 个错误，那么如果你把它切成 3 段，其中**至少有一段**必须是完全匹配的。
 
+### 鸽巢原理的数学表述
+
+如果将长度为 $m$ 的 Read 分为 $k+1$ 段，每段长度为 $\lfloor m/(k+1) \rfloor$，则至多有 $k$ 段可能包含错误，因此**至少有一段是完全精确匹配的**。
+
+一般地，允许 $k$ 个错误时，种子段数 $q$ 和种子长度 $L$ 满足：
+
+$$
+q \cdot L \geq m - L + 1 \quad \text{且} \quad q \geq k + 1
+$$
+
 ### 算法流程
+
 1.  **种子阶段 (Seeding)**：利用索引（如哈希或 FM-index）寻找 $P$ 的若干个**精确匹配**短片段。
-2.  **过滤阶段 (Filtering)**：排除那些孤立的、无法形成共线性的种子命中。
+2.  **过滤阶段 (Filtering)**：排除那些孤立的、无法形成共线性的种子命中。这一步极大地减少了需要运行动态规划的候选位置数量。
 3.  **延伸阶段 (Extending)**：在种子周围运行动态规划（如 Smith-Waterman），允许 Indel 和错配，直到找到最终的近似匹配。
+
+### worked example：种子-延伸
+
+在文本 $T = \text{...ACGTTAGCA...}$ 中定位 $P = \text{ACGTCAGCA}$（允许 1 个错误）。
+
+1. **种子**：将 $P$ 分为 2 段：`ACGTC` 和 `AGCA`。
+2. **查找**：在 $T$ 中查找 `ACGTC` 的精确匹配 → 找到位置 $i$。
+3. **延伸**：在位置 $i$ 周围运行动态规划：
+   ```
+   T: ACGTTAGCA
+   P: ACGTCAGCA
+         ^
+   发现位置 4 处 T→C 替换（1 个错误），得分可接受。
+   ```
+4. **结果**：$P$ 在 $T$ 中位置 $i$ 处有一个编辑距离为 1 的近似匹配。
 
 ## 4. 权衡：敏感性 vs 效率
 
@@ -63,12 +160,58 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 | **敏感性** | 低（错一个碱基就找不到） | 高（能发现同源性） |
 | **典型工具** | 快速过滤、去重 | BWA, Bowtie2, BLAST |
 
+### 敏感性的量化
+
+对于一条长度为 $m$ 的 Read，如果允许 $k$ 个错误，使用 $q$ 个不重叠种子，**漏掉一个真实匹配的概率**（即所有种子都因错误而被破坏的概率）大约为：
+
+$$
+P_{\text{miss}} \approx \binom{m}{k} \left(\frac{1}{|\Sigma|}\right)^k \cdot (1 - p_{\text{seed}})^q
+$$
+
+其中 $p_{\text{seed}}$ 是单个种子精确匹配的概率。增加种子数量或使用**间隔种子 (Spaced Seeds)** 可以降低漏检率。
+
+## 5. 复杂度与适用前提
+
+### 算法复杂度对比
+
+| 方法 | 查询时间 | 适用条件 |
+|:---:|:---:|:---:|
+| 朴素动态规划 | $O(nm)$ | 小规模数据 |
+| 种子-延伸 (BWA) | $O(m \cdot \text{hits})$ 平均 | Read Mapping |
+| BLAST | $O(m + \text{extensions})$ | 数据库搜索 |
+| 位并行 (Myers) | $O(\lceil m/w \rceil \cdot n)$ | $k \leq 64$，$w$ 为字长 |
+
+### 适用前提
+
+- **精确匹配**适用于：种子查找阶段、去重、完美匹配的快速过滤。
+- **近似匹配**适用于：Read Mapping、同源搜索、变异检测。
+- **种子-延伸**是两者的最佳折中，但种子长度和数量需要根据错误率 $e$ 和允许的错误数 $k$ 进行调优。当 $k$ 很大时（如跨物种搜索），可能需要更短的种子或更多的种子来保证敏感性。
+
+## 6. 常见误区
+
+### 编辑距离越小，两个序列越同源
+
+不一定。编辑距离没有考虑不同位置突变的生物学权重。在蛋白质比对中，某些氨基酸替换（如 I→V）比其他替换（如 G→W）更常见，因此需要使用打分矩阵（如 BLOSUM62）而非简单的编辑距离。
+
+### Hamming 距离可以替代编辑距离
+
+当序列中存在 Indel 时，Hamming 距离无法正确衡量差异。例如 `ACGT` 与 `ACT` 的 Hamming 距离为 2（需要对齐后比较），但编辑距离仅为 1（一次删除）。在测序数据分析中，Indel 是常见的错误类型，因此不能仅用 Hamming 距离。
+
+### 种子越长越好
+
+种子越长，精确匹配的概率越低（因为更容易被测序错误破坏），导致漏检率上升。种子越短，精确匹配的概率越高，但会产生更多的候选位置，增加过滤和延伸的计算量。种子的选择是在敏感性和效率之间的权衡。
+
+### 近似匹配总是需要动态规划
+
+现代工具大量使用启发式方法来避免完整的动态规划。例如，BWA-MEM 使用 SIMD 加速的 SIMD-based banded alignment，Minimap2 使用 affine-gap 动态规划的快速近似。完整的 $O(nm)$ 动态规划通常仅用于最终的候选验证阶段。
+
 ## 相关页面
 
 <RelatedLinks
   links={[
     { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '量化近似匹配的代价' },
     { title: 'BLAST 算法', to: '/wiki-bioinfo/alignment/blast', description: '最著名的种子-延伸实现' },
-    { title: 'FM-index', to: '/wiki-bioinfo/sequence/fm-index', description: '支持极速种子查找的索引' }
+    { title: 'FM-index', to: '/wiki-bioinfo/sequence/fm-index', description: '支持极速种子查找的索引' },
+    { title: '打分矩阵与罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '编辑距离的加权版本' }
   ]}
 />

@@ -11,7 +11,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 <SummaryBox
   summary="在单细胞测序中，我们面临两个核心挑战：如何识别 Read 来自哪个细胞？以及如何区分真实的分子与 PCR 重复？细胞 Barcode 与 UMI (Unique Molecular Identifier) 正是为此设计的分子标签。"
   bullets={[
-    '掌握细胞 Barcode 的作用：细胞身份的“身份证”',
+    '掌握细胞 Barcode 的作用：细胞身份的"身份证"',
     '理解 UMI 的统计原理：将 Read 计数转化为原始分子计数',
     '掌握 UMI 去重算法如何校正 PCR 扩增偏差',
     '了解 Barcode 纠错与白名单过滤的逻辑'
@@ -32,6 +32,17 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **逻辑**：被该液滴捕获的细胞，其所有的 mRNA 在逆转录后都会带上这个相同的标签。
 - **计算分配**：在拆分 (Demultiplexing) 阶段，算法根据 Barcode 将海量的 Reads 重新归类到各自的细胞中。
 
+### Barcode 的信息论考量
+
+Cell Barcode 的设计需要在两个目标之间取得平衡：
+
+- **唯一性**：能够区分实验中所有的细胞。对于 $N$ 个细胞，需要 $n$ 个碱基使得 $4^n \gg N$。10x Genomics v3 使用 16 bp Barcode，理论上可编码 $4^{16} \approx 4.3 \times 10^9$ 种组合。
+- **纠错能力**：测序过程中 Barcode 区域也可能发生碱基错误。设计上要求合法的 Barcode 之间保持足够的汉明距离（Hamming Distance），使得单个碱基错误不会被误判为另一个合法 Barcode。
+
+### Barcode 白名单 (Whitelist)
+
+并非所有 $4^{16}$ 种序列都能用作 Cell Barcode。厂商通过实验筛选出一组已知能正常工作的 Barcode 序列，构成**白名单**。在数据处理时，只保留与白名单匹配（或经纠错后匹配）的 Reads，其余视为无效数据。
+
 ## 2. UMI：标记分子身份
 
 **UMI (Unique Molecular Identifier)** 是一段随机生成的短序列（通常 10-12 bp）。
@@ -40,25 +51,144 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **去重逻辑**：如果多条具有相同 Barcode 的 Reads 映射到同一个基因且携带**相同的 UMI**，算法会将它们计为**一个原始分子**。
 
 ### UMI Count vs Read Count
+
 - **Read Count**：受 PCR 偏好性影响大，不能真实反映表达量。
 - **UMI Count**：反映了逆转录前的原始分子数，是目前单细胞定量的标准度量。
+
+### UMI 的数学模型
+
+假设基因 $g$ 在细胞 $c$ 中有 $n_{g,c}$ 个真实的 mRNA 分子被捕获，每个分子被分配一个 UMI。由于 UMI 空间（$4^{10} \approx 10^6$）通常远大于实际分子数（$n_{g,c} \ll 10^6$），UMI 碰撞的概率很低。
+
+UMI 去重的核心问题可以形式化为：给定同一 Barcode 下映射到同一基因的一组 UMI 序列集合 $U = \{u_1, u_2, \ldots, u_m\}$，如何推断原始分子数 $n$？
+
+理想情况下，如果每个 UMI 只来自一个分子，则 $n = |U|$（去重后的唯一 UMI 数量）。但测序错误会导致同一个 UMI 被错误读取为多个不同序列，因此需要纠错步骤。
 
 ## 3. 算法挑战：纠错与过滤
 
 ### 测序错误的处理
+
 如果 UMI 在测序中错了一个碱基，简单的完全匹配会将其计为两个分子。
 - **解决方案**：利用邻域聚类（如 UMI-tools 算法）。如果两个 UMI 的汉明距离为 1，且其中一个丰度远高于另一个，则将其合并。
 
+具体而言，UMI-tools 的方向性（directional）方法遵循以下逻辑：
+
+1. 对同一基因下的所有 UMI 按观测次数降序排列。
+2. 对于每个 UMI $u_i$，检查是否存在汉明距离为 1 的邻居 UMI $u_j$。
+3. 如果 $u_j$ 的观测次数 $< u_i / 2$，则将 $u_j$ 的所有 Reads 合并到 $u_i$。
+
+这一规则背后的直觉是：测序错误产生的变异 UMI 丰度应显著低于其正确来源的 UMI。
+
+### UMI-tools 的算法变体
+
+| 方法 | 策略 | 优点 | 缺点 |
+|------|------|------|------|
+| **Unique** | 仅保留完全匹配的 UMI | 最简单 | 严重低估分子数 |
+| **Cluster** | 基于汉明距离聚类 | 回收测序错误 | 可能合并不同分子 |
+| **Directional** | 基于频率的方向性合并 | 兼顾准确与回收 | 依赖频率差异足够大 |
+| **Adjacency** | 基于序列距离网络 | 处理多碱基错误 | 计算开销更大 |
+
 ### 膝点图 (Knee Plot) 与空液滴过滤
+
 并不是所有检测到的 Barcode 都代表真实细胞。
 - **背景噪声**：液滴中可能只含有环境 RNA（Ambient RNA）。
-- **过滤直觉**：将所有 Barcode 按 UMI 总数降序排列。真实细胞通常位于曲线的“膝部”上方，而噪音则处于平缓的尾部。
+- **过滤直觉**：将所有 Barcode 按 UMI 总数降序排列。真实细胞通常位于曲线的"膝部"上方，而噪音则处于平缓的尾部。
+
+### 空液滴检测的统计方法
+
+简单的膝点图依赖人工目视判断，不够鲁棒。更系统的方法包括：
+
+- **EmptyDrops**（Lun et al., 2019）：对每个 Barcode 计算 RNA 概率，使用 FDR 控制假阳性率。即使 UMI 总数较低，只要基因表达谱与已知细胞显著不同，也可判定为真实细胞。
+- **Barcode-Rank Inflection**：利用 Barcode 排名-丰度曲线的曲率变化自动识别拐点。
 
 ## 4. 表达矩阵 (Count Matrix) 的生成
 
 经过比对和去重，最终输出是一个**基因 $\times$ 细胞**的稀疏矩阵。
 - **维度**：通常为 $30,000$ 基因 $\times 10,000$ 细胞。
-- **稀疏性**：由于捕获效率限制，矩阵中 90% 以上的元素通常为 0（Dropout 现象）。
+- **稀疏性**：由于捕获效率限制，矩阵中 90% 以上为 0（Dropout 现象）。
+
+### 从 FASTQ 到 Count Matrix 的完整流程
+
+```
+原始 FASTQ 文件（Read 1: Barcode+UMI, Read 2: cDNA）
+    |
+    v
+Barcode 识别与白名单过滤（cellranger mkfastq / bcl2fastq）
+    |
+    v
+参考基因组比对（STAR / STARsolo）
+    |
+    v
+UMI 去重与计数（cellranger count / UMI-tools）
+    |
+    v
+稀疏表达矩阵（genes x cells, Matrix Market 格式）
+```
+
+### 矩阵的稀疏表示
+
+由于矩阵极度稀疏（通常 >90% 为 0），实际存储使用稀疏格式而非密集矩阵。常见的格式包括：
+
+- **Matrix Market (.mtx)**：坐标列表格式，仅存储非零元素及其行列索引。
+- **HDF5 (.h5)**：压缩的二进制格式，支持快速随机访问。
+- **AnnData / Seurat 对象**：在稀疏矩阵之上封装元数据、降维结果和注释信息。
+
+## 5. 技术细节：Barcode 与 UMI 的结构
+
+以 10x Genomics Chromium v3 为例，Read 1 的结构如下：
+
+```
+[16 nt Cell Barcode] [10 nt UMI] [接头序列]
+```
+
+- **Cell Barcode** 位于 Read 1 的最前端，长度 16 bp。
+- **UMI** 紧随 Barcode 之后，长度 10 bp。
+- 这两部分共同构成每个 Read 的"身份标识"，后续的 cDNA 序列（Read 2）提供实际的基因信息。
+
+### 不同平台的 Barcode 设计
+
+| 平台 | Barcode 长度 | UMI 长度 | Barcode 空间 | 特点 |
+|------|-------------|---------|-------------|------|
+| 10x Genomics v3 | 16 bp | 10 bp | ~750,000 (白名单) | 高通量液滴法 |
+| 10x Genomics v2 | 16 bp | 10 bp | ~750,000 (白名单) | 早期版本 |
+| Drop-seq | 12 bp | 8 bp | 较小 | 开源液滴法方案 |
+| Smart-seq2 | 无 Barcode | 无 UMI | N/A | 全长、无标签 |
+| inDrop | 8-11 bp | 6 bp | 可变 | 开源液滴法方案 |
+
+## 6. 为什么重要
+
+细胞 Barcode 与 UMI 是整个单细胞数据分析管线的**基石**。它们的质量直接决定了下游所有分析的可靠性：
+
+- **Barcode 错误分配**会导致细胞混合，使得原本来自不同细胞的 Reads 被错误合并，产生虚假的"混合态"细胞。
+- **UMI 去重不充分**会导致高表达基因的定量膨胀，夸大基因间的表达差异，影响差异表达分析的统计推断。
+- **空液滴过滤不当**会将背景 RNA 误判为细胞，引入噪音信号，干扰聚类和注释。
+
+## 7. 应用场景
+
+- **实验设计阶段**：根据目标细胞数选择合适的 Barcode 空间和 UMI 长度，避免 Barcode 碰撞。
+- **质控阶段**：通过 Barcode 排名图和 UMI 统计评估数据质量，识别和过滤空液滴。
+- **定量阶段**：通过 UMI 去重获得无 PCR 偏差的基因表达矩阵。
+- **多样本整合**：通过基因型或样本特异性 Barcode 实现多样本混池测序（如 Demuxlet, CellHashing）。
+
+## 8. 常见误区
+
+- **"UMI 完全消除了 PCR 偏差"**
+  - UMI 去重能校正 PCR 扩增的不均匀性，但无法解决捕获效率差异、转录本长度偏差等问题。UMI 计数仍然需要归一化才能进行跨细胞比较。
+
+- **"UMI 越长越好"**
+  - UMI 长度需要在分子区分能力和测序成本之间平衡。10 bp 的 UMI 空间（约 $10^6$）对于绝大多数单细胞实验已经足够，更长的 UMI 会挤占 Read 中可用于 cDNA 比对的空间。
+
+- **"膝点以上的所有 Barcode 都是真实细胞"**
+  - 膝点图只能过滤空液滴，无法区分单细胞与 Doublet（双联体）。Doublet 的 UMI 总数可能比许多单细胞更高。Doublet 检测需要专门的算法（如 Scrublet）。
+
+- **"所有 Barcode 纠错都是安全的"**
+  - 过于激进的纠错可能将两个碰巧汉明距离为 1 的不同 Barcode 合并。特别是在高细胞密度实验中，Barcode 碰撞的风险不可忽略。
+
+## 参考资料
+
+- Smith et al., 2017. *UMI-tools: Extracting cellular signals from multiplexed sequencing data.* Nature Methods.
+- Lun et al., 2019. *EmptyDrops: distinguishing cells from empty droplets in droplet-based single-cell RNA sequencing data.* Genome Biology.
+- Zheng et al., 2017. *Massively parallel digital transcriptional profiling of single cells.* Nature Communications (10x Genomics).
+- Macosko et al., 2015. *Highly parallel genome-wide expression profiling of individual cells using nanoliter droplets.* Cell (Drop-seq).
 
 ## 相关页面
 

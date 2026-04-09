@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 
 <SummaryBox
   summary="群体结构（Population Structure）是指样本并非来自遗传均匀的单一群体，而是由具有不同祖源背景的亚群构成。这种不均匀性是 GWAS 中虚假关联的主要来源，必须通过统计手段进行校正。"
@@ -37,12 +39,65 @@ $F_{ST}$ 用于量化亚群间的分化程度。
 - $F_{ST} = 1$：完全分化（亚群间固定了不同的等位基因）。
 - **直觉**：人类大洲间群体的 $F_{ST}$ 约为 0.1-0.15，说明 10-15% 的变异可由祖源差异解释。
 
+### $F_{ST}$ 的形式化定义
+
+考虑一个由 $K$ 个亚群组成的总体，设第 $k$ 个亚群的样本量为 $n_k$，等位基因 $A$ 在该亚群中的频率为 $p_k$。令总样本量为 $N = \sum_{k=1}^{K} n_k$，总体等位基因频率的加权均值为：
+
+$$\bar{p} = \sum_{k=1}^{K} \frac{n_k}{N} p_k$$
+
+则 $F_{ST}$ 可定义为：
+
+$$F_{ST} = \frac{\sum_{k=1}^{K} \frac{n_k}{N}(p_k - \bar{p})^2}{\bar{p}(1 - \bar{p})}$$
+
+分子衡量的是亚群间等位基因频率的**方差**，分母是总体等位基因频率的**理论方差**。$F_{ST}$ 越大，说明亚群间的遗传分化越强烈。
+
+### Wright 的分层模型
+
+Sewall Wright 将群体遗传变异分解为三个层级：
+
+$$F_{ST} = \frac{\sigma^2_{\text{between}}}{\sigma^2_{\text{total}}} = 1 - \frac{H_S}{H_T}$$
+
+其中 $H_S$ 是亚群内的平均杂合度（Expected Heterozygosity），$H_T$ 是总体的杂合度。这一分解直接告诉我们：$F_{ST}$ 衡量的是**亚群内丢失了多少遗传多样性**。
+
 ## 2. 识别工具：主成分分析 (PCA)
 
 PCA 是识别群体结构最常用的降维工具。
 - **逻辑**：将数百万个 SNP 投影到二维或三维空间中。
-- **发现**：研究证明，基因型的前两个主成分（PC1 和 PC2）往往能完美映射出样本的地理起源（如“欧洲地图”效应）。
+- **发现**：研究证明，基因型的前两个主成分（PC1 和 PC2）往往能完美映射出样本的地理起源（如"欧洲地图"效应）。
 - **算法用途**：在 GWAS 中将这些 PC 作为协变量，可以有效抵消背景差异。
+
+### PCA 在基因型数据上的数学框架
+
+设我们有 $n$ 个个体和 $m$ 个 SNP 位点。基因型矩阵 $\mathbf{X} \in \mathbb{R}^{n \times m}$，其中 $X_{ij}$ 为第 $i$ 个个体在第 $j$ 个位点上的基因型值（编码为 0、1、2）。
+
+PCA 的计算步骤如下：
+
+1. **中心化**：对每个 SNP 列减去其均值 $\mu_j$，得到 $\tilde{\mathbf{X}}$。
+2. **协方差矩阵**：计算 $\mathbf{C} = \frac{1}{m}\tilde{\mathbf{X}}\tilde{\mathbf{X}}^T$（注意此处是对 SNP 维度求平均，与标准 PCA 的 $1/n$ 不同，这是 EIGENSOFT 的做法）。
+3. **特征分解**：对 $\mathbf{C}$ 进行特征分解，取前 $d$ 个最大特征值对应的特征向量 $\mathbf{v}_1, \ldots, \mathbf{v}_d$。
+
+每个个体 $i$ 在第 $k$ 个主成分上的坐标为 $v_{ik}$。这些坐标就是我们在散点图中看到的"PC 值"。
+
+### 为什么前几个 PC 能反映祖源？
+
+直觉在于：如果群体中存在亚群结构，那么同一亚群的个体共享更多的等位基因。这种共享在基因型矩阵中表现为**行之间的相关性**——来自同一亚群的个体的行向量更为相似。PCA 的前几个主成分恰好捕捉了这种行间相关性最大的方向。
+
+### 谱分解法 vs. Nystrom 近似
+
+当 $n$ 很大时（如 UK Biobank 的 50 万样本），$n \times n$ 协方差矩阵的特征分解在计算上不可行。实际工具采用以下策略：
+
+<DefinitionList
+  items={[
+    {
+      term: '精确谱分解 (Exact Eigendecomposition)',
+      definition: '直接对协方差矩阵做特征分解。适用于样本量在数万以内的情况。EIGENSOFT 的早期版本采用此方法。',
+    },
+    {
+      term: '随机投影 (Randomized SVD)',
+      definition: '先通过随机矩阵将问题投影到低维空间，再进行精确分解。复杂度从 $O(n^3)$ 降至 $O(n^2 r)$，其中 $r$ 为目标维度。FlashPCA2 采用此策略。',
+    },
+  ]}
+/>
 
 ## 3. 群体混合 (Admixture) 模型
 
@@ -50,11 +105,96 @@ PCA 是识别群体结构最常用的降维工具。
 - **STRUCTURE/ADMIXTURE 算法**：假设存在 $K$ 个祖先群，计算每个个体来自这些祖先群的百分比。
 - **统计原理**：基于隐马尔可夫模型 (HMM) 或期望最大化 (EM) 算法，通过观测到的 SNP 组合反推最可能的祖源构成。
 
-## 4. 为什么它是 GWAS 的“幽灵”？
+### ADMIXTURE 的数学模型
+
+假设存在 $K$ 个祖先群体。对于个体 $i$，定义一个祖源比例向量 $\mathbf{q}_i = (q_{i1}, \ldots, q_{iK})$，满足 $\sum_{k=1}^{K} q_{ik} = 1$。
+
+每个祖先群体 $k$ 在第 $j$ 个 SNP 上具有等位基因频率 $f_{kj}$。个体 $i$ 在该位点上的基因型概率为：
+
+$$P(G_{ij} \mid \mathbf{q}_i, \{f_{kj}\}) = \sum_{k=1}^{K} q_{ik} \cdot P(G_{ij} \mid f_{kj})$$
+
+其中 $P(G_{ij} \mid f_{kj})$ 是在群体 $k$ 的等位基因频率下观察到该基因型的概率（基于 Hardy--Weinberg 平衡）。
+
+ADMIXTURE 使用**块松弛 EM (Block Relaxation EM)** 算法交替优化 $\mathbf{q}$ 和 $\mathbf{f}$，并引入正则化项防止过拟合。
+
+### 如何选择 $K$？
+
+$K$ 的选择是 Admixture 分析中的关键问题。常用的策略包括：
+
+- **交叉验证 (Cross-validation, CV)**：ADMIXTURE 内置 CV 功能，将数据随机分为训练集和验证集，选择使验证集似然最大的 $K$。CV 误差在 $K$ 增加时通常会先下降后趋于平坦，"拐点"处即为合理的 $K$ 值。
+- **进化先验**：结合考古学和语言学知识判断。例如对欧亚大陆人群，$K=3$ 通常能分离出非洲、欧洲和东亚三个主要祖源成分。
+
+## 4. 为什么它是 GWAS 的"幽灵"？
 
 如果在病例组中正好包含了较多来自亚群 A 的样本，而对照组多来自亚群 B：
 - 任何在 A 和 B 之间频率不同的 SNP（即便与疾病无关）都会在统计上显示显著关联。
 - **后果**：产生海量的假阳性信号，掩盖真实的致病变异。
+
+### 一个简单的数值例子
+
+假设我们研究某个疾病，病例组中 80% 来自亚群 A（某等位基因频率 $p_A = 0.6$），20% 来自亚群 B（$p_B = 0.2$）；对照组中 20% 来自 A，80% 来自 B。
+
+该等位基因在病例组中的混合频率为：
+$$p_{\text{case}} = 0.8 \times 0.6 + 0.2 \times 0.2 = 0.52$$
+
+在对照组中的混合频率为：
+$$p_{\text{control}} = 0.2 \times 0.6 + 0.8 \times 0.2 = 0.28$$
+
+尽管该等位基因与疾病完全无关，但由于两组的亚群构成不同，$p_{\text{case}}$ 与 $p_{\text{control}}$ 出现了巨大差异，在统计检验中将产生高度显著的假阳性信号。
+
+## 5. 在 GWAS 中校正群体结构
+
+### PCA 校正
+
+将 PCA 提取的前若干个主成分（通常是 PC1--PC10）作为协变量加入回归模型：
+
+$$Y_i = \beta_0 + \beta_g G_i + \sum_{k=1}^{d} \gamma_k \text{PC}_{ik} + \epsilon_i$$
+
+其中 $Y_i$ 是表型，$G_i$ 是基因型，$\text{PC}_{ik}$ 是第 $k$ 个主成分。$\beta_g$ 即为校正群体结构后的关联效应。
+
+### 线性混合模型 (Linear Mixed Model, LMM)
+
+当群体结构非常复杂（如存在隐匿的亲缘关系或精细分层）时，PCA 可能不足以完全捕获混杂。LMM 通过引入**遗传亲缘关系矩阵 (Genetic Relationship Matrix, GRM)** 来建模个体间的全基因组相似度：
+
+$$\mathbf{K} = \frac{1}{m}\tilde{\mathbf{X}}\tilde{\mathbf{X}}^T$$
+
+LMM 的模型形式为：
+
+$$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \mathbf{u} + \boldsymbol{\epsilon}$$
+
+其中 $\mathbf{u} \sim \mathcal{N}(\mathbf{0}, \sigma_g^2 \mathbf{K})$ 为随机效应，$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \sigma_e^2 \mathbf{I})$ 为残差。$\sigma_g^2 / (\sigma_g^2 + \sigma_e^2)$ 被称为**遗传力 (Heritability)** 的 SNP 估计值。
+
+LMM 的优势在于：即使不显式提取 PC，GRM 本身就已经编码了所有成对亲缘关系信息，因此能更灵活地处理复杂的群体结构。
+
+### PCA 与 LMM 的选择
+
+| 特征 | PCA 校正 | LMM |
+| :--- | :--- | :--- |
+| 计算速度 | 快 | 较慢（需估计方差分量） |
+| 模型假设 | 线性协变量 | 正态随机效应 |
+| 适用场景 | 中等程度群体分层 | 近亲、精细分层、样本间亲缘关系复杂 |
+| 代表工具 | PLINK, EIGENSOFT | GEMMA, BOLT-LMM, SAIGE |
+
+## 6. 常见误区
+
+<PitfallsBox
+  items={[
+    '将 PCA 的前两个主成分当作"种族"的替代指标。PC 反映的是连续的遗传梯度，而非离散的分类。强行将 PC 空间划分为"种族"会丢失大量信息。',
+    '在 GWAS 中忽略群体结构校正就直接进行关联分析。未校正的 GWAS 结果几乎一定会产生大量假阳性，特别是在多中心、跨祖源的研究中。',
+    '混淆 $F_{ST}$ 与遗传距离。$F_{ST}$ 衡量的是群体间的相对分化程度，而遗传距离（如 Nei 距离）衡量的是绝对差异。两者在不同场景下的解读不同。',
+    'Admixture 分析中盲目追求最大的 $K$ 值。更大的 $K$ 并不意味着更好的生物学解释，过大的 $K$ 会将噪音拟合为"祖源成分"。',
+    '假设 PCA 校正后的残差就完全消除了群体混杂。如果真实群体结构与提取的 PC 不对齐（如存在 PCA 无法捕获的精细结构），残差中仍可能残留混杂信号。'
+  ]}
+/>
+
+## 7. 应用场景
+
+群体结构分析不仅服务于 GWAS，还广泛应用于以下领域：
+
+- **祖源推断 (Ancestry Inference)**：在法医学中推断未知样本的地理来源；在临床遗传学中识别患者的祖源背景以选择合适的参考面板。
+- **自然选择检测**：通过 $F_{ST}$ 扫描寻找在特定人群中受到强烈选择的基因组区域，如乳糖酶基因（LCT）在欧洲人群中的选择性清除。
+- **群体历史重建**：结合 PCA 和 Admixture 分析重建人类走出非洲、跨大陆迁徙的历史。
+- **复制研究设计**：在跨祖源的 GWAS 复制研究中，合理匹配病例组和对照组的祖源构成是保证复制可靠性的前提。
 
 ## 相关页面
 
@@ -62,6 +202,7 @@ PCA 是识别群体结构最常用的降维工具。
   links={[
     { title: 'GWAS 分析', to: '/wiki-bioinfo/population/gwas', description: '如何利用 PCA 校正混杂' },
     { title: 'Hardy–Weinberg 平衡', to: '/wiki-bioinfo/population/hardy-weinberg', description: '群体混合导致的平衡偏离' },
+    { title: '连锁不平衡', to: '/wiki-bioinfo/population/linkage-disequilibrium', description: '群体混合产生的假性 LD' },
     { title: '机器学习基础', to: '/wiki-bioinfo/ml-bioinfo', description: '理解 PCA 的数学底蕴' }
   ]}
 />

@@ -12,7 +12,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   summary="精确字符串匹配是序列分析中最基础的问题：给定一个模式串 P 和一个长文本 T，找出 P 在 T 中出现的所有位置。它是索引构建、引物设计和快速数据库搜索的底层逻辑。"
   bullets={[
     '掌握朴素匹配算法（Naive Matching）的时间复杂度 bottleneck',
-    '理解“预处理” (Preprocessing) 思想：利用已匹配信息减少重复比较',
+    '理解"预处理" (Preprocessing) 思想：利用已匹配信息减少重复比较',
     '了解生物学背景下海量数据对算法 $O(nm)$ 复杂度的严苛挑战',
     '对比 KMP、Boyer-Moore 和基于索引的匹配策略'
   ]}
@@ -27,8 +27,30 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 1. 问题定义
 
-**精确字符串匹配 (Exact Pattern Matching)**：
-给定文本 $T$ (长度 $n$) 和模式串 $P$ (长度 $m$)，找出所有起始位置 $i$，使得 $T[i \dots i+m-1] = P$。
+<DefinitionList
+  items={[
+    {
+      term: '精确字符串匹配 (Exact Pattern Matching)',
+      definition: '给定文本 $T$（长度 $n$）和模式串 $P$（长度 $m$），找出所有起始位置 $i$，使得 $T[i \dots i+m-1] = P$。',
+    },
+    {
+      term: '出现 (Occurrence)',
+      definition: '模式串 $P$ 在文本 $T$ 中的某次匹配，由起始位置 $i$ 唯一确定。',
+    },
+  ]}
+/>
+
+**形式化定义**：
+给定文本 $T = t_0 t_1 \dots t_{n-1}$ 和模式串 $P = p_0 p_1 \dots p_{m-1}$，输出所有位置 $i \in \{0, 1, \dots, n-m\}$，使得
+
+$$
+T[i \dots i+m-1] = P
+$$
+
+### 输入与输出
+
+- **输入**：文本 $T$（长度 $n$），模式串 $P$（长度 $m$），$m \leq n$。
+- **输出**：匹配位置集合 $\{i \mid T[i..i+m-1] = P\}$。
 
 ### 生物学应用
 - **Motif 扫描**：查找已知的转录因子结合位点。
@@ -42,16 +64,73 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **复杂度**：最坏情况下为 $O(nm)$。
 - **致命弱点**：它完全无视了已经匹配过的字符信息。如果 $P = \text{AAAAAB}$，而 $T$ 是一长串 `A`，算法每次都要比较到最后一位才发现失败，然后仅仅右移一位重新开始。
 
+### 伪代码
+
+```
+输入：文本 T[0..n-1]，模式串 P[0..m-1]
+输出：所有匹配位置
+
+for i = 0 to n - m:
+    j = 0
+    while j < m and T[i+j] == P[j]:
+        j = j + 1
+    if j == m:
+        输出匹配位置 i
+```
+
+### worked example
+
+在文本 $T = \text{ACGACGAC}$ 中查找 $P = \text{ACG}$：
+
+| 对齐位置 $i$ | 比较 | 结果 |
+|:---:|:---:|:---:|
+| 0 | `ACG` vs `ACG` | 匹配 |
+| 1 | `CGA` vs `ACG` | 失配（第 0 位） |
+| 2 | `GAC` vs `ACG` | 失配（第 0 位） |
+| 3 | `ACG` vs `ACG` | 匹配 |
+| 4 | `CGA` vs `ACG` | 失配（第 0 位） |
+| 5 | `GAC` vs `ACG` | 失配（第 0 位） |
+
+匹配位置：$\{0, 3\}$。共执行 $3 \times 1 + 3 \times 1 = 6$ 次字符比较。
+
+### 最坏情况分析
+
+考虑 $T = \text{AAAA}\dots\text{A}$（$n$ 个 A），$P = \text{AAA}\dots\text{AB}$（$m-1$ 个 A 加一个 B）：
+- 每次对齐都比较 $m$ 个字符，前 $m-1$ 次全部匹配，最后一个失配。
+- 共 $n - m + 1$ 次对齐，每次 $m$ 次比较。
+- 总比较次数：$(n - m + 1) \cdot m = O(nm)$。
+
 ## 3. 预处理的直觉：变聪明一点
+
+精确匹配的关键瓶颈在于：朴素算法在失配后完全丢弃已匹配的信息，每次只右移一位。三种经典算法从不同角度利用已匹配信息来加速搜索：
+
+| 算法 | 利用什么信息 | 如何加速 |
+|:---:|:---:|:---:|
+| KMP | 模式串自身的重复前缀-后缀结构 | 失配时跳转到最长可复用前缀 |
+| Boyer-Moore | 失配字符在模式串中的出现位置 | 跳过不可能匹配的大段文本 |
+| Rabin-Karp | 滑动窗口哈希值的一致性 | 用 $O(1)$ 哈希比较代替 $O(m)$ 逐位比较 |
 
 为了突破 $O(nm)$，我们需要在匹配之前对模式串 $P$ 进行**预处理**：
 
 ### KMP 算法的思路
+
 利用模式串自身的重复结构。如果匹配到一半失败了，我们已经知道文本的前几个碱基是什么。
-- **Failure Function**：预先计算好如果某位失配，模式串应该“跳”到哪个前缀继续。
+- **Failure Function**：预先计算好如果某位失配，模式串应该"跳"到哪个前缀继续。
+- **时间复杂度**：预处理 $O(m)$，匹配 $O(n + m)$，总体 $O(n + m)$。
 
 ### Boyer-Moore 算法的思路
+
 从右向左匹配。如果你在 $P$ 的末尾发现了一个根本不在 $P$ 中出现的碱基（如文本里是 `G`，而 $P$ 只有 `AT`），你可以直接把整个模式串跳过 $m$ 位。
+- **Bad Character Rule**：根据失配字符在模式串中的最右出现位置计算跳转距离。
+- **Good Suffix Rule**：根据已匹配后缀在模式串前缀中的出现位置计算跳转距离。
+- **平均时间复杂度**：$O(n/m)$，在模式串较长时极为高效。
+
+### Rabin-Karp 算法的思路
+
+将模式串的匹配转化为哈希值的比较。
+- **核心思想**：为文本的每个窗口计算滚动哈希值，仅当哈希值相同时才进行逐字符验证。
+- **优势**：天然支持多模式匹配（多个模式串共享同一哈希扫描过程）。
+- **时间复杂度**：平均 $O(n + m)$，最坏 $O(nm)$（哈希碰撞过多时）。
 
 ## 4. 大规模数据的挑战
 
@@ -60,12 +139,73 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - 经过优化的 $O(n)$ 算法（如 KMP）只需几秒。
 - **终极方案**：当文本 $T$ 固定而查询 $P$ 非常多时，我们不再扫描文本，而是对文本构建**索引**（如 Suffix Tree 或 BWT），将匹配时间降至 $O(m)$。
 
+### 算法选择指南
+
+| 场景 | 推荐算法 | 原因 |
+|:---:|:---:|:---:|
+| 单次查询，模式短 | Boyer-Moore | 平均 $O(n/m)$，实际最快 |
+| 单次查询，需要最坏保证 | KMP | $O(n+m)$ 最坏保证 |
+| 多个模式同时查询 | Rabin-Karp / Aho-Corasick | 共享扫描过程 |
+| 文本固定，海量查询 | 索引 (FM-index / Suffix Array) | 查询 $O(m)$，与 $n$ 无关 |
+
+## 5. 复杂度与适用前提
+
+### 复杂度总结
+
+| 算法 | 预处理时间 | 匹配时间 | 空间 |
+|:---:|:---:|:---:|:---:|
+| 朴素 | $O(1)$ | $O(nm)$ | $O(1)$ |
+| KMP | $O(m)$ | $O(n+m)$ | $O(m)$ |
+| Boyer-Moore | $O(m+|\Sigma|)$ | $O(n/m)$ 平均 | $O(|\Sigma|)$ |
+| Rabin-Karp | $O(m)$ | $O(n+m)$ 平均 | $O(1)$ |
+
+### 适用前提
+
+- 精确匹配要求查询序列与目标序列之间不存在变异或测序错误。在真实的 Read Mapping 中，精确匹配仅适用于**种子阶段 (Seeding)**。
+- 生物学序列的字母表很小（DNA: $|\Sigma|=4$，蛋白质: $|\Sigma|=20$），这意味着 Bad Character Rule 等启发式的跳转距离受限，Boyer-Moore 在 DNA 上的优势不如在英文文本上明显。
+
+### 与真实工具的连接
+
+| 工具 | 匹配策略 | 说明 |
+|:---:|:---:|:---:|
+| **BWA-MEM** | FM-index 精确种子 + 动态规划延伸 | 种子阶段使用精确匹配，延伸阶段使用近似匹配 |
+| **Bowtie2** | FM-index + 逆向搜索 | 同上，针对不同读长优化 |
+| **BLAST** | k-mer 哈希种子 + 无空位延伸 + 带空位延伸 | 经典的种子-延伸架构 |
+| **MUMmer** | Suffix Tree + 最大唯一匹配 | 全基因组比对，基于精确匹配的 MUMs |
+| **KRAKEN2** | 最小完美哈希 + 精确 k-mer 匹配 | 物种分类，完全依赖精确匹配 |
+
+### 字母表大小对算法性能的影响
+
+DNA 序列的字母表仅有 4 个字符（$|\Sigma|=4$），这对算法设计有重要影响：
+
+- **Boyer-Moore 的 Bad Character Rule** 跳转距离期望为 $\frac{|\Sigma|}{|\Sigma|-1}$，当 $|\Sigma|$ 很小时跳转效果有限。在 DNA 上，平均跳转距离仅约 $4/3 \approx 1.33$ 位。
+- **KMP** 不依赖字母表大小，因此在 DNA 序列上相对更稳定。
+- **Rabin-Karp** 的哈希碰撞概率为 $1/|\Sigma|^k$（$k$ 位哈希），$|\Sigma|$ 越小碰撞越多，需要更长的哈希或更好的哈希函数。
+
+蛋白质序列（$|\Sigma|=20$）的情况则完全不同，Boyer-Moore 的优势更加明显。
+
+## 6. 常见误区
+
+### KMP 总是最快的精确匹配算法
+
+不是。KMP 的优势在于最坏情况的 $O(n+m)$ 保证，但在实际生物序列中，Boyer-Moore 的平均性能往往更好（尤其在蛋白质序列上，因为 $|\Sigma|=20$ 使得 Bad Character Rule 更有效）。当需要处理大量查询时，基于索引的方法（如 FM-index）远优于任何单模式匹配算法。
+
+### 朴素算法在实际中毫无用处
+
+朴素算法在某些场景下仍然有用：当模式串极短（如 $m=1$ 或 $m=2$）时，预处理的开销无法被摊销；当只需要知道"是否存在至少一个匹配"时，朴素算法可以提前终止。
+
+### 精确匹配可以直接用于基因组比对
+
+不可以。真实的测序数据中几乎一定包含测序错误（错配和 Indel），基因组本身也存在 SNP 和结构变异。精确匹配在基因组比对中仅作为种子查找的第一步，后续必须配合近似匹配算法（如动态规划）才能完成完整比对。
+
 ## 相关页面
 
 <RelatedLinks
   links={[
     { title: 'KMP 算法', to: '/wiki-bioinfo/sequence/kmp-algorithm', description: '利用失效函数的线性匹配' },
     { title: 'Boyer-Moore 算法', to: '/wiki-bioinfo/sequence/boyer-moore-algorithm', description: '大跨度跳跃的匹配策略' },
-    { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '处理海量查询的文本预索引' }
+    { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '处理海量查询的文本预索引' },
+    { title: 'Trie 与多模式匹配', to: '/wiki-bioinfo/sequence/trie-and-multi-pattern-matching', description: '同时搜索多个模式的算法' },
+    { title: '精确匹配与近似匹配', to: '/wiki-bioinfo/sequence/exact-vs-approximate', description: '从精确到近似的桥梁' }
   ]}
 />

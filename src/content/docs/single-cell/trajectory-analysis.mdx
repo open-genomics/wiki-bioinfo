@@ -9,11 +9,11 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="单细胞测序捕捉的是细胞发育过程中的“瞬间快照”。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。"
+  summary="单细胞测序捕捉的是细胞发育过程中的"瞬间快照"。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。"
   bullets={[
     '理解伪时间 (Pseudotime) 的概念：基于转录组距离而非物理时间',
     '掌握轨迹建模的拓扑结构：线性、分支（Bifurcation）、循环与树状',
-    '理解 RNA Velocity 及其在推断细胞“演化方向”中的前瞻性作用',
+    '理解 RNA Velocity 及其在推断细胞"演化方向"中的前瞻性作用',
     '掌握主流工具（Monocle, PAGA, scVelo）的底层算法直觉'
   ]}
 />
@@ -33,7 +33,35 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **假设**：如果群体中存在处于不同发育阶段的细胞，那么通过计算它们之间的转录组相似性，我们可以将它们排序。
 - **伪时间 (Pseudotime)**：定义为细胞沿发育路径相对于起始点的距离。
 
-## 2. 轨迹拓扑与图论建模
+### 为什么需要伪时间？
+
+传统的聚类分析只能告诉我们"有哪些类型的细胞"，但无法回答"这些细胞是如何从一个状态过渡到另一个状态的"。伪时间分析的核心价值在于：
+
+- **重建分化路径**：从干细胞到成熟细胞的连续状态变化。
+- **识别分支点**：细胞命运决定的精确时刻。
+- **发现过渡态**：处于两个已知类型之间的中间状态。
+- **量化动态基因**：随分化过程表达量发生变化的基因。
+
+## 2. 要解决什么生物信息学问题
+
+### 形式化问题定义
+
+**输入**：
+- 基因 $\times$ 细胞的表达矩阵 $X \in \mathbb{R}^{G \times N}$
+- 可选：降维后的嵌入（PCA 或扩散映射空间中的细胞坐标）
+- 可选：聚类的先验信息（用于约束或引导轨迹构建）
+
+**输出**：
+- 每个细胞的伪时间值 $t_i \in [0, 1]$（0 为起点，1 为终点）
+- 轨迹的拓扑结构（线性、分支、树状、循环）
+- 沿伪时间变化的差异表达基因
+- 分支点的位置和对应的基因表达模式
+
+**核心约束**：
+- 伪时间是序数关系，不等于真实的物理时间
+- 轨迹应反映细胞状态的连续变化，而非离散跳变
+
+## 3. 轨迹拓扑与图论建模
 
 轨迹推断本质上是在降维后的空间中寻找**路径**。
 
@@ -54,27 +82,211 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 3. RNA Velocity：向量场的力量
+### 主曲线 (Principal Curves) 方法
 
-传统的轨迹推断是“回溯式”的，而 **RNA Velocity** 提供了“预测性”的视角。
+主曲线是线性 PCA 在非线性场景下的推广。给定数据点 $\{x_1, \ldots, x_N\}$，主曲线 $f(\lambda)$ 是一条通过数据"中间"的光滑曲线，满足自一致性条件：
+
+$$
+\mathbb{E}[X \mid \lambda_f(X) = \lambda] = f(\lambda)
+$$
+
+其中 $\lambda_f(x)$ 是点 $x$ 在曲线 $f$ 上的投影参数。
+
+Monocle 2 使用的 DDRTree 算法通过以下步骤近似主曲线：
+
+1. 在降维空间中学习一个低维流形嵌入。
+2. 在流形上构建最小生成树 (Minimum Spanning Tree)。
+3. 将每个细胞投影到树上，获得伪时间值。
+
+### PAGA：基于图的拓扑推断
+
+PAGA (Partition-based Graph Abstraction) 在聚类后的 cluster 图上工作，而非单个细胞层面：
+
+1. 对每个 cluster $C_i$，计算其与相邻 cluster $C_j$ 之间的连接强度：
+
+$$
+w_{ij} = \frac{|\{(u,v) : u \in C_i, v \in C_j, (u,v) \in E\}|}{\sqrt{|C_i| \cdot |C_j|}}
+$$
+
+2. 基于连接强度构建 cluster 间的拓扑图。
+3. 通过阈值化保留显著的连接，过滤噪音连接。
+
+PAGA 的优势在于对离散化（聚类）的依赖使其对单细胞噪音具有天然的鲁棒性。
+
+### 常见轨迹拓扑结构
+
+| 拓扑类型 | 典型生物学场景 | 代表工具 |
+|---------|--------------|---------|
+| **线性** | 细胞成熟、分化终末 | Slingshot, Monocle 2 |
+| **二分叉** | 二选一的命运决定 | Monocle 3, Slingshot |
+| **多分支树** | 血细胞分化（多谱系） | PAGA + Monocle 3 |
+| **循环** | 细胞周期、昼夜节律 | Cyclone, scVelo |
+| **图/网络** | 可逆的状态转换 | Palantir |
+
+## 4. RNA Velocity：向量场的力量
+
+传统的轨迹推断是"回溯式"的，而 **RNA Velocity** 提供了"预测性"的视角。
 
 ### 核心直觉
-- **未剪接 RNA (Unspliced)**：刚转录出来的原始信号。
-- **已剪接 RNA (Spliced)**：成熟的信号。
-- **逻辑**：如果一个基因的未剪接量远高于稳态比例，说明它正在“加速”表达。
-- **结果**：通过对数千个基因的速率进行矢量求和，我们可以得到每个细胞在 UMAP 空间中的“速度矢量”，直接指出它接下来将演化成哪种状态。
 
-## 4. 算法权衡与误区
+- **未剪接 RNA (Unspliced)**：刚转录出来的原始信号，包含内含子序列。
+- **已剪接 RNA (Spliced)**：成熟的信号，内含子已被移除。
+- **逻辑**：如果一个基因的未剪接量远高于稳态比例，说明它正在"加速"表达。
+- **结果**：通过对数千个基因的速率进行矢量求和，我们可以得到每个细胞在嵌入空间中的"速度矢量"，直接指出它接下来将演化成哪种状态。
 
-| 特性 | 轨迹推断 (Pseudotime) | RNA Velocity |
-| :--- | :--- | :--- |
-| **基础** | 细胞间的静态距离 | 剪接与降解的动力学 |
-| **方向** | 需要手动指定起点 | 自动推断方向 |
-| **敏感度** | 对大尺度过程敏感 | 对瞬时动态敏感 |
+### RNA Velocity 的数学模型
 
-**常见误区**：
-- **UMAP 形状就是轨迹**：错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。
-- **伪时间等于真实时间**：错误。细胞在不同阶段的停留时间不同，伪时间反映的是状态变化量。
+scVelo 使用以下转录动力学模型。对于每个基因 $g$，其剪接动力学由一对常微分方程描述：
+
+$$
+\frac{du_g}{dt} = \alpha_g(t) - \beta_g \cdot u_g
+$$
+
+$$
+\frac{ds_g}{dt} = \beta_g \cdot u_g - \gamma_g \cdot s_g
+$$
+
+其中：
+- $u_g$ 是基因 $g$ 的未剪接 mRNA 数量
+- $s_g$ 是基因 $g$ 的已剪接 mRNA 数量
+- $\alpha_g(t)$ 是转录速率（Transcription Rate）
+- $\beta_g$ 是剪接速率（Splicing Rate）
+- $\gamma_g$ 是降解速率（Degradation Rate）
+
+在稳态（Steady State）下，$\frac{du}{dt} = 0$ 且 $\frac{ds}{dt} = 0$，因此：
+
+$$
+s^* = \frac{\beta}{\gamma} u^*
+$$
+
+偏离稳态的方向指示了该基因表达的动态趋势。对所有基因的速度向量进行聚合，得到细胞的速度向量：
+
+$$
+v_c = \sum_{g} \hat{\alpha}_g(c) \cdot e_g
+$$
+
+其中 $\hat{\alpha}_g(c)$ 是基因 $g$ 在细胞 $c$ 中的估计转录速率，$e_g$ 是对应的嵌入空间方向。
+
+### 隐时间 (Latent Time)
+
+scVelo 还引入了**隐时间**的概念，基于每个细胞的基因表达偏离稳态的程度来推断"发育时钟"：
+
+$$
+\tau_c = \frac{1}{G} \sum_{g} \frac{s_{g,c}}{s_g^*}
+$$
+
+隐时间与伪时间不同：它基于动力学的内在时间尺度，而非外部路径距离。
+
+## 5. Worked Example：造血干细胞分化
+
+假设我们有一批包含造血干细胞（HSC）及其分化后代的单细胞数据。
+
+**步骤 1 - 降维与聚类**：
+- PCA 降维后进行 Leiden 聚类，识别出 5 个 cluster。
+- 通过 marker 基因注释：HSC、髓系祖细胞、淋巴系祖细胞、单核细胞、T 细胞。
+
+**步骤 2 - PAGA 拓扑推断**：
+- 构建 cluster 间的连接图。
+- 发现 HSC 同时连接髓系祖细胞和淋巴系祖细胞，确认分支拓扑。
+- 单核细胞只与髓系祖细胞相连，T 细胞只与淋巴系祖细胞相连。
+
+**步骤 3 - RNA Velocity 分析**：
+- 计算 velocity 向量。
+- 在 HSC cluster 中，速度向量指向髓系祖细胞和淋巴系祖细胞两个方向。
+- 在髓系祖细胞中，速度向量统一指向单核细胞方向。
+- 在终末分化细胞（单核细胞、T 细胞）中，速度趋近于零，符合"分化终点"的预期。
+
+**步骤 4 - 差异表达基因**：
+- 沿伪时间排列基因表达变化。
+- 发现转录因子 *PU.1* 在髓系分支上调，*GATA3* 在淋巴系分支上调，确认它们是命运决定的关键调控因子。
+
+## 6. 复杂度与适用前提
+
+### 计算复杂度
+
+| 方法 | 时间复杂度 | 空间复杂度 | 主要瓶颈 |
+|------|-----------|-----------|---------|
+| **Monocle 3 (DDRTree)** | $O(N \cdot d \cdot I)$ | $O(Nd)$ | 降维迭代 |
+| **Slingshot** | $O(N \cdot d + N \cdot K)$ | $O(Nd)$ | 最小生成树 |
+| **PAGA** | $O(K^2 + E)$ | $O(K^2)$ | cluster 间连接 |
+| **scVelo** | $O(N \cdot G + N \cdot G \cdot I)$ | $O(NG)$ | 基因级 ODE 求解 |
+
+其中 $N$ 为细胞数，$d$ 为嵌入维度，$I$ 为迭代次数，$K$ 为 cluster 数，$G$ 为基因数。
+
+### 适用前提与潜在陷阱
+
+| 前提假设 | 潜在问题 | 应对策略 |
+|----------|----------|----------|
+| 发育过程可被截面数据重建 | 动态过程可能无截面覆盖 | 确保采样覆盖发育各阶段 |
+| 细胞状态连续变化 | 跳跃式的状态转换（如 EMT） | 考虑非连续的模型 |
+| 基因表达反映细胞状态 | 技术噪音掩盖信号 | 预处理去除噪音基因 |
+| RNA Velocity 的稳态假设成立 | 基因特异性剪接/降解速率差异 | 使用动态模型替代稳态模型 |
+| 轨迹在低维空间可分 | 复杂的轨迹在高维空间中纠缠 | 尝试不同的降维方法 |
+
+## 7. 与真实工具的连接
+
+### 工具选择决策
+
+| 场景 | 推荐工具 | 理由 |
+|------|----------|------|
+| 线性分化、简单轨迹 | Slingshot | 速度快，基于最小生成树，简单直观 |
+| 复杂分支结构 | Monocle 3 + PAGA | 支持任意拓扑，可视化丰富 |
+| 需要预测演化方向 | scVelo | RNA Velocity 提供前瞻性信息 |
+| 细胞周期分析 | Cyclone / scVelo | 专门针对循环轨迹设计 |
+| 连续的命运概率 | Palantir | 输出每个细胞到各终点的概率 |
+
+### 标准分析流程中的位置
+
+```
+表达矩阵 + 质控
+    |
+    v
+降维（PCA） + 聚类（Leiden）
+    |
+    v
+拓扑推断（PAGA）确定轨迹结构
+    |
+    v
+路径学习（Monocle 3 / Slingshot）分配伪时间
+    |
+    v
+RNA Velocity（scVelo）验证方向
+    |
+    v
+差异表达基因 + 转录因子分析
+    |
+    v
+可视化（沿伪时间的基因表达热图、速度流场图）
+```
+
+## 8. 常见误区
+
+- **"UMAP 形状就是轨迹"**
+  - 错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。UMAP 的全局拓扑不可靠。
+
+- **"伪时间等于真实时间"**
+  - 错误。细胞在不同阶段的停留时间不同，伪时间反映的是状态变化量而非物理时间。一个细胞在祖细胞阶段停留数天，但在分化末期可能只有数小时。
+
+- **"RNA Velocity 向量指向的终点就是命运"**
+  - 需谨慎解读。Velocity 反映的是当前的瞬时趋势，而非长期命运。在分支点附近，速度向量可能不确定。
+
+- **"所有基因都应纳入 velocity 计算"**
+  - 只有表达量足够高且具有显著剪接动力学变化的基因才应纳入。低表达基因的 velocity 估计不可靠。
+
+- **"轨迹方法可以处理所有类型的动态过程"**
+  - 大多数轨迹方法假设发育是单向的。对于可逆的状态转换（如细胞激活/静息），需要专门的工具（如 Palantir 的扩散伪时间）。
+
+- **"分支点一定是生物学上的命运决定点"**
+  - 算法检测到的分支可能是技术假象（如 batch effect）。应通过分支点附近的差异表达基因和已知生物学知识进行验证。
+
+## 参考资料
+
+- Street et al., 2018. *Slingshot: cell lineage and pseudotime inference for single-cell transcriptomics.* BMC Genomics.
+- Cao et al., 2019. *The single-cell transcriptional landscape of mammalian organogenesis.* Nature (PAGA).
+- Bergen et al., 2020. *Generalizing RNA velocity to transient cell states through dynamical modeling.* Nature Biotechnology (scVelo).
+- Trapnell et al., 2014. *The dynamics and regulators of cell fate decisions are revealed by pseudotemporal ordering of single cells.* Nature Biotechnology (Monocle).
+- Setty et al., 2019. *Characterization of cell fate probabilities in single-cell data with Palantir.* Nature Biotechnology.
+- Saelens et al., 2019. *A comparison of single-cell trajectory inference methods.* Nature Biotechnology.
 
 ## 相关页面
 

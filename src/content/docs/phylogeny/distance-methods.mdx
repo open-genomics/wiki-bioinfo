@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能“解释”这些距离的树。"
+  summary="与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能"解释"这些距离的树。"
   bullets={[
     '理解从多序列比对到距离矩阵的压缩过程',
     '掌握常见的演化距离度量（如 Hamming、Jukes-Cantor）',
@@ -25,13 +25,34 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 1. 核心流程：从序列到树
+## 1. 要解决什么生物信息学问题？
+
+基于距离的方法要解决的核心问题是：**给定一组生物序列，如何高效地重建它们之间的进化关系？**
+
+距离法的策略是将复杂的序列比对数据压缩为一个简洁的距离矩阵，然后在距离矩阵上应用图论算法来构建系统发育树。这种"先压缩、再建树"的两阶段策略虽然在信息上有所损失，但在计算效率上具有显著优势。
+
+## 2. 输入与输出
+
+### 输入
+- 多序列比对结果（通常为 FASTA 或 Clustal 格式）。
+- 距离度量函数的选择（如 p-distance、Jukes-Cantor 等）。
+
+### 输出
+- 一棵带权的系统发育树 $T = (V, E, w)$，其中叶子节点对应输入序列，边权表示进化距离。
+
+## 3. 核心思想与数学模型
+
+### 核心流程：从序列到树
 
 基于距离的方法通常分为两个独立步骤：
 1.  **距离估计**：通过比对计算每对序列之间的演化距离，填充 $n \times n$ 的距离矩阵 $D$。
 2.  **树构建**：应用特定算法（如 UPGMA 或 NJ）根据矩阵 $D$ 推断树拓扑结构和边权。
 
-## 2. 什么是“演化距离”？
+### 两阶段范式的意义
+
+将距离估计和树构建分离有一个重要优势：两个阶段可以独立优化。距离估计阶段可以使用复杂的序列进化模型来获得更准确的距离，而树构建阶段可以使用高效的图论算法来处理大规模数据。
+
+## 4. 什么是"演化距离"？
 
 距离矩阵中的每一个值 $D_{ij}$ 应该反映物种 $i$ 和 $j$ 自共同祖先分化以来积累的替换总数。
 
@@ -39,11 +60,15 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     {
       term: 'p-distance',
-      definition: '简单的差异比例（错配数 / 比对长度）。虽然直观，但在分化时间较长时会因为“多次替换”而低估真实距离。',
+      definition: '简单的差异比例（错配数 / 比对长度）。虽然直观，但在分化时间较长时会因为"多次替换"而低估真实距离。',
     },
     {
-      term: '模型校正距离',
-      definition: '如 Jukes-Cantor (JC) 模型，通过数学公式补偿多次替换，使距离更接近真实的演化事件数。',
+      term: 'Jukes-Cantor (JC) 距离',
+      definition: '最简单的核苷酸替换模型。假设四种碱基的替换概率相等，通过公式 $d = -\frac{3}{4}\ln(1 - \frac{4}{3}p)$ 将 p-distance 校正为估计的真实替换数。',
+    },
+    {
+      term: 'Kimura 2-Parameter (K2P) 距离',
+      definition: '区分转换 (Transition, Ti) 和颠换 (Transversion, Tv) 两种替换类型。由于 Ti 的发生频率通常高于 Tv，K2P 比 JC 更准确地估计距离。',
     },
     {
       term: '超度量 (Ultrametric)',
@@ -52,21 +77,147 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 3. 距离法的优缺点
+### 距离校正的必要性
+
+p-distance 的问题在于"饱和效应"：当两个序列分化时间足够长时，同一个位点可能经历了多次替换。例如，一个位点从 A 变成 G，后来又从 G 变成 T，但我们在比对中只能看到一个差异（A vs T），却错过了中间的替换事件。
+
+p-distance 与真实替换数 $d$ 的关系可以用以下公式近似（Jukes-Cantor 模型下）：
+$$p = \frac{3}{4}\left(1 - e^{-\frac{4}{3}d}\right)$$
+
+当 $d$ 较小时，$p \approx d$，p-distance 是合理的近似。但当 $d$ 较大时，$p$ 趋近于 $3/4 = 0.75$（即完全随机化），无法区分"中等分化"和"高度分化"的序列对。
+
+### Jukes-Cantor 校正的推导
+
+在 Jukes-Cantor 模型下，经过时间 $t$ 后，某个位点未发生任何替换的概率为：
+$$P(\text{不变}) = \frac{1}{4} + \frac{3}{4}e^{-\frac{4}{3}\lambda t}$$
+
+其中 $\lambda$ 是替换速率。观测到的相同比例 $1 - p = P(\text{不变})$，因此：
+$$d = \lambda t = -\frac{3}{4}\ln\left(1 - \frac{4}{3}p\right)$$
+
+这个公式将可观测的 $p$ 值"校正"为不可观测的真实替换数 $d$。
+
+## 5. Worked Example：从比对到距离矩阵
+
+假设有以下 4 条序列的比对结果：
+
+```
+序列 A: A T G C C A
+序列 B: A T G C T A
+序列 C: A T G C C G
+序列 D: A T A C C A
+```
+
+比对长度 $L = 6$。
+
+**计算 p-distance**：
+- $D_{AB} = 1/6$（位置 5 不同：C vs T）
+- $D_{AC} = 1/6$（位置 6 不同：A vs G）
+- $D_{AD} = 1/6$（位置 3 不同：G vs A）
+- $D_{BC} = 2/6$（位置 5, 6 不同）
+- $D_{BD} = 2/6$（位置 3, 5 不同）
+- $D_{CD} = 2/6$（位置 3, 6 不同）
+
+**Jukes-Cantor 校正**（以 $D_{AB}$ 为例）：
+$$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\frac{3}{4}\ln\left(\frac{7}{9}\right) \approx 0.170$$
+
+## 6. 距离法的优缺点
 
 ### 优势
 - **计算极快**：相比最大似然法 (ML) 或贝叶斯法，距离法能处理包含数万条序列的超大数据集。
 - **直观性**：将进化关系量化为空间距离，易于通过聚类方法理解。
+- **灵活性**：可以自由选择距离度量，适应不同类型的序列和不同的进化模型。
 
 ### 局限
-- **信息丢失**：将整个序列比对简化为一个数字，丢失了具体的位点变异信息（如某些位点演化快，某些慢）。
+- **信息丢失**：将整个序列比对简化为一个数字，丢失了具体的位点变异信息。这种信息丢失可能导致在树拓扑的关键位置产生错误。
 - **对噪声敏感**：如果距离估计不准，构建出的树拓扑可能发生剧烈跳变。
+- **无法利用位点特异性信息**：基于位点的方法（如 ML）可以对不同位点赋予不同的替换速率，而距离法只能产生一个全局的汇总距离。
 
-## 4. 常见算法家族
+## 7. 距离矩阵的性质与树的对应关系
+
+### 可加矩阵 (Additive Matrix)
+
+如果距离矩阵 $D$ 可以被一棵带权树完美解释（即任意两点的距离等于树上路径长度之和），则称 $D$ 是可加的。这是距离法的理想情况。
+
+### 超度量矩阵 (Ultrametric Matrix)
+
+如果距离矩阵 $D$ 满足超度量条件（对于任意三点 $i, j, k$，三个距离中的最大值至少出现两次），则称 $D$ 是超度量的。超度量矩阵对应于一棵所有叶子到根等距的树。
+
+### 现实中的距离矩阵
+
+现实中的距离矩阵通常既不完全可加也不超度量，原因包括：
+- 多重替换导致距离低估（即使使用校正模型也只能部分补偿）。
+- 不同位点的进化速率不同（异质性）。
+- 测序误差和比对错误引入噪声。
+
+## 8. 常见算法家族
 
 本章节将详细探讨以下两种最经典的距离算法：
 - **UPGMA**：基于平均连接的聚类，产生有根树，假设分子钟。
 - **Neighbor-Joining (NJ)**：基于 Q 矩阵的启发式搜索，产生无根树，不要求分子钟。
+
+### 算法选择指南
+
+| 场景 | 推荐算法 | 原因 |
+| :--- | :--- | :--- |
+| 序列数量少 (< 50)，教学演示 | UPGMA | 直观易懂，有根树 |
+| 序列数量中等，分子钟不满足 | NJ / BioNJ | 不要求分子钟，结果更可靠 |
+| 序列数量大 (> 1000) | FastNJ / FastME | 计算效率高 |
+| 需要高精度拓扑 | ML 方法 | 利用位点级信息 |
+
+## 9. 复杂度与适用前提
+
+### 时间复杂度
+- 距离估计阶段：$O(n^2 \cdot L)$，其中 $L$ 是比对长度。
+- UPGMA 树构建：$O(n^3)$。
+- NJ 树构建：$O(n^3)$（标准实现）或 $O(n^2)$（优化实现如 FastNJ）。
+
+### 空间复杂度
+- 存储距离矩阵：$O(n^2)$。
+
+### 适用前提
+- 序列之间具有足够的相似性，可以进行可靠的比对。
+- 距离矩阵中不应存在过多的缺失值。
+
+## 10. 常见误区
+
+### "p-distance 和 Jukes-Cantor 距离差别不大"
+
+对于高度分化的序列，两者的差别可以非常大。当 $p$ 接近 $75\%$（Jukes-Cantor 模型的上限）时，Jukes-Cantor 距离趋向无穷大，而 p-distance 仍然只是一个有限的分数。
+
+### "距离法已经过时，应该总是用最大似然法"
+
+距离法在大规模系统发育分析中仍然不可替代。例如，当需要构建包含数万个物种的树时，ML 方法在计算上不可行，而 NJ 可以在合理时间内完成。现代实践中，距离法常用于初步分析和作为 ML 方法的初始化。
+
+### "距离矩阵中所有值都需要精确"
+
+距离矩阵中某些值的不精确性对最终树拓扑的影响可能较小。树构建算法对"长枝"（距离较大的边）通常更敏感。
+
+### "距离法只能用于 DNA 序列"
+
+距离法可以用于任何可以定义距离的数据类型，包括蛋白质序列、形态学特征、基因表达数据等。
+
+## 11. 与真实工具的连接
+
+<DefinitionList
+  items={[
+    {
+      term: 'MEGA',
+      definition: 'Molecular Evolutionary Genetics Analysis，最常用的距离法实现之一。提供多种距离度量选项和 UPGMA/NJ 建树方法，图形界面友好。',
+    },
+    {
+      term: 'PHYLIP (neighbor/fitch)',
+      definition: '经典的系统发育分析软件包。neighbor 程序实现 NJ 和 UPGMA，fitch 程序实现 Fitch-Margoliash 方法。',
+    },
+    {
+      term: 'FastME',
+      definition: '专门优化的距离法建树工具，使用平衡最小进化 (Balanced Minimum Evolution) 准则。比标准 NJ 更快且通常更准确。',
+    },
+    {
+      term: 'IQ-TREE (快速模式)',
+      definition: '虽然以 ML 方法著称，但也提供了基于距离的快速模式，可以在几秒到几分钟内完成大规模数据集的初步建树。',
+    },
+  ]}
+/>
 
 ## 相关页面
 
@@ -74,6 +225,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   links={[
     { title: 'UPGMA 算法', to: '/wiki-bioinfo/phylogeny/upgma', description: '基于聚类直觉的建树方法' },
     { title: 'Neighbor-Joining', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '现代系统发育分析的标准距离法' },
-    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: '距离法的数学理想模型' }
+    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: '距离法的数学理想模型' },
+    { title: '最大似然法', to: '/wiki-bioinfo/phylogeny/maximum-likelihood', description: '基于位点模型的高精度建树方法' }
   ]}
 />

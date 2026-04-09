@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类“多对一”匹配提供了理想的骨架。"
+  summary="在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类"多对一"匹配提供了理想的骨架。"
   bullets={[
     '理解 Keyword Trees (Trie) 如何通过前缀共享减少重复计算',
     '掌握 Aho–Corasick 算法中失败链接 (Failure Links) 的核心直觉',
@@ -30,43 +30,192 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **引物设计**：需要验证数万个候选引物在基因组中是否有非特异性匹配。
 - **Motif 扫描**：同时寻找一组已知的转录因子结合位点。
 - **Read Mapping**：在索引构建之前，简单的多模式匹配可用于处理短序列。
+- **Barcode 识别**：在 pooled 测序数据中识别样本来源。
 
 如果对 $k$ 个模式串各跑一遍 KMP，总时间复杂度为 $O(k \cdot n)$。而多模式匹配算法可以将这一复杂度降至接近 $O(n)$。
 
 ## 2. 核心结构：关键词树 (Keyword Trees / Trie)
 
+<DefinitionList
+  items={[
+    {
+      term: 'Trie（字典树 / Keyword Tree）',
+      definition: '一种将一组字符串（模式集 $\mathcal{P}$）存储为树形结构的索引。从根到某个标记节点的路径代表一个模式。',
+    },
+    {
+      term: '失败链接 (Failure Link)',
+      definition: 'Aho-Corasick 算法中，为每个节点定义的回退指针，指向当前路径所代表前缀的最长真后缀在 Trie 中对应的位置。',
+    },
+    {
+      term: '输出链接 (Output Link)',
+      definition: '当通过失败链接回退到某个节点后，指向该节点所对应的所有模式输出的链接。',
+    },
+  ]}
+/>
+
 **Trie** 是一种将一组字符串（模式集 $\mathcal{P}$）存储为树形结构的索引：
 - **路径即模式**：从根到某个标记节点的路径代表一个模式。
 - **前缀共享**：如果多个模式共享相同的前缀（如 `ATGC` 和 `ATGT`），它们在树中会共用同一条初始路径。
 
+### Trie 的构建
+
+给定模式集 $\mathcal{P} = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
+
+```
+        (root)
+       /     \
+      A       G
+     / \       \
+    C   C       A (标记: GA)
+   /     \
+  G       T
+  |       |
+(ACG)   (ACT)
+```
+
+- 根节点不对应任何字符。
+- 每条边对应字母表中的一个字符。
+- 标记节点（图中括号标注）表示一个模式串的终止。
+
 ### 匹配直觉
+
 在文本 $T$ 中扫描时，我们维护一个指向 Trie 节点的指针：
 1. 读入文本下一个字符 $c$。
 2. 如果当前节点有边 $c$，移动指针。
 3. 如果到达标记节点，说明匹配到了一个模式。
-4. 如果失配（无边 $c$），则需要“回退”。
+4. 如果失配（无边 $c$），则需要"回退"。
+
+### worked example：朴素 Trie 匹配
+
+在文本 $T = \text{GACGACT}$ 中搜索 $\mathcal{P} = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
+
+| 步骤 | 字符 | 当前节点路径 | 匹配结果 |
+|:---:|:---:|:---:|:---:|
+| 1 | G | root→G | — |
+| 2 | A | G→A | **GA** (位置 0) |
+| 3 | C | 失配，回退到 root；root→A→C | — |
+| 4 | G | A→C→G | **ACG** (位置 2) |
+| 5 | A | 失配，回退到 root；root→A | — |
+| 6 | C | A→C | — |
+| 7 | T | A→C→T | **ACT** (位置 4) |
+
+注意步骤 4-5 中，匹配 `ACG` 后遇到 `A` 失配，朴素方法回退到 root 重新开始。这是低效的——如果我们能利用已匹配的 `CG` 后缀信息，就不必从 root 开始。
 
 ## 3. Aho–Corasick：不再从头开始
 
 朴素的 Trie 匹配在失配时会回到根节点，这非常低效。**Aho–Corasick (AC) 算法** 借鉴了 KMP 的思想，为每个节点增加了**失败链接 (Failure Links)**。
 
 ### 失败链接的逻辑
+
 失败链接指向的是当前路径所代表的前缀的**最长真后缀**在 Trie 中对应的位置。
-- **效果**：失配时，你不需要从根重新开始，而是跳到一个“尽可能长的、且已经匹配过”的后缀状态继续匹配。
+- **效果**：失配时，你不需要从根重新开始，而是跳到一个"尽可能长的、且已经匹配过"的后缀状态继续匹配。
 - **效率**：这保证了文本 $T$ 中的每个字符只需读入一次，实现了真正的 $O(n)$ 匹配。
 
-## 4. 在生物信息学中的位置
+### 失败链接的构建
+
+为上例 Trie 中的每个节点构建失败链接：
+
+| 节点路径 | 失败链接指向 |
+|:---:|:---:|
+| root | root（自指） |
+| A | root |
+| G | root |
+| AC | root |
+| ACG | root |
+| ACT | root |
+| GA | root |
+
+在本例中，由于模式之间没有共享的非空前缀-后缀关系，所有节点的失败链接都指向 root。但当模式集为 $\mathcal{P} = \{\text{ACG}, \text{CGT}\}$ 时：
+
+| 节点路径 | 失败链接指向 | 原因 |
+|:---:|:---:|:---:|
+| C | root | "C" 的最长真后缀为空串 |
+| CG | root | "CG" 的最长真后缀 "G" 不在 Trie 中 |
+| CGT | root | "CGT" 的最长真后缀 "GT" 不在 Trie 中 |
+| ACG | C | "ACG" 的最长真后缀 "CG" 对应节点 C→G |
+
+### AC 算法伪代码
+
+```
+构建阶段：
+1. 构建模式集 P 的 Trie
+2. BFS 遍历 Trie，为每个节点计算失败链接
+3. 对每个节点合并输出链接
+
+匹配阶段：
+state = root
+for i = 0 to n-1:
+    while state 没有边 T[i] 且 state ≠ root:
+        state = failure[state]
+    if state 有边 T[i]:
+        state = state 的 T[i] 子节点
+    else:
+        state = root
+    输出 state 对应的所有匹配模式
+```
+
+## 4. 复杂度与适用前提
+
+### 复杂度分析
+
+| 阶段 | 时间复杂度 | 空间复杂度 |
+|:---:|:---:|:---:|
+| Trie 构建 | $O(|\mathcal{P}|)$ | $O(|\mathcal{P}|)$ |
+| 失败链接构建 | $O(|\mathcal{P}| \cdot |\Sigma|)$ | $O(|\mathcal{P}|)$ |
+| 匹配 | $O(n + z)$ | — |
+
+其中 $|\mathcal{P}|$ 为所有模式串的总长度，$n$ 为文本长度，$z$ 为匹配总数。
+
+### 适用前提
+
+- Trie 的大小与模式集的总长度成正比，而非与模式数量成正比。因此当模式数量多但总长度适中时，AC 算法极为高效。
+- 当模式串很长（如 $m > 100$）时，Trie 的内存开销可能不可接受，此时更适合使用后缀索引（Suffix Tree / FM-index）在文本侧建索引。
+
+## 5. 在生物信息学中的位置
 
 Trie 与 AC 算法是处理**海量短模式**的首选：
-- **优点**：处理模式数量多时极快；支持在线处理数据流。
+- **优点**：处理模式数量多时极快；支持在线处理数据流；匹配时间是 $O(n)$，与模式数量无关。
 - **局限**：Trie 的内存开销随模式总长度增长；不适合处理极长的查询串（此时应使用 Suffix Tree 或 FM-index）。
+
+### 典型应用
+
+| 应用 | 模式特征 | 工具/方法 |
+|:---:|:---:|:---:|
+| 引物特异性检查 | 数万个 20-mer 引物 | AC 自动机或哈希索引 |
+| Motif 扫描 | 数百个 6-15 mer | AC 自动机 |
+| Barcode 分拣 | 数千个 8-12 mer | AC 自动机 |
+| 限制性酶切位点搜索 | 数十个 4-8 mer | 朴素搜索即可 |
+
+## 6. 与其他算法的关系
+
+Trie 与多模式匹配在字符串算法谱系中处于一个关键位置：
+
+- **与 KMP 的关系**：AC 算法可以看作 KMP 在多模式情况下的推广。KMP 的 failure function 是 AC 失败链接在单模式 Trie 上的特例。
+- **与 Suffix Tree 的关系**：Trie 对模式建索引（模式集小、文本大）；Suffix Tree 对文本建索引（文本固定、模式查询多且变长）。两者互为对偶。
+- **与哈希索引的关系**：哈希索引也支持多模式匹配，但不支持在线扫描（需要一次性提取所有 k-mer），且无法利用已匹配的前缀信息。
+
+## 7. 常见误区
+
+### Trie 和 Suffix Tree 是同一个东西
+
+不是。Trie（Keyword Tree）是对**模式集**建树，每个模式是一条从根到叶（或标记节点）的路径。Suffix Tree 是对**文本**的所有后缀建树。两者的建树对象、使用场景和复杂度特征完全不同。
+
+### 失败链接就等于 KMP 的 failure function
+
+在单模式的情况下，AC 的失败链接退化为 KMP 的 failure function。但在多模式情况下，AC 的失败链接可以在不同模式之间跳跃（例如匹配 `ACG` 后失配，可以跳到 `CG` 对应的状态，而 `CG` 可能是另一个模式的前缀），这是 KMP 不具备的能力。
+
+### 多模式匹配总是比单模式匹配快
+
+不一定。如果只需要搜索 1-2 个模式，直接运行 KMP 或 Boyer-Moore 更简单，预处理开销也更小。AC 算法的优势在模式数量达到数十个以上时才显现。
 
 ## 相关页面
 
 <RelatedLinks
   links={[
     { title: '精确字符串匹配', to: '/wiki-bioinfo/sequence/exact-string-matching', description: '理解单模式匹配的基础' },
+    { title: 'KMP 算法', to: '/wiki-bioinfo/sequence/kmp-algorithm', description: '失败链接的思想源头' },
     { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '当模式串只有一个但极长时的索引对策' },
-    { title: 'Suffix Array 与 BWT', to: '/wiki-bioinfo/sequence/suffix-array-bwt', description: '现代基因组索引的基石' }
+    { title: 'Suffix Array 与 BWT', to: '/wiki-bioinfo/sequence/suffix-array-bwt', description: '现代基因组索引的基石' },
+    { title: '索引结构概览', to: '/wiki-bioinfo/sequence/indexing', description: '索引家族的全景图' }
   ]}
 />

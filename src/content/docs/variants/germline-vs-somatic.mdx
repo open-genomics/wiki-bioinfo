@@ -7,13 +7,15 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 
 <SummaryBox
   summary="区分变异的生物学来源对于选择正确的算法模型至关重要。胚系变异遵循孟德尔遗传规律，而体细胞变异则受克隆进化、肿瘤纯度和拷贝数变化的复杂驱动。"
   bullets={[
     '掌握 Germline 变异的合子型（Zygosity）与种群频率背景',
     '掌握 Somatic 变异检测中的 VAF (Variant Allele Frequency) 统计直觉',
-    '理解“肿瘤-正常配对”设计在过滤胚系背景中的核心作用',
+    '理解"肿瘤-正常配对"设计在过滤胚系背景中的核心作用',
     '认识克隆异质性（Heterogeneity）对突变频率分布的影响'
   ]}
 />
@@ -34,17 +36,33 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 | **遗传性** | 可传递给后代。 | 不遗传。 |
 | **检测目标** | 遗传病诊断、单倍型分析。 | 癌症驱动基因识别、克隆演化研究。 |
 
+### 孟德尔遗传 vs. 体细胞突变
+
+胚系变异遵循孟德尔遗传定律。在二倍体生物中，每个个体从父母各继承一个等位基因，形成基因型。这意味着：
+
+- **常染色体显性遗传**：杂合子即可表现出表型。
+- **常染色体隐性遗传**：需要两个等位基因同时突变。
+- **X 连锁遗传**：男性只有一个 X 染色体上的等位基因，半合子即可表现出表型。
+
+体细胞变异不遵循孟德尔遗传。它发生在体细胞的有丝分裂过程中，由 DNA 复制错误、环境致癌因素（如紫外线、烟草）或修复机制缺陷引起。体细胞突变的积累是癌症发生的基础。
+
 ## 2. 统计直觉：VAF 告诉我们什么？
 
 **变异等位基因频率 (Variant Allele Frequency, VAF)** 是区分两者的关键指标。
 
-### Germline 的“确定性”
-在正常的二倍体生物中，胚系变异的 VAF 通常呈现“全或半”的特征：
+### Germline 的"确定性"
+在正常的二倍体生物中，胚系变异的 VAF 通常呈现"全或半"的特征：
 - **杂合 (Heterozygous)**：VAF $\approx 0.5$（理论上来自两条染色体中的一条）。
 - **纯合 (Homozygous)**：VAF $\approx 1.0$。
 - **算法逻辑**：如果一个位点的 VAF 偏离 0.5 或 1.0 太多，算法通常会将其视为测序错误或噪音。
 
-### Somatic 的“波动性”
+VAF 的分布可以形式化为：
+
+$$\text{VAF}_{\text{germline}} \sim \text{Binomial}(n, p)$$
+
+其中 $n$ 是覆盖深度，$p$ 是真实等位基因频率（0.5 或 1.0）。在足够的深度下（如 $n \geq 20$），二项分布近似为正态分布，VAF 的置信区间可以很容易地计算。
+
+### Somatic 的"波动性"
 在肿瘤样本中，VAF 受到多种因素的剧烈干扰：
 $$VAF \approx \text{Purity} \times \text{Clone Fraction} \times \frac{\text{Local Copy Number}}{\text{Total Depth}}$$
 - **肿瘤纯度 (Purity)**：样本中混入了多少正常基质细胞。
@@ -52,16 +70,132 @@ $$VAF \approx \text{Purity} \times \text{Clone Fraction} \times \frac{\text{Loca
 - **拷贝数 (CNV)**：变异位点可能发生了扩增或缺失。
 - **算法逻辑**：Somatic Caller（如 Mutect2）必须能够识别极低频率（甚至 $1\%$）的信号，并利用 **Panel of Normals (PON)** 来排除系统性的噪音。
 
-## 3. 分析设计：为什么要“配对”？
+### VAF 公式的详细推导
+
+假设一个肿瘤样本的纯度为 $\rho$（即肿瘤细胞占总细胞的比例），某个体细胞突变存在于克隆比例为 $\phi$ 的癌细胞中，该位点在肿瘤细胞中的局部拷贝数为 $C$，其中突变等位基因的拷贝数为 $M$，则：
+
+$$\text{VAF} = \rho \cdot \phi \cdot \frac{M}{2\rho \cdot C + 2(1-\rho)}$$
+
+分母中，$2\rho \cdot C$ 是肿瘤细胞在该位点的总等位基因数，$2(1-\rho)$ 是正常细胞的等位基因数（二倍体）。
+
+**数值例子**：假设纯度 $\rho = 0.6$，克隆比例 $\phi = 0.5$，拷贝数 $C = 2$，突变拷贝数 $M = 1$（杂合）：
+
+$$\text{VAF} = 0.6 \times 0.5 \times \frac{1}{2 \times 0.6 \times 2 + 2 \times 0.4} = 0.3 \times \frac{1}{2.4 + 0.8} = 0.3 \times \frac{1}{3.2} \approx 0.094$$
+
+即 VAF 约为 9.4%，远低于胚系杂合变异的 50%。
+
+## 3. 分析设计：为什么要"配对"？
 
 为了精准识别体细胞变异，标准的做法是 **Tumor-Normal Pair**。
 - **逻辑**：将患者肿瘤组织的测序数据与同一人的外周血（正常对照）进行比对。
 - **过滤**：所有在正常对照中出现的变异都被标记为 Germline 变异并剔除，剩余的才是该患者特有的 Somatic 突变。
 
-## 4. 临床报告差异
+### 无配对设计的挑战
+
+在某些情况下（如只有 FFPE 肿瘤样本，没有匹配的正常组织），只能使用**无配对 (Tumor-Only)** 模式进行体细胞变异检测。此时面临的挑战包括：
+
+- **无法区分胚系多态性**：人群中常见的 SNP 会被误报为体细胞变异。
+- **需要外部过滤**：必须依赖公共数据库（如 gnomAD、dbSNP）来过滤常见的胚系变异。
+- **假阳性率更高**：测序错误和比对噪音无法通过与正常样本的比对来消除。
+
+### Panel of Normals (PON)
+
+PON 是由大量正常样本（通常 40--100 个）构建的噪音模型。其原理是：
+
+1. 对每个正常样本运行体细胞变异检测流程。
+2. 收集所有检测到的"变异"——这些几乎都是假阳性。
+3. 将 PON 中的变异作为黑名单，在实际分析中过滤掉。
+
+PON 能有效捕获系统性技术噪音（如特定基因组区域的比对困难、氧化损伤导致的 G>T 人为突变等）。
+
+## 4. 突变谱 (Mutational Signature)
+
+不同类型的 DNA 损伤会在基因组中留下特征的突变模式，称为**突变谱 (Mutational Signatures)**。这些模式不仅帮助理解突变的生物学成因，也可用于区分胚系和体细胞变异。
+
+<DefinitionList
+  items={[
+    {
+      term: '紫外线损伤 (UV Signature)',
+      definition: '特征为 C>T 转换在二核苷酸语境中富集（TCN > TTN）。见于皮肤黑色素瘤。',
+    },
+    {
+      term: '吸烟相关 (Tobacco Signature)',
+      definition: '特征为 G>T 颠换（C>A 互补链）的富集。见于肺鳞癌。',
+    },
+    {
+      term: '错配修复缺陷 (MMR Deficiency)',
+      definition: '特征为微卫星不稳定性 (MSI) 和大量插入/缺失突变。见于结直肠癌和子宫内膜癌。',
+    },
+    {
+      term: 'APOBEC 酶活性',
+      definition: '特征为 TCW > TTW 和 GCW > GTW 突变。在多种癌症类型中观察到，可能与病毒感染或免疫反应有关。',
+    },
+  ]}
+/>
+
+## 5. 肿瘤克隆结构 (Clonal Architecture)
+
+肿瘤不是单一的细胞群体，而是由多个基因型不同的亚克隆 (Subclones) 构成。理解克隆结构对于体细胞变异检测和解读至关重要。
+
+### 克隆进化模型
+
+最常见的肿瘤进化模型包括：
+
+- **线性进化 (Linear Evolution)**：突变逐步累积，新的亚克隆在前一个亚克隆的基础上产生。
+- **分支进化 (Branching Evolution)**：不同的亚克隆从共同祖先独立演化，形成树状结构。
+- **中性进化 (Neutral Evolution)**：大多数"乘客突变 (Passenger Mutations)"的积累遵循中性漂变模型，不受到正向选择的影响。
+
+### 克隆 vs. 亚克隆
+
+- **克隆 (Clonal) 变异**：存在于所有肿瘤细胞中，VAF 较高（通常 > 20--30%，取决于纯度）。这些变异通常发生在肿瘤发生的早期，可能是驱动突变。
+- **亚克隆 (Subclonal) 变异**：只存在于部分肿瘤细胞中，VAF 较低。这些变异发生在肿瘤进化的后期，可能是耐药突变的来源。
+
+## 6. 临床报告差异
 
 - **Germline**：参考 **ACMG 指南**，关注变异的致病性与家族遗传风险。
 - **Somatic**：关注 **AMP/ASCO 分级**，评估突变是否具有可药物靶向性（如 EGFR 突变）或预后意义。
+
+### ACMG 致病性分级标准
+
+美国医学遗传学学会 (ACMG) 将胚系变异分为五个等级：
+
+| 分级 | 含义 | 临床行动 |
+| :--- | :--- | :--- |
+| Pathogenic | 致病 | 明确的临床指导 |
+| Likely Pathogenic | 可能致病 | 提供临床指导 |
+| VUS | 意义不明 | 不提供明确指导 |
+| Likely Benign | 可能良性 | 通常不需要干预 |
+| Benign | 良性 | 无需临床干预 |
+
+### 体细胞变异的临床分级
+
+体细胞变异的分级体系（AMP/ASCO/CAP）侧重于临床可操作性：
+
+- **Tier I**：具有强临床意义（FDA 批准的靶向药物对应的变异）。
+- **Tier II**：具有潜在临床意义（临床试验中的靶向药物或临床前证据支持）。
+- **Tier III**：临床意义未知（在癌症中观察到但功能不明确）。
+- **Tier IV**：良性或可能良性（在群体数据库中频率较高，不太可能是驱动突变）。
+
+## 7. 常见误区
+
+<PitfallsBox
+  items={[
+    '将 VAF = 0.5 作为胚系变异的绝对标准。测序覆盖度不足时（如 depth < 10），VAF 的置信区间很宽，0.3--0.7 的范围都可能与杂合胚系变异兼容。',
+    '在肿瘤样本中忽略拷贝数变异对 VAF 的影响。如果一个杂合突变位点发生了拷贝数扩增（如从 2 拷贝扩增到 6 拷贝），VAF 可能远高于 0.5。',
+    '在体细胞变异检测中使用胚系变异的过滤策略。胚系分析中常用的 HWE 过滤和 MAF 过滤不适用于体细胞变异，因为体细胞突变在"群体"中的频率本来就极低。',
+    '混淆胚系致病性分级和体细胞临床分级。ACMG 分级关注遗传风险，AMP/ASCO 分级关注治疗可操作性，两者的评估框架完全不同。',
+    '假设所有体细胞变异都是驱动突变。肿瘤中绝大多数突变是"乘客突变"，不参与肿瘤的发生和发展。区分驱动和乘客突变需要额外的功能验证。'
+  ]}
+/>
+
+## 8. 应用场景
+
+区分胚系和体细胞变异在以下场景中至关重要：
+
+- **癌症精准医疗**：识别肿瘤中的可靶向驱动突变（如 EGFR L858R、ALK 融合），指导靶向治疗选择。
+- **遗传性癌症综合征筛查**：在肿瘤患者中识别胚系致病突变（如 BRCA1/2），提示遗传性癌症风险，建议家族成员进行基因检测。
+- **液态活检 (Liquid Biopsy)**：通过检测血液中循环肿瘤 DNA (ctDNA) 的体细胞突变，实现癌症的早期筛查、疗效监测和复发预警。
+- **肿瘤免疫治疗**：肿瘤突变负荷 (Tumor Mutational Burden, TMB) 是预测免疫检查点抑制剂疗效的指标，需要准确的体细胞变异计数。
 
 ## 相关页面
 

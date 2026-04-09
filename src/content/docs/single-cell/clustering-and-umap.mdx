@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的“维度灾难”。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。"
+  summary="单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的"维度灾难"。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。"
   bullets={[
     '掌握 PCA 的线性投影逻辑：寻找解释最大方差的变异轴',
     '理解聚类的核心标准：同质性 (Homogeneity) 与分离性 (Separation)',
@@ -32,36 +32,312 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **距离失效**：在高维空间，任意两点间的距离趋于相等，无法区分细胞类型。
 - **噪音干扰**：单细胞数据的稀疏性（Dropout）会淹没真实的生物学信号。
 
+这一现象可以通过**维度灾难（Curse of Dimensionality）**的数学直觉来理解。对于均匀分布在 $d$ 维单位超立方体中的 $n$ 个点，最远点与最近点的距离之比为：
+
+$$
+\frac{d_{\max}}{d_{\min}} \to 1 \quad \text{当 } d \to \infty
+$$
+
+这意味着在高维空间中，所有点对之间的距离几乎相同，基于距离的度量方法（如 k-NN）将失去区分能力。
+
 **策略**：先用 **PCA** 进行线性压缩，去除噪音；再构建 **k-NN 图**，将全局问题转化为局部连接问题。
 
-## 2. 聚类的数学直觉：同质性与分离性
+## 2. 要解决什么生物信息学问题
+
+单细胞聚类的核心目标是：从数以万计的细胞中，自动识别具有相似转录组状态的细胞群体，从而发现：
+
+- **细胞类型**：如 T 细胞、B 细胞、巨噬细胞等已知分类。
+- **细胞亚群**：已知类型内部的精细分类（如 CD4+ 效应 T 细胞 vs. 记忆 T 细胞）。
+- **稀有群体**：比例极低但具有生物学意义的细胞（如干细胞、祖细胞）。
+- **异常状态**：应激反应、病理状态下的转录组变化。
+
+### 形式化定义
+
+- **输入**：基因 $\times$ 细胞的表达矩阵 $X \in \mathbb{R}^{G \times N}$，其中 $G$ 为基因数（约 20,000），$N$ 为细胞数。
+- **输出**：细胞的分组标签 $\{c_1, c_2, \ldots, c_N\}$，使得同组细胞转录组高度相似，不同组细胞差异显著。
+
+## 3. PCA：线性降维的基石
+
+**PCA (Principal Component Analysis)** 通过正交变换将高维数据投影到方差最大的方向。
+
+### 数学原理
+
+给定中心化后的数据矩阵 $X \in \mathbb{R}^{N \times G}$（每行是一个细胞），PCA 寻找一组正交方向 $v_1, v_2, \ldots, v_G$，使得投影后的方差依次递减：
+
+$$
+v_1 = \arg\max_{\|v\|=1} \|Xv\|^2
+$$
+
+这等价于对协方差矩阵 $C = \frac{1}{N-1} X^T X$ 进行特征值分解：
+
+$$
+C v_i = \lambda_i v_i
+$$
+
+其中 $\lambda_1 \geq \lambda_2 \geq \ldots \geq \lambda_G$ 为特征值，$v_i$ 为对应的特征向量（即主成分，Principal Components）。
+
+### 单细胞中 PCA 的特殊考量
+
+在单细胞数据中，我们通常选择前 30-50 个主成分用于后续分析。选择依据包括：
+
+- **肘部图 (Elbow Plot)**：绘制特征值的下降曲线，在拐点处截断。
+- **解释方差比例**：选择累计解释方差达到 80-90% 的主成分数量。
+- **生物学信号富集**：通过 JackStraw 或置换检验，验证哪些主成分包含的基因富集了生物学功能。
+
+PCA 的核心假设是**生物学变异在主成分方向上**，而技术噪音（如 Dropout、批次效应）分布在次要成分中。这一假设在多数情况下成立，但并非总是如此。
+
+## 4. k-NN 图构建
+
+在 PCA 降维后的空间中，我们为每个细胞找到其最近的 $k$ 个邻居，构建一个 **k-NN 图 (k-Nearest Neighbor Graph)**。
+
+### 构建过程
+
+1. 对每个细胞 $i$，在 PCA 空间中计算与其他所有细胞的欧氏距离。
+2. 选择距离最近的 $k$ 个细胞作为邻居。
+3. 将细胞 $i$ 与其 $k$ 个邻居之间建立边。
+4. 为每条边赋予权重，通常基于 Jaccard 相似性或高斯核函数：
+
+$$
+w_{ij} = \exp\left(-\frac{\|x_i - x_j\|^2}{2\sigma^2}\right)
+$$
+
+其中 $\sigma$ 是带宽参数，控制权重的衰减速度。
+
+### 为什么需要图而不是直接聚类？
+
+直接在高维空间或 PCA 空间进行聚类（如 k-means）存在以下问题：
+
+- **全局距离不可靠**：k-means 依赖全局距离度量，在高维空间中效果差。
+- **簇形状灵活**：真实的细胞群体在降维空间中往往不是球形分布，k-means 的凸簇假设不适用。
+- **局部一致性**：k-NN 图捕捉的是局部邻域关系，对非凸形状和流形结构具有更好的适应性。
+
+## 5. 聚类的数学直觉：同质性与分离性
 
 正如在 [Corrupted Cliques](../phylogeny/corrupted-cliques-cast.mdx) 中讨论的，一个理想的聚类（如团图）应满足：
 1.  **同质性 (Homogeneity)**：同一簇内的细胞在转录组上高度相似。
 2.  **分离性 (Separation)**：不同簇的细胞之间界限清晰。
 
-### 图聚类：Leiden 算法
-现代单细胞分析（如 Scanpy, Seurat）首选 **Leiden** 或 **Louvain** 算法。
-- **逻辑**：在细胞邻域图中，通过最大化**模块度 (Modularity)** 来识别连接紧密的节点集合。
-- **分辨率 (Resolution)**：通过调整参数控制聚类的粒度。高分辨率会产生更多细分的小群。
+### 图聚类：Leiden 与 Louvain 算法
 
-## 3. 可视化的魔术：UMAP
+现代单细胞分析（如 Scanpy, Seurat）首选 **Leiden** 或 **Louvain** 算法。这两种算法都基于**模块度 (Modularity)** 优化。
+
+**模块度**定义为：
+
+$$
+Q = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \frac{k_i k_j}{2m} \right] \delta(c_i, c_j)
+$$
+
+其中：
+- $A_{ij}$ 是邻接矩阵中节点 $i$ 和 $j$ 之间的边权重
+- $k_i = \sum_j A_{ij}$ 是节点 $i$ 的度数
+- $m = \frac{1}{2}\sum_{ij} A_{ij}$ 是图中所有边的总权重
+- $\delta(c_i, c_j)$ 是指示函数，当 $i$ 和 $j$ 属于同一社区时为 1，否则为 0
+- $\frac{k_i k_j}{2m}$ 是在随机图（null model）中该边权重的期望值
+
+模块度衡量的是**实际连接密度相对于随机期望的超出程度**。$Q$ 越大，说明社区内部越紧密。
+
+### Leiden vs Louvain
+
+| 特性 | Louvain | Leiden |
+|------|---------|--------|
+| **核心策略** | 贪心模块度优化 | 贪心优化 + 局部连接性检查 |
+| **已发现问题** | 可能产生断开的社区 | 保证社区内部连通 |
+| **分辨率控制** | 通过 resolution 参数 | 通过 resolution 参数 |
+| **计算速度** | 略快 | 略慢但更稳定 |
+| **推荐场景** | 快速探索 | 正式分析（推荐） |
+
+### 分辨率参数 (Resolution)
+
+分辨率参数 $\gamma$ 控制聚类的粒度。修改后的模块度公式为：
+
+$$
+Q_\gamma = \frac{1}{2m} \sum_{ij} \left[ A_{ij} - \gamma \frac{k_i k_j}{2m} \right] \delta(c_i, c_j)
+$$
+
+- **高分辨率**（$\gamma > 1$）：产生更多、更小的社区，适合寻找稀有亚群。
+- **低分辨率**（$\gamma < 1$）：产生更少、更大的社区，适合粗粒度分类。
+- **默认值**：通常为 0.8-1.2，取决于数据规模和细胞异质性。
+
+## 6. 可视化的魔术：UMAP
 
 **UMAP (Uniform Manifold Approximation and Projection)** 是目前最流行的降维可视化算法。
 
 ### 核心思想
+
 - **流形假设**：假设细胞分布在一个高维空间中弯曲的低维平面（流形）上。
 - **拓扑保持**：UMAP 试图在二维平面上重现高维空间中的局部拓扑关系。
+
+### 算法步骤
+
+1. **构建模糊单纯复形 (Fuzzy Simplicial Set)**：在高维空间中，对每个点 $x_i$，定义其到第 $k$ 个最近邻的距离 $\rho_i$。然后使用高斯核函数计算局部连接强度：
+
+$$
+p_{ij} = \exp\left(-\frac{\max(0, d(x_i, x_j) - \rho_i)}{\sigma_i}\right)
+$$
+
+2. **对称化**：将非对称的邻接概率矩阵对称化：
+
+$$
+p_{ij} = p_{ij} + p_{ji} - p_{ij} \cdot p_{ji}
+$$
+
+3. **低维嵌入优化**：在低维空间中，使用类似 t-SNE 的 Student-t 分布作为尾分布，优化低维点 $y_i$ 的位置，使得高维和低维的拓扑结构尽可能一致。
+
+### UMAP 的关键参数
+
+| 参数 | 含义 | 推荐值 | 影响 |
+|------|------|--------|------|
+| **n_neighbors** | 局部 vs 全局平衡 | 15-30 | 值越大越关注全局结构 |
+| **min_dist** | 低维点最小距离 | 0.1-0.5 | 值越大点越分散 |
+| **n_components** | 输出维度 | 2（可视化） | 也可设为 3 |
+| **metric** | 距离度量 | euclidean / cosine | 影响高维拓扑构建 |
+
+### UMAP vs t-SNE
+
+| 特性 | UMAP | t-SNE |
+|------|------|-------|
+| **理论基础** | 黎曼几何与代数拓扑 | KL 散度最小化 |
+| **计算速度** | 较快 | 较慢 |
+| **全局结构保持** | 较好 | 较差 |
+| **可重复性** | 较好（随机种子更稳定） | 较差 |
+| **新数据投影** | 支持 transform | 不支持（需重新计算） |
+| **参数敏感性** | 较低 | 较高 |
 
 **重要提醒**：
 - **UMAP 距离不具有定量意义**：两个点在 UMAP 图上离得远，不代表它们的进化距离远。
 - **分类依赖聚类而非 UMAP**：你应该根据 Leiden 聚类的颜色标签来识别细胞群，而不是仅仅盯着 UMAP 的图形形状。
+- **UMAP 形状不能代表真实的生物学结构**：簇的"拉伸"或"桥接"可能是参数选择或随机种子的产物。
 
-## 4. 细胞类型注释 (Annotation)
+## 7. Worked Example：从矩阵到 UMAP
 
-聚类只是将细胞分成了“0, 1, 2...”号盒子。
+假设我们有 6 个细胞、4 个基因的简化表达矩阵：
+
+$$
+X = \begin{pmatrix}
+10 & 0 & 5 & 0 \\
+9 & 1 & 4 & 1 \\
+11 & 0 & 6 & 0 \\
+0 & 8 & 0 & 10 \\
+1 & 9 & 1 & 11 \\
+0 & 7 & 0 & 9
+\end{pmatrix}
+$$
+
+（每行为一个细胞，每列为一个基因）
+
+**步骤 1 - PCA 降维**：
+- 中心化矩阵后，计算协方差矩阵的特征值。
+- 前两个主成分 PC1 和 PC2 已能解释 >95% 的方差。
+- 细胞 1-3 在 PC1 上投影为正值（高表达基因 1, 3），细胞 4-6 为负值（高表达基因 2, 4）。
+
+**步骤 2 - k-NN 图**（设 $k=3$）：
+- 细胞 1 的邻居：{2, 3, 4}（前 3 个最近邻）
+- 细胞 2 的邻居：{1, 3, 4}
+- 细胞 3 的邻居：{1, 2, 4}
+- 细胞 4 的邻居：{3, 5, 6}
+- 细胞 5 的邻居：{4, 6, 2}
+- 细胞 6 的邻居：{4, 5, 2}
+
+**步骤 3 - Leiden 聚类**：
+- 模块度优化将细胞分为两组：{1, 2, 3} 和 {4, 5, 6}。
+- 这与数据的生物学直觉一致：两组细胞分别高表达不同的基因集合。
+
+**步骤 4 - UMAP 可视化**：
+- 在二维平面上，{1, 2, 3} 形成一个紧凑的簇，{4, 5, 6} 形成另一个簇。
+- 两个簇之间的距离反映了它们在 PCA 空间中的分离程度。
+
+## 8. 细胞类型注释 (Annotation)
+
+聚类只是将细胞分成了"0, 1, 2..."号盒子。
 - **算法任务**：差异表达分析（Differential Expression）。寻找每个 cluster 特有的 **Marker Genes**。
-- **生物学解释**：如果 cluster 0 高表达 *CD3D*，我们就将其注释为“T 细胞”。
+- **生物学解释**：如果 cluster 0 高表达 *CD3D*，我们就将其注释为"T 细胞"。
+
+### 差异表达分析的关键方法
+
+| 方法 | 检验统计量 | 适用场景 |
+|------|-----------|---------|
+| **Wilcoxon 秩和检验** | 非参数检验 | Seurat 默认，稳健 |
+| **t 检验** | 参数检验 | 简单快速，假设正态 |
+| **DESeq2** | 负二项 GLM | 适用于 Bulk 对比 |
+| **MAST** | 零膨胀模型 | 处理 Dropout 效应 |
+
+### 自动注释工具
+
+近年来出现了基于参考图谱的自动注释方法：
+
+- **SingleR**：将每个细胞的表达谱与参考数据集中的纯化细胞类型比较，基于相关性打分。
+- **CellTypist**：使用预训练的逻辑回归分类器进行快速细胞类型预测。
+- **Azimuth / scArches**：将查询数据映射到预构建的参考 UMAP 空间，直接继承参考注释。
+
+这些工具能显著加速注释过程，但仍需人工验证关键 marker 基因的表达。
+
+## 9. 复杂度与适用前提
+
+### 计算复杂度
+
+| 步骤 | 时间复杂度 | 空间复杂度 |
+|------|-----------|-----------|
+| PCA | $O(NG^2)$ 或 $O(N \cdot r \cdot G)$（截断 SVD） | $O(NG)$ |
+| k-NN 构建 | $O(N^2 d)$（朴素）或 $O(N \log N \cdot d)$（近似） | $O(Nk)$ |
+| Leiden 聚类 | $O(N \cdot I)$，$I$ 为迭代次数 | $O(N + E)$ |
+| UMAP | $O(N \cdot k \cdot d + N \cdot I)$ | $O(Nk)$ |
+
+其中 $N$ 为细胞数，$G$ 为基因数，$d$ 为 PCA 维度，$k$ 为邻居数。
+
+### 适用前提
+
+- **PCA 线性假设**：PCA 只能捕捉线性变异方向。如果生物学信号是非线性的（如环形轨迹），PCA 可能无法充分捕获。
+- **k 的选择**：k-NN 的 $k$ 值影响聚类的粒度。$k$ 太大会模糊边界，$k$ 太小会受噪音影响。通常推荐 $k = 15-30$。
+- **分辨率敏感性**：聚类结果对分辨率参数高度敏感，需要通过多分辨率分析（multiresolution analysis）来验证结果的稳健性。
+
+## 10. 与真实工具的连接
+
+| 工具/框架 | 默认聚类算法 | 降维方法 | 语言 |
+|----------|------------|---------|------|
+| **Scanpy** | Leiden | PCA + UMAP | Python |
+| **Seurat** | Leiden / Louvain | PCA + UMAP | R |
+| **scVI-tools** | Leiden（在潜空间上） | 变分自编码器 | Python |
+| **Monocle 3** | Leiden | UMAP | R |
+
+### 典型分析流程（Scanpy 示例）
+
+```python
+import scanpy as sc
+
+# 假设 adata 为已加载的 AnnData 对象
+sc.pp.normalize_total(adata, target_sum=1e4)
+sc.pp.log1p(adata)
+sc.pp.highly_variable_genes(adata, n_top_genes=2000)
+sc.tl.pca(adata, n_comps=50)
+sc.pp.neighbors(adata, n_neighbors=15, n_pcs=30)
+sc.tl.leiden(adata, resolution=0.8)
+sc.tl.umap(adata)
+```
+
+## 11. 常见误区
+
+- **"UMAP 簇就是细胞类型"**
+  - UMAP 的簇形状受参数和随机种子影响，可能出现人工连接或分离。始终以聚类标签为准，UMAP 仅作辅助可视化。
+
+- **"聚类的分辨率越高越好"**
+  - 过高的分辨率会产生碎片化的社区，将生物学上同质的细胞人为分开。应通过 marker 基因验证来选择合理的分辨率。
+
+- **"PCA 的主成分数量不重要"**
+  - 使用过多主成分会将噪音引入聚类；使用过少则会丢失生物学信号。推荐使用 30-50 个主成分，并通过 JackStraw 检验验证。
+
+- **"所有高变异基因都应该用于聚类"**
+  - 高变异基因可能包含技术噪音（如线粒体基因、核糖体基因）。通常需要先过滤这些基因，再进行降维和聚类。
+
+- **"不同批次的细胞可以不经校正直接合并聚类"**
+  - 批次效应会导致同一细胞类型在不同批次中被分开聚类。需要先进行批次校正（如 Harmony, scVI, BBKNN），再进行聚类。
+
+## 参考资料
+
+- McInnes et al., 2018. *UMAP: Uniform Manifold Approximation and Projection for Dimension Reduction.* arXiv.
+- Traag et al., 2019. *From Louvain to Leiden: guaranteeing well-connected communities.* Scientific Reports.
+- Blondel et al., 2008. *Fast unfolding of communities in large networks.* Journal of Statistical Mechanics.
+- Wolf et al., 2018. *SCANPY: large-scale single-cell gene expression data analysis.* Genome Biology.
+- Luecken & Theis, 2019. *Current best practices in single-cell RNA-seq analysis: a tutorial.* Molecular Systems Biology.
 
 ## 相关页面
 

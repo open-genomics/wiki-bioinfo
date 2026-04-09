@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 
 <SummaryBox
   summary="变异检测（Variant Calling）在不同尺度上采用完全不同的算法。Small Variants 依赖局部堆叠（Pileup）的统计特征，而结构变异（SV）则需要整合全基因组范围的非正常比对信号。"
@@ -33,48 +35,244 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 | **Small Variants** | 1 bp - 50 bp | 包含 SNP 和短插入/缺失。能被单条 Read 完整覆盖。 |
 | **Structural Variants** | > 50 bp | 包含大片段缺失、重复、倒位和易位。通常涉及基因组结构的剧烈重排。 |
 
+### SV 的分类体系
+
+结构变异的类型多样，按照其对基因组结构的影响可以分为：
+
+<DefinitionList
+  items={[
+    {
+      term: '缺失 (Deletion, DEL)',
+      definition: '基因组中一段序列被删除。长度从 50 bp 到数 Mb 不等。是人类基因组中最常见的 SV 类型。',
+    },
+    {
+      term: '插入 (Insertion, INS)',
+      definition: '基因组中新出现了一段序列。包括插入新的 DNA 片段或移动元件（如 Alu、LINE-1）的插入。',
+    },
+    {
+      term: '倒位 (Inversion, INV)',
+      definition: '一段序列的方向被反转。通常由同一条染色体上的两次双链断裂和错误修复产生。',
+    },
+    {
+      term: '易位 (Translocation, TRA)',
+      definition: '非同源染色体之间的片段交换。可分为平衡易位（无片段丢失）和非平衡易位（伴随片段丢失或重复）。',
+    },
+    {
+      term: '拷贝数变异 (Copy Number Variation, CNV)',
+      definition: '基因组中某段序列的拷贝数偏离二倍体状态（如从 2 拷贝变为 1 拷贝或 3 拷贝）。是 DEL 和 DUP 在拷贝数维度上的统称。',
+    },
+  ]}
+/>
+
 ## 2. Small Variants：局部堆叠模型
 
 这类变异主要通过 **Pileup (堆叠)** 信息来识别。
 - **算法核心**：贝叶斯推断。计算在给定观测碱基和质量值（Phred Score）的情况下，该位点属于某种基因型的概率。
 - **挑战**：区分真实的低频变异与背景测序噪音。
 
+### 贝叶斯模型的数学形式
+
+对于某个位点，设观测到的碱基为 $\mathbf{d} = (d_1, d_2, \ldots, d_n)$，每个碱基的质量值为 $q_i$。对于候选基因型 $G$（如 $G = \text{A/T}$ 表示杂合），贝叶斯模型计算：
+
+$$P(G \mid \mathbf{d}) = \frac{P(\mathbf{d} \mid G) \cdot P(G)}{\sum_{G'} P(\mathbf{d} \mid G') \cdot P(G')}$$
+
+其中似然函数假设各碱基独立：
+
+$$P(\mathbf{d} \mid G) = \prod_{i=1}^{n} P(d_i \mid G)$$
+
+每个碱基的似然由测序错误率 $\epsilon_i = 10^{-q_i/10}$ 决定：
+
+$$P(d_i \mid G) = \begin{cases} 1 - \epsilon_i & \text{if } d_i \text{ matches } G \\ \epsilon_i / 3 & \text{if } d_i \text{ mismatches } G \end{cases}$$
+
+先验 $P(G)$ 可以根据群体等位基因频率（如从 gnomAD 数据库获取）或假设均匀分布来设定。
+
+### 碱基质量重校准 (Base Quality Score Recalibration, BQSR)
+
+原始的 Phred 质量值可能系统性偏高或偏低。GATK 的 BQSR 通过建立已知变异位点的协变量模型（依赖于碱基上下文、机器周期、reads 位置等）来校准质量值，使贝叶斯推断的输入更加可靠。
+
 ## 3. 结构变异 (SV)：全局信号整合
 
-由于 SV 的尺度超出了单条 Read 的长度，算法必须寻找“非正常”的比对证据：
+由于 SV 的尺度超出了单条 Read 的长度，算法必须寻找"非正常"的比对证据：
 
 <DefinitionList
   items={[
     {
       term: 'Read Pair (RP)',
-      definition: '成对 Read 的间距（Insert Size）异常。间距过大暗示中间有缺失 (DEL)，过小暗示有插入 (INS)。',
+      definition: '成对 Read 的间距（Insert Size）异常。间距过大暗示中间有缺失 (DEL)，过小暗示有插入 (INS)。方向异常（如 FF 或 RR 而非 FR）可能暗示倒位或易位。',
     },
     {
       term: 'Split Read (SR)',
-      definition: '单条 Read 被切断并比对到基因组不连续的两个位置。这直接定义了变异的精确断点 (Breakpoint)。',
+      definition: '单条 Read 被切断并比对到基因组不连续的两个位置。这直接定义了变异的精确断点 (Breakpoint)，是 SV 分辨率的基石。',
     },
     {
       term: 'Read Depth (RD)',
-      definition: '通过覆盖度的显著升高或降低来检测拷贝数变异 (CNV)。',
+      definition: '通过覆盖度的显著升高或降低来检测拷贝数变异 (CNV)。使用滑动窗口计算局部覆盖度，并与基因组背景水平比较。',
     },
     {
       term: 'Assembly',
-      definition: '局部 de novo 组装。这是最精确的方法，特别适合检测含有复杂重复序列的变异。',
+      definition: '局部 de novo 组装。这是最精确的方法，特别适合检测含有复杂重复序列的变异。通过将 Reads 拼接成更长的 Contig，可以直接观测 SV 的断点序列。',
+    },
+    {
+      term: 'Breakends (BND)',
+      definition: '断点记录格式。BND 不仅记录 SV 本身，还记录断点在参考基因组中的精确坐标和方向，是 VCF 规范中用于表示复杂重排的标准化方式。',
     },
   ]}
 />
 
-## 4. SV 与基因组重排的联系
+### 五种信号的互补性
+
+不同的 SV 类型对不同信号的敏感度不同：
+
+| SV 类型 | RP | SR | RD | Assembly |
+| :--- | :--- | :--- | :--- | :--- |
+| 缺失 (DEL) | 敏感 | 敏感（精确断点） | 敏感 | 最精确 |
+| 插入 (INS) | 有限 | 依赖读长 | 不敏感 | 最精确 |
+| 倒位 (INV) | 方向信号 | 敏感 | 不敏感 | 敏感 |
+| 易位 (TRA) | 方向信号 | 敏感 | 不敏感 | 敏感 |
+| CNV | 不敏感 | 不敏感 | 最敏感 | 不适用 |
+
+现代 SV 检测工具（如 Manta、Delly、GRIDSS）通常整合多种信号以提高灵敏度和特异性。
+
+## 4. Read Pair 信号的统计模型
+
+Read Pair 信号是检测 SV 的基础。在正常情况下，Insert Size 服从一个分布（近似正态）：
+
+$$\text{IS} \sim \mathcal{N}(\mu, \sigma^2)$$
+
+其中 $\mu$ 是平均 Insert Size（如 Illumina 的 350 bp 文库中 $\mu \approx 350$），$\sigma$ 是标准差（通常 $\sigma \approx 30$--$50$ bp）。
+
+### 缺失检测
+
+如果一个 Read Pair 的 Insert Size 显著大于 $\mu$（如 $\text{IS} > \mu + 3\sigma$），则暗示两个 Read 之间存在缺失。缺失长度的估计为：
+
+$$\hat{L}_{\text{DEL}} = \text{IS} - \mu$$
+
+### Z-score 检验
+
+对于每个 Read Pair，计算其 Insert Size 的 Z-score：
+
+$$Z = \frac{\text{IS} - \mu}{\sigma}$$
+
+$|Z| > 3$ 的 Read Pair 被视为异常。在候选区域中，如果异常 Read Pair 的数量超过统计阈值（如 Poisson 分布的 $P < 0.01$），则报告为一个候选 SV。
+
+## 5. Read Depth 与 CNV 检测
+
+### 滑动窗口法
+
+将基因组划分为固定大小的窗口（如 1 kb），计算每个窗口内的归一化覆盖度：
+
+$$\text{RC}_j = \frac{d_j}{\bar{d}}$$
+
+其中 $d_j$ 是第 $j$ 个窗口的原始覆盖度，$\bar{d}$ 是全基因组覆盖度的中位数。在二倍体区域，$\text{RC} \approx 1$；在杂合缺失区域，$\text{RC} \approx 0.5$；在纯合缺失区域，$\text{RC} \approx 0$。
+
+### 环形二元分割 (Circular Binary Segmentation, CBS)
+
+CBS 算法通过统计检验识别覆盖度的显著变化点，将基因组分割为覆盖度一致的片段。该算法由 Olshen 等人提出，是 DNAcopy 包的核心方法。
+
+其核心思想是：给定一个基因组区间，检验其覆盖度是否存在一个突变点（即左右两段覆盖度均值不同）。如果检验显著，则在该点分割，并递归处理两个子区间。
+
+## 6. SV 与基因组重排的联系
 
 结构变异在数学上可以抽象为**排列的变换**。
 - **倒位 (Inversion)** 对应于排列中的一个子串反转。
 - **易位 (Translocation)** 对应于子串在不同染色体（或同一染色体不同位置）间的移动。
-- **算法启发**：我们在[基因组重排](../foundations/genome-rearrangements.mdx)中讨论的“反转距离”和“断点分析”是理解大型 SV 演化机制的理论基础。
+- **算法启发**：我们在[基因组重排](../foundations/genome-rearrangements.mdx)中讨论的"反转距离"和"断点分析"是理解大型 SV 演化机制的理论基础。
 
-## 5. 临床与功能意义
+### 断点图 (Breakpoint Graph)
+
+断点图是分析基因组重排的经典工具。对于两个基因组 $A$ 和 $B$，将 $A$ 中每个基因的两端（头和尾）作为节点，$A$ 中的相邻关系和 $B$ 中的相邻关系分别用灰色和黑色边连接。断点图中的交替环的数量直接对应于两个基因组之间的重排距离。
+
+## 7. SV 的检测灵敏度与测序策略
+
+不同测序策略对 SV 检测的能力差异巨大：
+
+| 策略 | 典型读长 | SV 检测优势 | SV 检测局限 |
+| :--- | :--- | :--- | :--- |
+| 短读长 (Illumina) | 150 bp | 高覆盖度，SNP 检测准 | 无法跨越大 SV，在重复区域中困难 |
+| 长读长 (PacBio) | 10--25 kb | 可跨越大 SV，精确断点 | 覆盖度较低，成本高 |
+| 超长读长 (Nanopore) | 10--100 kb | 可检测超大 SV 和复杂重排 | 单碱基错误率较高 |
+| 光学图谱 (Bionano) | > 100 kb | 检测 Mb 级 SV，不受序列偏差影响 | 分辨率有限（~500 bp），无法检测 SNP |
+| Hi-C | 染色体级别 | 检测拓扑关联结构变化 | 灵敏度低，需要深度数据 |
+
+**关键洞察**：没有任何单一测序策略能完美检测所有类型的 SV。最优的策略是结合多种技术的互补优势。例如，用 Illumina 数据检测 SNP 和小 Indel，用长读长数据检测大 SV 的精确断点，用光学图谱验证 Mb 级的结构变化。
+
+## 8. Worked Example：从 Read Pair 信号推断缺失
+
+### 问题
+
+某 Illumina 测序文库的 Insert Size 分布为 $\mathcal{N}(350, 40^2)$。在基因组坐标 chr5:100,000--100,500 附近，观察到以下 Read Pair 信息：
+
+- 30 个正常 Read Pair（Insert Size 在 300--400 之间，FR 方向）
+- 15 个异常 Read Pair（Insert Size 在 600--800 之间，FR 方向）
+
+这些异常 Read Pair 的平均 Insert Size 为 700 bp。请推断可能的 SV 及其参数。
+
+### 求解
+
+**步骤 1**：计算异常 Read Pair 的 Z-score。
+
+$$Z = \frac{700 - 350}{40} = 8.75$$
+
+$|Z| = 8.75 \gg 3$，这些 Read Pair 显著异常。
+
+**步骤 2**：推断缺失长度。
+
+$$\hat{L}_{\text{DEL}} = 700 - 350 = 350 \text{ bp}$$
+
+推断为约 350 bp 的缺失。
+
+**步骤 3**：确定缺失坐标。
+
+异常 Read Pair 的上游 Read 比对到 chr5:99,500--99,650 附近，下游 Read 比对到 chr5:100,350--100,500 附近。
+
+缺失的候选区间为 chr5:99,650--100,350（约 700 bp 区间，扣除正常 Insert Size 后约 350 bp 为缺失）。
+
+**步骤 4**：统计显著性。
+
+在零假设（无 SV）下，$|Z| > 3$ 的概率为 $P < 0.003$。15 个 Read Pair 都异常的概率极低（假设每个 Read Pair 独立，$P < 0.003^{15} \approx 0$），因此该 SV 信号高度显著。
+
+**步骤 5**：验证建议。
+
+使用 Split Read 信号确认精确断点位置，使用 Read Depth 检查该区域的覆盖度是否下降约 50%（杂合缺失）或 100%（纯合缺失）。
+
+## 9. 临床与功能意义
 
 - **剂量效应**：大片段缺失或重复（CNV）常导致基因拷贝数变化，引发发育疾病或癌症。
 - **基因融合**：易位可能将两个不相关的基因拼在一起（如 BCR-ABL），成为癌症的驱动因子。
+
+### 临床中常见的 SV
+
+| 疾病/场景 | SV 类型 | 代表性变异 | 功能后果 |
+| :--- | :--- | :--- | :--- |
+| 慢性髓性白血病 (CML) | 平衡易位 | t(9;22) BCR-ABL1 融合 | 产生具有持续酪氨酸激酶活性的融合蛋白 |
+| DiGeorge 综合征 | 大片段缺失 | 22q11.2 缺失（约 3 Mb） | TBX1 等基因单倍型不足，导致心脏和免疫缺陷 |
+| Charcot-Marie-Tooth 病 | 基因重复 | PMP22 基因重复（1.5 Mb） | PMP22 过表达导致周围神经脱髓鞘 |
+| 微阵列基因组杂交 (CMA) | CNV | 全基因组 CNV 扫描 | 一线临床遗传学诊断工具 |
+
+## 10. 常见误区
+
+<PitfallsBox
+  items={[
+    '认为 50 bp 是 Small Variants 和 SV 的严格分界线。实际上，50--1000 bp 是一个"灰色地带"，短读长数据对这一范围内的 Indel 检测能力都很有限。这一范围通常被称为"中间尺度变异"，需要专门的工具和策略。',
+    '在 SV 检测中忽略 Insert Size 分布的偏移。不同文库的 Insert Size 分布可能差异很大，使用错误的 $\mu$ 和 $\sigma$ 会导致大量假阳性或假阴性。',
+    '将 Read Pair 信号作为唯一的 SV 证据。Read Pair 只能提供粗略的 SV 位置和大小估计，必须结合 Split Read 信号才能精确定位断点。',
+    '忽略 SV 检测工具的假阳性问题。由于 SV 的信号比 SNP 弱得多（支持证据少、信号弥散），SV 检测的假阳性率通常高于 SNP 检测。需要通过多种工具的交集或长读长验证来降低假阳性。',
+    '混淆 CNV 和 SV 的概念。CNV 是 SV 的一个子集（特指拷贝数变化），但 CNV 检测（基于 Read Depth）和 SV 检测（基于 Read Pair/Split Read）使用的是完全不同的算法。'
+  ]}
+/>
+
+## 11. 与真实工具的连接
+
+<ToolMappingBox
+  items={[
+    '**GATK HaplotypeCaller**：Small Variants 检测的工业标准。通过局部 de Bruijn 图组装实现准确的 SNP 和短 Indel 基因分型。',
+    '**DeepVariant**：Google 开发的基于深度学习的变异检测工具。使用卷积神经网络从 Pileup 图像中识别变异，在多个基准测试中表现优异。',
+    '**Manta**：结合 Read Pair、Split Read 和局部组装信号的 SV 检测工具。适用于短读长数据，是临床流程中的常用工具。',
+    '**Delly**：基于 Read Pair 和 Split Read 信号的 SV 检测工具。支持所有主要 SV 类型，包括复杂的断裂重排。',
+    '**Sniffles**：专为长读长数据（PacBio/Nanopore）设计的 SV 检测工具。利用长读长的优势检测精确断点和复杂 SV。',
+    '**CNVkit / EXCAVATOR2**：基于 Read Depth 的 CNV 检测工具。适用于全外显子和全基因组测序数据。'
+  ]}
+/>
 
 ## 相关页面
 
@@ -82,6 +280,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   links={[
     { title: '变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '变异分析的标准流程' },
     { title: '基因组重排', to: '/wiki-bioinfo/foundations/genome-rearrangements', description: 'SV 演化的数学模型' },
-    { title: '变异过滤与质控', to: '/wiki-bioinfo/variants/variant-filtering', description: '减少假阳性的统计方法' }
+    { title: '变异过滤与质控', to: '/wiki-bioinfo/variants/variant-filtering', description: '减少假阳性的统计方法' },
+    { title: '重复与低复杂度区域', to: '/wiki-bioinfo/variants/repeats-and-low-complexity', description: '重复区域对 SV 检测的影响' }
   ]}
 />

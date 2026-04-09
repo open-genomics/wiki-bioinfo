@@ -27,21 +27,88 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 1. 什么是 k-mer？
 
+<DefinitionList
+  items={[
+    {
+      term: 'k-mer',
+      definition: '一段长度为 $k$ 的连续子串。给定序列 $S = s_1 s_2 \dots s_n$，其第 $i$ 个 k-mer 为 $S[i \dots i+k-1]$。',
+    },
+    {
+      term: 'k-mer 频谱 (k-mer Spectrum)',
+      definition: '一段序列中所有 k-mer 及其出现次数的频率分布图，常用于基因组大小估计和错误校正。',
+    },
+  ]}
+/>
+
 **定义**：对于一段长度为 $n$ 的序列 $S$，其 **k-mer** 是指其中所有长度为 $k$ 的连续子串。
 - 数量：一段长度为 $n$ 的序列包含 $n-k+1$ 个 k-mer。
 - **示例**：序列 `ACGTC` 的 3-mers 为 `ACG`, `CGT`, `GTC`。
 
+### 理论总量
+
+在 DNA 字母表 $\Sigma = \{A, C, G, T\}$ 上，长度为 $k$ 的不同 k-mer 总数为 $|\Sigma|^k = 4^k$。
+
+| $k$ | 可能的 k-mer 总数 |
+|:---:|:---:|
+| 10 | $4^{10} \approx 10^6$ |
+| 15 | $4^{15} \approx 10^9$ |
+| 20 | $4^{20} \approx 10^{12}$ |
+| 31 | $4^{31} \approx 4.6 \times 10^{18}$ |
+
+当 $k$ 足够大时（如 $k=31$），理论 k-mer 数量远大于人类基因组长度（$\sim 3 \times 10^9$），因此大部分 k-mer 在基因组中只会出现一次，这正是 k-mer 索引区分力强的原因。
+
+### 反向互补 k-mer
+
+由于 DNA 双链的互补性，k-mer 通常需要同时考虑其**反向互补 (Reverse Complement)**：
+$$
+\text{rc}(\text{ACGT}) = \text{ACGT}
+$$
+$$
+\text{rc}(\text{AACG}) = \text{CGTT}
+$$
+
+在构建 k-mer 索引时，通常将每个 k-mer 与其反向互补中的字典序较小者作为规范形式 (Canonical k-mer)，从而将存储需求减半。
+
 ## 2. 统计与重复发现
 
-### 频率表 (l-mer Tabulation)
+### 频率表 (k-mer Tabulation)
+
 在基因组分析中，一种最简单的索引方式是构建 **k-mer 频率表**。
 - **结构**：一个哈希表或数组，记录每个可能的 $k$-长度字符串在基因组中出现的位置列表。
 - **用途**：快速定位重复序列。如果一个 k-mer 在表中出现了多次，说明它是一个重复单元。
 
+### k-mer 计数算法
+
+给定一组测序 Reads，统计所有 k-mer 的出现频率是一个基础操作：
+
+1. **遍历**：对每条 Read，滑动窗口提取所有长度为 $k$ 的子串。
+2. **哈希**：将 k-mer 通过哈希函数映射到哈希表中的条目。
+3. **计数**：对每个 k-mer 的计数加一。
+
+**时间复杂度**：$O(N)$，其中 $N$ 为所有 Read 的总碱基数。
+**空间复杂度**：$O(D)$，其中 $D$ 为不同 k-mer 的数量（Distinct k-mers）。
+
+对于人类基因组级别的数据（$\sim 30\times$ 覆盖度，$k=31$），不同的 k-mer 数量约为 $10^9$ 量级，需要数十 GB 内存。现代工具（如 Jellyfish、KMC）通过**最小完美哈希 (Minimal Perfect Hash)** 和**磁盘分区**等技术大幅降低了内存需求。
+
 ### 最大重复 (Maximal Repeats)
+
 短的重复（如 $k=12$）在基因组中非常普遍，往往没有生物学意义。
 - **挑战**：我们需要找到能够向左右两端延伸且不再相同的**最大重复**。
-- **算法思路**：先通过 k-mer 索引找到“种子”匹配，再尝试双向扩展。
+- **算法思路**：先通过 k-mer 索引找到"种子"匹配，再尝试双向扩展。
+
+### worked example：k-mer 频谱分析
+
+给定序列 `S = ACGACGT`，计算所有 3-mer 及其频率：
+
+| 3-mer | 位置 | 频率 |
+|:---:|:---:|:---:|
+| ACG | 1, 5 | 2 |
+| CGA | 2 | 1 |
+| GAC | 3 | 1 |
+| ACG | (同上) | — |
+| CGT | 6 | 1 |
+
+观察到 `ACG` 出现了 2 次，说明该序列中存在长度至少为 3 的重复。
 
 ## 3. 参数 $k$ 的权衡
 
@@ -52,11 +119,93 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 | **较小 ($k < 15$)** | 对错配更容忍，适合找短保守基序。 | 随机匹配多，区分力差，索引冗余大。 |
 | **较大 ($k > 25$)** | 区分力极强，适合唯一步对。 | 对测序错误极度敏感，一个碱基错就会破坏整个匹配。 |
 
+### 选择 $k$ 的经验法则
+
+$k$ 的选择取决于具体应用场景：
+
+- **de Bruijn 图组装**：通常选择 $k = 21 \sim 127$。$k$ 太小会导致图中存在大量模糊连接（来自重复序列）；$k$ 太大会导致图过于稀疏（来自测序错误）。
+- **Read Mapping 的种子**：BWA-MEM 使用 $k = 19$ 的 Minimizer，Minimap2 使用 $k = 15 \sim 20$。
+- **物种分类 (Kraken)**：$k = 31 \sim 35$，需要在区分力与分类数据库大小之间取得平衡。
+
+一个常用的启发式规则是：选择 $k$ 使得 $4^k$ 远大于基因组大小，但又不会大到因测序错误而产生过多唯一 k-mer。对于测序错误率 $e$，每个 k-mer 被破坏的概率约为 $1 - (1-e)^k \approx ek$（当 $e$ 和 $k$ 较小时），因此 $k$ 越大，错误带来的唯一 k-mer 越多。
+
 ## 4. 在 de Bruijn 图中的应用
 
 k-mer 是现代组装算法的核心抽象。
+
+<DefinitionList
+  items={[
+    {
+      term: 'de Bruijn 图 (de Bruijn Graph)',
+      definition: '一种有向图，其中节点为 $(k-1)$-mer，边为 $k$-mer。一条 $k$-mer 边从其前缀 $(k-1)$-mer 节点指向其后缀 $(k-1)$-mer 节点。',
+    },
+  ]}
+/>
+
 - **节点与边**：在图中，我们将 $(k-1)$-mer 作为顶点，而 $k$-mer 则代表连接前缀顶点和后缀顶点的**有向边**。
-- **组装本质**：寻找图中的欧拉路径，即重建那条遍历了所有观测到的 k-mer 的原始序列。
+- **组装本质**：寻找图中的欧拉路径 (Eulerian Path)，即重建那条遍历了所有观测到的 k-mer 的原始序列。
+
+### worked example：de Bruijn 图构建
+
+给定序列 `S = ACGACGT`，取 $k=3$，$(k-1)$-mer 为 2-mer：
+
+提取所有 3-mer 及其前缀/后缀：
+
+| 3-mer | 前缀 (2-mer) | 后缀 (2-mer) |
+|:---:|:---:|:---:|
+| ACG | AC | CG |
+| CGA | CG | GA |
+| GAC | GA | AC |
+| ACG | AC | CG |
+| CGT | CG | GT |
+
+构建 de Bruijn 图：
+- 节点：`AC`, `CG`, `GA`, `GT`
+- 边：`AC→CG`（出现 2 次）, `CG→GA`, `GA→AC`, `CG→GT`
+
+欧拉路径 `AC→CG→GA→AC→CG→GT` 对应的序列为 `ACGACGT`。
+
+## 5. 复杂度与适用前提
+
+### 时间与空间复杂度
+
+| 操作 | 时间复杂度 | 空间复杂度 |
+|:---:|:---:|:---:|
+| 提取所有 k-mer | $O(N)$ | — |
+| 哈希表计数 | $O(N)$ 平均 | $O(D)$ |
+| 最小完美哈希计数 | $O(N)$ 平均 | $O(D)$ |
+| 排序-去重计数 | $O(N \log N)$ | $O(N)$ |
+
+其中 $N$ 为输入序列总长度，$D$ 为不同 k-mer 的数量。
+
+### 适用前提
+
+- k-mer 方法假设序列可以完全由其局部 $k$-长度片段表征。当基因组中存在长于 $k$ 的重复时，仅靠 k-mer 无法唯一确定组装路径。
+- 对于高度杂合或重复度极高的基因组（如植物多倍体），需要结合配对信息或长读长数据才能解决歧义。
+
+## 6. 与真实工具的连接
+
+| 工具 | 用途 | k-mer 相关策略 |
+|:---:|:---:|:---:|
+| **Jellyfish** | k-mer 计数 | 基于哈希的多线程并行计数 |
+| **KMC** | k-mer 计数 | 磁盘分区 + 最小完美哈希 |
+| **SPAdes** | 基因组组装 | de Bruijn 图 + 多 $k$ 策略 |
+| **Kraken2** | 物种分类 | $k=35$ 的精确 k-mer 匹配 + 最小完美哈希 |
+| **Minimap2** | Read Mapping | Minimizers（一种稀疏 k-mer 采样） |
+
+## 7. 常见误区
+
+### k-mer 越长越好
+
+不一定。过长的 $k$ 值会导致：测序错误产生的错误 k-mer 大量占据存储空间；图中出现过多孤立节点（Dead Ends），使得欧拉路径难以找到。实践中通常通过分析 k-mer 频谱来选择合适的 $k$。
+
+### k-mer 计数结果可以直接当作基因组大小
+
+k-mer 频谱的主峰高度大致对应基因组中单拷贝区域的 k-mer 频率 $c$（即覆盖度）。基因组大小的估计值为 $\frac{\text{总 k-mer 数}}{c}$，但需要排除重复序列和错误 k-mer 的干扰。
+
+### de Bruijn 图组装只需要选一个 $k$ 值
+
+现代组装器（如 SPAdes）通常使用多 $k$ 策略，先在小 $k$ 值下获得连通性更好的图，再逐步增大 $k$ 值以消除歧义，最终合并结果。
 
 ## 相关页面
 
@@ -64,6 +213,7 @@ k-mer 是现代组装算法的核心抽象。
   links={[
     { title: '索引结构概览', to: '/wiki-bioinfo/sequence/indexing', description: '基于 k-mer 的数据库加速' },
     { title: 'de Bruijn 图组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: 'k-mer 在重构基因组中的应用' },
-    { title: '哈希表', to: '/wiki-bioinfo/sequence/hash-tables', description: '存储 k-mer 的核心数据结构' }
+    { title: '哈希表', to: '/wiki-bioinfo/sequence/hash-tables', description: '存储 k-mer 的核心数据结构' },
+    { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '另一种组织后缀信息的索引结构' }
   ]}
 />

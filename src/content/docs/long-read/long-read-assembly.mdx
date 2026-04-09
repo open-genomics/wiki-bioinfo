@@ -26,51 +26,173 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 1. 为什么长读长改变了组装？
+## 1. 要解决什么生物信息学问题？
 
-**短读长的困境**：如果基因组中有一段长度为 $1 \text{ kb}$ 的重复序列，而 Read 只有 $150 \text{ bp}$，算法将无法确定该 Read 来自哪个重复副本，导致组装图在此处断裂或形成复杂的“气泡”。
+基因组组装的本质是将数以百万计的短序列片段（Reads）重新拼接成完整的基因组序列。**长读长组装**要解决的核心问题是：如何利用长读长数据的长度优势，跨越短读长无法处理的重复区域，产出连续的染色体级别组装。
+
+**短读长的困境**：如果基因组中有一段长度为 $1 \text{ kb}$ 的重复序列，而 Read 只有 $150 \text{ bp}$，算法将无法确定该 Read 来自哪个重复副本，导致组装图在此处断裂或形成复杂的"气泡"。
 
 **长读长的突破**：$20 \text{ kb}$ 的 Read 可以轻而易举地覆盖整个重复区及其两侧的独特序列（Flanking sequences），从而像拼图一样将基因组唯一地拼接起来。
 
-## 2. OLC 组装范式
+### 从 de Bruijn 图到 OLC 的范式转变
+
+短读长组装的主流策略是 **de Bruijn 图 (de Bruijn Graph)**：将每条 Read 拆解为固定长度的 $k$-mer，然后以 $k$-mer 为节点构建有向图。这种方法在短读长下高效，但面对长读长时会产生极其庞大和稠密的图，计算代价不可接受。
+
+长读长组装回归了更古老的 **OLC (Overlap-Layout-Consensus)** 范式。其核心思想是直接利用 Read 之间的末端重叠关系构建图结构，而非通过 $k$-mer 进行间接表示。OLC 方法在理论上更直观，且天然适合处理变长的高错误率长序列。
+
+## 2. 输入与输出
+
+### 输入
+- 原始长读长数据（FASTQ 格式），通常经过初步的质量过滤。
+- 可选的短读长数据，用于最终的杂交校正。
+
+### 输出
+- 组装序列（FASTA 格式），包含多条 Contigs。
+- 组装质量报告（如 QUAST 评估结果）。
+
+## 3. 核心思想与数学模型
+
+OLC 组装的数学本质是**寻找图中的最优路径**问题。在 String Graph 中，每条 Read 是一个顶点，Read 之间的有向重叠是一条边（边权为重叠长度），我们需要找到一条覆盖尽可能多顶点的路径。
+
+然而，最长路径问题在一般图中是 NP-难的。实际的组装器通过以下策略来获得近似解：
+1. **贪心路径延伸**：从覆盖度最高的 Read 出发，在每一步选择最长的重叠边进行延伸。
+2. **拓扑排序约束**：在有向无环图的子区域中，最长路径可以在多项式时间内精确求解。
+3. **覆盖度引导**：优先选择高覆盖度路径，低覆盖度的分支可能是测序错误或嵌合序列 (Chimera)。
+
+## 4. OLC 组装范式
 
 长读长组装通常遵循 **Overlap-Layout-Consensus** 流程：
 
 ### 第一阶段：Overlap (重叠检测)
+
 寻找所有 Read 之间的重叠关系。
 - **算法挑战**：由于长读长数量巨大且存在错误，直接进行 $O(N^2)$ 的动态规划比对太慢。通常使用 **Minimap2** 等基于 Minimizer 的快速搜索算法。
+- **Minimizer 索引**：从每条 Read 中选取若干短的"代表序列"（Minimizer），建立哈希索引。通过查找 Minimizer 之间的共现关系，可以快速筛选出可能存在重叠的 Read 对，再对候选对进行精确比对验证。这一策略将搜索空间从 $O(N^2)$ 降至接近线性。
+- **过滤标准**：并非所有检测到的重叠都会被保留。通常需要设置最小重叠长度（如 $1 \text{ kb}$）和最小序列同一性（如 90%）的阈值，以过滤掉不可靠的短重叠和由重复序列引起的假阳性重叠。
 
 ### 第二阶段：Layout (布局构建)
+
 将重叠关系组织成图（如 **String Graph**），并寻找代表基因组的最优路径。
-- **约简 (Reduction)**：删除传递边（Transitive edges），简化图结构。
-- **处理分叉**：识别并解决由于重复序列或测序错误引起的复杂拓扑。
+- **约简 (Reduction)**：删除传递边（Transitive edges），简化图结构。如果 Read A 与 Read B 重叠，Read B 与 Read C 重叠，且 A 与 C 的重叠可以由 A-B 和 B-C 的关系完全推导出来，则 A-C 之间的边就是传递边，可以安全删除。
+- **处理分叉**：识别并解决由于重复序列或测序错误引起的复杂拓扑。当图中出现多个分叉路径时，算法需要判断这是真实的生物学重复还是测序假象。通常利用覆盖度信息（真实重复会有更高覆盖度）和 Read 两端的唯一性来做出判断。
 
 ### 第三阶段：Consensus (共识生成)
-由于单条长 Read 可能含有 $5\% \text{--} 15\%$ 的错误，组装结果（Draft Assembly）需要通过覆盖在该区域的所有 Reads 进行“多方投票”，提取最准确的共识碱基。
 
-## 3. Polishing (磨光/校正)
+由于单条长 Read 可能含有 $5\% \text{--} 15\%$ 的错误，组装结果（Draft Assembly）需要通过覆盖在该区域的所有 Reads 进行"多方投票"，提取最准确的共识碱基。
+
+共识生成的核心是一个**多序列比对 (Multiple Sequence Alignment)** 问题：将所有支持同一个基因组区域的 Reads 进行局部比对，然后在每个位置上选择出现频率最高的碱基。对于 Nanopore 数据，更先进的方法（如 Racon、Medaka）会直接利用原始电信号而非 Basecalled 序列来进行校正，从而保留更多的信息。
+
+## 5. Polishing (磨光/校正)
 
 组装完成后，通常需要进行 **Polishing** 以达到 Q40（$99.99\%$ 准确率）以上的水平。
-- **方法**：将原始 Reads 重新比对回组装好的 Contigs，利用信号模型（如 Nanopore 的电信号）或高精度二代数据进行碱基级别的修正。
 
-## 4. 质量评估标准
+### 长读长自校正 (Self-Correction)
+
+使用原始的长读长 Reads 重新比对回组装好的 Contigs，利用覆盖度投票进行碱基修正。常用的工具包括：
+- **Racon**：基于偏序图 (POA) 的快速共识工具，可在几分钟内完成一轮校正。
+- **Medaka**（ONT 专用）：利用神经网络模型，结合原始电信号进行碱基级别的精细校正。
+
+### 短读长杂交校正 (Hybrid Correction)
+
+对于追求极高精度的项目（如临床参考基因组），常使用高精度的短读长数据对长读长组装结果进行最终校正。短读长虽然长度有限，但其碱基准确率极高（Q35--Q40），可以有效地修复长读长组装中残留的少量 Indel 错误。常用的工具包括 **Pilon** 和 **NextPolish**。
+
+### 多轮迭代
+
+实际项目中，Polishing 通常需要多轮迭代。第一轮使用 Racon 进行快速粗修，第二轮使用 Medaka（ONT）或 Arrow（PacBio）进行精修，最后一轮使用短读长数据进行最终打磨。每一轮校正后，QV 分数通常会有显著提升。
+
+## 6. 质量评估标准
 
 <DefinitionList
   items={[
     {
       term: 'N50',
-      definition: '衡量连续性的核心指标。将组装片段按长度排序，累计到总长度 50% 时的那个片段的长度。',
+      definition: '衡量连续性的核心指标。将组装片段按长度排序，累计到总长度 50% 时的那个片段的长度。N50 越大，说明组装越连续。',
     },
     {
       term: 'BUSCO',
-      definition: '衡量完整性的指标。通过在组装结果中寻找保守的单拷贝同源基因，评估基因组覆盖是否完整。',
+      definition: '衡量完整性的指标。通过在组装结果中搜索一组高度保守的单拷贝直系同源基因（如昆虫使用 insecta_odb10 数据集），评估基因组中是否存在这些"必须存在"的基因。',
     },
     {
       term: 'QV (Quality Value)',
-      definition: '衡量单碱基准确性的指标。反映了组装序列与真实序列的符合程度。',
+      definition: '衡量单碱基准确性的指标，定义为 $QV = -10 \log_{10}(\text{错误率})$。例如 Q50 表示平均每 $10^5$ 个碱基中有一个错误（99.999% 准确率）。',
     },
   ]}
 />
+
+### 其他重要指标
+
+- **L50**：达到 N50 时的 Contig 数量。L50 越小越好。
+- **总长度 (Total Length)**：组装序列的总和，应与预期基因组大小接近。
+- **GC 含量**：组装序列的 GC 比例，应与参考物种的已知值一致。
+
+## 7. Worked Example：一个简化的 OLC 流程
+
+假设我们有以下 4 条 Reads（已简化表示）：
+
+```
+Read 1: A T G C C A T G G A C T
+Read 2:         C A T G G A C T T A
+Read 3:                   A C T T A G C
+Read 4: A T G C C A T G G A C T T A G C
+```
+
+**Overlap 检测**：
+- Read 1 和 Read 2 共享后缀/前缀 "CATGGACT"（8 bp 重叠）
+- Read 2 和 Read 3 共享后缀/前缀 "ACTTA"（5 bp 重叠）
+- Read 1 和 Read 4 共享前缀 "ATGCCATGGACT"（12 bp 重叠）
+
+**Layout**：构建 String Graph，Read 4 实际上是 Read 1 + Read 2 + Read 3 的完整跨度，因此 Read 1、2、3 构成的路径是传递边，可以直接使用 Read 4 作为组装结果。
+
+**Consensus**：由于 Read 4 完整覆盖了目标区域，且没有其他 Read 与之冲突，Consensus 结果即为 Read 4 本身。
+
+## 8. 复杂度与适用前提
+
+### 时间复杂度
+- Overlap 阶段：使用 Minimap2 时约为 $O(N \cdot L)$，其中 $N$ 为 Read 数量，$L$ 为平均 Read 长度。
+- Layout 阶段：String Graph 的构建和约简约为 $O(N \log N + E)$，$E$ 为边数。
+- Consensus 阶段：取决于覆盖度和比对算法，通常为 $O(N \cdot L \cdot C)$，$C$ 为平均覆盖度。
+
+### 适用前提
+- **足够的数据量**：通常需要 $30\text{--}60\times$ 的基因组覆盖度才能完成高质量组装。
+- **适当的 Read 长度分布**：Read 需要足够长以跨越基因组中最长的重复序列。
+- **合理的错误率**：虽然长读长组装算法可以容忍较高的错误率，但错误率过高会显著增加 Overlap 检测的假阳性和假阴性。
+
+## 9. 与真实工具的连接
+
+<DefinitionList
+  items={[
+    {
+      term: 'HiCanu / Canu',
+      definition: '专门针对长读长（尤其是 Nanopore）设计的 OLC 组装器。Canu 在 Overlap 阶段进行了针对性的纠错处理，能高效处理高错误率的超长 Read。',
+    },
+    {
+      term: 'Flye',
+      definition: '基于重复图 (Repeat Graph) 的长读长组装器。Flye 不使用传统的 String Graph，而是将重复序列显式地建模为图中的特殊结构，在处理高重复基因组时表现优异。',
+    },
+    {
+      term: 'hifiasm',
+      definition: '专为 PacBio HiFi 数据设计的组装器。利用 HiFi 的高准确率特性，hifiasm 能够直接进行单倍型定相组装（Phased Assembly），产出两套分属父本和母本的完整单倍型序列。',
+    },
+    {
+      term: 'Shasta',
+      definition: '利用 GPU 加速的快速长读长组装器，特别适合需要快速获得初步组装结果的场景。',
+    },
+  ]}
+/>
+
+## 10. 常见误区
+
+### "只要 Read 足够长，组装就一定连续"
+
+Read 长度是必要条件但不是充分条件。如果基因组中存在比最长 Read 更长的串联重复（Tandem Repeat），即使 Read 很长也无法区分重复的拷贝边界。此外，数据覆盖度不足也会导致部分区域完全没有 Read 覆盖。
+
+### "N50 高就代表组装质量好"
+
+N50 只衡量连续性，不衡量准确性。一个高 N50 但充满碱基错误的组装在下游分析中可能比低 N50 但准确的组装更有害。评估组装质量必须综合多个指标（N50、QV、BUSCO 等）。
+
+### "所有长读长组装器都使用 OLC 策略"
+
+不完全正确。虽然 OLC 是主流范式，但部分工具（如部分版本的 Flye）采用了基于重复图的方法，还有一些工具（如 Peregrine）探索了基于 de Bruijn 图的改进策略来处理长读长数据。
 
 ## 相关页面
 
@@ -78,6 +200,8 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   links={[
     { title: 'PacBio 与 Nanopore', to: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '理解数据的物理来源' },
     { title: '组装算法概览', to: '/wiki-bioinfo/assembly', description: '对比 OLC 与 de Bruijn 图' },
-    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '基于组装结果的变异挖掘' }
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '基于组装结果的变异挖掘' },
+    { title: 'Minimap2 比对', to: '/wiki-bioinfo/long-read/minimap2-alignment', description: '长读长 Overlap 检测的核心工具' },
+    { title: '重叠检测算法', to: '/wiki-bioinfo/long-read/overlap-detection', description: '深入理解 Minimizer 索引与过滤' }
   ]}
 />

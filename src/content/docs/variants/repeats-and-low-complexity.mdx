@@ -7,9 +7,11 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 
 <SummaryBox
-  summary="人类基因组中超过 50% 的序列由重复元素构成。这些区域是变异检测的“重灾区”，因为它们会引发多重比对歧义和测序错误积累。理解重复序列的算法特征是准确识别复杂区域变异的基础。"
+  summary="人类基因组中超过 50% 的序列由重复元素构成。这些区域是变异检测的'重灾区'，因为它们会引发多重比对歧义和测序错误积累。理解重复序列的算法特征是准确识别复杂区域变异的基础。"
   bullets={[
     '理解重复序列的主要分类：串联重复 (Tandem) 与散在重复 (Interspersed)',
     '掌握低复杂度区域 (LCR) 对比对质量 (MAPQ) 的负面影响',
@@ -34,7 +36,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     {
       term: '串联重复 (Tandem Repeats)',
-      definition: '一段序列紧密首尾相连。包括微卫星 (STR, 1-6bp 单元) 和卫星 DNA。极易发生“复制滑移”，是 Indel 变异的高发区。',
+      definition: '一段序列紧密首尾相连。包括微卫星 (STR, 1-6bp 单元) 和卫星 DNA。极易发生"复制滑移"，是 Indel 变异的高发区。',
     },
     {
       term: '散在重复 (Interspersed Repeats)',
@@ -47,6 +49,31 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
+### 人类基因组中重复序列的构成
+
+人类基因组（约 3.1 Gb）中，重复序列占据了超过一半的篇幅：
+
+| 重复类型 | 占基因组比例 | 典型长度 | 估计数量 |
+| :--- | :--- | :--- | :--- |
+| LINE-1 | ~17% | ~6 kb | ~50 万 |
+| Alu (SINE) | ~11% | ~300 bp | ~100 万 |
+| SVA | ~0.2% | 1--2 kb | ~2,700 |
+| 微卫星 (STR) | ~3% | 1--6 bp 重复单元 | 数十万 |
+| 片段重复 | ~5% | >1 kb | 数千 |
+| 着丝粒/端粒卫星 | ~8% | >100 bp 重复单元 | 数百个区域 |
+
+LINE-1 和 Alu 元素都属于**逆转录转座子 (Retrotransposons)**，它们通过"复制-粘贴"的机制在基因组中扩散。这一过程在人类演化中扮演了重要角色，也是当今基因组不稳定性的重要来源。
+
+### 低复杂度序列 (Low Complexity Sequences, LCR)
+
+低复杂度序列是指由少数几种碱基或短模体重复组成的区域。例如：
+
+- 同聚物 (Homopolymers)：`AAAAAAA` 或 `TTTTTTT`
+- 二核苷酸重复：`ATATATAT`
+- 简单重复：`CAGCAGCAG`
+
+这些序列在 Illumina 测序中特别容易产生错误。例如，在同聚物区域中，测序仪很难准确判断连续相同碱基的数量，导致插入/缺失错误。
+
 ## 2. 算法直觉：如何找到所有重复？
 
 在构建参考基因组或分析变异时，首先需要识别这些重复区域。
@@ -55,22 +82,194 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 通过对基因组中所有的 $l$-mer 进行计数，可以快速发现哪些短片段出现了多次。
 - **局限**：只能找到固定长度的重复，无法识别具有不同长度的**最大重复 (Maximal Repeats)**。
 
+#### k-mer 频率表的构建与查询
+
+构建过程：扫描基因组序列，对每个长度为 $k$ 的子串（k-mer）进行哈希计数。
+
+$$\text{count}(w) = |\{i : S[i:i+k] = w\}|$$
+
+如果 $\text{count}(w) > 1$，则 $w$ 是一个重复的 k-mer。
+
+**复杂度**：构建 $O(n)$ 时间（假设哈希表操作为 $O(1)$），空间 $O(n)$。但需要遍历多个 $k$ 值才能覆盖不同长度的重复。
+
 ### 进阶方案：后缀树 (Suffix Tree)
 后缀树是解决重复发现问题的终极武器。
 - **直觉**：树中任何一个拥有至少两个子节点的**内部节点**，都代表了一个在基因组中至少出现两次的子串。
 - **算法**：通过遍历后缀树，可以在线性时间 $O(n)$ 内找到基因组中所有的重复模式及其精确坐标。
 
+#### 后缀树中的重复发现
+
+在后缀树中，每个叶节点对应一个后缀。从根到某个内部节点 $v$ 的路径标签为 $w$，如果 $v$ 的子树中包含至少两个叶节点，则 $w$ 至少出现两次。
+
+更精确地：
+
+<DefinitionList
+  items={[
+    {
+      term: '最大重复 (Maximal Repeat)',
+      definition: '一个在基因组中出现至少两次的子串 $w$，且 $w$ 不能向左或向右扩展（即 $aw$ 和 $wb$ 在基因组中只出现一次）。在后缀树中对应满足特定分支条件的内部节点。',
+    },
+    {
+      term: '超重复 (Supermaximal Repeat)',
+      definition: '一个在基因组中出现至少两次的子串 $w$，且 $w$ 的每一次出现都不包含在任何更长的重复中。在后缀树中，对应其所有出现位置恰好终止于不同分支的内部节点。',
+    },
+    {
+      term: '最长重复子串 (Longest Repeated Substring)',
+      definition: '在整个序列中出现至少两次的最长子串。在后缀树中，对应深度最大的内部节点。',
+    },
+  ]}
+/>
+
+### 哈希表方案：后缀数组 + LCP 数组
+
+虽然后缀树理论优雅，但实际工程中内存开销巨大。更实用的方案是后缀数组 (Suffix Array) + LCP 数组 (Longest Common Prefix Array)：
+
+1. **后缀数组**：将所有后缀按字典序排序后的起始位置数组。
+2. **LCP 数组**：相邻后缀在排序后数组中的最长公共前缀长度。
+
+最大重复对应于 LCP 数组中的局部最大值。通过扫描 LCP 数组，可以在 $O(n)$ 时间内找到所有重复。
+
+**工具映射**：RepeatMasker 在内部使用基于哈希的快速比对工具（如 Cross_Match 和 RMBlast）将参考序列与已知重复家族数据库（如 Repbase）进行比对，而非从头构建后缀树。
+
 ## 3. 变异检测的挑战：映射错位 (Mis-mapping)
 
 在重复区域，比对软件（如 BWA）往往无法确定一条 Read 到底来自哪个副本。
 - **后果**：Read 的 **MAPQ (Mapping Quality)** 会被降为 0 或极低值。
-- **假阳性陷阱**：如果副本 A 发生了变异，但 Read 被错误比对到了副本 B，算法会误报副本 B 存在变异。这就是所谓的“伪变异” (Paralogous Sequence Variants, PSVs)。
+- **假阳性陷阱**：如果副本 A 发生了变异，但 Read 被错误比对到了副本 B，算法会误报副本 B 存在变异。这就是所谓的"伪变异" (Paralogous Sequence Variants, PSVs)。
 
-## 4. 实践中的对策
+### 比对歧义的量化
+
+比对软件通过 MAPQ 来量化映射的不确定性。MAPQ 的定义与错误概率的关系为：
+
+$$\text{MAPQ} = -10 \log_{10} P(\text{mapping is wrong})$$
+
+- MAPQ = 60：错误概率 $< 10^{-6}$（高置信度唯一比对）。
+- MAPQ = 0：错误概率 $\geq 0.1$（无法确定正确的比对位置）。
+
+在重复区域中，如果一个 Read 可以等概率地比对到 $k$ 个位置，则 MAPQ 通常被设为 0。
+
+### PSV 的具体机制
+
+假设基因组中有两个高度相似的片段重复区域：Region A（位置 chr1:100000--101000）和 Region B（位置 chr1:500000--501000），相似度为 98%。
+
+Region A 中有一个真实的 SNV（chr1:100500 处的 C>T），而 Region B 中该位置为参考碱基 C。
+
+当一条来自 Region A 的 Read 覆盖了变异位点时：
+- 如果 Read 中其他位置的碱基恰好与 Region B 更匹配（由于 2% 的序列差异），比对器可能将 Read 错误地比对到 Region B。
+- 此时，Region B 中会出现一个假的 C>T 信号（PSV），而 Region A 中真实的 C>T 信号被弱化。
+
+## 4. 重复区域的测序技术差异
+
+不同测序平台在重复区域的表现差异显著：
+
+| 平台 | 读长 | 重复区域优势 | 重复区域劣势 |
+| :--- | :--- | :--- | :--- |
+| Illumina | 150--300 bp | 准确率高（Q30+） | 读长短，无法跨越大片段重复 |
+| PacBio HiFi | 10--25 kb | 长读长可跨越重复区域 | 单碱基准确率低于 Illumina |
+| Oxford Nanopore | 10--100 kb | 超长读长 | 同聚物区域错误率较高 |
+| 10x Genomics (linked-reads) | 150 bp + barcodes | 借助条形码连接长距离信息 | 需要高质量 DNA，成本较高 |
+
+长读长测序技术（PacBio、Nanopore）在重复区域的变异检测中具有根本性优势，因为单条 Read 可以跨越整个重复单元甚至整个片段重复区域，消除了比对歧义。
+
+## 5. 实践中的对策
 
 1.  **使用掩码 (Masking)**：在分析前利用 RepeatMasker 标记已知重复区，过滤掉低信度位点。
 2.  **局部重组装 (Local Assembly)**：对于复杂的 Indel，不依赖比对，而是直接在局部利用 k-mer 重新拼出序列。
 3.  **长读长验证**：利用 PacBio 或 Nanopore 数据跨越整个重复区域，直接观测断点。
+
+### 掩码策略的细节
+
+重复掩码通常有两种级别：
+
+- **软掩码 (Soft Masking)**：将重复序列转为小写字母（如 `acgtacgt`）。比对器仍然可以比对到这些区域，但可以区分掩码区域和唯一区域。
+- **硬掩码 (Hard Masking)**：将重复序列替换为 `N`。比对器完全无法比对到这些区域。
+
+在变异检测中，软掩码更为常用。GATK 的 Best Practices 建议使用软掩码的参考基因组，以便比对器能够利用重复区域的上下文信息，同时在变异过滤时对掩码区域的变异进行额外审查。
+
+### 局部重组装的原理
+
+局部重组装（如 GATK 的 HaplotypeCaller 中的 de Bruijn 图组装）在变异位点周围提取所有 Reads，构建一个局部 de Bruijn 图：
+
+1. 从比对结果中提取候选区域的所有 Reads。
+2. 构建 de Bruijn 图，每个节点是一个 k-mer，边表示 k-1 碱基重叠。
+3. 在图中寻找路径，每条路径对应一个可能的单倍型。
+4. 将 Reads 重新比对到候选单倍型上，计算每种单倍型的似然。
+
+这种方法不依赖全局参考序列，因此能够避免比对歧义对变异检测的影响。
+
+## 6. Worked Example：k-mer 重复发现
+
+### 问题
+
+给定序列 $S = \texttt{ACGTACGTAC}$，使用 3-mer 频率表找出所有重复子串。
+
+### 求解
+
+**步骤 1**：提取所有 3-mer。
+
+| 位置 | 3-mer |
+| :--- | :--- |
+| 1 | ACG |
+| 2 | CGT |
+| 3 | GTA |
+| 4 | TAC |
+| 5 | ACG |
+| 6 | CGT |
+| 7 | GTA |
+| 8 | TAC |
+
+**步骤 2**：计数。
+
+| 3-mer | 计数 |
+| :--- | :--- |
+| ACG | 2 |
+| CGT | 2 |
+| GTA | 2 |
+| TAC | 2 |
+
+**步骤 3**：识别重复。
+
+所有四个 3-mer 都出现了两次。注意更长的重复模式：
+- `ACGT` 出现了两次（位置 1--4 和 5--8）。
+- `ACGTACGT` 只出现了一次（位置 1--8，重叠出现不算）。
+
+如果使用 4-mer：
+- `ACGT`（位置 1 和 5）：计数 = 2
+- `CGTA`（位置 2 和 6）：计数 = 2
+- `GTAC`（位置 3 和 7）：计数 = 2
+- `TACG`（位置 4 和 8）：计数 = 2
+
+如果使用 5-mer：
+- `ACGTA`（位置 1 和 5）：计数 = 2
+- `CGTAC`（位置 2 和 6）：计数 = 2
+- `GTACG`（位置 3 和 7）：计数 = 2
+- `TACGT`（位置 4 和 8）：计数 = 2
+
+最大的非重叠重复子串是 `ACGT`（长度 4）。
+
+## 7. 常见误区
+
+<PitfallsBox
+  items={[
+    '认为重复序列就是"垃圾 DNA"。虽然重复序列不编码蛋白质，但它们在基因调控、染色体结构和进化中扮演重要角色。例如，Alu 元件可以影响 mRNA 的可变剪接。',
+    '在变异检测中忽略 MAPQ 过滤。在重复区域中保留 MAPQ = 0 的 Reads 会产生大量假阳性变异。标准的做法是过滤 MAPQ < 20 或更严格的阈值。',
+    '假设 RepeatMasker 能标注所有重复区域。RepeatMasker 依赖于已知的重复家族数据库，无法发现新的或高度分歧的重复序列。',
+    '在微卫星区域使用基于比对的 Indel 检测工具。微卫星的滑移突变和测序错误使得标准工具难以准确分型，应使用专门的 STR 基因分型工具。',
+    '忽略 PSV（伪变异）对临床报告的影响。如果未经验证的变异恰好位于已知片段重复区域，应特别谨慎，建议用长读长数据或 PCR 进行验证。'
+  ]}
+/>
+
+## 8. 与真实工具的连接
+
+<ToolMappingBox
+  items={[
+    '**RepeatMasker**：重复序列标注的标准工具。将基因组序列与 Repbase 数据库比对，输出重复区域的坐标和类型。支持 soft/hard masking。',
+    '**Tandem Repeats Finder (TRF)**：专门用于识别串联重复（包括微卫星）的工具。通过自相关检测和一致性评分来定位串联重复区域。',
+    '**GATK HaplotypeCaller**：内置局部 de Bruijn 图组装功能，能在一定程度上克服重复区域的比对歧义。',
+    '**Delly / Manta**：结构变异检测工具，利用 Split Read 和 Read Pair 信号检测重复区域中的 SV。长读长数据能显著提升这些工具的灵敏度。',
+    '**GangSTR / ExpansionHunter**：专门用于短串联重复 (STR) 基因分型的工具。能准确估计重复单元的拷贝数，在临床遗传学中用于检测 STR 扩增疾病（如亨廷顿病）。'
+  ]}
+/>
 
 ## 相关页面
 
@@ -78,6 +277,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   links={[
     { title: 'Suffix Tree', to: '/wiki-bioinfo/sequence/suffix-tree', description: '高效发现重复的利器' },
     { title: 'k-mer 与序列表示', to: '/wiki-bioinfo/sequence/kmers', description: '简单的重复计数单元' },
-    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '解析大片段重排' }
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '解析大片段重排' },
+    { title: '比对质量与多重比对', to: '/wiki-bioinfo/alignment/mapping-quality-and-multi-mapping', description: '理解重复导致的 MAPQ 下降' }
   ]}
 />

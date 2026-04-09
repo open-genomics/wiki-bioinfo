@@ -30,18 +30,6 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **Needleman-Wunsch 算法**是全局比对的基石。它假设两条序列在进化上是整体相关的，因此试图将它们从第一个碱基对齐到最后一个。
 
-### 视觉化直觉
-```mermaid
-graph LR
-    subgraph Global_Alignment[Needleman-Wunsch: 强制全长对齐]
-    A[序列 X: G A T T A C A]
-    B[序列 Y: G C A T G C U]
-    A <-->|从头到尾| B
-    end
-    
-    style Global_Alignment fill:#f9f,stroke:#333,stroke-width:2px
-```
-
 ### 核心递推
 $$F(i,j) = \max \begin{cases} F(i-1,j-1) + s(x_i, y_j) \\ F(i-1,j) + g \\ F(i,j-1) + g \end{cases}$$
 
@@ -51,20 +39,6 @@ $$F(i,j) = \max \begin{cases} F(i-1,j-1) + s(x_i, y_j) \\ F(i-1,j) + g \\ F(i,j-
 ## 2. 局部比对 (Local Alignment)
 
 **Smith-Waterman 算法**针对的是“局部同源”场景。例如，两个功能完全不同的蛋白质可能共享同一个保守的催化结构域。
-
-### 视觉化直觉
-```mermaid
-graph LR
-    subgraph Local_Alignment[Smith-Waterman: 寻找最优片段]
-    X1[噪声...] --- X2[保守结构域] --- X3[噪声...]
-    Y1[无相关...] --- Y2[保守结构域] --- Y3[无相关...]
-    X2 <-->|局部对齐| Y2
-    end
-    
-    style X2 fill:#dfd,stroke:#333
-    style Y2 fill:#dfd,stroke:#333
-    style Local_Alignment fill:#fff,stroke:#333,stroke-dasharray: 5 5
-```
 
 ### 为什么全局比对会失效？
 如果在全局比对中，两个序列中间有一段高度保守的区域，但两侧是完全无关的噪音，那么两侧的 Gap 或错配惩罚会迅速“淹没”中间的匹配得分，导致算法给出错误的解释。

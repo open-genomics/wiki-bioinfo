@@ -40,33 +40,6 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 liftover 是将一个参考版本定义的基因组坐标，映射到另一参考版本的过程。
 
-### 视觉化直觉：Liftover 映射逻辑
-
-```mermaid
-graph TD
-    subgraph "源版本 (Source: e.g., GRCh37/hg19)"
-    S_POS1[chr1:1000]
-    S_GAP[--- Gap ---]
-    S_POS2[chr1:2000]
-    end
-    
-    subgraph "中间层 (Chain File: 全基因组比对关系)"
-    ALIGN[Alignment Blocks]
-    end
-    
-    subgraph "目标版本 (Target: e.g., GRCh38/hg38)"
-    T_POS1[chr1:1200]
-    T_INS[+ New Sequence]
-    T_POS2[chr1:2350]
-    end
-    
-    S_POS1 -->|Mapping| ALIGN -->|New Coord| T_POS1
-    S_POS2 -->|Mapping| ALIGN -->|New Coord| T_POS2
-    
-    style S_GAP fill:#eee,stroke-dasharray: 5 5
-    style T_INS fill:#e8f5e9,stroke:#2e7d32
-```
-
 其技术基础是：
 
 - **全基因组比对**：生成两个版本间的 chain files，记录区域间的对应、插入、删除和重排关系；

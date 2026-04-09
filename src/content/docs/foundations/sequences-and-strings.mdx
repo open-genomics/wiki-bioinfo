@@ -59,18 +59,6 @@ DNA 和 RNA 链具有极性。在生物信息学中，除非特别说明，**字
 2.  **反向 (Reverse)**：将字符串前后颠倒。
 3.  **反向互补**：得到 `5'-GCAT-3'`。
 
-```mermaid
-graph LR
-    subgraph "DNA Double Helix (Anti-parallel)"
-    S1["5' - A T G C - 3' (Forward)"]
-    S2["3' - T A C G - 5' (Complement)"]
-    S1 --- S2
-    end
-    
-    RC["5' - G C A T - 3' (Reverse Complement)"]
-    S2 -.->|"Reverse Direction"| RC
-```
-
 - **算法挑战**：在搜索 Motif 或比对 Reads 时，必须同时考虑原始序列及其反向互补链，因为测序仪可能从任何一条链上读取信息。
 
 ## 3. 坐标系统：生物信息学的“巨坑”
@@ -83,28 +71,6 @@ graph LR
 | **区间表示** | 通常为半开区间 $[start, end)$ | 通常为闭区间 $[start, end]$ |
 | 示例格式 | BED, BAM, Python 索引 | VCF, GFF, SAM (文本), R |
 | **长度计算** | $end - start$ | $end - start + 1$ |
-
-```mermaid
-graph TD
-    subgraph "Sequence: A C T G"
-    N1["Index 0: A"]
-    N2["Index 1: C"]
-    N3["Index 2: T"]
-    N4["Index 3: G"]
-    end
-
-    subgraph "0-based (Half-open [0, 2))"
-    Z1["Start: 0"] --> N1
-    Z2["End: 2"] --> N3
-    Z_Note["Range covers A, C"]
-    end
-
-    subgraph "1-based (Closed [1, 2])"
-    O1["Start: 1"] --> N1
-    O2["End: 2"] --> N2
-    O_Note["Range covers A, C"]
-    end
-```
 
 ### 示例
 对于序列 `ACTG`：

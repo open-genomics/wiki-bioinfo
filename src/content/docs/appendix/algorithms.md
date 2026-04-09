@@ -26,33 +26,6 @@ title: "算法基础"
 
 ### 核心算法类别
 
-为了直观理解算法范式与生物学问题的关系，我们可以参考下图：
-
-```mermaid
-graph TD
-    BioProb[生物学问题] --> SeqAnal[序列分析]
-    BioProb --> Structural[结构与功能预测]
-    BioProb --> Evolution[进化推断]
-
-    SeqAnal --> StrAlgo[字符串算法]
-    SeqAnal --> GraphAlgo[图算法]
-    
-    Evolution --> TreeAlgo[树与聚类算法]
-    
-    StrAlgo --> DP[动态规划: 比对/搜索]
-    StrAlgo --> Indexing[索引结构: BWT/FM-index]
-    
-    GraphAlgo --> Assembly[组装: de Bruijn 图]
-    GraphAlgo --> Network[网络分析: 信号通路]
-    
-    TreeAlgo --> NJ[邻接法/UPGMA]
-    TreeAlgo --> Parsimony[简约法]
-    
-    ProbModel[概率模型: HMM/EM] -.-> SeqAnal
-    ProbModel -.-> Evolution
-    ML[机器学习: CNN/Transformer] -.-> Structural
-```
-
 ### 算法复杂度速查
 
 不同复杂度随数据规模增长的直观对比：

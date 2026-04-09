@@ -94,36 +94,6 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
   ]}
 />
 
-## 核心数据格式的语义解析
-
-```mermaid
-graph TD
-    subgraph "Raw Data Layer"
-    FASTQ["FASTQ (Reads + Quality)"]
-    end
-
-    subgraph "Reference Layer"
-    FASTA["FASTA (Reference Genome)"]
-    GTF["GTF/GFF (Gene Annotation)"]
-    end
-
-    subgraph "Alignment Layer"
-    BAM["SAM/BAM/CRAM (Alignment)"]
-    end
-
-    subgraph "Inference Layer"
-    VCF["VCF/BCF (Variants)"]
-    COUNTS["Expression Counts/Matrix"]
-    end
-
-    FASTQ -->|"Alignment (BWA/Bowtie2)"| BAM
-    FASTA -->|"Reference Input"| BAM
-    BAM -->|"Variant Calling (GATK)"| VCF
-    BAM -->|"Quantification (FeatureCounts)"| COUNTS
-    GTF -->|"Annotation Input"| COUNTS
-    GTF -->|"Functional Annotation"| VCF
-```
-
 ### 1. FASTA：参考序列的计算表示
 
 **概念定义**

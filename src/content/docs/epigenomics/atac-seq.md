@@ -16,19 +16,6 @@ title: "ATAC-seq"
 
 传统的 DNase-seq 可以回答这些问题，但它需要大量细胞（10⁶ 量级）、操作复杂、耗时较长。ATAC-seq 正是为了解决这些问题而诞生。
 
-### ATAC-seq 的核心思想
-
-```mermaid
-graph LR
-    Tn5["Tn5 转座酶 (已装载接头)"] -- "偏好插入" --> Open["开放染色质 (无核小体)"]
-    Tn5 -- "被阻挡" --> Closed["紧密染色质 (有核小体)"]
-    Open --> Cut["切割 DNA 并连接接头"]
-    Cut --> Library["文库 DNA (准备测序)"]
-
-    style Open fill:#e1f5fe,stroke:#01579b
-    style Closed fill:#ffebee,stroke:#b71c1c
-```
-
 ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）由 Buenrostro 等人在 2013 年提出。
 它利用了**Tn5 转座酶**的特性：
 
@@ -44,26 +31,6 @@ ATAC-seq（Assay for Transposase-Accessible Chromatin using sequencing）由 Bue
 - 不同条件下开放图谱如何变化？
 
 ## 数据生物学特征
-
-### 插入片段长度分布的生物学含义
-
-```mermaid
-graph TD
-    Fragment["ATAC-seq 片段"] --> NFR["无核小体片段 (NFR)"]
-    Fragment --> Mono["单核小体片段"]
-    Fragment --> Multi["多核小体片段"]
-
-    NFR --> NFR_Size["< 100 bp"]
-    Mono --> Mono_Size["~ 200 bp"]
-    Multi --> Multi_Size["> 400 bp"]
-
-    NFR_Size --> NFR_Bio["反映转录因子结合位点"]
-    Mono_Size --> Mono_Bio["反映核小体占据位置"]
-
-    style NFR fill:#c8e6c9,stroke:#2e7d32
-    style Mono fill:#fff9c4,stroke:#fbc02d
-    style Multi fill:#ffccbc,stroke:#d84315
-```
 
 ATAC-seq 的一个独特优势是：
 插入片段长度本身携带了染色质结构信息。当 Tn5 转座酶切割开放染色质时，片段长度由以下因素决定：

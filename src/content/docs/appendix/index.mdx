@@ -11,18 +11,6 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 它不是知识主干的一部分，而是帮助读者在主干之外快速查词、追溯来源和整理后续补充内容的区域。
 
-```mermaid
-graph LR
-    Main[知识主干] --- Appendix((附录))
-    Appendix --> Glossary[术语表]
-    Appendix --> Algo[算法基础]
-    Appendix --> Ref[参考资料]
-    
-    Glossary -.->|统一术语| Main
-    Algo -.->|原理解析| Main
-    Ref -.->|溯源查证| Main
-```
-
 ## 子主题导航
 
 <SectionNavigator

@@ -6,32 +6,6 @@ title: "表观基因组学"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
-## 知识全景图
-
-```mermaid
-graph TD
-    Epigenomics["表观基因组学 (Epigenomics)"] --> DNA_Meth["DNA 甲基化<br/>(DNA Methylation)"]
-    Epigenomics --> Histone_Mod["组蛋白修饰<br/>(Histone Modification)"]
-    Epigenomics --> Chromatin_Acc["染色质可及性<br/>(Chromatin Accessibility)"]
-    Epigenomics --> High_Order["三维基因组结构<br/>(3D Genome)"]
-
-    DNA_Meth --> WGBS["WGBS / RRBS<br/>(检测位点状态)"]
-    Histone_Mod --> ChIP_seq_H["ChIP-seq<br/>(检测修饰分布)"]
-    Chromatin_Acc --> ATAC_seq["ATAC-seq<br/>(检测开放区域)"]
-    High_Order --> HiC["Hi-C / Micro-C<br/>(检测空间互作)"]
-
-    WGBS --> Gene_Silence["基因沉默 / 印记"]
-    ChIP_seq_H --> Regulation["启动子/增强子活性"]
-    ATAC_seq --> TF_Binding["转录因子足迹"]
-    HiC --> TAD_Loop["TAD / Loop 结构"]
-
-    style Epigenomics fill:#f9f,stroke:#333,stroke-width:4px
-    style DNA_Meth fill:#bbf,stroke:#333
-    style Histone_Mod fill:#bbf,stroke:#333
-    style Chromatin_Acc fill:#bbf,stroke:#333
-    style High_Order fill:#bbf,stroke:#333
-```
-
 <SummaryBox
   summary="表观基因组学研究不改变 DNA 序列的可遗传调控机制，包括 DNA 甲基化、组蛋白修饰、染色质可及性等。它是理解基因表达调控、细胞命运决定和疾病发生的关键层面。"
   bullets={[

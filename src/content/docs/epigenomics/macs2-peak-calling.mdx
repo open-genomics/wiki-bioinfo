@@ -111,26 +111,6 @@ MACS2 的关键创新在于动态估计背景参数 `λ`。
 
 **实际实现**：MACS2 会比较局部估计和全局缩放后的估计，通常取较大值作为最终 `λ`。但具体实现涉及复杂的启发式规则、窗口尺度选择和参数调整，远超此处的简化描述。
 
-### Fragment Size 估计
-
-```mermaid
-graph TD
-    Reads["测序 Reads (仅两端)"] --> Watson["正链 Reads (5' 端)"]
-    Reads --> Crick["负链 Reads (3' 端)"]
-
-    Watson -- "向右偏移 d/2" --> Center["蛋白结合中心 (Peak)"]
-    Crick -- "向左偏移 d/2" --> Center
-
-    subgraph "双峰模型 (Cross-correlation)"
-    Watson_Peak["正链峰"] --- Crick_Peak["负链峰"]
-    Watson_Peak -- "距离 d" --> Crick_Peak
-    end
-
-    style Center fill:#f9f,stroke:#333,stroke-width:2px
-    style Watson fill:#e1f5fe,stroke:#01579b
-    style Crick fill:#fff3e0,stroke:#e65100
-```
-
 ChIP-seq 测序得到的是片段的两端，真实的蛋白结合位置应该在片段中心。
 MACS2 通过以下步骤估计片段大小 `d`：
 

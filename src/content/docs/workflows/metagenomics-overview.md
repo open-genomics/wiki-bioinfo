@@ -1,5 +1,6 @@
 ---
 title: "Metagenomics 流程总览"
+description: 宏基因组学分析流程：从环境样本到物种组成、功能注释与差异分析的计算管线。
 ---
 
 

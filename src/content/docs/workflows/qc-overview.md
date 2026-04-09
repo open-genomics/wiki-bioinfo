@@ -1,5 +1,6 @@
 ---
 title: "质量控制（QC）总览"
+description: NGS 数据质量控制的核心指标（FastQC）、接头去除（Trimming）与过滤策略。
 ---
 
 

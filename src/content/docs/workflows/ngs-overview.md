@@ -1,5 +1,6 @@
 ---
 title: "NGS 流程总览"
+description: 高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。
 ---
 
 

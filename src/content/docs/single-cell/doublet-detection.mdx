@@ -55,6 +55,50 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 - **标记基因**：是否出现了生物学上互斥的标记（如 *CD3E* 与 *CD19* 同时高表达）？
 - **聚类位置**：是否位于两个原本界限清晰的 cluster 之间？
 
+## 5. 何时 Doublet 率更高
+
+以下实验条件会显著增加 Doublet 发生率：
+
+| 因素 | 机制 | 缓解策略 |
+|------|------|---------|
+| **上样细胞浓度过高** | 液滴中细胞密度增加，多细胞包裹概率上升 | 遵循厂商推荐的上样密度 |
+| **追求极高通量** | 相同体积下细胞密度必须提高 | 平衡通量与质量 |
+| **细胞大小不均一** | 大小差异大的细胞体系更难优化液滴参数 | 预分选细胞至均一大小 |
+| **样本混池** | 多个样本同时上样增加复杂性 | 结合基因型验证（如 Demuxlet / Vireo） |
+| **脆弱或粘连细胞** | 细胞易聚集成团 | 优化解离条件，过滤细胞团 |
+
+典型 10x 实验中，Doublet 率约为 2--8%，与上样细胞密度正相关。在实验设计阶段就应充分考虑这些因素，而非仅依赖后续计算去除。
+
+## 6. 常见误区与注意事项
+
+### 高 UMI 细胞就是 Doublet
+
+某些细胞类型天然具有高代谢活性（如增殖期细胞、浆细胞），大细胞类型（如巨噬细胞）也可能携带更多 UMI。应比较同类型细胞内的 UMI 分布，而非使用全局阈值一刀切。
+
+### Doublet 分数高就必须删除
+
+Doublet score 是概率性预测，存在假阳性。对边缘案例，应结合 UMAP 位置和标记基因表达综合判断，必要时可保留并做敏感性分析，而非盲目剔除。
+
+### 只关注异质 Doublet
+
+同质 Doublet 同样影响下游分析：在定量分析（如差异表达）中会引入系统性偏差，严重时会形成虚假的"亚群"。不可因为检测难度大就忽视其存在。
+
+### Doublet 检测后不做验证
+
+删除标记细胞后应进行验证：
+1. 检查被标记细胞的 UMAP 分布（应集中在 cluster 交界处）
+2. 查看其 top 差异表达基因（应混合两类特征）
+3. 统计各 cluster 的 Doublet 比例（极端不均匀可能提示算法偏差）
+4. 去除后重新聚类，确认 cluster 结构是否更清晰
+
+## 7. 参考资料
+
+- Wolock et al., *Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data* (Cell Systems, 2019)
+- McGinnis et al., *DoubletFinder: Doublet Detection in Single-Cell RNA Sequencing Data Using Artificial Nearest Neighbors* (Cell Systems, 2019)
+- Kang et al., *Demuxlet: Multiplexed droplet single-cell RNA-seq using natural genetic variation* (Nature Biotechnology, 2018)
+- Huang et al., *Vireo: Bayesian demultiplexing of pooled single-cell RNA-seq without genotype reference* (Genome Biology, 2019)
+- Luecken & Theis, *Best practices for single-cell analysis* (Nature Reviews Genetics, 2022)
+
 ## 相关页面
 
 <RelatedLinks

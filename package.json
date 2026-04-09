@@ -29,6 +29,7 @@
     "build": "astro build",
     "preview": "astro preview",
     "check": "astro check && astro build",
+    "check:links": "bash scripts/check-links.sh",
     "astro": "astro"
   },
   "dependencies": {

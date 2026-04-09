@@ -29,7 +29,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 10. [带状动态规划](./banded-dp.mdx)
 11. [BLAST：基于 seed-and-extend 的局部搜索](./blast.mdx)
 12. [Minimap2 比对算法](../long-read/minimap2-alignment.mdx)
-15. [多序列比对（MSA）](./multiple-sequence-alignment.mdx)
+13. [多序列比对（MSA）](./multiple-sequence-alignment.mdx)
 
 
 ## 子主题导航
@@ -102,18 +102,6 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       to: '/docs/alignment/blast',
       badge: '数据库搜索',
       description: '理解经典 BLAST 如何在大型数据库中结合 seed-and-extend 做局部相似性搜索。',
-    },
-    {
-      title: 'BWA 与 minimap2',
-      to: '/docs/alignment/bwa-minimap2',
-      badge: 'read mapping',
-      description: '从短读长到长读长，理解现代 mapper 如何结合 FM-index / minimizer 与扩展策略。',
-    },
-    {
-      title: 'MAPQ、CIGAR 与多重比对',
-      to: '/docs/alignment/mapping-quality-and-multi-mapping',
-      badge: '结果解释',
-      description: '把 mapper 输出的字段真正放回变异检测与表达定量的解释框架里。',
     },
     {
       title: '多序列比对（MSA）',

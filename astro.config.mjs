@@ -101,6 +101,10 @@ export default defineConfig({
                 { slug: 'foundations/restriction-mapping' },
                 { slug: 'foundations/genome-rearrangements' },
                 { slug: 'foundations/gene-prediction' },
+                { slug: 'foundations/breakpoints-and-reversals' },
+                { slug: 'foundations/pancake-flipping' },
+                { slug: 'foundations/eulerian-hamiltonian-paths' },
+                { slug: 'foundations/dag-longest-path' },
               ],
             },
           ],
@@ -110,6 +114,7 @@ export default defineConfig({
           collapsed: false,
           items: [
             { slug: 'core-methods' },
+            { slug: 'core-methods/algorithm-design-paradigms' },
             {
               label: '序列表示与索引',
               collapsed: true,
@@ -126,6 +131,7 @@ export default defineConfig({
                 { slug: 'sequence/suffix-tree' },
                 { slug: 'sequence/suffix-array-bwt' },
                 { slug: 'sequence/fm-index' },
+                { slug: 'sequence/approximate-pattern-matching' },
               ],
             },
             {
@@ -146,6 +152,7 @@ export default defineConfig({
                 { slug: 'alignment/banded-dp' },
                 { slug: 'alignment/blast' },
                 { slug: 'alignment/multiple-sequence-alignment' },
+                { slug: 'alignment/four-russians-speedup' },
               ],
             },
             {
@@ -177,6 +184,9 @@ export default defineConfig({
                 { slug: 'models/em-algorithm' },
                 { slug: 'models/bayesian-inference' },
                 { slug: 'models/gene-prediction' },
+                { slug: 'models/exon-chaining' },
+                { slug: 'models/spliced-alignment' },
+                { slug: 'models/gibbs-sampling' },
               ],
             },
           ],
@@ -301,6 +311,8 @@ export default defineConfig({
                 { slug: 'proteomics/database-search-and-fdr' },
                 { slug: 'proteomics/quantitative-proteomics' },
                 { slug: 'proteomics/spectrum-graphs' },
+                { slug: 'proteomics/spectral-convolution' },
+                { slug: 'proteomics/spectral-alignment' },
               ],
             },
             {
@@ -352,6 +364,7 @@ export default defineConfig({
                 { slug: 'phylogeny/neighbor-joining' },
                 { slug: 'phylogeny/parsimony' },
                 { slug: 'phylogeny/maximum-likelihood' },
+                { slug: 'phylogeny/corrupted-cliques-cast' },
               ],
             },
             {
@@ -403,6 +416,7 @@ export default defineConfig({
             { slug: 'appendix/glossary' },
             { slug: 'appendix/references' },
             { slug: 'appendix/algorithms' },
+            { slug: 'appendix/classical-problems-index' },
           ],
         },
       ],

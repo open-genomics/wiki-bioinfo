@@ -1,5 +1,6 @@
 ---
 title: "如何选择 alignment、assembly 或 pseudo-alignment"
+description: 根据研究目标（变异检测、定量分析、基因组重建）和数据特征，选择合适的序列分析策略。
 ---
 
 

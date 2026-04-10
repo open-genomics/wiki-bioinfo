@@ -4,7 +4,8 @@ title: "Hirschberg 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '核心思想是将问题分解为子问题，递归求解',
     '它是动态规划空间优化的经典案例',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: 'Needleman-Wunsch 算法', href: '/wiki-bioinfo/alignment/needleman-wunsch', description: 'Hirschberg 所优化的全局比对基础算法' },
+    { title: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '理解 DP 空间优化的前置知识' },
+    { title: '分治法', href: '/wiki-bioinfo/foundations/divide-and-conquer', description: 'Hirschberg 所使用的分治策略基础' },
   ]}
 />
 
@@ -268,3 +277,13 @@ Hirschberg 算法本身较少直接用于现代生物信息学工具，主要因
 - [全局比对与局部比对](./global-local.mdx)
 - [Needleman-Wunsch 算法](./needleman-wunsch.mdx)
 - [打分矩阵与 gap 罚分](./scoring-matrices.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: 'Hirschberg 所优化的全局比对基础算法' },
+    { title: '带状动态规划', to: '/wiki-bioinfo/alignment/banded-dp', description: '另一种 DP 优化策略，从时间维度加速高相似度序列比对' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '局部比对的标准算法，与 Hirschberg 形成全局/局部的对照' },
+    { title: '分治法', to: '/wiki-bioinfo/foundations/divide-and-conquer', description: 'Hirschberg 算法所使用的分治策略基础' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '理解 DP 空间优化的前置知识' },
+  ]}
+/>

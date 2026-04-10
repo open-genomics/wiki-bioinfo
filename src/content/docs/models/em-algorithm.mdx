@@ -4,7 +4,9 @@ title: "EM算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '重点理解E步和M步的交替迭代过程',
     'EM算法不保证全局最优，但保证单调改进似然',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { title: '贝叶斯推断基础', href: '/wiki-bioinfo/models/bayesian-inference' },
+    { title: 'PWM 与 PSSM', href: '/wiki-bioinfo/models/pwm-pssm' },
   ]}
 />
 
@@ -263,9 +273,12 @@ EM算法在生物信息学中的核心应用：
 - Bishop, C. M. *Pattern Recognition and Machine Learning*, Chapter 9
 - Bailey, T. L., & Elkan, C. (1994). "Fitting a mixture model by expectation maximization to discover motifs in biopolymers"
 
-## 相关页面
-
-- [Motif discovery的算法路线](./motif-discovery-algorithms.mdx)
-- [PWM与PSSM](./pwm-pssm.mdx)
-- [隐马尔可夫模型](./hmm.mdx)
-- [Viterbi、Forward与Backward](./viterbi-forward-backward.mdx)
+<RelatedLinks
+  links={[
+    { title: '贝叶斯推断基础', to: '/wiki-bioinfo/models/bayesian-inference', description: '贝叶斯推断提供处理隐变量的另一种视角，与 EM 形成互补。' },
+    { title: 'Motif discovery 的算法路线', to: '/wiki-bioinfo/models/motif-discovery-algorithms', description: 'MEME 等工具使用 EM 算法寻找转录因子结合位点。' },
+    { title: '隐马尔可夫模型', to: '/wiki-bioinfo/models/hmm', description: 'Baum-Welch 算法是 EM 在 HMM 参数估计上的特例。' },
+    { title: 'PWM 与 PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'EM 算法的输出常为 PWM/PSSM 形式的 motif 模型。' },
+    { title: 'Viterbi、Forward 与 Backward', to: '/wiki-bioinfo/models/viterbi-forward-backward', description: 'EM 的 M 步依赖 Forward-Backward 计算的后验概率。' },
+  ]}
+/>

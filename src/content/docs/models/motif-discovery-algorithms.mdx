@@ -4,6 +4,8 @@ title: "Motif discovery 的算法路线"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -15,15 +17,23 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
   ]}
 />
 
+<PrerequisitesBox
+  links={[
+    { title: 'Motif 寻找', href: '/wiki-bioinfo/models/motif-finding' },
+    { title: 'PWM 与 PSSM', href: '/wiki-bioinfo/models/pwm-pssm' },
+    { title: '随机化算法', href: '/wiki-bioinfo/foundations/randomized-algorithms' },
+  ]}
+/>
+
 ## 是什么
 
-在 `motif-finding.md` 里，我们把 motif 理解为“带有统计偏好的局部模式”。
+在 `motif-finding.md` 里，我们把 motif 理解为"带有统计偏好的局部模式"。
 
 而 **motif discovery** 要回答的是更进一步的问题：
 
-> 当 motif 本身并不知道、位置也不知道时，如何从一组序列中把它“找出来”？
+> 当 motif 本身并不知道、位置也不知道时，如何从一组序列中把它"找出来"？
 
-这使问题从“给定模型去扫描”变成了“从数据里反推模型”。
+这使问题从"给定模型去扫描"变成了"从数据里反推模型"。
 
 ## 为什么这是一个难问题
 
@@ -53,7 +63,7 @@ motif discovery 很难，原因在于：
 优点：
 
 - 概念简单；
-- 能作为“理论最直接”的基线；
+- 能作为"理论最直接"的基线；
 
 缺点：
 
@@ -106,7 +116,7 @@ motif discovery 很难，原因在于：
 
 - 速度快；
 - 容易解释；
-- 很适合形成一个“逐步收敛”的教学例子；
+- 很适合形成一个"逐步收敛"的教学例子；
 
 缺点是：
 
@@ -146,8 +156,8 @@ motif discovery 很难，原因在于：
 
 直观上可以理解为：
 
-- 贪心方法像“沿着当前感觉最好的方向一直走”；
-- randomized motif search 则像“从多个不同起点反复尝试，再选最优的一条路”。
+- 贪心方法像"沿着当前感觉最好的方向一直走"；
+- randomized motif search 则像"从多个不同起点反复尝试，再选最优的一条路"。
 
 **算法3：随机化 motif search**
 
@@ -197,7 +207,7 @@ Gibbs sampling 是 motif discovery 中很经典的一类随机化方法。
 5. 按这个概率重新抽样一个位置；
 6. 重复迭代。
 
-与纯贪心不同，这里不是每次都选“当前最优”，而是：
+与纯贪心不同，这里不是每次都选"当前最优"，而是：
 
 - 高分位置更可能被选中；
 - 但低一点的分数也不是完全没机会；
@@ -318,13 +328,13 @@ Gibbs sampling 是 motif discovery 中很经典的一类随机化方法。
 
 ## 5. 这些方法如何与 PWM / PSSM 连接
 
-motif discovery 的输出常常不是一句“找到了字符串 TATAAA”，而是：
+motif discovery 的输出常常不是一句"找到了字符串 TATAAA"，而是：
 
 - 一个 PFM；
 - 一个 PWM / PSSM；
 - 一个序列 logo；
 
-也就是说，discovery 算法的本质是在“找一个好模型”，而不只是找一个短串。
+也就是说，discovery 算法的本质是在"找一个好模型"，而不只是找一个短串。
 
 之后，这个模型就可以用于：
 
@@ -342,7 +352,7 @@ motif discovery 的输出常常不是一句“找到了字符串 TATAAA”，而
 - ChIP-seq / ATAC-seq 等实验信号；
 - 基因表达或调控信息；
 
-否则，高分 motif 可能只是统计上看起来“像”，但并不一定有真实生物学作用。
+否则，高分 motif 可能只是统计上看起来"像"，但并不一定有真实生物学作用。
 
 ## 常见误区
 
@@ -358,8 +368,12 @@ motif discovery 的输出常常不是一句“找到了字符串 TATAAA”，而
 
 随机化方法并不等于随意，它们往往是为了在巨大搜索空间中更有效地寻找高质量近似解。
 
-## 相关页面
-
-- [Motif 寻找](./motif-finding.mdx)
-- [PWM 与 PSSM](./pwm-pssm.mdx)
-- [隐马尔可夫模型](./hmm.mdx)
+<RelatedLinks
+  links={[
+    { title: 'Motif 寻找', to: '/wiki-bioinfo/models/motif-finding', description: '从 motif 的定义和理解出发，再看 discovery 算法会更清晰。' },
+    { title: 'PWM 与 PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'Motif discovery 的输出通常是 PWM/PSSM 形式的 motif 模型。' },
+    { title: '随机化算法', to: '/wiki-bioinfo/foundations/randomized-algorithms', description: 'Gibbs Sampling 和随机化搜索是 motif discovery 的核心随机化方法。' },
+    { title: 'Median String 问题', to: '/wiki-bioinfo/models/median-string', description: 'Median String 是 motif finding 的等价表述，提供了不同的搜索视角。' },
+    { title: '穷举搜索与分支定界', to: '/wiki-bioinfo/foundations/exhaustive-search', description: '穷举是 motif discovery 的概念基线，分支定界是其精确求解策略。' },
+  ]}
+/>

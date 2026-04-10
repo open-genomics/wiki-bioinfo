@@ -80,9 +80,34 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 <SectionNavigator
   items={[
     {
-      title: '生物信息学数据格式：从存储结构到语义层次',
+      title: '数据格式总论：从存储结构到语义层次',
       to: '/docs/formats/common-file-formats',
-      description: '系统性解析 FASTA、FASTQ、SAM/BAM/CRAM、GTF/GFF、BED、VCF/BCF 的概念定义、数据结构、计算语义和层次关系。包含综合实例和常见误区分析。',
+      description: '系统性理解六种核心格式的语义分层、依赖关系和常见误区。建立"参考层→观测层→证据层→推断层"的完整概念框架。',
+    },
+    {
+      title: 'FASTA 格式',
+      to: '/docs/formats/fasta-format',
+      description: '参考序列的标准表示。理解坐标骨架、索引机制和参考版本体系。',
+    },
+    {
+      title: 'FASTQ 格式',
+      to: '/docs/formats/fastq-format',
+      description: '原始测序观测的标准化编码。理解 Phred 质量分数、paired-end 结构和质控流程。',
+    },
+    {
+      title: 'SAM/BAM/CRAM 格式',
+      to: '/docs/formats/sam-bam-cram',
+      description: '比对结果的标准编码。理解 FLAG、CIGAR、MAPQ 和 TAG 字段。',
+    },
+    {
+      title: 'GTF/GFF/BED 格式',
+      to: '/docs/formats/gtf-gff-bed',
+      description: '基因组注释与区间表示。理解层级结构、坐标系统差异和应用场景。',
+    },
+    {
+      title: 'VCF/BCF 格式',
+      to: '/docs/formats/vcf-bcf-format',
+      description: '变异候选的标准编码。理解基因型、INFO 字段和变异过滤。',
     },
   ]}
 />

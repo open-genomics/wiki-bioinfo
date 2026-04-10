@@ -1,0 +1,231 @@
+---
+title: "PDB 蛋白质结构数据库：实验结构与计算预测"
+description: "PDB 如何存储和组织蛋白质三维结构，以及与 AlphaFold 预测结构的关系"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="PDB（Protein Data Bank）是全球唯一的实验测定生物大分子三维结构数据库。理解结构文件的格式（PDB/mmCIF）、测定方法（X-ray、NMR、Cryo-EM）和结构质量指标（分辨率、R-factor），是从序列走向结构功能解释的基础。"
+  bullets={[
+    'PDB 存储实验测定的蛋白质、核酸、复合体三维结构',
+    '主要测定方法：X 射线晶体学、NMR、冷冻电镜（Cryo-EM）',
+    '结构文件格式：PDB（旧）和 mmCIF（新标准）',
+    '质量指标：分辨率（Resolution）、R-factor/R-free 评估结构可靠性',
+    'AlphaFold DB 提供计算预测结构，与 PDB 实验结构互补',
+  ]}
+/>
+
+## 是什么
+
+**PDB（Protein Data Bank）** 是全球唯一的实验测定生物大分子三维结构存档数据库，由 wwPDB（Worldwide PDB）联盟维护。
+
+### 核心内容
+
+PDB 存储以下类型的结构：
+
+| 结构类型 | 占比 | 示例 |
+|---------|------|------|
+| **蛋白质** | ~90% | 酶、受体、抗体、结构蛋白 |
+| **核酸** | ~5% | DNA、RNA、DNA-RNA 复合体 |
+| **复合体** | ~5% | 蛋白-DNA、蛋白-蛋白、核糖体 |
+
+### 结构标识符
+
+| 标识符 | 格式 | 示例 | 说明 |
+|--------|------|------|------|
+| **PDB ID** | 4 位字符 | 1TUP、6VXX | 传统标识符，wwPDB 分配 |
+| **Entry ID** | 同 PDB ID | 1TUP | 新版命名，与 PDB ID 等价 |
+
+## 为什么重要
+
+PDB 结构信息是**从序列走向功能机制**的关键证据：
+
+- **功能位点识别**：活性位点、结合口袋、催化残基的三维位置
+- **变异解释**：氨基酸替换如何影响结构稳定性或相互作用
+- **药物设计**：基于结构的药物设计（structure-based drug design）
+- **突变效应**：致病突变是否破坏关键结构区域
+- **分子互作**：蛋白-蛋白、蛋白-DNA 相互作用的界面
+
+**关键认知**：结构比序列更接近功能。远缘同源蛋白可能序列差异很大（< 30% 相似），但折叠方式相似。
+
+<PrerequisitesBox
+  items={[
+    '理解蛋白质基本结构：一级、二级、三级、四级结构',
+    '了解氨基酸类型和侧链特性',
+    '如果不熟悉蛋白质功能注释，先阅读 UniProt 页面',
+  ]}
+/>
+
+## 结构测定方法
+
+### 三种主要方法
+
+| 方法 | 分辨率范围 | 适用场景 | 局限 |
+|------|-----------|---------|------|
+| **X 射线晶体学** | 0.8-3.5 Å | 大多数蛋白质结构 | 需要结晶，无法观察动态 |
+| **NMR** | 不适用 | 小蛋白、动态研究 | 仅适用于 < 40 kDa 分子 |
+| **冷冻电镜（Cryo-EM）** | 1.5-4.0 Å | 大型复合体、膜蛋白 | 设备昂贵，数据处理复杂 |
+
+### 分辨率的意义
+
+分辨率（Resolution）衡量结构细节的清晰度：
+
+| 分辨率 | 质量等级 | 可见信息 |
+|--------|---------|---------|
+| **< 1.5 Å** | 超高分辨率 | 单个原子、氢键、水分子 |
+| **1.5-2.5 Å** | 高分辨率 | 侧链方向、配体结合 |
+| **2.5-3.5 Å** | 中等分辨率 | 主链轨迹、大体侧链 |
+| **> 3.5 Å** | 低分辨率 | 仅主链框架，侧链模糊 |
+
+**越低越好**：分辨率数值越小，结构越清晰。
+
+## 结构文件格式
+
+### PDB 格式（传统）
+
+文本格式，每行 80 字符（历史限制）：
+
+```pdb
+ATOM      1  N   MET A   1      27.340  24.430   2.614  1.00 20.00           N
+ATOM      2  CA  MET A   1      26.266  25.413   2.842  1.00 20.00           C
+ATOM      3  C   MET A   1      26.913  26.639   3.531  1.00 20.00           C
+```
+
+| 列 | 内容 |
+|----|------|
+| 1-6 | 记录类型（ATOM/HETATM） |
+| 13-16 | 原子名称 |
+| 17 | 替代位置指示 |
+| 18-20 | 残基名称 |
+| 22 | 链 ID |
+| 23-26 | 残基序号 |
+| 31-38 | X 坐标 |
+| 39-46 | Y 坐标 |
+| 47-54 | Z 坐标 |
+| 55-60 | 占位符（occupancy） |
+| 61-66 | 温度因子（B-factor） |
+
+### mmCIF 格式（新标准）
+
+更灵活的结构化格式，无 80 字符限制：
+
+```mmcif
+loop_
+_atom_site.group_PDB
+_atom_site.id
+_atom_site.type_symbol
+_atom_site.label_atom_id
+_atom_site.label_comp_id
+_atom_site.label_seq_id
+_atom_site.Cartn_x
+_atom_site.Cartn_y
+_atom_site.Cartn_z
+ATOM 1 N N MET 1 27.340 24.430 2.614
+ATOM 2 C CA MET 1 26.266 25.413 2.842
+```
+
+**趋势**：wwPDB 正在从 PDB 格式转向 mmCIF 格式，新结构仅以 mmCIF 存档。
+
+## 结构质量指标
+
+### 关键指标
+
+| 指标 | 说明 | 优质阈值 |
+|------|------|---------|
+| **Resolution** | 测定分辨率 | < 2.5 Å |
+| **R-factor** | 模型与实验数据拟合度 | < 0.20 |
+| **R-free** | 交叉验证拟合度 | < 0.25 |
+| **Ramachandran favored** | 二面角合理性 | > 98% |
+| **Clashscore** | 原子碰撞数 | < 10 |
+
+### R-factor vs R-free
+
+- **R-factor**：模型与观测数据的拟合度（训练集）
+- **R-free**：使用未参与精修的数据计算（测试集）
+
+**关键注意**：R-free 比 R-factor 更可靠地反映模型质量。如果 R-free 远高于 R-factor，可能过拟合。
+
+## PDB 与 AlphaFold DB 的关系
+
+### 两种结构来源
+
+| 特性 | PDB（实验） | AlphaFold DB（预测） |
+|------|-----------|-------------------|
+| **来源** | 实验测定 | 深度学习预测 |
+| **覆盖度** | ~20 万条 | ~2 亿条（覆盖几乎所有已知蛋白） |
+| **可靠性** | 实验验证，高置信度 | 预测置信度因区域而异（pLDDT） |
+| **动态信息** | 可能包含多个构象 | 通常单一构象 |
+| **配体/复合体** | 可包含配体、DNA、其他蛋白 | 仅预测单个蛋白质链 |
+
+### 如何使用
+
+| 场景 | 推荐 | 原因 |
+|------|------|------|
+| 已知实验结构 | PDB | 经过实验验证 |
+| 无实验结构 | AlphaFold DB | 预测结构可用 |
+| 配体结合研究 | PDB | 包含配体坐标 |
+| 大规模结构分析 | AlphaFold DB | 覆盖更全 |
+
+**最佳实践**：优先使用 PDB 实验结构，如无则使用 AlphaFold 预测结构，但需注意预测置信度（pLDDT 分数）。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '结构可视化：PyMOL、ChimeraX、VMD 加载 PDB/mmCIF 文件',
+    '结构搜索：Foldseek 快速搜索结构相似性',
+    '药物设计：AutoDock、Schrödinger 基于 PDB 结构进行对接模拟',
+    '变异解释：查询 PDB 确认致病变异是否落在关键结构区域',
+    '结构比对：TM-align、CE 算法比较结构相似性',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**PDB 结构 = 绝对真理**：实验结构也有误差，需检查分辨率和 R-factor。',
+    '**静态结构代表所有状态**：蛋白质是动态分子，单一结构不反映所有构象。',
+    '**AlphaFold = 实验结构**：AlphaFold 是预测，不是实验测定，某些区域（如无序区）置信度低。',
+    '**PDB 只有蛋白质**：PDB 也存储核酸、糖类、复合体结构。',
+    '**结构相似 = 功能相同**：结构相似暗示功能相关，但不意味功能完全相同。',
+  ]}
+/>
+
+## 本章小结
+
+- PDB 是**实验测定结构**的唯一存档数据库
+- 三种主要测定方法：X-ray、NMR、Cryo-EM，分辨率是关键指标
+- 结构格式从 PDB 转向 mmCIF，质量指标包括 R-factor/R-free
+- AlphaFold DB 提供预测结构，与 PDB 互补使用
+- 结构比序列更接近功能，是药物设计和变异解释的关键
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'UniProt 蛋白质数据库',
+      to: '/docs/databases/uniprot',
+      label: '上游资源',
+      description: '蛋白质功能注释与 PDB 结构的映射关系。',
+    },
+    {
+      title: 'AlphaFold 与结构预测',
+      to: '/docs/structure-bioinfo/alphafold-and-structure-prediction',
+      label: '预测方法',
+      description: '深度学习如何预测蛋白质三维结构。',
+    },
+    {
+      title: '结构比对与 fold',
+      to: '/docs/structure-bioinfo/structure-alignment-and-fold',
+      label: '算法层',
+      description: '如何量化结构相似性。',
+    },
+  ]}
+/>

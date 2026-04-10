@@ -4,7 +4,9 @@ title: "UPGMA算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="UPGMA（Unweighted Pair Group Method with Arithmetic Mean）是一种层次聚类算法，通过不断合并最近的类群来构建系统发育树，适用于满足分子钟假设的数据。"
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心思想是每次合并距离最近的两个类群，用算术平均更新距离',
     '依赖分子钟假设：所有分支以相同速率演化',
     '是理解层次聚类和系统发育树构建的经典入门算法',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '系统发育树基础', href: '/wiki-bioinfo/phylogeny/phylogenetic-tree-basics', description: '系统发育树的概念与表示' },
+    { title: '距离方法概览', href: '/wiki-bioinfo/phylogeny/distance-methods', description: '距离矩阵建树方法族' },
+    { title: '层次聚类', href: '/wiki-bioinfo/foundations/clustering', description: 'UPGMA 的算法本质' },
   ]}
 />
 
@@ -373,9 +383,11 @@ WPGMA在某些情况下可能更稳定，但UPGMA更常用。
 - Sneath, P. H., & Sokal, R. R. (1973). *Numerical taxonomy: the principles and practice of numerical classification*.
 - Felsenstein, J. (2004). *Inferring phylogenies*. Sinauer associates.
 
-## 相关页面
-
-- [距离方法概览](./distance-methods.mdx)
-- [Neighbor-Joining算法](./neighbor-joining.mdx)
-- [层次聚类](./hierarchical-clustering.mdx)
-- [加法系统发育](./additive-phylogeny.mdx)
+<RelatedLinks
+  links={[
+    { title: '距离方法概览', to: '/wiki-bioinfo/phylogeny/distance-methods', description: 'UPGMA 所属的距离矩阵建树方法族' },
+    { title: 'Neighbor-Joining 算法', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '不依赖分子钟假设的建树方法' },
+    { title: '层次聚类', to: '/wiki-bioinfo/phylogeny/hierarchical-clustering', description: 'UPGMA 的算法本质' },
+    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: 'UPGMA 正确性的理论基础' }
+  ]}
+/>

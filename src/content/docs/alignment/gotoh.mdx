@@ -4,7 +4,9 @@ title: "Gotoh 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '核心是维护三个独立的 DP 矩阵：匹配状态、X 方向 gap、Y 方向 gap',
     '它是所有现代比对工具中 affine gap 模型的理论基础',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: 'Needleman-Wunsch 算法', href: '/wiki-bioinfo/alignment/needleman-wunsch', description: 'Gotoh 算法的基础框架' },
+    { title: 'Affine gap penalty', href: '/wiki-bioinfo/alignment/affine-gap-penalty', description: 'Gotoh 所处理的 gap 模型' },
+    { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '理解 DP 递推关系的起点' },
   ]}
 />
 
@@ -359,3 +369,13 @@ Gotoh 算法是：
 - [打分矩阵与 gap 罚分](./scoring-matrices.mdx)
 - [Affine gap penalty](./affine-gap-penalty.mdx)
 - [Needleman-Wunsch 算法](./needleman-wunsch.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: 'Gotoh 算法的基础框架，处理线性 gap 罚分的全局比对' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: 'Gotoh 思想同样可扩展到局部比对场景' },
+    { title: 'Affine gap penalty', to: '/wiki-bioinfo/alignment/affine-gap-penalty', description: 'Gotoh 算法所处理的 affine gap 模型的详细说明' },
+    { title: '打分矩阵与 gap 罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '比对打分体系的全面介绍' },
+    { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '理解序列比对 DP 递推关系的最简起点' },
+  ]}
+/>

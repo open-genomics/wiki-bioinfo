@@ -4,7 +4,9 @@ title: "半全局比对"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '重点理解半全局比对的边界条件如何与全局比对不同',
     '半全局比对在很多实际工具中是比全局比对更实用的选择',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: 'Needleman-Wunsch 算法', href: '/wiki-bioinfo/alignment/needleman-wunsch', description: '半全局比对的基础框架' },
+    { title: '全局比对与局部比对', href: '/wiki-bioinfo/alignment/global-local', description: '比对策略的选择与适用场景' },
+    { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '理解 DP 递推关系的起点' },
   ]}
 />
 
@@ -322,3 +332,13 @@ S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 - [Needleman-Wunsch算法](./needleman-wunsch.mdx)
 - [Smith-Waterman算法](./smith-waterman.mdx)
 - [Minimap2 比对算法](../long-read/minimap2-alignment.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '半全局比对的基础框架，通过调整边界条件实现变体' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '允许从任意位置开始/结束的局部比对，与半全局比对形成对照' },
+    { title: '全局比对与局部比对', to: '/wiki-bioinfo/alignment/global-local', description: '三种比对策略的系统比较与选择指南' },
+    { title: '带状动态规划', to: '/wiki-bioinfo/alignment/banded-dp', description: '半全局比对的时间复杂度优化方法' },
+    { title: 'Minimap2 比对算法', to: '/wiki-bioinfo/long-read/minimap2-alignment', description: '实际工具中使用半全局比对思想的 read mapper' },
+  ]}
+/>

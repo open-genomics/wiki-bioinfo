@@ -4,7 +4,8 @@ title: "概率算法与统计推断"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '理解概率模型如何表示生物学知识的先验',
     '掌握从观测数据推断隐状态的统计方法',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '概率模型与模式识别', href: '/wiki-bioinfo/models/index' },
+    { name: '生物信息学算法总览', href: '/wiki-bioinfo/applications/algorithms-overview' },
+    { name: '动态规划算法', href: '/wiki-bioinfo/applications/dynamic-programming' },
   ]}
 />
 
@@ -106,9 +115,9 @@ $$
 
 **视觉化模型逻辑**：
 
-1.  **状态转移图**：想象一个有向图，节点是隐状态（如“编码区”和“非编码区”），边上的权重是转移概率。
+1.  **状态转移图**：想象一个有向图，节点是隐状态（如"编码区"和"非编码区"），边上的权重是转移概率。
 2.  **动态规划网格 (Trellis Diagram)**：将时间轴展开，每个时间点都有所有可能的隐状态。Viterbi 算法就是在寻找穿过这个网格的最优路径。
-3.  **发射过程**：每个状态像一个带权重的“骰子”，在每个位置随机掷出一个观测碱基。
+3.  **发射过程**：每个状态像一个带权重的"骰子"，在每个位置随机掷出一个观测碱基。
 
 ### 基本概念
 
@@ -491,6 +500,8 @@ RANDOMIZEDQUICKSORT(array)
 
 ### 采样方法
 
+采样方法是从复杂概率分布中获取样本的核心技术。**蒙特卡洛方法（Monte Carlo）**通过随机采样近似计算积分或期望值，广泛应用于概率推断和不确定性量化。**重要性采样（Importance Sampling）**从提议分布采样并用权重校正，适用于目标分布难以直接采样的场景。**马尔可夫链蒙特卡洛（MCMC）**通过构造马尔可夫链从目标分布中采样，特别适合高维复杂分布，其中 Gibbs 采样和 Metropolis-Hastings 是最常用的两种 MCMC 算法。在生物信息学中，这些方法被用于系统发育贝叶斯推断、motif 发现、参数估计等任务。
+
 ### 1. 拒绝采样（Rejection Sampling）
 
 **思想**：从简单分布采样，按概率接受或拒绝。
@@ -640,3 +651,13 @@ $$
 - [PWM/PSSM 与 motif](../models/pwm-pssm.mdx)
 - [算法总览](./algorithms-overview.mdx)
 - [动态规划算法](./dynamic-programming.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'HMM 与 Viterbi 算法', to: '/wiki-bioinfo/models/viterbi-forward-backward', description: 'HMM 三个基本问题的 DP 解法' },
+    { title: 'PWM/PSSM 与 motif', to: '/wiki-bioinfo/models/pwm-pssm', description: '位置权重矩阵的概率模型表示' },
+    { title: '概率模型与模式识别', to: '/wiki-bioinfo/models/index', description: '概率模型在生物信息学中的系统介绍' },
+    { title: '算法总览', to: '/wiki-bioinfo/applications/algorithms-overview', description: '生物信息学核心算法全景' },
+    { title: '动态规划算法', to: '/wiki-bioinfo/applications/dynamic-programming', description: 'DP 在 HMM Viterbi/Forward/Backward 中的应用' },
+  ]}
+/>

@@ -4,8 +4,9 @@ title: "相似性网络融合（SNF）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="SNF 通过为每组学构建样本相似性网络，然后迭代融合这些网络，实现多组学数据的整合，不依赖于数据分布假设。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心是将数据转化为网络表示，通过消息传递实现融合',
     '不假设数据分布，适合不同类型的数据',
     '算法简单直观，是理解图方法多组学整合的入门算法',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: '多组学整合策略', to: '/wiki-bioinfo/multi-omics/integration-strategies' },
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf' },
   ]}
 />
 
@@ -612,10 +621,11 @@ labels <- spectralClustering(W, K = 3)
 - Wang, B., et al. (2014). "Similarity network fusion for aggregating data types on a genomic scale". *Nature methods*, 11(3), 333-337.
 - Wang, B., & A. J. (2018). "Similarity Network Fusion: A Fast and Effective Method for Integrating Multi-Omics Data"
 
-## 相关页面
-
-- [整合算法概览](./integration-algorithms.md)
-- [联合NMF](./joint-nmf.mdx)
-- [典型相关分析](./canonical-correlation-analysis.mdx)
-- [MOFA+](./mofa-plus.mdx)
-- [图算法基础](../applications/graph-algorithms.mdx)
+<RelatedLinks
+  links={[
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms', description: 'SNF 在整合算法中的定位' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf', description: '基于矩阵分解的替代整合方法' },
+    { title: '典型相关分析', to: '/wiki-bioinfo/multi-omics/canonical-correlation-analysis', description: '基于相关性的替代整合方法' },
+    { title: 'MOFA+', to: '/wiki-bioinfo/multi-omics/mofa-plus', description: '因子分析框架下的整合方法' }
+  ]}
+/>

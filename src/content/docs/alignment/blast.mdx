@@ -4,7 +4,6 @@ title: "BLAST：基于 seed-and-extend 的局部搜索"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
@@ -279,7 +278,7 @@ E-value 衡量的是**统计显著性**，而非同源性的强度。一个短�
 <RelatedLinks
   links={[
     { title: '局部比对算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: 'BLAST 追求的精确基准' },
-    { title: 'Seed-and-Extend 策略', to: '/wiki-bioinfo/alignment/seed-and-extend', description: '更通用的算法加速思想' },
+    { title: 'BWA 比对工具', to: '/wiki-bioinfo/sequence/suffix-array-bwt', description: 'BWT 索引与 seed-extend 的工业实现' },
     { title: '打分矩阵与罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '理解比对得分的物理意义' }
   ]}
 />

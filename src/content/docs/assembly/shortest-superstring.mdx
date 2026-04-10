@@ -4,6 +4,8 @@ title: "最短超串问题"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +15,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '掌握问题与旅行商问题（TSP）的联系',
     '学习贪心近似算法及其性能保证',
     '了解问题在真实基因组组装中的局限性'
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '图遍历算法', href: '/wiki-bioinfo/assembly/graph-traversal-algorithms' },
+    { title: 'OLC：Overlap-Layout-Consensus', href: '/wiki-bioinfo/assembly/olc' },
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
   ]}
 />
 
@@ -283,10 +293,42 @@ GREEDYSUPERSTRING(strings)
 
 虽然直接用于实际组装有限，但最短超串问题是理解组装算法原理的重要基础。
 
+## 常见误区
+
+### 最短超串问题的解就是真实的基因组序列
+
+最短超串问题寻找的是包含所有输入片段的最短字符串，但真实的基因组序列不一定是"最短"的。例如，当输入 reads 中存在来自重复序列的片段时，最短超串可能将不同重复拷贝的 reads 压缩到一起，导致组装结果比真实基因组更短。此外，最短超串不考虑正负链问题，而真实基因组是双链的。
+
+### 贪心算法的近似比是 2，所以贪心解最多是最优解的 2 倍
+
+近似比 2 是一个理论上界，意味着在最坏情况下贪心解的长度不超过最优解的 2 倍。但在实际数据中，贪心算法通常表现远好于此上界。反过来，也不能因此认为贪心算法"总是接近最优"——存在精心构造的反例使贪心解显著劣于最优解。
+
+### 最短超串问题等价于 OLC 组装
+
+最短超串是 OLC（Overlap-Layout-Consensus）组装的极端简化版本。真实组装需要处理测序错误、重复序列、覆盖度不均和正负链等问题，这些在最短超串问题中都不存在。最短超串的价值在于提供理论框架，而非直接用于实际组装。
+
+### 重叠图就是旅行商问题图
+
+虽然最短超串可以归约为旅行商问题（TSP），但两者的图结构有重要区别。TSP 的目标是访问所有顶点且每个顶点恰好访问一次（哈密顿回路），而最短超串的图论建模中，顶点对应字符串，边的权重是负的重叠长度。这个归约是概念性的，实际组装中直接在重叠图上寻找路径，而非调用 TSP 求解器。
+
+### NP 完全意味着无法在实际中解决
+
+NP 完全是关于最坏情况的理论分类，并不意味着问题在实际数据上无法高效近似。事实上，贪心算法和启发式方法在大多数实际输入上表现良好。生物信息学中的许多 NP 完全问题（如 Motif Finding、蛋白质折叠）都通过近似算法在实践中得到了有效解决。
+
 ## 相关页面
 
 - [de Bruijn 图组装](de-bruijn.mdx
 - [OLC 组装](olc.mdx
 - [组装评估](assembly-evaluation.mdx
 - [重复序列处理](repeats-and-graph-cleaning.mdx
-- [图遍历算法](graph-traversal-algorithms.mdx
+- [图遍历算法](graph-traversal-algorithms.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'OLC：Overlap-Layout-Consensus', to: '/wiki-bioinfo/assembly/olc', description: '最短超串思想在真实组装中的扩展实现' },
+    { title: 'de Bruijn graph 组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: '现代短读长组装的主流图论方法' },
+    { title: '测序杂交（SBH）', to: '/wiki-bioinfo/assembly/sequencing-by-hybridization', description: 'SBH 与最短超串问题的理论联系' },
+    { title: '重复序列、分叉与图清理', to: '/wiki-bioinfo/assembly/repeats-and-graph-cleaning', description: '重复序列对组装路径的影响' },
+    { title: '组装评估', to: '/wiki-bioinfo/assembly/assembly-evaluation', description: '评估组装结果的质量与可用性' },
+  ]}
+/>

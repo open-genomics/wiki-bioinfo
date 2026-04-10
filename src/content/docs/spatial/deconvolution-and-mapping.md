@@ -3,10 +3,20 @@ description: 空间去卷积（deconvolution）的数学模型、算法实现与
 title: "去卷积与细胞映射"
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 是什么
 
 **空间去卷积（Spatial Deconvolution）** 是一类将空间转录组 spot 的混合表达信号分解为各细胞类型贡献比例的计算方法。由于大多数空间平台（如 10x Visium）的一个 spot 包含多个细胞，直接读取的表达值是这些细胞表达谱的加权平均。去卷积的目标是利用单细胞 RNA-seq（scRNA-seq）提供的参考图谱，反推每个 spot 中各细胞类型的组成比例。
+
+<PrerequisitesBox
+  items={[
+    { title: '空间转录组总览', to: '/wiki-bioinfo/spatial/spatial-transcriptomics-overview' },
+    { title: 'spot 与单细胞', to: '/wiki-bioinfo/spatial/spot-vs-single-cell' },
+    { title: '单细胞组学', to: '/wiki-bioinfo/single-cell/index' },
+  ]}
+/>
 
 ## 要解决什么生物信息学问题
 
@@ -262,10 +272,11 @@ scRNA-seq 参考数据
 - Biancalani et al., 2021. *Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram.* Nature Methods
 - Arnold et al., 2023. *Spatial deconvolution of HER2-positive breast cancer delineates tumor-associated cell type interactions.* Nature Communications
 
-## 相关页面
-
-- **[空间转录组总览](./spatial-transcriptomics-overview.md)** — 理解空间数据的产生与技术背景
-- **[spot 与单细胞](./spot-vs-single-cell.md)** — 深入理解为什么要进行去卷积
-- **[单细胞组学](../single-cell/index.mdx)** — 构建参考图谱的基础
-- **[概率模型](../models/index.mdx)** — 理解贝叶斯去卷积的统计基础
-- **[矩阵分解](../multi-omics/joint-nmf.mdx)** — 理解 NMF 去卷积的数学原理
+<RelatedLinks
+  links={[
+    { title: '空间转录组总览', to: '/wiki-bioinfo/spatial/spatial-transcriptomics-overview', description: '理解空间数据的产生与技术背景' },
+    { title: 'spot 与单细胞', to: '/wiki-bioinfo/spatial/spot-vs-single-cell', description: '理解为什么要进行去卷积' },
+    { title: '单细胞组学', to: '/wiki-bioinfo/single-cell/index', description: '构建去卷积所需的参考图谱' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf', description: 'NMF 去卷积的数学原理' }
+  ]}
+/>

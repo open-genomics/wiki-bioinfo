@@ -5,6 +5,8 @@ title: "字符串模式匹配"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '先理解朴素匹配为什么慢，再看 KMP 和 Boyer-Moore 如何优化会更顺。',
     '这些算法的思想也体现在现代 BLAST 等工具的 seed-and-extend 策略中。',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' },
+    { name: '序列表示与索引', href: '/wiki-bioinfo/sequence/index' }
   ]}
 />
 
@@ -357,9 +367,12 @@ BLAST 并不直接使用上述算法，但借鉴了思想：
 - Dan Gusfield, *Algorithms on Strings, Trees, and Sequences*
 - Pattern Matching Algorithms (各种教材和论文)
 
-## 相关页面
-
-- [算法与复杂度](./algorithms-and-complexity.mdx)
-- [序列表示与索引](../sequence/index.mdx)
-- [序列比对](../alignment/index.mdx)
-- [Motif 搜索](../models/motif-finding.mdx)
+<RelatedLinks
+  links={[
+    { title: '序列表示与索引', to: '/wiki-bioinfo/sequence/index', description: '后缀数组、FM-index 等高级索引结构是模式匹配的延伸。' },
+    { title: '近似模式匹配', to: '/wiki-bioinfo/sequence/approximate-pattern-matching', description: '在允许错配的情况下进行模式匹配，更贴近真实生物信息学场景。' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index', description: '序列比对在模式匹配基础上引入 gap 和打分系统。' },
+    { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: 'BLAST 的 seed-and-extend 策略借鉴了 Boyer-Moore 等匹配算法的思想。' },
+    { title: 'Motif 寻找', to: '/wiki-bioinfo/models/motif-finding', description: 'Motif 搜索是模式匹配在转录因子结合位点发现中的具体应用。' },
+  ]}
+/>

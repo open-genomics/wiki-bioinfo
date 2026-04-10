@@ -3,12 +3,22 @@ title: "NGS 流程总览"
 description: 高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 是什么
 
 NGS（Next-Generation Sequencing）流程总览关注的是：从原始测序数据到最终可解释结果，这条分析链路通常经过哪些阶段、每一步依赖什么输入输出，以及错误会如何在流程中传播。
 
-它不是某一个工具教程，而是理解整个二代测序分析生态的“地图页”。
+它不是某一个工具教程，而是理解整个二代测序分析生态的"地图页"。
+
+<PrerequisitesBox
+  items={[
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { title: '常见文件格式概览', to: '/wiki-bioinfo/formats/common-file-formats' },
+    { title: '生物信息学基础对象', to: '/wiki-bioinfo/foundations/biology-basics' },
+  ]}
+/>
 
 ## 为什么重要
 
@@ -19,7 +29,7 @@ NGS（Next-Generation Sequencing）流程总览关注的是：从原始测序数
 - 哪些参数会影响后续所有结果；
 - 结果异常时应该回头检查哪一层。
 
-因此，流程总览页的核心作用，是把“算法、工具、数据、解释”串成一个整体。
+因此，流程总览页的核心作用，是把"算法、工具、数据、解释"串成一个整体。
 
 ## 核心概念
 
@@ -36,7 +46,7 @@ NGS（Next-Generation Sequencing）流程总览关注的是：从原始测序数
 
 ### 2. 质量控制（QC）
 
-QC 的目标不是“把所有数据都删掉”，而是回答：数据能不能进入下一阶段，以及哪些问题需要先处理。
+QC 的目标不是"把所有数据都删掉"，而是回答：数据能不能进入下一阶段，以及哪些问题需要先处理。
 
 常见问题包括：
 
@@ -92,7 +102,7 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
 - 参考版本和注释版本是否匹配；
 - mapping 是否稳定。
 
-这也是为什么流程总览很重要：它帮助你理解“错误会在哪里累积”。
+这也是为什么流程总览很重要：它帮助你理解"错误会在哪里累积"。
 
 ## 与真实工具或流程的连接
 
@@ -115,10 +125,11 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
 - 工具名等于流程本身；
 - 参考版本、注释版本和文件格式不一致也问题不大。
 
-## 相关页面
-
-- [质量控制（QC）总览](./qc-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.mdx)
-- [序列比对](../alignment/index.mdx)
-- [基因组组装](../assembly/index.mdx)
-- [数据库与资源](../databases/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '质量控制（QC）总览', to: '/wiki-bioinfo/workflows/qc-overview', description: 'NGS 流程的入口质控步骤' },
+    { title: 'RNA-seq 工作流概览', to: '/wiki-bioinfo/workflows/rna-seq', description: '最常见的 NGS 分析分支' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index', description: '比对与组装的算法基础' },
+    { title: '基因组组装', to: '/wiki-bioinfo/assembly/index', description: '无参考的序列重建方法' }
+  ]}
+/>

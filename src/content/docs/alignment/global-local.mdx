@@ -4,15 +4,14 @@ description: 理解 Needleman-Wunsch 全局比对与 Smith-Waterman 局部比对
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="序列比对并不只有一种"对齐方式"。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。"
+  summary='序列比对并不只有一种「对齐方式」。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。'
   bullets={[
     '掌握 Needleman-Wunsch 算法的全局比对逻辑：从头到尾的强制解释',
-    '掌握 Smith-Waterman 算法的局部比对逻辑：允许在得分低于 0 时"推倒重来"',
+    '掌握 Smith-Waterman 算法的局部比对逻辑：允许在得分低于 0 时「推倒重来」',
     '理解为什么局部比对在寻找保守结构域和 Motif 时更具优势',
     '辨析两种比对方式在动态规划矩阵初始化和回溯终点上的不同'
   ]}

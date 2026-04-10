@@ -4,7 +4,9 @@ title: "贝叶斯推断基础"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '重点理解贝叶斯定理的核心思想和先验、似然、后验的关系',
     '贝叶斯方法在生物信息学中用于处理小样本、不确定性和模型选择',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { title: '统计基础', href: '/wiki-bioinfo/foundations/statistics-basics' },
+    { title: 'EM 算法', href: '/wiki-bioinfo/models/em-algorithm' },
   ]}
 />
 
@@ -310,9 +320,11 @@ $$
 - Bishop, C. M. *Pattern Recognition and Machine Learning*, Chapter 2
 - MacKay, D. J. C. *Information Theory, Inference and Learning Algorithms*
 
-## 相关页面
-
-- [概率、图与动态规划预备](../foundations/probability-and-graphs.mdx)
-- [EM算法](./em-algorithm.mdx)
-- [Motif discovery的算法路线](./motif-discovery-algorithms.mdx)
-- [PWM与PSSM](./pwm-pssm.mdx)
+<RelatedLinks
+  links={[
+    { title: 'EM 算法', to: '/wiki-bioinfo/models/em-algorithm', description: 'EM 算法从频率学派最大似然角度处理隐变量，与贝叶斯方法形成互补。' },
+    { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '贝叶斯推断的数学基础依赖概率论。' },
+    { title: 'Motif discovery 的算法路线', to: '/wiki-bioinfo/models/motif-discovery-algorithms', description: '贝叶斯方法在 Motif 发现中用于设定先验和计算后验概率。' },
+    { title: 'PWM 与 PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'PWM 的伪计数本质上是贝叶斯先验的一种体现。' },
+  ]}
+/>

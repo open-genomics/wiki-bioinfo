@@ -4,6 +4,8 @@ title: "循环神经网络（RNN）与 LSTM"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '隐状态捕获序列上下文信息',
     'LSTM 的门控机制实现选择性记忆和遗忘',
     '适合处理变长序列和时序依赖',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'CNN for Sequences', href: '/wiki-bioinfo/ml-bioinfo/cnn-for-sequences', description: '理解局部模式检测的互补架构' },
+    { title: 'HMM', href: '/wiki-bioinfo/models/hmm', description: 'RNN 的概率图模型前身' },
+    { title: '序列深度学习', href: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体框架' },
   ]}
 />
 
@@ -174,6 +184,8 @@ $$
 
 ### 标准 RNN
 
+标准 RNN 的核心是隐状态的递归更新：在每个时间步，当前输入与前一时刻的隐状态通过可学习权重矩阵结合，经激活函数（通常为 tanh 或 ReLU）产生新的隐状态。这种结构使 RNN 能够捕获序列中的上下文信息，但也带来了梯度消失/爆炸问题：当序列较长时，反向传播通过时间展开后，梯度会指数级衰减或增长，导致模型难以学习长程依赖关系。
+
 ### 步骤 1：初始化
 
 初始化隐状态 h₀（通常为零向量或随机初始化）
@@ -193,6 +205,8 @@ $$
 通过时间反向传播（BPTT）更新所有参数
 
 ### LSTM
+
+LSTM 通过引入**细胞状态（cell state）**和三个门控机制解决标准 RNN 的梯度消失问题。遗忘门决定丢弃哪些旧信息，输入门决定存储哪些新信息，输出门决定输出哪些信息。细胞状态作为信息传输的主干道，可以几乎无损地跨多个时间步传递信息，从而使模型能够学习长程依赖。GRU 是 LSTM 的简化版本，合并了遗忘门和输入门为单一更新门，参数更少、计算更快，在许多任务上表现相当。
 
 ### 步骤 1：初始化
 
@@ -447,10 +461,11 @@ $$
 - Jaganathan, K., et al. (2019). Predicting splicing from primary sequence with deep learning. *Nature*, 571(7763), 115-119.
 - Berg, J. A., et al. (2019). DeepPromoter: Promoter prediction using deep learning. *BMC bioinformatics*, 20(1), 1-13.
 
-## 相关页面
-
-- [序列深度学习](./deep-learning-for-sequences.mdx)
-- [嵌入与语言模型](./embeddings-and-language-models.mdx)
-- [CNN for Sequences](./cnn-for-sequences.mdx)
-- [Transformer for Sequences](./transformer-for-sequences.mdx)
-- [HMM](../models/hmm.mdx)
+<RelatedLinks
+  links={[
+    { title: '序列深度学习', to: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体概览' },
+    { title: 'CNN for Sequences', to: '/wiki-bioinfo/ml-bioinfo/cnn-for-sequences', description: '局部 motif 检测的互补架构' },
+    { title: 'Transformer for Sequences', to: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences', description: '替代 RNN 的现代序列建模架构' },
+    { title: 'HMM', to: '/wiki-bioinfo/models/hmm', description: 'RNN 的概率图模型前身' }
+  ]}
+/>

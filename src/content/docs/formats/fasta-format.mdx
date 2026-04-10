@@ -1,0 +1,208 @@
+---
+title: "FASTA 格式：参考序列的标准表示"
+description: "FASTA 如何编码参考基因组序列，以及它在分析流程中的坐标骨架角色"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="FASTA 编码参考序列（reference sequence）——整个生物信息学坐标系统的骨架。理解其简单结构、索引机制（.fai）和版本体系，是比对、注释和变异检测的前提。"
+  bullets={[
+    'FASTA 结构简单：定义行（`>` 开头）+ 序列行',
+    '只包含序列字符，不包含质量分数、比对位置或功能注释',
+    '参考基因组 FASTA 通常经过索引（samtools faidx）以支持快速随机访问',
+    '不同参考版本（GRCh37 vs GRCh38）的 FASTA 序列不同，不能混用',
+  ]}
+/>
+
+## 是什么
+
+**FASTA 格式**编码的是**参考序列（reference sequence）**——一个生物分子序列（DNA、RNA 或蛋白质）的字符串表示。它是整个生物信息学坐标系统的骨架。
+
+### 数据结构
+
+```fasta
+>chr1 Homo sapiens chromosome 1, GRCh38.p14 Primary Assembly
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN
+ACATAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTA
+```
+
+| 部分 | 说明 |
+|------|------|
+| **定义行**（`>` 开头） | 序列标识符和描述信息 |
+| **序列行** | 碱基或氨基酸字符（可跨多行） |
+
+### 关键特征
+
+- **只包含序列本身**，不包含任何元数据（如测序质量、比对位置、功能注释）
+- 支持 IUPAC 模糊字符（如 N 表示未知碱基）
+- 序列行通常按固定宽度换行（如 60 或 80 字符），但非严格要求
+
+## 为什么重要
+
+FASTA 是分析流程的**坐标骨架**：
+
+- **比对**：所有 reads 都相对于 FASTA 中的参考序列进行定位
+- **注释**：GTF/GFF 中的坐标必须与 FASTA 版本匹配
+- **变异检测**：REF 等位基因直接从 FASTA 中提取
+- **可视化**：基因组浏览器以 FASTA 为坐标基准
+
+**关键认知**：FASTA 定义了"坐标系的原点"。如果参考版本不一致，所有下游分析（比对、注释、变异）的坐标都将错位。
+
+<PrerequisitesBox
+  items={[
+    '理解参考基因组的概念：GRCh38、GRCh37 等版本体系',
+    '了解 IUPAC 碱基编码：A/C/G/T/N 等字符的含义',
+  ]}
+/>
+
+## 参考基因组 FASTA 的结构
+
+人类参考基因组 FASTA 通常包含所有染色体和 scaffolds：
+
+```fasta
+>chr1 Homo sapiens chromosome 1, GRCh38.p14 Primary Assembly
+ACATAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTA...
+>chr2 Homo sapiens chromosome 2, GRCh38.p14 Primary Assembly
+GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAG...
+...
+>chrX Homo sapiens chromosome X, GRCh38.p14 Primary Assembly
+TAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCT...
+>chrM Homo sapiens mitochondrion, GRCh38.p14 Primary Assembly
+GCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAGCTAG...
+```
+
+### 常见染色体标识符
+
+| 标识符 | 说明 |
+|--------|------|
+| `chr1` - `chr22` | 常染色体 |
+| `chrX`, `chrY` | 性染色体 |
+| `chrM` | 线粒体基因组 |
+| `chrUn_*` | 未定位 scaffolds |
+| `chr*_alt` | 替代 haplotype（GRCh38 新增） |
+| `chr*_decoy` | decoy 序列（用于捕获未比对 reads） |
+
+## FASTA 索引（.fai）
+
+由于参考基因组 FASTA 文件很大（人类 ~3 GB），直接随机访问特定区域效率低。`samtools faidx` 生成索引文件支持快速查询：
+
+```bash
+samtools faidx reference.fa
+# 生成 reference.fa.fai
+```
+
+### .fai 文件格式
+
+```
+chr1    248956422       52      60      61
+chr2    242193529       253154394       60      61
+```
+
+| 列 | 说明 |
+|----|------|
+| 1 | 序列名称 |
+| 2 | 序列长度 |
+| 3 | 文件中起始字节偏移 |
+| 4 | 每行碱基数 |
+| 5 | 每行字节数（含换行符） |
+
+### 使用索引快速查询
+
+```bash
+# 提取 chr1:1000-1050
+samtools faidx reference.fa chr1:1000-1050
+```
+
+## 压缩格式：bgzip 与 .fasta.gz
+
+大型 FASTA 文件可使用 `bgzip` 压缩（而非普通 gzip），支持随机访问：
+
+```bash
+bgzip reference.fa
+# 生成 reference.fa.gz
+samtools faidx reference.fa.gz
+```
+
+**bgzip 与普通 gzip 的区别**：bgzip 将文件分块压缩，每块可独立解压，支持 `tabix` 和 `faidx` 随机访问。
+
+## FASTA 与其他格式的关系
+
+| 对比 | FASTA | 对比格式 |
+|------|-------|---------|
+| **FASTQ** | 只包含序列，不带质量分数 | 包含序列 + 质量分数，是原始 reads |
+| **BAM** | 只包含参考序列，无比对信息 | 包含 reads 在参考上的定位结果 |
+| **GTF** | 只包含序列字符，无功能注释 | 包含基因结构注释 |
+
+**核心原则**：FASTA 是**参考层**，不是证据层或注释层。它回答"坐标 X 处的碱基是什么"，不回答"这个位置有什么功能"或"这个样本在这里有什么变异"。
+
+## 参考版本差异
+
+不同参考版本的 FASTA 序列可能不同：
+
+| 差异类型 | 示例 |
+|---------|------|
+| **补丁更新** | GRCh38.p12 → GRCh38.p14（修复错误序列） |
+| **主版本更新** | GRCh37 → GRCh38（新增 alternate loci、decoy） |
+| **命名差异** | `chr1`（UCSC）vs `1`（Ensembl） |
+
+**关键注意**：不同版本的 FASTA 不能混用。使用 GRCh37 的 BAM 配合 GRCh38 的 FASTA 会导致坐标错误。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '比对工具：BWA、Bowtie2、minimap2 以 FASTA 为参考输入',
+    '索引构建：samtools faidx、bwa index、bowtie2-build 基于 FASTA 构建索引',
+    '序列提取：samtools faidx、bedtools getfasta 从 FASTA 提取特定区域',
+    '变异注释：VEP、SnpEff 使用 FASTA 确认 REF 等位基因',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**FASTA = FASTQ**：FASTA 不含质量分数，不能替代 FASTQ 作为原始 reads。',
+    '**参考版本可混用**：GRCh37 和 GRCh38 的 FASTA 序列不同，混用会导致坐标错位。',
+    '**染色体命名一致**：UCSC 使用 `chr1`，Ensembl 使用 `1`，需要统一命名才能正确映射。',
+    '**FASTA 包含注释信息**：FASTA 只包含序列字符，基因功能需要从 GTF/GFF 获取。',
+    '**N 表示缺失**：N 表示未知碱基（如着丝粒区域），不是真正的删除或缺失变异。',
+  ]}
+/>
+
+## 本章小结
+
+- FASTA 编码参考序列，是整个分析流程的**坐标骨架**
+- 结构简单：定义行 + 序列行，不含质量或注释信息
+- `.fai` 索引支持快速随机访问
+- 参考版本必须与 BAM、GTF、VCF 保持一致
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'FASTQ 格式',
+      to: '/docs/formats/fastq-format',
+      label: '对比',
+      description: 'FASTQ 包含质量分数，是原始 reads 容器。',
+    },
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      label: '基础层',
+      description: '理解参考版本体系和坐标系统。',
+    },
+    {
+      title: '参考版本与 liftover',
+      to: '/docs/data-references/reference-versions-and-liftover',
+      label: '版本管理',
+      description: '如何在不同参考版本之间转换坐标。',
+    },
+  ]}
+/>

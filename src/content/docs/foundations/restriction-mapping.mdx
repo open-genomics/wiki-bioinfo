@@ -244,6 +244,32 @@ PPDP 可以分解为两个独立的 PDP：
 
 <RelatedLinks
   links={[
+    { title: '穷举搜索', to: '/wiki/foundations/exhaustive-search', description: '穷举搜索的基本原理和复杂度分析' },
+    { title: '算法复杂度', to: '/wiki/foundations/algorithms-and-complexity', description: '理解算法效率的理论框架' },
+    { title: '分支定界', to: '/wiki/foundations/branch-and-bound', description: '组合优化中的剪枝策略' },
+  ]}
+/>
+
+## 常见误区
+
+### 部分消化问题（PDP）的解总是唯一的
+
+PDP 可能存在多个解——不同的位点集合可能产生相同的距离多重集。即使分支定界找到了一个解，也不能保证它是唯一的。在实验中，测量误差会进一步增加解的不唯一性。实际应用中通常需要结合其他实验证据来消歧。
+
+### 凝胶电泳可以精确测量所有片段长度
+
+凝胶电泳的分辨率有限，特别是对于长度接近的片段，区分能力下降。短片段（< 50 bp）和长片段（> 20 kb）的测量误差更大。PDP 算法假设输入的距离集合是精确的，但实际实验数据必然带有噪声，需要算法能够容忍一定程度的误差。
+
+### 分支定界一定能高效求解 PDP
+
+虽然 PDP 的距离约束提供了很强的剪枝能力，但在某些精心构造的输入上，分支定界仍可能退化为接近穷举搜索。剪枝效果依赖于距离约束的"紧度"——如果很多位点之间的距离相同，剪枝效果就会大打折扣。
+
+### 限制性图谱在测序时代已经没有意义
+
+虽然高通量测序在很大程度上取代了限制性图谱作为基因组作图的主要手段，但限制性图谱仍用于验证组装结果（特别是结构变异）、研究表观遗传学（如甲基化敏感的限制性酶）以及在某些快速诊断场景中。它是一种互补而非被淘汰的技术。
+
+<RelatedLinks
+  links={[
     { title: '穷举搜索', to: '/wiki/foundations/exhaustive-search' },
     { title: '换钱问题', to: '/wiki/foundations/change-problem', description: '另一个动态规划入门案例' },
     { title: '基因组组装', to: '/wiki/assembly/olc', description: '大规模图谱构建的现代方法' }

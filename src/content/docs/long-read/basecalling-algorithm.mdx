@@ -4,7 +4,8 @@ title: "Basecalling 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     'HMM 通过状态转移和发射概率建模信号生成过程',
     '神经网络（CNN/RNN/Transformer）直接学习信号到碱基的端到端映射',
     '现代 basecaller 已超越传统 HMM，采用深度学习方法'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'HMM 与 Viterbi 算法', href: '/wiki-bioinfo/models/viterbi-forward-backward', description: 'Basecalling 中 HMM 解码的算法基础' },
+    { title: '序列深度学习', href: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '神经网络 basecaller 的架构背景' },
+    { title: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore', description: 'Nanopore 测序技术的物理原理' },
   ]}
 />
 
@@ -320,9 +329,11 @@ Oxford Nanopore 的官方 basecaller：
 - Boža, T. T., et al. (2020). Nanopore signal processing with hidden Markov models. *Bioinformatics*, 36(7), 2105-2111.
 - Wick, R. R., et al. (2019). Integrating mapping, assembly and haplotype variant estimation of single-molecule sequencing data using the Medaka genome analysis toolkit. *BioRxiv*.
 
-## 相关页面
-
-- [PacBio 与 Nanopore](./pacbio-nanopore.mdx)
-- [Consensus 算法](./consensus-algorithm.mdx)
-- [结构变异检测](./sv-detection.mdx)
-- [概率、图与动态规划预备](../foundations/probability-and-graphs.mdx)
+<RelatedLinks
+  links={[
+    { title: 'PacBio 与 Nanopore', to: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '长读长测序技术平台对比' },
+    { title: 'Consensus 算法', to: '/wiki-bioinfo/long-read/consensus-algorithm', description: 'Basecalling 后的序列纠错与共识' },
+    { title: '结构变异检测', to: '/wiki-bioinfo/long-read/sv-detection', description: '长读长在 SV 检测中的应用' },
+    { title: '序列深度学习', to: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的更多应用' }
+  ]}
+/>

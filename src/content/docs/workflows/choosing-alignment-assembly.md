@@ -3,12 +3,22 @@ title: "如何选择 alignment、assembly 或 pseudo-alignment"
 description: 根据研究目标（变异检测、定量分析、基因组重建）和数据特征，选择合适的序列分析策略。
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 任务目标
 
 不同任务面对的核心问题并不相同，因此"该先比对、先组装，还是直接做 pseudo-alignment"并没有统一答案。
 
 这一页的目标，是帮助你根据研究问题、参考条件和输出需求做选择。
+
+<PrerequisitesBox
+  items={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index' },
+    { title: '组装与图算法', to: '/wiki-bioinfo/assembly/index' },
+  ]}
+/>
 
 ## 输入输出
 
@@ -148,10 +158,29 @@ STAR 能提供剪接感知的精确比对，是融合基因检测的常用工具
 - 如果选择定量路径，继续阅读 [RNA-seq 工作流概览](./rna-seq.mdx)；
 - 如果选择 assembly 路径，继续阅读 [de Bruijn graph 组装](../assembly/de-bruijn.mdx)。
 
-## 相关页面
+## 常见误区
 
-- [DNA-seq 变异检测总览](../variants/variant-calling-overview.mdx)
-- [RNA-seq 工作流概览](./rna-seq.mdx)
-- [Pseudo-alignment 与表达定量](../transcriptomics/pseudo-alignment-and-quantification.mdx)
-- [de Bruijn graph 组装](../assembly/de-bruijn.mdx)
-- [质控与数据预处理](./qc-overview.md)
+### Alignment 和 pseudo-alignment 是互斥的选择
+
+不是。很多实际项目需要组合使用多种策略。例如在融合基因检测中，STAR 精确比对和 Salmon 定量可以互补使用——前者提供剪接感知的比对用于检测融合事件，后者提供高效的转录本定量用于差异表达分析。策略选择应根据具体的研究问题灵活组合，而非机械地二选一。
+
+### de novo assembly 比基于参考的流程"更原始"
+
+不是。de novo assembly 和 reference-based alignment 是解决不同问题的策略，不存在优劣之分。当参考基因组质量差、样本与参考差异大（如肿瘤、非模式生物）或研究目标涉及新序列发现时，de novo assembly 是不可替代的。相反，当参考基因组完整且研究目标是变异检测或定量时，reference-based 流程更高效且结果更可解释。
+
+### 只要工具版本足够新，结果就一定更可靠
+
+不是。新版本的工具可能修复了旧版本的问题，但也可能引入新的 bug 或改变默认参数，导致结果不一致。更重要的是，工具选择应匹配研究问题和数据特征。一个经典但经过充分验证的比对工具（如 BWA-MEM）在标准 DNA-seq 变异检测场景中，可能比最新发布但验证不足的新工具更可靠。关键是用对工具，而非用新工具。
+
+### 测序数据量越大越好
+
+不是。数据量应与研究目标和预期分析匹配。对于简单的定性与半定量分析（如物种组成估计），适度测序深度即可。过高的测序深度在差异表达分析中可能产生"统计显著但生物学意义不大的结果"（p-value hacking），同时浪费预算和计算资源。合理的做法是根据统计功效分析（power analysis）规划所需数据量。
+
+<RelatedLinks
+  links={[
+    { title: 'DNA-seq 变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '选择 alignment 路径后的变异检测' },
+    { title: 'RNA-seq 工作流概览', to: '/wiki-bioinfo/workflows/rna-seq', description: '选择定量路径后的 RNA-seq 分析' },
+    { title: 'Pseudo-alignment 与表达定量', to: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification', description: 'pseudo-alignment 算法详解' },
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview', description: '理解完整 NGS 分析链路' }
+  ]}
+/>

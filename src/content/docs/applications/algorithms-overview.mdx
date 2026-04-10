@@ -4,7 +4,8 @@ title: "生物信息学算法总览"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '重点理解每种算法解决什么生物学问题，以及它的适用边界',
     '算法不是抽象理论，而是理解工具行为和设计新方法的基础',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度基础', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '核心方法总览', href: '/wiki-bioinfo/core-methods/index' },
+    { name: '序列基础概念', href: '/wiki-bioinfo/sequence/index' },
   ]}
 />
 
@@ -302,3 +311,13 @@ $$
 - [概率算法与统计推断](./probabilistic-algorithms.mdx)
 - [核心方法总览](../core-methods/index.mdx)
 - [算法与复杂度基础](../foundations/algorithms-and-complexity.mdx)
+
+<RelatedLinks
+  links={[
+    { title: '动态规划算法', to: '/wiki-bioinfo/applications/dynamic-programming', description: '序列比对、编辑距离等核心 DP 应用' },
+    { title: '图算法在生物信息学中的应用', to: '/wiki-bioinfo/applications/graph-algorithms', description: '从 de Bruijn graph 到系统发育树的图论方法' },
+    { title: '字符串算法与索引结构', to: '/wiki-bioinfo/applications/string-algorithms', description: 'FM-index、Suffix Array 等搜索基础设施' },
+    { title: '概率算法与统计推断', to: '/wiki-bioinfo/applications/probabilistic-algorithms', description: 'HMM、贝叶斯方法与 MCMC 采样' },
+    { title: '算法与复杂度基础', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '算法设计的理论基础与复杂度分析' },
+  ]}
+/>

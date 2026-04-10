@@ -1,0 +1,222 @@
+---
+title: "NCBI 资源体系：Gene、RefSeq、SRA 与 PubMed"
+description: "NCBI 作为综合生物信息学门户，其子系统如何组织基因、序列、数据集和文献资源"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="NCBI（National Center for Biotechnology Information）不是单一数据库，而是多个子系统的综合门户。理解 Gene、RefSeq、SRA、PubMed 等核心资源的对象类型和查询策略，是生物信息学分析的基础能力。"
+  bullets={[
+    'NCBI Gene：基因中心，整合多源注释信息，使用 Entrez Gene ID',
+    'RefSeq：参考序列数据库，提供 NM_/NR_/NP_ 等标准化 accession',
+    'SRA：Sequence Read Archive，存储原始测序 reads',
+    'PubMed：生物医学文献数据库，通过 PMID 标识',
+    '各子系统之间通过交叉引用（cross-reference）互相连接',
+  ]}
+/>
+
+## 是什么
+
+**NCBI（National Center for Biotechnology Information）** 是美国国家生物技术信息中心，提供全球最大的生物信息学资源集合。
+
+关键认知：**NCBI 不是单一数据库，而是多个子系统的综合门户**。每次访问 NCBI 时，你实际在使用某个特定子系统（如 Gene、SRA、PubMed），而不是"NCBI 数据库"本身。
+
+### 核心资源概览
+
+| 资源 | 对象类型 | 标识符 | 典型用途 |
+|------|---------|--------|---------|
+| **NCBI Gene** | 基因注释记录 | Entrez Gene ID（整数） | 查询基因功能、位置、相关文献 |
+| **RefSeq** | 参考序列（DNA/RNA/蛋白） | Accession（如 NM_000546） | 获取标准化参考转录本和蛋白序列 |
+| **SRA** | 原始测序数据 | SRA Run ID（如 SRR123456） | 下载公开测序数据进行复用分析 |
+| **PubMed** | 生物医学文献 | PMID（如 30234567） | 检索相关研究和实验方法 |
+| **dbSNP** | 单核苷酸多态性 | rsID（如 rs12345） | 查询已知变异位点 |
+| **dbGaP** | 基因型-表型关联 | phs/study ID | 访问受控的个体水平数据 |
+
+## 为什么重要
+
+NCBI 资源是生物信息学分析的**基础数据源**：
+
+- **参考序列**：RefSeq 提供参考转录本和蛋白序列
+- **公开数据复用**：SRA 存储超过 2000 万个测序实验
+- **功能注释**：NCBI Gene 整合来自 Ensembl、UniProt、OMIM 等多源注释
+- **文献支持**：PubMed 连接研究背景与实验验证
+
+**关键认知**：NCBI 各子系统之间是**互相连接的网络**，而不是孤立的数据库。从一个 Gene 页面可以跳转到 RefSeq 序列、SRA 数据集、PubMed 文献，建立完整的证据链。
+
+<PrerequisitesBox
+  items={[
+    '理解中心法则：DNA → RNA → 蛋白质，各层级对象的对应关系',
+    '了解参考基因组版本体系：GRCh38/hg38',
+    '如果不熟悉数据库对象分类，先阅读常用数据库与资源总览',
+  ]}
+/>
+
+## NCBI Gene：基因注释中心
+
+### 核心功能
+
+NCBI Gene 整合来自多个来源的基因注释信息：
+
+- **基本属性**：基因符号（Symbol）、全名、基因 ID（Entrez Gene ID）
+- **基因组位置**：染色体、起止坐标、链方向
+- **功能注释**：Gene Ontology（GO）、通路信息
+- **相关资源**：RefSeq 转录本、PubMed 文献、dbSNP 变异
+- **表型关联**：OMIM（孟德尔遗传病）、ClinVar（临床意义）
+
+### 查询方式
+
+| 方法 | 适用场景 |
+|------|---------|
+| **基因符号搜索** | 已知基因名称（如 TP53） |
+| **Entrez Gene ID** | 稳定标识符，不随基因符号变化 |
+| **基因组坐标** | 基于位置的查询（需指定参考版本） |
+| **批量查询** | 通过 Gene ID 列表获取功能注释 |
+
+### Entrez Gene ID vs Gene Symbol
+
+| 特性 | Entrez Gene ID | Gene Symbol |
+|------|---------------|-------------|
+| **稳定性** | 稳定，不变化 | 可能随注释更新而变化 |
+| **唯一性** | 唯一对应一个基因 | 可能存在歧义（不同物种同名基因） |
+| **推荐使用** | 程序化分析和跨数据库映射 | 人工阅读和文献交流 |
+
+**建议**：在分析流程中使用 Entrez Gene ID，在报告和展示中使用 Gene Symbol。
+
+## RefSeq：参考序列数据库
+
+### RefSeq 是什么
+
+**RefSeq（Reference Sequence Database）** 提供非冗余、经过人工审编的参考序列集合，包括 DNA、RNA 和蛋白质序列。
+
+### Accession 命名体系
+
+RefSeq 使用前缀区分序列类型：
+
+| 前缀 | 类型 | 示例 |
+|------|------|------|
+| **NM_** | 编码转录本（mRNA），人工审编 | NM_000546（TP53 mRNA） |
+| **NR_** | 非编码转录本，人工审编 | NR_027676 |
+| **NP_** | 蛋白质产物，人工审编 | NP_000537 |
+| **XM_** | 编码转录本，自动预测 | XM_024450000 |
+| **XR_** | 非编码转录本，自动预测 | XR_002950000 |
+| **XP_** | 蛋白质产物，自动预测 | XP_024300000 |
+| **NC_** | 完整染色体或参考基因组 | NC_000001（chr1） |
+
+**NM_/NP_ 与 XM_/XP_ 的区别**：前者经过人工审编（Reviewed），置信度高；后者是自动预测（Predicted），需要实验验证。
+
+### RefSeq vs GenBank
+
+| 特性 | RefSeq | GenBank |
+|------|--------|---------|
+| **冗余度** | 非冗余，每个分子一个代表序列 | 冗余，同一序列可能多次提交 |
+| **质量** | 人工审编 + 自动预测 | 原始提交，未经统一审核 |
+| **用途** | 参考序列、标准比对模板 | 归档所有公开序列 |
+| **更新** | 定期审编更新 | 实时接收新提交 |
+
+## SRA：Sequence Read Archive
+
+### SRA 是什么
+
+**SRA** 是全球最大的原始测序数据存档，存储来自高通量测序仪的 reads 和元数据。
+
+### 数据层级
+
+SRA 中的数据按以下层级组织：
+
+| 层级 | 标识符 | 说明 |
+|------|--------|------|
+| **Study** | SRP/ERP/DRP | 研究项目（如"肺癌全外显子测序"） |
+| **Sample** | SRS/ERS/DRS | 生物样本（如"患者 A 的肿瘤组织"） |
+| **Experiment** | SRX/ERX/DRX | 测序实验设计（如"Illumina NovaSeq 2x150"） |
+| **Run** | SRR/ERR/DRR | 实际测序运行（下载单元） |
+
+### 数据获取方式
+
+| 工具 | 用途 |
+|------|------|
+| **SRA Toolkit** | 下载 SRA 文件并转换为 FASTQ（`fastq-dump`） |
+| **prefetch** | 预先下载 SRA 文件到本地缓存 |
+| **fasterq-dump** | 更快的 FASTQ 转换工具 |
+| **ENA** | 欧洲节点，提供直接 FASTQ 下载 |
+
+```bash
+# 下载并转换
+prefetch SRR123456
+fasterq-dump SRR123456
+```
+
+## PubMed：生物医学文献数据库
+
+### 核心功能
+
+PubMed 存储超过 3500 万篇生物医学文献，通过 PMID（PubMed ID）唯一标识。
+
+### 与生物信息学的连接
+
+- **方法学参考**：查找特定分析流程的原始论文
+- **实验验证**：确认计算预测的实验支持
+- **临床关联**：查找基因-疾病关系的文献证据
+- **数据库交叉引用**：NCBI Gene、dbSNP 等页面直接链接相关 PubMed 文献
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '数据下载：SRA Toolkit 从 SRA 获取原始 reads，转换为 FASTQ 进入分析流程',
+    '注释查询：Entrez Programming Utilities（E-utilities）提供 API 批量获取 Gene 注释',
+    '变异注释：dbSNP 提供 rsID 映射，ClinVar 提供临床意义注释',
+    '文献检索：PubMed 搜索特定基因或疾病相关的研究背景',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**NCBI 是单一数据库**：NCBI 是多个子系统的门户，Gene、RefSeq、SRA 是不同的数据库，有不同对象类型。',
+    '**Gene Symbol 是稳定标识符**：基因符号可能随注释更新而变化，Entrez Gene ID 才是稳定的。',
+    '**RefSeq = GenBank**：RefSeq 是非冗余参考序列，GenBank 是冗余归档序列。',
+    '**SRA 直接提供 FASTQ**：SRA 存储专有的 .sra 格式，需用 Toolkit 转换为 FASTQ。',
+    '**NM_ 与 XM_ 等价**：NM_ 经过人工审编，XM_ 是自动预测，置信度不同。',
+    '**PubMed 只有摘要**：部分文献通过 PMC（PubMed Central）提供全文开放获取。',
+  ]}
+/>
+
+## 本章小结
+
+- NCBI 是**综合门户**，包含 Gene、RefSeq、SRA、PubMed 等多个子系统
+- NCBI Gene 提供基因注释中心，Entrez Gene ID 是稳定标识符
+- RefSeq 提供非冗余参考序列，Accession 前缀区分序列类型
+- SRA 存储原始测序数据，需使用 Toolkit 转换为 FASTQ
+- 各子系统通过交叉引用互相连接，建立完整证据链
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: '常用数据库与资源总览',
+      to: '/docs/databases/common-resources',
+      label: '上层地图',
+      description: '理解 NCBI 在整体数据库生态中的位置。',
+    },
+    {
+      title: 'Ensembl 基因组注释',
+      to: '/docs/databases/ensembl',
+      label: '对比资源',
+      description: 'Ensembl 与 NCBI Gene/RefSeq 的注释体系比较。',
+    },
+    {
+      title: 'FASTQ 格式',
+      to: '/docs/formats/fastq-format',
+      label: '数据格式',
+      description: 'SRA 转换为 FASTQ 后的数据结构。',
+    },
+  ]}
+/>

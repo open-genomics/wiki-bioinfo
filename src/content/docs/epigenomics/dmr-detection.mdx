@@ -4,6 +4,8 @@ title: "DMR 检测算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '核心是使用 beta-binomial 模型建模甲基化比例的有界性和过离散性',
     '关键挑战是区域边界的推断与覆盖深度不均的处理',
     '常用方法包括滑动窗口、连续 CpG 平滑和贝叶斯分段'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'DNA 甲基化', href: '/wiki-bioinfo/epigenomics/dna-methylation', description: 'DNA 甲基化的生物学基础' },
+    { title: '统计检验与多重校正', href: '/wiki-bioinfo/foundations/probability-and-graphs', description: '假设检验与 FDR 校正原理' },
+    { title: 'HMM 与 Viterbi 算法', href: '/wiki-bioinfo/models/viterbi-forward-backward', description: '贝叶斯分段方法的算法基础' },
   ]}
 />
 
@@ -301,8 +311,11 @@ C++ 工具，特点：
 - Feng, H., et al. (2014). DSS: a Bayesian hierarchical model for detecting differential methylation. *Bioinformatics*, 30(14), 2060-2065.
 - Hansen, K. D., et al. (2012). BSmooth: from whole genome bisulfite sequencing reads to differentially methylated regions. *Genome Biology*, 13(10), R83.
 
-## 相关页面
-
-- [DNA 甲基化](./dna-methylation.mdx)
-- [统计检验与多重校正](../foundations/probability-and-graphs.mdx)
-- [贝叶斯方法](../models/viterbi-forward-backward.mdx)
+<RelatedLinks
+  links={[
+    { title: 'DNA 甲基化', to: '/wiki-bioinfo/epigenomics/dna-methylation', description: 'DNA 甲基化的生物学基础与检测技术' },
+    { title: 'ChIP-seq 概览', to: '/wiki-bioinfo/epigenomics/chip-seq-overview', description: '表观遗传学的另一核心实验技术' },
+    { title: '统计检验与多重校正', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: 'DMR 检验的统计学基础' },
+    { title: 'HMM 与 Viterbi 算法', to: '/wiki-bioinfo/models/viterbi-forward-backward', description: '贝叶斯推断与序列建模方法' }
+  ]}
+/>

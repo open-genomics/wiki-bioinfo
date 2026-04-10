@@ -5,6 +5,8 @@ title: "穷举搜索与分支定界"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <SummaryBox
@@ -13,6 +15,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '理解穷举搜索作为理论基线的价值',
     '掌握分支定界的剪枝思想和下界估计',
     '学习在 Motif Finding、限制性图谱等问题中的应用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '随机化算法', href: '/wiki-bioinfo/foundations/randomized-algorithms' },
+    { name: '近似算法', href: '/wiki-bioinfo/foundations/approximation-algorithms' }
   ]}
 />
 
@@ -124,7 +134,7 @@ SEARCH(subproblem)
 - **Motif Finding**：在序列中寻找 $t$ 个起始位置，使得由此产生的矩阵得分（Consensus Score）最大。
 - **Median String**：寻找一个长度为 $l$ 的字符串 $v$，使得它到所有序列的距离总和（Total Distance）最小。
 
-虽然定义不同，但这两个问题在寻找“最优保守模式”这一目标上是等价的。
+虽然定义不同，但这两个问题在寻找"最优保守模式"这一目标上是等价的。
 
 ### 为什么选择 Median String 视角？
 
@@ -172,7 +182,7 @@ SEARCH(subproblem)
 为了高效地在搜索树中移动，我们需要定义几种基本的遍历操作：
 
 #### 1. NEXTLEAF (遍历叶子)
-模拟“计数”过程，从当前的 $L$-mer 跳到下一个 $L$-mer。
+模拟"计数"过程，从当前的 $L$-mer 跳到下一个 $L$-mer。
 ```text
 NEXTLEAF(a, L, k)
 1 for i ← L to 1
@@ -383,10 +393,12 @@ BRANCHANDBOUNDMOTIFSEARCH(DNA, t, n, l)
 
 不是。对于有强约束的问题，即使规模较大也可能高效求解。关键是约束强度和下界紧度。
 
-## 相关页面
-
-- [限制性图谱](./restriction-mapping.mdx)
-- [算法与复杂度](./algorithms-and-complexity.mdx)
-- [近似算法](./approximation-algorithms.mdx)
-- [Motif Discovery算法](../models/motif-discovery-algorithms.mdx)
-- [动态规划算法](../applications/dynamic-programming.mdx)
+<RelatedLinks
+  links={[
+    { title: '近似算法', to: '/wiki-bioinfo/foundations/approximation-algorithms', description: '当穷举不可行时，近似算法在可接受时间内找到足够好的解。' },
+    { title: 'Median String 问题', to: '/wiki-bioinfo/models/median-string', description: 'Median String 是穷举搜索和分支定界的经典应用场景。' },
+    { title: 'Motif discovery 的算法路线', to: '/wiki-bioinfo/models/motif-discovery-algorithms', description: 'Motif 发现中从穷举到贪心再到随机化的算法演进。' },
+    { title: '随机化算法', to: '/wiki-bioinfo/foundations/randomized-algorithms', description: '随机化方法是跳出穷举搜索空间的有效策略。' },
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '理解穷举搜索的指数级复杂度和问题的计算难度。' },
+  ]}
+/>

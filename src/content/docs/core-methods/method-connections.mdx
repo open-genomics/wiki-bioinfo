@@ -1,0 +1,233 @@
+---
+title: "核心方法的内在连接：从索引到比对的算法链条"
+description: "序列表示、比对、组装和概率模型之间如何互相依赖和连接，形成统一的算法体系"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+
+<SummaryBox
+  summary="核心方法的四个子板块（序列表示与索引、序列比对、组装与图算法、概率模型与模式识别）不是孤立的算法集合，而是围绕同一个计算问题——如何从海量序列中提取生物学信息——形成的有机链条。理解它们之间的内在连接，是选择合适方法和追溯分析依赖的前提。"
+  bullets={[
+    '索引结构（k-mer、BWT、FM-index）为比对算法提供快速搜索能力',
+    '比对结果是组装和变异检测的证据基础',
+    '图算法将组装问题从序列匹配转向路径搜索',
+    '概率模型（HMM、PWM）处理比对和组装中的不确定性和噪声',
+    '所有方法最终服务于下游应用：变异检测、表达定量、motif 发现',
+  ]}
+/>
+
+## 为什么需要理解方法之间的连接
+
+在学习核心方法时，一个常见误区是将四个子板块视为**孤立的算法模块**：
+
+- 学完 k-mer 和 FM-index，不知道它如何用于比对
+- 学完 Needleman-Wunsch，不知道它如何用于变异检测
+- 学完 de Bruijn 图，不知道它和比对有什么联系
+- 学完 HMM，不知道它和 motif 发现或 gene prediction 的关系
+
+**真实情况**：这些方法形成一条**算法链条**，每一步的输出是下一步的输入，每一层的方法依赖下层的数据结构。
+
+## 算法链条的整体视图
+
+```
+序列表示与索引          序列比对              组装与图              概率模型
+(数据结构层)    →      (证据层)      →      (结构层)      →      (推断层)
+      ↓                    ↓                    ↓                    ↓
+  k-mer 索引           快速比对             de Bruijn 图          HMM
+  Suffix Array         局部比对             OLC 图                PWM
+  BWT/FM-index         Seed-and-extend      图遍历                Viterbi
+      ↓                    ↓                    ↓                    ↓
+      └────────────→ BWA/Bowtie ←─────────────┘                    ↓
+                         ↓                                          ↓
+                    变异检测 ←─────────────────────────────── gene prediction
+                    表达定量                                    motif 发现
+```
+
+## 索引 → 比对：如何加速搜索
+
+### 问题背景
+
+直接在全基因组（~30 亿碱基）上搜索一个 read（~150bp）的比对位置，暴力方法需要 $O(N \times M)$ 时间，不可行。
+
+### 索引如何帮助比对
+
+| 索引结构 | 核心思想 | 用在哪些工具 |
+|---------|---------|-------------|
+| **k-mer 索引** | 将参考序列切分为固定长度的 k-mer，建立 hash 表 | BWA-MEM、Bowtie2 |
+| **FM-index** | 基于 BWT 的压缩索引，支持快速精确匹配 | BWA、Bowtie |
+| **Suffix Array** | 后缀排序，支持二分搜索 | 早期比对器 |
+
+### 连接点：Seed-and-Extend
+
+现代比对器的标准策略：
+
+1. **Seed**：使用索引快速找到 read 与参考的短精确匹配（seed）
+2. **Extend**：从 seed 出发，使用动态规划扩展到完整比对
+
+```
+Read:  ATGCATCGATCGATCGATCG
+              ↓ (FM-index 找到 seed)
+Ref:  ...NNNATCGNNN...
+              ↓ (动态规划扩展)
+Ref:  ...ATGCATCGATCGATCGATCG...
+```
+
+**这是索引和比对的直接连接**：没有高效索引，就没有快速比对。
+
+→ 深入阅读：[序列表示与索引](../sequence/)、[序列比对](../alignment/)
+
+## 比对 → 组装：从定位到重建
+
+### 两种不同的问题
+
+| 问题 | 输入 | 输出 | 方法 |
+|------|------|------|------|
+| **比对（Mapping）** | Reads + 参考基因组 | Reads 在参考上的位置 | BWA、Bowtie2 |
+| **组装（Assembly）** | Reads（无参考） | 重建基因组序列 | SPAdes、MEGAHIT |
+
+### 比对如何支持组装
+
+在**参考引导组装**（reference-guided assembly）中：
+
+1. 先将 reads 比对到近缘物种参考
+2. 基于比对结果构建 consensus 序列
+3. 处理参考与样本之间的差异（SNPs、indels）
+
+### 组装如何使用图算法
+
+**de Bruijn 图方法**：
+
+1. 将 reads 切分为 k-mers
+2. 构建图：每个 k-mer 是节点，重叠 k-mer 之间有边
+3. 寻找 Eulerian path：遍历所有边的路径 = 重建的基因组
+
+```
+Reads:  ATGCGATCG
+        GCGATCGTA
+        CGATCGTAA
+
+k-mers (k=4): ATGC, TGCG, GCGA, CGAT, GATC, ATCG, TCGA, CGTA, GTAA
+
+de Bruijn Graph:
+ATGC → TGCG → GCGA → CGAT → GATC → ATCG → TCGA → CGTA → GTAA
+```
+
+**这是比对和组装的连接**：两者都处理 reads，但组装在没有参考的情况下使用图算法重建序列。
+
+→ 深入阅读：[组装与图算法](../assembly/)
+
+## 比对/组装 → 概率模型：处理不确定性
+
+### 为什么需要概率模型
+
+比对和组装都面临**不确定性**：
+
+- **比对歧义**：read 可能比对到多个位置（重复区域）
+- **测序错误**：碱基调用可能错误
+- **真实变异**：样本与参考之间的差异
+- **组装歧义**：重复序列导致多条可能路径
+
+### 概率模型的角色
+
+| 模型 | 解决的问题 | 应用场景 |
+|------|-----------|---------|
+| **HMM** | 从观测序列推断隐藏状态 | Gene prediction、序列比对 |
+| **PWM/PSSM** | 量化序列模式匹配程度 | Motif 发现、转录因子结合位点 |
+| **贝叶斯推断** | 整合先验知识和观测证据 | 变异检测（GATK）、定量 |
+
+### 示例：变异检测中的概率模型
+
+```
+比对结果 (BAM)
+      ↓
+Read pileup at position X
+      ↓
+贝叶斯模型：P(变异 | 数据) ∝ P(数据 | 变异) × P(变异)
+      ↓
+VCF：变异候选 + 置信度
+```
+
+**这是确定性方法（比对）和概率方法（推断）的连接**：比对提供证据，概率模型评估置信度。
+
+→ 深入阅读：[概率模型与模式识别](../models/)
+
+## 方法选择的决策框架
+
+<ComparisonTable
+  leftTitle="如果你有参考基因组"
+  rightTitle="如果你没有参考基因组"
+  rows={[
+    {
+      aspect: '首要任务',
+      left: '比对（mapping reads 到参考）',
+      right: '组装（de novo 重建基因组）',
+    },
+    {
+      aspect: '核心索引',
+      left: 'FM-index（BWA）、hash table（Bowtie2）',
+      right: 'k-mer 计数（de Bruijn 图构建）',
+    },
+    {
+      aspect: '核心算法',
+      left: 'Seed-and-extend + 动态规划',
+      right: '图遍历（Eulerian path）',
+    },
+    {
+      aspect: '下游分析',
+      left: '变异检测、表达定量',
+      right: '基因预测、功能注释',
+    },
+  ]}
+/>
+
+## 典型工具中的方法组合
+
+| 工具 | 使用的核心方法 | 方法组合 |
+|------|--------------|---------|
+| **BWA-MEM** | FM-index + Seed-and-extend + DP | 索引 + 比对 |
+| **SPAdes** | k-mer 计数 + de Bruijn 图 + 图遍历 | 索引 + 组装 |
+| **GATK** | 比对结果 + 贝叶斯模型 | 比对 + 概率推断 |
+| **HMMER** | Profile HMM + Viterbi 算法 | 概率模型 |
+| **MACS2** | Poisson 分布 + peak 调用 | 概率模型 |
+
+## 本章小结
+
+- 四个子板块是**有机连接的算法链条**，不是孤立的模块
+- **索引**为比对提供快速搜索能力
+- **比对**为变异检测和定量提供证据
+- **组装**在没有参考时使用图算法重建序列
+- **概率模型**处理所有步骤中的不确定性和噪声
+- 理解方法连接是**选择合适工具**和**追溯分析依赖**的前提
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: '序列表示与索引',
+      to: '/docs/sequence/',
+      label: '数据结构层',
+      description: 'k-mer、suffix array、BWT、FM-index 的原理和应用。',
+    },
+    {
+      title: '序列比对',
+      to: '/docs/alignment/',
+      label: '证据层',
+      description: '编辑距离、动态规划、seed-and-extend 的比对策略。',
+    },
+    {
+      title: '组装与图算法',
+      to: '/docs/assembly/',
+      label: '结构层',
+      description: 'OLC、de Bruijn 图和图遍历算法。',
+    },
+    {
+      title: '概率模型与模式识别',
+      to: '/docs/models/',
+      label: '推断层',
+      description: 'HMM、PWM、贝叶斯推断处理不确定性。',
+    },
+  ]}
+/>

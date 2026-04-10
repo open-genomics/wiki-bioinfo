@@ -1,0 +1,204 @@
+---
+title: "FASTQ 格式：原始测序观测的标准化编码"
+description: "FASTQ 格式如何编码原始测序 reads、Phred 质量分数，以及它在分析流程中的证据角色"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="FASTQ 是生物信息学分析流程的起点，承载测序仪输出的原始 reads 及其质量分数。理解其结构、质量编码体系和变体，是质控、比对和定量分析的前提。"
+  bullets={[
+    'FASTQ 四行结构：标识符、序列、分隔符、质量分数',
+    'Phred 质量分数将 ASCII 字符映射为碱基错误概率',
+    '不同测序平台（Illumina、PacBio、ONT）的 FASTQ 变体与质量编码体系',
+    'FASTQ 不保存任何参考坐标信息——比对后才建立位置关系',
+  ]}
+/>
+
+## 是什么
+
+**FASTQ 格式**编码的是**原始测序观测（raw sequencing reads）**——测序仪直接输出的碱基序列及其对应的质量分数（quality scores）。这是分析流程的起点，承载实验观测的原始证据。
+
+每条测序 read 在 FASTQ 中由四行组成：
+
+```
+@SEQ_ID
+GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTC
++
+!''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF>>>
+```
+
+| 行号 | 内容 | 说明 |
+|------|------|------|
+| 1 | 标识符行（`@` 开头） | read ID、仪器信息、barcode/UMI（如有） |
+| 2 | 碱基序列 | 测序仪调用的碱基（A/C/G/T/N） |
+| 3 | 分隔符（`+` 开头） | 可重复标识符，或留空 |
+| 4 | 质量分数 | ASCII 编码的 Phred 质量值，与第 2 行等长 |
+
+## 为什么重要
+
+FASTQ 是整个分析链条的**证据源头**。所有下游分析——比对、变异检测、表达定量——的可靠性都取决于 FASTQ 中保存的原始观测质量。
+
+理解 FASTQ 的关键在于认识到：
+
+- **它只包含"读到了什么"，不包含"它在哪里"**——位置信息需要比对后才能获得
+- **质量分数是误差模型的核心**——后续算法（如变异检测器）依赖质量值计算置信度
+- **格式变体反映测序技术差异**——Illumina 短读长与 PacBio/ONT 长读长的 FASTQ 有不同的特征
+
+<PrerequisitesBox
+  items={[
+    '理解测序的基本原理：DNA 片段化 → 文库构建 → 测序仪输出 reads',
+    '了解 Phred 质量分数的定义：$Q = -10 \log_{10}(P)$，其中 $P$ 是碱基调用错误概率',
+    '如果不熟悉参考坐标系统，先阅读参考基因组、坐标系统与注释',
+  ]}
+/>
+
+## Phred 质量分数体系
+
+### 数学定义
+
+Phred 质量分数 $Q$ 与碱基错误概率 $P$ 的关系为：
+
+$$Q = -10 \log_{10}(P)$$
+
+反过来，错误概率为：
+
+$$P = 10^{-Q/10}$$
+
+### 常用质量值对照
+
+| Phred Q | 错误概率 P | 碱基正确率 | 说明 |
+|---------|-----------|-----------|------|
+| 10 | 0.1 | 90% | 低质量阈值 |
+| 20 | 0.01 | 99% | 常用质控阈值 |
+| 30 | 0.001 | 99.9% | Illumina 高质量 reads |
+| 40 | 0.0001 | 99.99% | 极高置信度 |
+
+### ASCII 编码
+
+质量分数通过 ASCII 字符编码存储。历史上存在三种编码体系：
+
+| 编码体系 | ASCII 范围 | Phred 范围 | 使用场景 |
+|---------|-----------|-----------|---------|
+| **Sanger / Phred+33** | `!` (33) ~ `~` (126) | 0 ~ 93 | 现代 Illumina（1.8+）、PacBio、ONT |
+| **Illumina 1.3+ / Phred+64** | `@` (64) ~ `~` (126) | 0 ~ 62 | 旧版 Illumina（1.3-1.7） |
+| **Solexa** | `;` (59) ~ `~` (126) | -5 ~ 62 | 极早期 Solexa 仪器 |
+
+**关键注意**：现代测序数据几乎统一使用 **Phred+33** 编码。如果看到质量字符从 `!` 开始，通常是 Phred+33；如果从 `@` 开始，可能是 Phred+64。
+
+### 质量值的生物学意义
+
+质量分数不仅仅是技术指标，它直接影响下游分析：
+
+- **低质量碱基**可能导致错误的变异调用（false positive SNPs）
+- **质量分布偏移**可能指示测序周期末端的信号衰减
+- **质量修剪（quality trimming）** 是质控流程的标准步骤，去除低质量末端
+
+## FASTQ 标识符的结构
+
+现代 FASTQ 标识符行包含丰富的元数据。以 Illumina 为例：
+
+```
+@M00123:45:000000000-A1B2C:1:1101:12345:6789 1:N:0:ATCACG
+```
+
+| 字段 | 说明 |
+|------|------|
+| `M00123:45` | 仪器 ID 和运行 ID |
+| `000000000-A1B2C` | Flowcell ID |
+| `1:1101` | 流道（lane）和瓦片（tile） |
+| `12345:6789` | 簇的 x/y 坐标 |
+| `1` | read 编号（1 或 2，paired-end 时区分） |
+| `N` | 是否过滤（Y = 未通过，N = 通过） |
+| `0` | 控制位 |
+| `ATCACG` | index/barcode 序列 |
+
+**PacBio** 和 **Oxford Nanopore** 的标识符格式不同，通常包含 molecule ID、zmw 坐标等信息。
+
+## Paired-end 与单端
+
+### 单端测序（Single-end）
+
+每个 DNA 片段产生一条 read，存储在一个 FASTQ 文件中。
+
+### 双端测序（Paired-end）
+
+每个 DNA 片段从两端分别测序，产生 read1 和 read2：
+
+```
+sample_R1.fastq.gz  ← read 1 序列
+sample_R2.fastq.gz  ← read 2 序列
+```
+
+两个文件中的 reads **按顺序一一对应**（第 n 行的 read1 与第 n 行的 read2 来自同一个 DNA 片段）。
+
+**关键约束**：paired-end 分析要求两个 FASTQ 文件的 read 顺序严格同步。如果文件被打乱，配对关系将丢失。
+
+## FASTQ 与其他格式的关系
+
+| 对比 | FASTQ | 对比格式 |
+|------|-------|---------|
+| **FASTA** | 包含序列 + 质量分数，是原始观测 | 只包含序列，常作为参考序列 |
+| **SAM/BAM** | 尚未建立参考坐标关系 | 比对后获得位置、CIGAR、MAPQ |
+| **VCF** | 只包含原始 reads，无变异推断 | 基于比对证据的变异调用结果 |
+
+**核心原则**：FASTQ 是分析流程的**输入层**，不保存任何比对、注释或变异信息。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '质控工具：FastQC（质量报告）、MultiQC（汇总报告）、fastp（质控+修剪）',
+    '比对工具：BWA-MEM、Bowtie2、minimap2 以 FASTQ 为输入，输出 SAM/BAM',
+    '定量工具：Salmon、kallisto 支持直接从 FASTQ 进行 pseudo-alignment 定量',
+    '组装工具：SPAdes、MEGAHIT 使用 FASTQ 作为 de novo 组装输入',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**质量编码混淆**：假设所有 FASTQ 都使用 Phred+33，而旧版 Illumina 数据可能使用 Phred+64，导致质量值解读错误。',
+    '**FASTQ 包含位置信息**：FASTQ 只保存 reads 本身，比对后才获得参考坐标。',
+    '**paired-end 文件可独立处理**：R1 和 R2 必须配对使用，单独分析一端会丢失插入片段（insert size）信息。',
+    '**质量值=碱基可靠性绝对指标**：质量分数是测序仪估计值，可能存在系统性偏差，需结合质控工具验证。',
+    '**FASTQ 文件可以随意重排**：paired-end 的两个文件必须保持 read 顺序同步，否则配对关系丢失。',
+  ]}
+/>
+
+## 本章小结
+
+- FASTQ 是分析流程的**证据源头**，保存原始 reads 和质量分数
+- Phred 质量分数通过 ASCII 编码，现代数据统一使用 Phred+33
+- FASTQ **不保存参考坐标**——比对后才建立位置关系
+- 质控和质量修剪是 FASTQ 进入下游分析前的标准步骤
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'SAM/BAM 格式',
+      to: '/docs/formats/sam-bam-cram',
+      label: '下游格式',
+      description: '比对后 reads 获得参考坐标，保存在 SAM/BAM/CRAM 中。',
+    },
+    {
+      title: '测序 reads 与 coverage',
+      to: '/docs/foundations/sequencing-reads-coverage',
+      label: '基础层',
+      description: '理解 reads 的生成机制、coverage 概念和质量模型。',
+    },
+    {
+      title: 'FASTA 格式',
+      to: '/docs/formats/common-file-formats',
+      label: '对比',
+      description: 'FASTA 只包含序列，不带质量分数，常用于参考序列。',
+    },
+  ]}
+/>

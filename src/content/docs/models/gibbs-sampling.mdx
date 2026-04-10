@@ -4,7 +4,6 @@ title: "Gibbs Sampling"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
@@ -369,6 +368,28 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 输出：
 - 保守的结构或序列 motif
 ```
+
+## 常见误区
+
+### Gibbs Sampling 运行足够多次迭代就一定能找到全局最优 motif
+
+Gibbs Sampling 理论上在无限次迭代后能收敛到平稳分布，但这并不意味着一定能访问到全局最优解。收敛到平稳分布只是说明采样频率反映了各状态的概率，而全局最优 motif 的概率可能非常小。实践中，算法的搜索能力受初始化位置、序列保守程度和 motif 长度的强烈影响。对于高度退化的 motif（信息含量低），单次运行的 Gibbs Sampling 几乎必然错过最优解，必须依赖多次随机重启。
+
+### 伪计数（pseudocount）只是技术细节，用默认值即可
+
+伪计数的选择对 Gibbs Sampling 的结果有实质性影响。过小的伪计数（如 0.01）会导致 profile 对异常位置过于敏感——一旦某次采样选中了一个噪声位置，profile 会被严重扭曲。过大的伪计数（如 1.0 或更大）则会使 profile 趋于均匀分布，降低对真正 motif 信号的区分能力。伪计数本质上是在"拟合训练数据"和"保持先验平滑"之间的权衡，需要根据序列数量和 motif 保守程度进行调整。
+
+### Gibbs Sampling 与 EM 算法解决的是同一个问题
+
+虽然两者都用于 Motif Finding，但搜索策略有根本区别。EM 算法在 E-step 对所有可能的起始位置计算期望（软分配），倾向于快速收敛到最近的局部最优。Gibbs Sampling 在每步只随机选择一条序列更新一个位置（硬分配），其随机性使它有更大概率跳出局部最优。EM 通常收敛更快但更容易陷入局部最优，Gibbs Sampling 更慢但探索能力更强。选择哪种方法取决于数据特性和对速度/质量的需求。
+
+### Profile 矩阵的得分越高，找到的 motif 越有生物学意义
+
+Profile 得分（如信息含量）只衡量序列的统计保守性，不直接反映生物学功能。一组高度保守但缺乏功能关联的序列（如来自同一个基因家族的启动子区域中的某个非功能性保守元件）可能产生高得分。反过来，某些功能重要的 motif（如仅在某几个关键基因的启动子中出现）可能因为样本量不足而得分较低。生物学意义的判断需要结合实验验证和功能注释，而非仅看统计得分。
+
+### 迭代次数越多，burn-in 期可以忽略
+
+Burn-in 期的作用是让马尔可夫链"忘记"初始化的影响，进入平稳分布。如果 burn-in 设置得太短，后续采样中会混入初始化偏差。关键在于 burn-in 应该足够长使得链"混合良好"，而非简单地占总迭代的一定比例。在实践中，可以通过监控目标函数的收敛轨迹来判断 burn-in 是否充足。如果不同随机重启的最终结果差异很大，通常说明 burn-in 不足或问题本身存在多个局部最优。
 
 <RelatedLinks
   links={[

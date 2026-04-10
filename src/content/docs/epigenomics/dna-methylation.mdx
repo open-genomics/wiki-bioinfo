@@ -4,7 +4,6 @@ title: "DNA 甲基化"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
@@ -38,9 +37,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### HMM 建模直觉
 我们可以将寻找 CG 岛的问题建模为一个 **公平赌场 (Fair Bet Casino)** 问题：
-- **隐藏状态**：当前碱基属于“CG 岛”内部还是“背景区域”。
+- **隐藏状态**：当前碱基属于"CG 岛"内部还是"背景区域"。
 - **观测**：实际看到的碱基序列。
-- **逻辑**：在“CG 岛”状态下，发射 `C` 和 `G` 的概率显著高于背景状态。通过 **Viterbi 算法**，我们可以推断出整条序列中最可能的隐藏状态路径，从而精确定位 CG 岛的边界。
+- **逻辑**：在"CG 岛"状态下，发射 `C` 和 `G` 的概率显著高于背景状态。通过 **Viterbi 算法**，我们可以推断出整条序列中最可能的隐藏状态路径，从而精确定位 CG 岛的边界。
 
 ## 3. 实验与计算：WGBS 流程
 

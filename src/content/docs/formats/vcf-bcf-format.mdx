@@ -1,0 +1,215 @@
+---
+title: "VCF/BCF 格式：变异候选的标准编码"
+description: "VCF/BCF 如何编码基于比对证据推断的序列差异、基因型和质量指标"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="VCF（Variant Call Format）编码的是变异候选（variant calls）——基于比对证据推断的序列差异。理解其结构（REF/ALT、QUAL、INFO、FORMAT、基因型），是变异过滤、注释和解释的基础。"
+  bullets={[
+    'VCF 是文本格式，BCF 是二进制格式，两者语义等价',
+    '核心字段：CHROM/POS/REF/ALT 定义变异位置，QUAL 评估置信度',
+    'INFO 字段保存变异级属性（深度、等位基因频率、功能影响）',
+    'FORMAT + 样本列保存样本级基因型（GT）和其他指标',
+    'VCF 是统计推断结果，不是绝对真理——依赖 caller 算法和过滤参数',
+  ]}
+/>
+
+## 是什么
+
+**VCF（Variant Call Format）** 格式编码的是**变异候选（variant calls）**——基于 BAM 比对证据和统计模型产生的序列差异推断。
+
+### 文件结构
+
+VCF 文件由三部分组成：
+
+```vcf
+##fileformat=VCFv4.3
+##reference=file:///reference/GRCh38.fa
+##INFO=<ID=DP,Number=1,Type=Integer,Description="总深度">
+##INFO=<ID=AF,Number=A,Type=Float,Description="等位基因频率">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="基因型">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="样本深度">
+#CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  SAMPLE1
+chr1    12345   rs123   A       G       99.5    PASS    DP=150;AF=0.45  GT:DP   0/1:72
+chr2    67890   .       C       T       45.2    LowQual DP=30;AF=0.15   GT:DP   0/1:12
+```
+
+| 部分 | 前缀 | 内容 |
+|------|------|------|
+| **Meta-information** | `##` | 文件格式、参考版本、INFO/FORMAT 定义 |
+| **Header** | `#CHROM` | 列名和样本列表 |
+| **Data** | 无前缀 | 每条变异记录 |
+
+### 核心字段
+
+| 字段 | 说明 | 示例 |
+|------|------|------|
+| **CHROM** | 染色体 | chr1 |
+| **POS** | 1-based 位置 | 12345 |
+| **ID** | dbSNP ID（如有） | rs123 |
+| **REF** | 参考等位基因 | A |
+| **ALT** | 替代等位基因 | G |
+| **QUAL** | 质量分数（Phred-scaled） | 99.5 |
+| **FILTER** | 过滤状态 | PASS / LowQual |
+| **INFO** | 变异级属性 | DP=150;AF=0.45 |
+| **FORMAT** | 样本级字段格式 | GT:DP |
+| **样本列** | 每个样本的数据 | 0/1:72 |
+
+## 为什么重要
+
+VCF 是变异检测流程的**输出交付格式**，承载：
+
+- **候选变异列表**：SNPs、indels、结构变异
+- **基因型信息**：每个样本在每个变异位点的基因型（如 0/1 = 杂合）
+- **质量指标**：用于过滤低置信度调用
+- **注释接口**：可附加功能影响、临床意义等信息
+
+**关键认知**：VCF 是**统计推断结果**，不是绝对真理。每个变异的可信度取决于：
+- 比对质量（BAM 中的 MAPQ、碱基质量）
+- Caller 算法（GATK、FreeBayes、samtools 使用不同模型）
+- 过滤参数（QUAL 阈值、深度要求）
+
+<PrerequisitesBox
+  items={[
+    '理解 BAM 格式：变异检测基于 read pileup 证据',
+    '理解参考基因组坐标系统：变异位置相对于特定参考版本',
+    '了解基本概念：SNP、insertion、deletion、杂合/纯合',
+  ]}
+/>
+
+## 基因型编码
+
+### GT（Genotype）字段
+
+基因型用数字编码表示等位基因组合：
+
+| GT | 含义 | 说明 |
+|----|------|------|
+| `0/0` | 纯合参考 | 两个等位基因都是 REF |
+| `0/1` | 杂合 | 一个 REF，一个 ALT |
+| `1/1` | 纯合变异 | 两个等位基因都是 ALT |
+| `0/2` | 杂合（多等位基因） | REF + 第二个 ALT |
+| `./.` | 缺失基因型 | 无法确定 |
+
+**分隔符含义**：
+- `/`：未分相（unphased）——不知道两个等位基因的来源
+- `|`：已分相（phased）——知道等位基因来自哪条染色体
+
+示例：`0|1` 表示已分相的杂合基因型。
+
+### 多等位基因位点
+
+当同一位置有多个替代等位基因时：
+
+```
+REF=A  ALT=G,T
+GT=1/2  →  携带 G 和 T 两个变异等位基因
+GT=0/1  →  携带 A 和 G
+```
+
+## INFO 字段常见属性
+
+| 标签 | 类型 | 说明 |
+|------|------|------|
+| **DP** | int | 总测序深度 |
+| **AF** | float | 等位基因频率（ALT reads / total reads） |
+| **AC** | int | 等位基因计数 |
+| **AN** | int | 总等位基因数 |
+| **MQ** | float | 平均比对质量 |
+| **MQRankSum** | float | 参考 vs ALT 的 MAPQ 差异 |
+| **ReadPosRankSum** | float | 参考 vs ALT 的 read 位置偏差 |
+| **FS** | float | Fisher 精确检验（链偏倚） |
+| **QD** | float | 质量值/深度比值 |
+
+## 常见 FILTER 状态
+
+| 状态 | 含义 |
+|------|------|
+| **PASS** | 通过所有过滤标准 |
+| **LowQual** | 质量低于阈值 |
+| **LowDP** | 深度不足 |
+| **StrandBias** | 链偏倚显著 |
+| **ClusteredEvents** | 变异聚集（可能为假阳性） |
+
+## 常见变异类型
+
+| 类型 | REF/ALT 特征 | 示例 |
+|------|-------------|------|
+| **SNP** | 单碱基 → 单碱基 | REF=A, ALT=G |
+| **Insertion** | 单碱基 → 多碱基 | REF=A, ALT=ATG |
+| **Deletion** | 多碱基 → 单碱基 | REF=ATG, ALT=A |
+| **MNP** | 多碱基 → 多碱基 | REF=AC, ALT=TG |
+| **Structural Variant** | 通常用特殊 INFO 标记 | `<DEL>`, `<DUP>` |
+
+## VCF vs BCF
+
+| 特性 | VCF | BCF |
+|------|-----|-----|
+| **格式** | 文本 | 二进制 |
+| **可读性** | 人类可读 | 需要工具解码 |
+| **文件大小** | 较大 | 较小 |
+| **访问速度** | 慢（顺序读取） | 快（支持随机访问） |
+| **典型用途** | 最终报告、归档 | 分析中间格式、大规模处理 |
+
+**两者语义完全等价**，可通过 `bcftools` 互相转换。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '变异检测：GATK HaplotypeCaller、FreeBayes、samtools mpileup 输出 VCF',
+    '变异过滤：VQSR（GATK）、bcftools filter 根据 QUAL/INFO 字段过滤',
+    '变异注释：VEP（Ensembl）、ANNOVAR、SnpEff 添加功能影响和临床意义',
+    '可视化：IGV 使用 BAM + VCF 叠加显示变异证据',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**VCF = 最终结论**：VCF 是统计推断，QUAL 和 FILTER 字段反映置信度，需要结合上下文解释。',
+    '**VCF 包含原始证据**：VCF 只保存聚合统计信息（DP、AF），不保存产生调用的 reads（需回查 BAM）。',
+    '**PASS = 绝对可靠**：PASS 仅表示通过预设过滤标准，不代表生物学意义上一定是致病变异。',
+    '**基因型 = 表型**：0/1 杂合不意味着一定会表现变异表型，需考虑显隐性、表达量等因素。',
+    '**单样本 VCF 可直接比较**：不同样本的 VCF 需要在同一参考版本和 calling pipeline 下才可比较。',
+  ]}
+/>
+
+## 本章小结
+
+- VCF 编码变异候选，是**从比对层到变异解释层的抽象**
+- 核心字段定义变异位置（CHROM/POS/REF/ALT）、置信度（QUAL）、属性（INFO）和基因型（GT）
+- VCF 是统计推断结果，依赖 caller 算法和过滤参数
+- BCF 是二进制等价形式，适合高效处理
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'SAM/BAM/CRAM 格式',
+      to: '/docs/formats/sam-bam-cram',
+      label: '上游格式',
+      description: '变异检测的证据来源——比对结果。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      label: '应用层',
+      description: '查看 BAM → VCF 的完整变异检测流程。',
+    },
+    {
+      title: '变异过滤策略',
+      to: '/docs/variants/variant-filtering',
+      label: '下游流程',
+      description: '如何使用 VCF 中的 QUAL/INFO 字段进行质量控制。',
+    },
+  ]}
+/>

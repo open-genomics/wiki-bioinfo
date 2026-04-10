@@ -4,6 +4,8 @@ description: 介绍 RNA-seq 表达定量的算法策略：从精确比对转向 
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '问题核心：read 归属的不确定性（multi-mapping）与计算效率的权衡',
     '算法策略：k-mer 索引 + 等价类（equivalence class）+ EM 推断',
     '复杂度分析：从 O(reads × transcript_length) 降至 O(reads × k-mer_matches)',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'RNA-seq 工作流概览', href: '/wiki-bioinfo/workflows/rna-seq', description: '定量在完整分析流程中的位置' },
+    { title: '序列比对基础', href: '/wiki-bioinfo/alignment/index', description: '精确比对与 pseudo-alignment 的对比' },
+    { title: 'TPM、FPKM、CPM 与有效长度', href: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm', description: '定量后的归一化方法' },
   ]}
 />
 
@@ -180,10 +190,33 @@ Pseudo-alignment 算法**假设参考转录组注释是完备的**。如果：
 
 此时需要额外的生物学假设或过滤策略。
 
-## 相关算法与扩展阅读
+## 常见误区
 
-- **[RNA-seq 工作流概览](../workflows/rna-seq.mdx)**：将 pseudo-alignment 放在完整分析流程中理解
-- **[TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)**：理解定量后的归一化方法
-- **[FM-index](../sequence/fm-index.mdx)**：k-mer 索引的底层数据结构
-- **[序列比对](../alignment/index.mdx)**：精确比对的算法基础
-- **[基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)**：定量结果的层级聚合
+### Pseudo-alignment 精度不如传统比对，因此结果不可靠
+
+Pseudo-alignment 在表达定量任务上的精度并不低于传统比对，甚至在某些场景下更优。因为传统比对在面对多映射 read 时也需要做出任意选择或丢弃，而 pseudo-alignment 的 EM 算法通过概率模型更合理地处理了归属不确定性。精度差异主要取决于参考注释的完备性，而非比对方法本身。
+
+### Kallisto/Salmon 的速度优势来自"跳过了比对"
+
+这种说法不够准确。Pseudo-alignment 并非跳过比对，而是用一种更轻量的兼容性判断替代了碱基级精确比对。核心加速来自两方面：k-mer 索引的 O(1) 查询（而非 FM-index 的对数级搜索）和等价类聚合（将数百万 reads 压缩为少量等价类再运行 EM）。这是一种算法策略的转变，而非简单的"偷工减料"。
+
+### EM 算法一定会收敛到全局最优
+
+EM 算法只保证收敛到似然函数的局部极大值，而非全局最大值。在丰度参数的初始值选择不当时，EM 可能收敛到较差的解。实践中，Salmon 和 Kallisto 通过在线学习（逐 read 更新）和合理的初始化策略来缓解这一问题，但不能完全消除局部最优的风险。
+
+### 等价类数量越少，定量结果越好
+
+等价类数量少意味着大量 reads 被归入相同的兼容性集合，这虽然提高了计算效率，但也意味着这些 reads 无法被区分。极端情况下，如果所有 reads 都兼容所有转录本（等价类只有一个），定量结果将完全退化。等价类数量是参考注释复杂度和序列相似性的反映，而非定量质量的指标。
+
+### Pseudo-alignment 可以替代所有比对需求
+
+Pseudo-alignment 仅适用于"已知转录本的表达定量"这一特定场景。如果需要发现新转录本、分析剪接位点、检测基因组变异或研究融合基因，仍必须使用传统 spliced alignment（如 STAR、HISAT2）。将 pseudo-alignment 用于其设计范围之外的任务会导致信息丢失和错误结论。
+
+<RelatedLinks
+  links={[
+    { title: 'RNA-seq 工作流概览', to: '/wiki-bioinfo/workflows/rna-seq', description: '将 pseudo-alignment 放在完整分析流程中理解' },
+    { title: 'TPM、FPKM、CPM 与有效长度', to: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm', description: '定量后的归一化方法' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index', description: '精确比对的算法基础' },
+    { title: '基因层与转录本层表达定量', to: '/wiki-bioinfo/transcriptomics/gene-vs-transcript-quant', description: '定量结果的层级聚合' }
+  ]}
+/>

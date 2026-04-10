@@ -54,6 +54,51 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 3. 算法实现：动态规划
 
+谱图图方法将肽段测序问题转化为有向无环图（DAG）中的最长路径问题。由于 DAG 的拓扑有序性，可以使用动态规划在 O(V + E) 时间内找到最优路径。
+
+### 算法核心思路
+
+对于 DAG 中的每个顶点，我们维护一个从源点到该顶点的最大得分路径。设 `dist[v]` 为从源点 `v_source` 到顶点 `v` 的最大路径得分，`prev[v]` 为前驱节点（用于回溯路径）。
+
+### 伪代码实现
+
+```
+LONGEST-PATH-DAG(G, source, sink):
+    // 拓扑排序
+    topo_order = TOPOLOGICAL-SORT(G)
+    
+    // 初始化
+    for each vertex v:
+        dist[v] = -∞
+        prev[v] = null
+    dist[source] = 0
+    
+    // 动态规划：按拓扑序遍历
+    for v in topo_order:
+        for each edge (v, u) in G.adj[v]:
+            if dist[u] < dist[v] + weight(v, u):
+                dist[u] = dist[v] + weight(v, u)
+                prev[u] = v
+    
+    // 回溯路径
+    path = []
+    v = sink
+    while v != source:
+        path.prepend(v)
+        v = prev[v]
+    path.prepend(source)
+    
+    return path, dist[sink]
+```
+
+### 关键实现细节
+
+**权重设置**：在使用概率评分的场景下，边的权重等于目标顶点的得分；在简单最长路径场景下，所有边权重为 1。
+
+**复杂度保证**：拓扑排序 O(V + E)，动态规划遍历 O(V + E)，回溯 O(V)，总体 O(V + E)。
+
+**边界处理**：需要检查是否存在从源点到汇点的可达路径；若不存在，说明谱图不完备，需要报告失败。
+
 ## 谱图图构建
 
 ### 基本概念

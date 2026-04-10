@@ -4,6 +4,7 @@ title: "AlphaFold 与结构预测"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
@@ -14,6 +15,14 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '核心是利用 MSA 和模板信息预测残基间几何关系，而非直接匹配已知结构',
     'pLDDT 和 PAE 是两个关键置信度指标，分别衡量局部精度和域间相对位置精度',
     '理解置信度边界：无序区、多域相对位置、配体效应是主要局限'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '蛋白结构基础', href: '/wiki-bioinfo/structure-bioinfo/protein-structure-basics', description: '蛋白质结构的层次与表示' },
+    { title: 'Transformer for Sequences', href: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences', description: 'AlphaFold 的注意力机制基础' },
+    { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '共进化信息的来源' },
   ]}
 />
 

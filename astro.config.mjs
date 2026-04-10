@@ -115,6 +115,7 @@ export default defineConfig({
           items: [
             { slug: 'core-methods' },
             { slug: 'core-methods/algorithm-design-paradigms' },
+            { slug: 'core-methods/method-connections' },
             {
               label: '序列表示与索引',
               collapsed: true,
@@ -334,6 +335,8 @@ export default defineConfig({
                 { slug: 'structure-bioinfo/protein-structure-basics' },
                 { slug: 'structure-bioinfo/alphafold-and-structure-prediction' },
                 { slug: 'structure-bioinfo/structure-alignment-and-fold' },
+                { slug: 'structure-bioinfo/molecular-dynamics-basics' },
+                { slug: 'structure-bioinfo/protein-interaction-prediction' },
               ],
             },
             {
@@ -389,12 +392,18 @@ export default defineConfig({
             { slug: 'data-references/databases-and-annotations' },
             { slug: 'data-references/common-formats-overview' },
             { slug: 'data-references/reference-versions-and-liftover' },
+            { slug: 'data-references/reference-genome-history' },
+            { slug: 'data-references/annotation-pipelines' },
             {
               label: '数据库与资源',
               collapsed: true,
               items: [
                 { slug: 'databases' },
                 { slug: 'databases/common-resources' },
+                { slug: 'databases/ncbi' },
+                { slug: 'databases/ensembl' },
+                { slug: 'databases/uniprot' },
+                { slug: 'databases/pdb' },
                 { slug: 'databases/database-algorithms' },
               ],
             },
@@ -404,6 +413,11 @@ export default defineConfig({
               items: [
                 { slug: 'formats' },
                 { slug: 'formats/common-file-formats' },
+                { slug: 'formats/fasta-format' },
+                { slug: 'formats/fastq-format' },
+                { slug: 'formats/sam-bam-cram' },
+                { slug: 'formats/gtf-gff-bed' },
+                { slug: 'formats/vcf-bcf-format' },
               ],
             },
           ],

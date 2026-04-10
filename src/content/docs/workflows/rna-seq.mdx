@@ -4,13 +4,22 @@ title: "RNA-seq 工作流概览"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="这是一页把 RNA-seq 从原始 reads 一路串到定量、归一化、差异分析与功能解释的总览页面，重点是建立流程地图而不是记命令。"
   bullets={[
     '如果你刚开始接触 RNA-seq，先把流程中的输入输出、注释依赖和定量目标区分清楚。',
     '如果你已经做过一些分析，这页更适合你回头定位每一步依赖的算法与统计前提。',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index' },
+    { title: '数据库与资源', to: '/wiki-bioinfo/databases/index' },
   ]}
 />
 
@@ -145,7 +154,7 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
   <figcaption>RNA-seq 分析主线：从 reads 与质控，到 mapping / pseudo-alignment，再到定量、归一化与差异表达。</figcaption>
 </figure>
 
-真正上手时，流程中的关键选择常常不是“用哪个工具更流行”，而是：
+真正上手时，流程中的关键选择常常不是"用哪个工具更流行"，而是：
 
 - 当前问题是否需要精确定位还是快速定量；
 - 结果是 gene-level 还是 transcript-level；
@@ -159,10 +168,11 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
 - 差异分析只要调 p 值阈值，不需要回头看质控和注释背景；
 - 生物学重复的重要性低于流程细节。
 
-## 相关页面
-
-- [NGS 流程总览](./ngs-overview.md)
-- [质量控制（QC）总览](./qc-overview.md)
-- [Pseudo-alignment 与表达定量](../transcriptomics/pseudo-alignment-and-quantification.mdx)
-- [TPM、FPKM、CPM 与有效长度](../transcriptomics/tpm-fpkm-cpm.mdx)
-- [差异表达分析](../transcriptomics/differential-expression.mdx)
+<RelatedLinks
+  links={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview', description: 'RNA-seq 在 NGS 分析中的位置' },
+    { title: '质量控制（QC）总览', to: '/wiki-bioinfo/workflows/qc-overview', description: 'RNA-seq 数据的质控要点' },
+    { title: 'Pseudo-alignment 与表达定量', to: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification', description: '快速定量算法详解' },
+    { title: '差异表达分析', to: '/wiki-bioinfo/transcriptomics/differential-expression', description: 'RNA-seq 的核心下游分析' }
+  ]}
+/>

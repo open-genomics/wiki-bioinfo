@@ -214,11 +214,11 @@ $$\widehat{\text{FDR}}(t) = \frac{\#\{\text{Decoy PSMs with score} \geq t\}}{\#\
 | 步骤 | 复杂度 | 说明 |
 |:---|:---|:---|
 | 数据库预处理 | $O(|D| \cdot \bar{L})$ | 酶切 + 理论谱生成，$|D|$ 为数据库大小 |
-| 前体质量过滤 | $O(|\mathcal{P}|)$ | 按母离子质量筛选候选肽段 |
-| 评分计算 | $O(n \cdot k \cdot |\mathcal{P}_s|)$ | $n$ 张谱图，每张与 $|\mathcal{P}_s|$ 个候选比较，$k$ 为碎片数量 |
+| 前体质量过滤 | $O(N_{\text{peptide}})$ | 按母离子质量筛选候选肽段 |
+| 评分计算 | $O(n \cdot k \cdot N_{\text{filtered}})$ | $n$ 张谱图，每张与 $N_{\text{filtered}}$ 个候选比较，$k$ 为碎片数量 |
 | FDR 计算 | $O(n \cdot \log n)$ | 排序 + 累积计算 |
 
-其中 $|\mathcal{P}_s|$ 是经过质量过滤后的候选数量。实践中，使用前体索引（Precursor Index）可以将搜索速度提高数个数量级。
+其中 $N_{\text{filtered}}$ 是经过质量过滤后的候选数量。实践中，使用前体索引（Precursor Index）可以将搜索速度提高数个数量级。
 
 ### 适用前提
 

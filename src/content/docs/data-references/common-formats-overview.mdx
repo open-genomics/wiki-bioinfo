@@ -56,7 +56,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 <PrerequisitesBox
   items={[
     '先理解参考基因组、坐标系统与注释，因为很多格式的意义都依赖参考背景。',
-    '理解不同任务的“结果文件”并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
+    '理解不同任务的"结果文件"并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
     '如果你更想看具体格式保存什么和不保存什么，再去读常见文件格式概览。',
   ]}
 />
@@ -110,11 +110,11 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 原始观测层：FASTQ
 
-这一层持有的是实验直接产生的 reads 与质量值。它代表“样本观测”，但还没有被放进参考坐标系。
+这一层持有的是实验直接产生的 reads 与质量值。它代表"样本观测"，但还没有被放进参考坐标系。
 
 ### 定位结果层：SAM / BAM / CRAM
 
-这一层开始把 reads 放到参考背景下理解。此时我们拥有了位置、CIGAR、MAPQ 等信息，但还没有自动得到“生物学解释”。
+这一层开始把 reads 放到参考背景下理解。此时我们拥有了位置、CIGAR、MAPQ 等信息，但还没有自动得到"生物学解释"。
 
 ### 注释与区间层：GTF / GFF / BED
 
@@ -122,7 +122,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 变异结果层：VCF / BCF
 
-这一层把定位证据进一步提炼成候选变异及其过滤信息。它比 BAM 更接近“结论”，但仍然依赖参考版本、caller 逻辑与上下文解释。
+这一层把定位证据进一步提炼成候选变异及其过滤信息。它比 BAM 更接近"结论"，但仍然依赖参考版本、caller 逻辑与上下文解释。
 
 ### 派生指标层：矩阵、coverage、汇总表
 
@@ -148,7 +148,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       title: '放入坐标系',
       badge: '定位层',
       description: 'reads 被比对或定位后，得到 SAM/BAM/CRAM。',
-      hint: '这里回答的是“放在哪里”，不是“最后意味着什么”。',
+      hint: '这里回答的是"放在哪里"，不是"最后意味着什么"。',
     },
     {
       title: '结合注释与任务解释',
@@ -189,7 +189,7 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
 
 <ToolMappingBox
   items={[
-    '不同软件经常被误认为“只是吃不同格式”，但它们实际上在处理不同语义层的对象。',
+    '不同软件经常被误认为"只是吃不同格式"，但它们实际上在处理不同语义层的对象。',
     'alignment、feature counting、variant calling、expression quantification 等步骤，本质上是在不同层之间做信息交接。',
     '当工作流输出矩阵、VCF 或汇总表时，仍然需要知道它是从哪一层证据提炼出来的。',
   ]}
@@ -203,7 +203,7 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
     '把 GTF/GFF 当成样本证据，而不是参考上的注释背景。',
     '把 BAM 看成最终解释结果，而忽略它只是定位层表示。',
     '把 VCF 当成完全脱离参考版本、caller 和过滤逻辑的最终真相。',
-    '看到“结果文件”就以为已经不需要回溯到前一层。',
+    '看到"结果文件"就以为已经不需要回溯到前一层。',
   ]}
 />
 

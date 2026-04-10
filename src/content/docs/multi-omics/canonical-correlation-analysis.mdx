@@ -4,8 +4,9 @@ title: "典型相关分析（CCA）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="CCA 通过寻找两组变量的线性组合使它们之间的相关性最大化，是分析两组数据关联的经典统计方法，也是多组学整合的重要基础。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心是最大化跨组学相关性，而非重构误差',
     '可扩展到多组学（Group CCA）和非线性场景（Kernel CCA、Deep CCA）',
     '是理解现代深度多模态学习对比损失的思想源头',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: '多组学整合策略', to: '/wiki-bioinfo/multi-omics/integration-strategies' },
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf' },
   ]}
 />
 
@@ -640,10 +649,11 @@ Deep CCA 是多模态深度学习的早期方法，影响了后续的：
 - Witten, D. M., et al. (2009). "A penalized matrix decomposition, with applications to sparse principal components and canonical correlation analysis"
 - Andrew, G., et al. (2013). "Deep Canonical Correlation Analysis"
 
-## 相关页面
-
-- [整合算法概览](./integration-algorithms.md)
-- [联合NMF](./joint-nmf.mdx)
-- [MOFA+](./mofa-plus.mdx)
-- [机器学习基础](../ml-bioinfo/index.mdx)
-- [机器学习与基础模型](../ml-bioinfo/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms', description: 'CCA 在多组学整合算法中的定位' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf', description: '基于重构误差的替代整合方法' },
+    { title: 'MOFA+', to: '/wiki-bioinfo/multi-omics/mofa-plus', description: '因子分析框架下的整合方法' },
+    { title: '相似性网络融合', to: '/wiki-bioinfo/multi-omics/similarity-network-fusion', description: '基于图的整合方法' }
+  ]}
+/>

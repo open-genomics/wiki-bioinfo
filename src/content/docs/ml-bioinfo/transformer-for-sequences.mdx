@@ -4,7 +4,8 @@ title: "Transformer 与自注意力机制"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '自注意力机制捕获长程依赖',
     '并行计算，训练效率高',
     '是 ESM、DNABERT 等生物语言模型的核心',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'CNN for Sequences', href: '/wiki-bioinfo/ml-bioinfo/cnn-for-sequences', description: '局部模式检测的高效架构' },
+    { title: 'RNN/LSTM for Sequences', href: '/wiki-bioinfo/ml-bioinfo/rnn-lstm-for-sequences', description: '序列建模的经典架构' },
+    { title: '嵌入与语言模型', href: '/wiki-bioinfo/ml-bioinfo/embeddings-and-language-models', description: 'Transformer 预训练的基础' },
   ]}
 />
 
@@ -571,10 +580,11 @@ $$
 - Ji, Y., et al. (2021). DNABERT: pre-trained Bidirectional Encoder Representations from Transformers model for DNA-language in genome. *Bioinformatics*, 37(15), 2112-2119.
 - Avsec, Ž., et al. (2021). Effective gene expression prediction from sequence by integrating long-range interactions. *Nature methods*, 18(11), 1423-1433.
 
-## 相关页面
-
-- [序列深度学习](./deep-learning-for-sequences.mdx)
-- [嵌入与语言模型](./embeddings-and-language-models.mdx)
-- [CNN for Sequences](./cnn-for-sequences.mdx)
-- [RNN/LSTM for Sequences](./rnn-lstm-for-sequences.mdx)
-- [AlphaFold 与结构预测](../structure-bioinfo/alphafold-and-structure-prediction.mdx)
+<RelatedLinks
+  links={[
+    { title: '序列深度学习', to: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体概览' },
+    { title: '嵌入与语言模型', to: '/wiki-bioinfo/ml-bioinfo/embeddings-and-language-models', description: 'Transformer 预训练的基础' },
+    { title: 'CNN for Sequences', to: '/wiki-bioinfo/ml-bioinfo/cnn-for-sequences', description: '局部模式检测的高效架构' },
+    { title: 'AlphaFold 与结构预测', to: '/wiki-bioinfo/structure-bioinfo/alphafold-and-structure-prediction', description: 'Transformer 在蛋白质结构预测中的成功应用' }
+  ]}
+/>

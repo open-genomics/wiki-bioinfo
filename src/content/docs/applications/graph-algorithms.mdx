@@ -4,7 +4,8 @@ title: "图算法在生物信息学中的应用"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '将生物学问题转化为图问题是理解的关键第一步',
     '图的类型（有向/无向、加权/无权）决定适用的算法',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度基础', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '基因组组装概述', href: '/wiki-bioinfo/assembly/index' },
+    { name: '生物信息学算法总览', href: '/wiki-bioinfo/applications/algorithms-overview' },
   ]}
 />
 
@@ -498,9 +507,9 @@ D [ 9  10   8   0 ]
 
 - **视觉化构建逻辑**：
 
-1.  **节点拆分**：将每个长度为 $k$ 的序列 (k-mer) 视为连接两个 $(k-1)$-mer 的“边”。
+1.  **节点拆分**：将每个长度为 $k$ 的序列 (k-mer) 视为连接两个 $(k-1)$-mer 的"边"。
 2.  **图合并**：由于节点是长度为 $k-1$ 的重叠前缀/后缀，相同的子串会自动塌陷为同一个节点。
-3.  **气泡 (Bubble) 产生**：当由于测序错误或 SNP 导致序列在中间位置出现微小差异时，图上会形成“闭合回路”，即气泡。
+3.  **气泡 (Bubble) 产生**：当由于测序错误或 SNP 导致序列在中间位置出现微小差异时，图上会形成"闭合回路"，即气泡。
 4.  **死胡同 (Tip)**：测序末端的错误通常表现为从主路径分叉出的短枝条。
 
 **组装流程的视觉隐喻**：
@@ -512,3 +521,13 @@ D [ 9  10   8   0 ]
 - [系统发育与进化](../phylogeny/index.mdx)
 - [算法总览](./algorithms-overview.mdx)
 - [动态规划算法](./dynamic-programming.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'de Bruijn graph 组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: '图算法在基因组组装中的核心应用' },
+    { title: 'OLC：Overlap-Layout-Consensus', to: '/wiki-bioinfo/assembly/olc', description: '基于重叠图的经典组装方法' },
+    { title: '系统发育与进化', to: '/wiki-bioinfo/phylogeny/index', description: '图算法在进化树构建中的应用' },
+    { title: '算法总览', to: '/wiki-bioinfo/applications/algorithms-overview', description: '生物信息学核心算法全景' },
+    { title: '动态规划算法', to: '/wiki-bioinfo/applications/dynamic-programming', description: '序列比对中的网格图 DP 方法' },
+  ]}
+/>

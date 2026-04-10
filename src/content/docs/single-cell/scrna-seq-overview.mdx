@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的"平均值"迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。"
+  summary='scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的「平均值」迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。'
   bullets={[
     '理解 scRNA-seq 与 Bulk RNA-seq 的本质差异：从"果昔"到"水果切盘"',
     '掌握主流平台（10x Genomics, Smart-seq2）的捕获原理与优劣',
@@ -278,7 +278,7 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 - 13 个基因的原始表达矩阵
 
 **分析结果**：
-- 质控后保留约 2,600 个细胞（过滤掉 UMI <200 和线粒体比例 >5% 的细胞）
+- 质控后保留约 2,600 个细胞（过滤掉 UMI ＜200 和线粒体比例 ＞5% 的细胞）
 - Leiden 聚类（resolution=0.5）识别出 8 个 cluster
 - 通过 marker 基因注释为：Naive CD4+ T、CD14+ Monocyte、B 细胞、CD8+ T 细胞、NK 细胞、FCGR3A+ Monocyte、Dendritic 细胞、Megakaryocyte
 
@@ -302,6 +302,28 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 - **空间转录组整合**：将 scRNA-seq 数据映射到空间坐标。参见 [空间去卷积](../spatial/deconvolution-and-mapping.md)。
 - **多组学整合**：scATAC-seq + scRNA-seq 联合分析（如 Signac, ArchR）。
 - **大规模整合分析**：如 Human Cell Atlas、Tabula Muris 等图谱级项目。
+
+## 常见误区
+
+### 更多细胞数一定带来更好的结果
+
+不是。细胞数增加会提高检测稀有细胞群的能力，但也同时增加 Doublet（双联体）率、计算成本和批次效应的复杂性。如果细胞捕获质量差或样本本身异质性低，盲目追求细胞数反而可能引入更多噪声。关键是在细胞数和数据质量之间取得平衡，并做好 Doublet 检测与去除。
+
+### 聚类数量由算法自动决定
+
+不是。Leiden/Louvain 算法的 resolution 参数直接控制聚类粒度，不同 resolution 下聚类数量可以差异很大。不存在"自动确定最优聚类数"的魔法——研究者需要结合 marker 基因表达、已知细胞类型和生物学先验知识来判断合理的分群方案。更推荐的做法是尝试多个 resolution，比较结果的生物学合理性。
+
+### 归一化可以消除所有技术偏差
+
+不能。归一化（如 CPM、SCTransform）只能校正测序深度等部分技术因素。其他偏差来源——如细胞周期效应、线粒体应激、批次效应、捕获效率差异——需要专门的方法处理（如细胞周期回归、批次校正）。把归一化当作万能的去噪步骤是初学者最常见的技术错误之一。
+
+### UMAP 可视化可以直接用于定量解读
+
+不可以。UMAP 是非线性降维方法，它的目的是在二维平面上近似展示高维数据的局部和全局拓扑结构。UMAP 轴上的距离没有明确的物理或统计含义，簇与簇之间的距离、簇的大小和形状都会受到参数选择和随机初始化的影响。UMAP 应仅用于探索性可视化和生成假设，不应作为定量分析的依据。
+
+### 10x Genomics 和 Smart-seq2 的数据可以直接比较
+
+不能直接比较。10x Genomics 仅捕获转录本 3' 端的短片段，Smart-seq2 覆盖全长转录本，两者的基因检出灵敏度、覆盖偏差和定量方式存在本质差异。即使针对同一生物样本，两种平台产生的数据也需要专门的跨平台校正方法才能联合分析，且解读时必须考虑平台特异的检测偏差。
 
 ## 相关页面
 

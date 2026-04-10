@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <SummaryBox
-  summary="在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类"多对一"匹配提供了理想的骨架。"
+  summary='在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类「多对一」匹配提供了理想的骨架。'
   bullets={[
     '理解 Keyword Trees (Trie) 如何通过前缀共享减少重复计算',
     '掌握 Aho–Corasick 算法中失败链接 (Failure Links) 的核心直觉',
@@ -40,7 +40,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     {
       term: 'Trie（字典树 / Keyword Tree）',
-      definition: '一种将一组字符串（模式集 $\mathcal{P}$）存储为树形结构的索引。从根到某个标记节点的路径代表一个模式。',
+      definition: '一种将一组字符串（模式集 `P`）存储为树形结构的索引。从根到某个标记节点的路径代表一个模式。',
     },
     {
       term: '失败链接 (Failure Link)',
@@ -53,13 +53,13 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-**Trie** 是一种将一组字符串（模式集 $\mathcal{P}$）存储为树形结构的索引：
+**Trie** 是一种将一组字符串（模式集 `P`）存储为树形结构的索引：
 - **路径即模式**：从根到某个标记节点的路径代表一个模式。
 - **前缀共享**：如果多个模式共享相同的前缀（如 `ATGC` 和 `ATGT`），它们在树中会共用同一条初始路径。
 
 ### Trie 的构建
 
-给定模式集 $\mathcal{P} = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
+给定模式集 $P = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
 
 ```
         (root)
@@ -87,7 +87,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### worked example：朴素 Trie 匹配
 
-在文本 $T = \text{GACGACT}$ 中搜索 $\mathcal{P} = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
+在文本 $T = \text{GACGACT}$ 中搜索 $P = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
 
 | 步骤 | 字符 | 当前节点路径 | 匹配结果 |
 |:---:|:---:|:---:|:---:|
@@ -125,7 +125,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 | ACT | root |
 | GA | root |
 
-在本例中，由于模式之间没有共享的非空前缀-后缀关系，所有节点的失败链接都指向 root。但当模式集为 $\mathcal{P} = \{\text{ACG}, \text{CGT}\}$ 时：
+在本例中，由于模式之间没有共享的非空前缀-后缀关系，所有节点的失败链接都指向 root。但当模式集为 $P = \{\text{ACG}, \text{CGT}\}$ 时：
 
 | 节点路径 | 失败链接指向 | 原因 |
 |:---:|:---:|:---:|
@@ -160,11 +160,11 @@ for i = 0 to n-1:
 
 | 阶段 | 时间复杂度 | 空间复杂度 |
 |:---:|:---:|:---:|
-| Trie 构建 | $O(|\mathcal{P}|)$ | $O(|\mathcal{P}|)$ |
-| 失败链接构建 | $O(|\mathcal{P}| \cdot |\Sigma|)$ | $O(|\mathcal{P}|)$ |
+| Trie 构建 | $O(|P|)$ | $O(|P|)$ |
+| 失败链接构建 | $O(|P| \cdot |\Sigma|)$ | $O(|P|)$ |
 | 匹配 | $O(n + z)$ | — |
 
-其中 $|\mathcal{P}|$ 为所有模式串的总长度，$n$ 为文本长度，$z$ 为匹配总数。
+其中 $|P|$ 为所有模式串的总长度，$n$ 为文本长度，$z$ 为匹配总数。
 
 ### 适用前提
 

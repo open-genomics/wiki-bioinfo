@@ -4,7 +4,9 @@ title: "Neighbor-Joining算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Neighbor-Joining（NJ）是一种不依赖分子钟假设的距离矩阵建树算法，通过最小化总树长来选择邻居对，是目前最常用的系统发育树构建方法之一。"
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心思想是通过Q矩阵找到能最小化总树长的邻居对',
     '不要求分子钟假设，适用于演化速率不均匀的数据',
     '产生无根树，是理解现代系统发育分析的关键算法',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'UPGMA 算法', href: '/wiki-bioinfo/phylogeny/upgma', description: '层次聚类建树的入门方法' },
+    { title: '距离方法概览', href: '/wiki-bioinfo/phylogeny/distance-methods', description: '距离矩阵建树方法族' },
+    { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '距离矩阵的来源' },
   ]}
 />
 
@@ -25,14 +35,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 **输出**：一棵无根树 $T$，使得总树长 $\sum_{e \in E(T)} \text{length}(e)$ 最小化，且对于任意两个叶子 $i$ 和 $j$，树上路径长度接近 $D_{ij}$
 
-## 1. Neighbor-Joining 的直觉：寻找真正的“邻居”
+## 1. Neighbor-Joining 的直觉：寻找真正的"邻居"
 
 与 UPGMA 不同，Neighbor-Joining (NJ) **不要求分子钟假设**。它允许不同分支以完全不同的速率演化。
 
 ### 核心动机
-在可加性树（Additive Tree）中，一对“邻居”是指连接到同一个内部节点的两个叶子节点。NJ 的目标就是通过一种巧妙的评分方式，在每一步迭代中“捕获”这对真正的邻居。
+在可加性树（Additive Tree）中，一对"邻居"是指连接到同一个内部节点的两个叶子节点。NJ 的目标就是通过一种巧妙的评分方式，在每一步迭代中"捕获"这对真正的邻居。
 
-### 如何定义“近”？
+### 如何定义"近"？
 简单的距离 $D_{ij}$ 可能会误导我们（例如，两个演化极快的物种虽然距离远，但在拓扑上可能是邻居）。因此，NJ 引入了一个衡量标准：**两个节点不仅要彼此接近，还要与其他节点尽可能远离。**
 
 这导致了 **Q 矩阵** 的诞生：
@@ -90,7 +100,7 @@ NJ的构建过程可以理解为：
 对于距离矩阵D，定义Q矩阵：
 
 $$
-Q_\{ij\} = (n-2) \cdot d_\{ij\} - \sum_\{k=1\}^\{n\} d_\{ik\} - \sum_\{k=1\}^\{n\} d_\{jk\}
+Q_{ij} = (n-2) \cdot d_{ij} - \sum_{k=1}^{n} d_{ik} - \sum_{k=1}^{n} d_{jk}
 $$
 
 其中：
@@ -103,7 +113,7 @@ $$
 对于每个节点i，计算其总divergence（到其他所有节点的距离之和）：
 
 $$
-r_i = \sum_\{k=1\}^\{n\} d_\{ik\}
+r_i = \sum_{k=1}^{n} d_{ik}
 $$
 
 ### 分支长度计算
@@ -111,11 +121,11 @@ $$
 当选择节点i和j作为邻居对时：
 - 新节点u到i的分支长度：
   $$
-  L_\{ui\} = \frac\{1\}\{2\} d_\{ij\} + \frac\{1\}\{2(n-2)\} (r_i - r_j)
+  L_{ui} = \frac{1}{2} d_{ij} + \frac{1}{2(n-2)} (r_i - r_j)
   $$
 - 新节点u到j的分支长度：
   $$
-  L_\{uj\} = \frac\{1\}\{2\} d_\{ij\} + \frac\{1\}\{2(n-2)\} (r_j - r_i)
+  L_{uj} = \frac{1}{2} d_{ij} + \frac{1}{2(n-2)} (r_j - r_i)
   $$
 
 ### 距离矩阵更新
@@ -123,7 +133,7 @@ $$
 创建新节点u后，u到其他节点k的距离为：
 
 $$
-d_\{uk\} = \frac\{1\}\{2\} (d_\{ik\} + d_\{jk\} - d_\{ij\})
+d_{uk} = \frac{1}{2} (d_{ik} + d_{jk} - d_{ij})
 $$
 
 ## 算法步骤
@@ -407,9 +417,11 @@ NJ和Maximum Likelihood（ML）的关系：
 - Studier, J. A., & Keppler, K. J. (1988). A note on the neighbor-joining algorithm of Saitou and Nei. *Molecular biology and evolution*, 5(6), 729-731.
 - Gascuel, O., & Steel, M. (2006). Neighbor-joining revealed. *Molecular biology and evolution*, 23(11), 1997-2000.
 
-## 相关页面
-
-- [距离方法概览](./distance-methods.mdx)
-- [UPGMA算法](./upgma.mdx)
-- [加法系统发育](./additive-phylogeny.mdx)
-- [Maximum Likelihood](./maximum-likelihood.mdx)
+<RelatedLinks
+  links={[
+    { title: '距离方法概览', to: '/wiki-bioinfo/phylogeny/distance-methods', description: 'NJ 所属的距离矩阵建树方法族' },
+    { title: 'UPGMA 算法', to: '/wiki-bioinfo/phylogeny/upgma', description: '需要分子钟假设的对比方法' },
+    { title: 'Maximum Likelihood', to: '/wiki-bioinfo/phylogeny/maximum-likelihood', description: 'NJ 初始化后的精确优化方法' },
+    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: 'NJ 理论基础的加法树模型' }
+  ]}
+/>

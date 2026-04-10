@@ -3,12 +3,22 @@ title: "质量控制（QC）总览"
 description: NGS 数据质量控制的核心指标（FastQC）、接头去除（Trimming）与过滤策略。
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 是什么
 
 质量控制（quality control, QC）关注的是：在 raw reads 进入比对、组装、定量或变异检测之前，先判断数据质量是否达到了可分析的基本条件，以及有哪些系统性问题需要先识别和处理。
 
-它的目标不是“尽可能删掉更多 reads”，而是建立一套对数据状态的解释框架：哪些问题只是轻微噪声，哪些问题会在后续流程里被放大，哪些问题说明样本或文库本身就存在结构性偏差。
+它的目标不是"尽可能删掉更多 reads"，而是建立一套对数据状态的解释框架：哪些问题只是轻微噪声，哪些问题会在后续流程里被放大，哪些问题说明样本或文库本身就存在结构性偏差。
+
+<PrerequisitesBox
+  items={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview' },
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { title: '常见文件格式概览', to: '/wiki-bioinfo/formats/common-file-formats' },
+  ]}
+/>
 
 ## 为什么重要
 
@@ -19,7 +29,7 @@ QC 往往是整个 NGS workflow 中最容易被低估、但最直接影响后续
 - GC 偏好、文库复杂度不足和重复偏高会改变 coverage 结构；
 - 样本之间的系统性偏差会在差异表达或比较分析中被误当成生物学信号。
 
-换句话说，很多“下游结果很奇怪”的问题，其实在 QC 阶段已经给出了线索。
+换句话说，很多"下游结果很奇怪"的问题，其实在 QC 阶段已经给出了线索。
 
 ## 任务目标
 
@@ -89,7 +99,7 @@ GC distribution 异常并不总意味着数据错误，但它常提示：
 - 输入量偏低；
 - 某些实验本身就强烈富集特定序列。
 
-因此，“重复多”不是一句话就能下结论，必须结合实验类型来解释。
+因此，"重复多"不是一句话就能下结论，必须结合实验类型来解释。
 
 ### 污染与异常序列
 
@@ -116,7 +126,7 @@ overrepresented sequences、异常 k-mer 或意外的序列组成，有时提示
 - 该样本可能存在文库偏差、污染或不同组成；
 - 下游差异分析中这个样本可能成为 outlier。
 
-这说明 QC 的意义不只是“看图”，而是把图上的异常翻译成对 workflow 的判断。
+这说明 QC 的意义不只是"看图"，而是把图上的异常翻译成对 workflow 的判断。
 
 ## 与真实 workflow 的连接
 
@@ -127,7 +137,7 @@ QC 并不是独立步骤，而是后续决策的前提：
 - 对 **RNA-seq quantification / DE** 来说，样本偏差、污染和 composition 问题会影响归一化与统计解释；
 - 对 **variant calling** 来说，质量问题会改变假阳性与假阴性平衡。
 
-很多时候，真正的工作不是“跑一次 QC 工具”，而是决定：哪些问题需要修复，哪些问题应该在解释阶段被明确记录。
+很多时候，真正的工作不是"跑一次 QC 工具"，而是决定：哪些问题需要修复，哪些问题应该在解释阶段被明确记录。
 
 ## 常见误区
 
@@ -154,10 +164,11 @@ QC 并不是独立步骤，而是后续决策的前提：
 - [常见文件格式概览](../formats/common-file-formats.mdx)
 - [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
 
-## 相关页面
-
-- [NGS 流程总览](./ngs-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.mdx)
-- [差异表达：从 counts 到统计检验](../transcriptomics/differential-expression.mdx)
-- [常见文件格式概览](../formats/common-file-formats.mdx)
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
+<RelatedLinks
+  links={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview', description: 'QC 在 NGS 分析链路中的位置' },
+    { title: 'RNA-seq 工作流概览', to: '/wiki-bioinfo/workflows/rna-seq', description: 'RNA-seq 特有的 QC 考量' },
+    { title: '常见文件格式概览', to: '/wiki-bioinfo/formats/common-file-formats', description: 'FASTQ 等核心文件格式' },
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '质量分数与错误模型基础' }
+  ]}
+/>

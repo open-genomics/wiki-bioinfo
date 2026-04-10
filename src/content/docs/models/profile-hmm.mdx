@@ -4,7 +4,9 @@ title: "Profile HMM"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +15,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心是 M/I/D 三类状态组成的线性结构',
     '用 Viterbi 算法找最优比对路径，用 Forward 算法评估匹配程度',
     '它是蛋白家族数据库（如 Pfam）的核心建模方法'
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '隐马尔可夫模型', href: '/wiki-bioinfo/models/hmm' },
+    { title: 'PWM 与 PSSM', href: '/wiki-bioinfo/models/pwm-pssm' },
+    { title: 'Viterbi、Forward 与 Backward', href: '/wiki-bioinfo/models/viterbi-forward-backward' },
   ]}
 />
 
@@ -26,7 +36,7 @@ PWM/PSSM 很适合描述一个**固定长度**的 motif：
 
 而 **Profile HMM** 则进一步解决：
 
-> 如果一个序列家族在不同成员之间存在插入、缺失和长度变化，如何仍然用概率模型刻画它的“家族结构”？
+> 如果一个序列家族在不同成员之间存在插入、缺失和长度变化，如何仍然用概率模型刻画它的"家族结构"？
 
 ## 数学模型
 
@@ -76,7 +86,7 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 
 ### Viterbi 算法与特殊状态处理
 
-在 Profile HMM 中，Viterbi 算法需要处理三种状态的转移。特别需要注意的是 **Delete 状态 (D)**，因为它不发射任何字符（称为“静默状态”）。
+在 Profile HMM 中，Viterbi 算法需要处理三种状态的转移。特别需要注意的是 **Delete 状态 (D)**，因为它不发射任何字符（称为"静默状态"）。
 
 定义 $v^M_j(i)$ 为观测序列前缀 $x_1 \dots x_i$ 与模型前缀（直到状态 $M_j$）对齐的最优对数似然得分。
 
@@ -101,9 +111,9 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 - 某些位置可以缺失；
 - 某些位置允许插入额外残基；
 - 不同成员的长度并不完全一致；
-- 只靠固定长度窗口会把这些变化都当成“糟糕匹配”。
+- 只靠固定长度窗口会把这些变化都当成"糟糕匹配"。
 
-这时，需要一个能显式表示“匹配 / 插入 / 缺失”的模型。
+这时，需要一个能显式表示"匹配 / 插入 / 缺失"的模型。
 
 ## 算法步骤
 
@@ -224,11 +234,11 @@ Profile HMM 通常由三类状态构成：
 
 因此，一条序列与 profile 的关系不再只是：
 
-- “每个位点得多少分”；
+- "每个位点得多少分"；
 
 而是：
 
-- “它沿着这条 match/insert/delete 状态路径走了一遍”。
+- "它沿着这条 match/insert/delete 状态路径走了一遍"。
 
 ## 一个直观例子
 
@@ -252,7 +262,7 @@ A - G - T
 - `AQGRT`
 - `AT`
 
-都可以被统一地解释为“属于这个家族”，只是经过的状态路径不同。
+都可以被统一地解释为"属于这个家族"，只是经过的状态路径不同。
 
 ## 与 Viterbi / Forward 的关系
 
@@ -286,13 +296,13 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
 - 蛋白功能注释；
 - 结构域边界判断。
 
-它是从“简单 motif 打分”走向“序列家族概率建模”的关键一步。
+它是从"简单 motif 打分"走向"序列家族概率建模"的关键一步。
 
 ## 常见误区
 
 ### Profile HMM 只是更长的 PWM
 
-不是。它的关键优势不是“更长”，而是显式建模插入和缺失。
+不是。它的关键优势不是"更长"，而是显式建模插入和缺失。
 
 ### 有了 PWM 就没必要用 Profile HMM
 
@@ -302,9 +312,11 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
 
 虽然在蛋白家族分析中特别常见，但它本质上是一般的序列 profile 概率模型，也可推广到其他类型的序列家族问题。
 
-## 相关页面
-
-- [PWM 与 PSSM](./pwm-pssm.mdx)
-- [隐马尔可夫模型](./hmm.mdx)
-- [Viterbi、Forward 与 Backward](./viterbi-forward-backward.mdx)
-- [Gene prediction](./gene-prediction.mdx)
+<RelatedLinks
+  links={[
+    { title: 'PWM 与 PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'Profile HMM 是 PWM/PSSM 的扩展，显式建模插入和缺失。' },
+    { title: '隐马尔可夫模型', to: '/wiki-bioinfo/models/hmm', description: 'Profile HMM 是一般 HMM 在序列家族建模上的专门化。' },
+    { title: 'Viterbi、Forward 与 Backward', to: '/wiki-bioinfo/models/viterbi-forward-backward', description: 'Profile HMM 的推断依赖这三个核心算法。' },
+    { title: 'Gene prediction', to: '/wiki-bioinfo/models/gene-prediction', description: 'Gene prediction HMM 与 Profile HMM 共享状态建模思想，但应用目标不同。' },
+  ]}
+/>

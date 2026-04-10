@@ -3,6 +3,8 @@ description: spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与
 title: "spot 与单细胞"
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 核心差别
 
@@ -14,6 +16,14 @@ title: "spot 与单细胞"
 | **测量对象** | 单个细胞的转录组 | 局部区域内所有细胞的混合转录组 |
 | **空间信息** | ❌ 解离后丢失 | ✅ 保留二维坐标 |
 | **分辨率** | 单细胞 | 取决于 spot 大小（通常多细胞） |
+
+<PrerequisitesBox
+  items={[
+    { title: '空间转录组总览', to: '/wiki-bioinfo/spatial/spatial-transcriptomics-overview' },
+    { title: '单细胞组学', to: '/wiki-bioinfo/single-cell/index' },
+    { title: '去卷积与细胞映射', to: '/wiki-bioinfo/spatial/deconvolution-and-mapping' },
+  ]}
+/>
 
 ### 形式化描述
 
@@ -163,9 +173,11 @@ scRNA-seq 数据
 - Kleshchevnikov et al., 2022. *Cell2location maps fine-grained cell types in spatial transcriptomics.* Nature Biotechnology
 - Biancalani et al., 2021. *Deep learning and alignment of spatially resolved single-cell transcriptomes with Tangram.* Nature Methods
 
-## 相关页面
-
-- **[空间转录组总览](./spatial-transcriptomics-overview.md)** — 理解空间技术的原理与数据结构
-- **[去卷积与细胞映射](./deconvolution-and-mapping.md)** — 学习如何整合 scRNA-seq 与空间数据的具体方法
-- **[单细胞组学](../single-cell/index.mdx)** — 建立单细胞分析基础
-- **[概率模型](../models/index.mdx)** — 理解去卷积的统计基础
+<RelatedLinks
+  links={[
+    { title: '空间转录组总览', to: '/wiki-bioinfo/spatial/spatial-transcriptomics-overview', description: '空间技术的原理与数据结构' },
+    { title: '去卷积与细胞映射', to: '/wiki-bioinfo/spatial/deconvolution-and-mapping', description: '整合 scRNA-seq 与空间数据的具体方法' },
+    { title: '单细胞组学', to: '/wiki-bioinfo/single-cell/index', description: '单细胞分析基础' },
+    { title: '概率模型', to: '/wiki-bioinfo/models/index', description: '去卷积的统计基础' }
+  ]}
+/>

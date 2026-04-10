@@ -4,6 +4,8 @@ title: "MACS2 峰调用算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '核心是使用泊松分布建模背景 read 分布',
     '关键创新是动态估计局部背景参数 λ',
     '通过正负链偏移对齐精确定位蛋白结合中心'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'ChIP-seq 概览', href: '/wiki-bioinfo/epigenomics/chip-seq-overview', description: 'ChIP-seq 实验原理与数据特点' },
+    { title: '统计检验与多重校正', href: '/wiki-bioinfo/foundations/probability-and-graphs', description: '泊松检验与 FDR 校正原理' },
+    { title: 'ATAC-seq', href: '/wiki-bioinfo/epigenomics/atac-seq', description: 'ATAC-seq 中同样使用 MACS2' },
   ]}
 />
 
@@ -304,9 +314,11 @@ MACS3 是 MACS2 的升级版本，主要改进：
 - Feng, J., et al. (2012). MACS: a powerful tool for ChIP-seq data analysis. *Current Protocols*, Chapter 2, Unit-2.14.
 - Liu, X., et al. (2023). Model-based Analysis for Single-cell ATAC-seq (MACS3). *Bioinformatics*.
 
-## 相关页面
-
-- [ChIP-seq 概览](./chip-seq-overview.mdx)
-- [ATAC-seq](./atac-seq.mdx)
-- [统计检验与多重校正](../foundations/probability-and-graphs.mdx)
-- [泊松分布与负二项分布](../foundations/algorithms-and-complexity.mdx)
+<RelatedLinks
+  links={[
+    { title: 'ChIP-seq 概览', to: '/wiki-bioinfo/epigenomics/chip-seq-overview', description: 'MACS2 所服务的实验技术背景' },
+    { title: 'ATAC-seq', to: '/wiki-bioinfo/epigenomics/atac-seq', description: 'ATAC-seq 中的峰调用同样使用 MACS2' },
+    { title: '统计检验与多重校正', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '峰调用中的 FDR 校正原理' },
+    { title: 'Footprinting 算法', to: '/wiki-bioinfo/epigenomics/footprinting-algorithms', description: '从峰到转录因子结合位点的精细分析' }
+  ]}
+/>

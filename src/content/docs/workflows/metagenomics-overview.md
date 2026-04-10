@@ -3,12 +3,22 @@ title: "Metagenomics 流程总览"
 description: 宏基因组学分析流程：从环境样本到物种组成、功能注释与差异分析的计算管线。
 ---
 
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 任务目标
 
 宏基因组分析关注的是：从混合样本的测序数据中推断其中有哪些物种、它们的相对丰度如何，以及可能携带哪些功能特征。
 
 与传统基因组学不同，宏基因组学的核心挑战在于样本本身就是多种生物的混合体。我们不知道样本中有哪些物种，也不知道它们的基因组序列。这意味着分析流程需要在不依赖单一参考基因组的前提下，从海量混合 reads 中重建出有意义的生物学信息。
+
+<PrerequisitesBox
+  items={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview' },
+    { title: '组装与图算法', to: '/wiki-bioinfo/assembly/index' },
+    { title: '数据库与资源', to: '/wiki-bioinfo/databases/index' },
+  ]}
+/>
 
 ## 输入输出
 
@@ -185,10 +195,29 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 - 如果关注分类算法的细节，阅读 [序列比对](../alignment/index.mdx)；
 - 如果关注功能注释相关的数据库，阅读 [数据库与注释系统一览](../data-references/databases-and-annotations.mdx)。
 
-## 相关页面
+## 常见误区
 
-- [NGS 流程总览](./ngs-overview.md)
-- [组装与图算法](../assembly/index.mdx)
-- [数据库与资源](../databases/index.mdx)
-- [质控与数据预处理](./qc-overview.md)
-- [如何选择 alignment、assembly 或 pseudo-alignment](./choosing-alignment-assembly.md)
+### 未检出等于不存在
+
+不是。宏基因组中一个物种未被检出可能是测序深度不够、数据库不覆盖该类群、提取效率低或该物种确实不存在。"Absence of evidence is not evidence of absence"——在解释分类结果时，必须谨慎区分"未检测到"和"确实不存在"。低丰度物种的检出尤其需要考虑检测限。
+
+### 组装结果中 contig 越长越好
+
+不是。虽然 contig N50 是常用的组装质量指标，但更长的 contig 不一定更准确。宏基因组组装中的嵌合体（chimera）contig——将来自不同物种的序列错误拼接在一起——是常见的质量问题，长 contig 反而可能隐藏更严重的嵌合错误。组装质量的评估应结合完整性（如 CheckM）和污染率，而非仅看长度。
+
+### 不同分类工具的结果应该一致
+
+不一定。不同工具（如 Kraken2、MetaPhlAn3、Centrifuge）使用不同的分类策略（k-mer 精确匹配 vs 标记基因 vs 比对分类）和不同的参考数据库，对同一样本可能给出不同的物种组成估计。差异在属或种的水平上尤其明显。比较研究应固定工具和数据库版本，并关注方法之间一致的高置信分类结果。
+
+### 功能注释可以直接等同于功能能力
+
+不能。功能注释（如 KEGG 通路映射）是基于序列同源的预测，检出某个通路基因并不意味着该通路在当前环境中是活跃的。基因可能不表达、表达水平可能不足以产生功能效应、或者缺少通路中的其他关键基因。功能注释应视为"潜力"而非"现实"，需要结合宏基因组转录组（metatranscriptomics）或代谢组学数据验证功能活性。
+
+<RelatedLinks
+  links={[
+    { title: 'NGS 流程总览', to: '/wiki-bioinfo/workflows/ngs-overview', description: '通用 NGS 分析流程概览' },
+    { title: '组装与图算法', to: '/wiki-bioinfo/assembly/index', description: '宏基因组组装的算法基础' },
+    { title: '质控与数据预处理', to: '/wiki-bioinfo/workflows/qc-overview', description: '宏基因组 QC 的特殊考量' },
+    { title: '数据库与资源', to: '/wiki-bioinfo/databases/index', description: '物种分类与功能注释数据库' }
+  ]}
+/>

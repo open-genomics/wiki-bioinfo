@@ -4,7 +4,8 @@ title: "Viterbi、Forward 与 Backward"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -16,18 +17,26 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   ]}
 />
 
+<PrerequisitesBox
+  links={[
+    { title: '隐马尔可夫模型', href: '/wiki-bioinfo/models/hmm' },
+    { title: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' },
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+  ]}
+/>
+
 ## 1. 为什么需要 Viterbi？
 
-在 HMM 的“公平赌场”模型中，如果你看到一系列掷硬币结果，你最想知道的是：**在那一时刻，荷官到底用了哪枚硬币？**
+在 HMM 的"公平赌场"模型中，如果你看到一系列掷硬币结果，你最想知道的是：**在那一时刻，荷官到底用了哪枚硬币？**
 
-简单的逐位判断（即计算每个位点的后验概率）可能会给出一个在逻辑上“不可能”的序列。
+简单的逐位判断（即计算每个位点的后验概率）可能会给出一个在逻辑上"不可能"的序列。
 - **例子**：如果从状态 A 转移到状态 B 的概率为 0，那么即便状态 B 在某个位点看起来最像，它也不应该出现在紧随 A 之后的路径中。
 
 **Viterbi 算法** 解决了这个问题：它寻找的是**全局概率最高的一整条路径**，而不是每个位点的最优状态组合。它保证了路径在转移上是合法的且整体最优。
 
 ## 2. 算法核心：动态规划
 
-如果只看某一个位置最像哪个状态，很容易忽略“整条路径的结构约束”：
+如果只看某一个位置最像哪个状态，很容易忽略"整条路径的结构约束"：
 
 - 当前状态是否容易从上一个状态转移而来；
 - 未来观测是否支持这次选择；
@@ -282,7 +291,7 @@ G C G A
 - **Profile HMM**：
   - Forward/Backward 常用于评估一条序列与某个 profile 的匹配程度；
 - **一般 HMM 分析**：
-  - 需要根据任务目标选择“整体路径”还是“位点后验”。
+  - 需要根据任务目标选择"整体路径"还是"位点后验"。
 
 ## 常见误区
 
@@ -298,8 +307,12 @@ G C G A
 
 不是。它们是评估模型和做 posterior 推断的核心，也是很多学习算法的基础。
 
-## 相关页面
-
-- [隐马尔可夫模型](./hmm.mdx)
-- [Profile HMM](./profile-hmm.mdx)
-- [Gene prediction](./gene-prediction.mdx)
+<RelatedLinks
+  links={[
+    { title: '隐马尔可夫模型', to: '/wiki-bioinfo/models/hmm', description: 'Viterbi、Forward、Backward 是 HMM 的三个核心推断算法。' },
+    { title: 'Profile HMM', to: '/wiki-bioinfo/models/profile-hmm', description: 'Profile HMM 使用 Viterbi 寻找最优比对路径，Forward 评估匹配程度。' },
+    { title: 'Gene prediction', to: '/wiki-bioinfo/models/gene-prediction', description: 'Viterbi 在基因预测中用于寻找最优的 exon/intron 状态路径。' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '这三个算法本质上是 DP 在概率模型上的应用。' },
+    { title: 'EM 算法', to: '/wiki-bioinfo/models/em-algorithm', description: 'Baum-Welch（EM）训练 HMM 时依赖 Forward-Backward 计算的后验。' },
+  ]}
+/>

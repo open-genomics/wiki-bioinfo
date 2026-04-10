@@ -6,6 +6,7 @@ title: "差异表达：统计模型与假设检验"
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <PageHeaderMeta
@@ -20,6 +21,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '统计模型：为什么 RNA-seq 差异分析使用负二项分布而非正态分布',
     '离散度估计：技术噪声与生物学变异的分离',
     '多重检验：FDR 控制的算法原理（Benjamini-Hochberg 方法）',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'RNA-seq 工作流概览', href: '/wiki-bioinfo/workflows/rna-seq', description: '差异分析在完整流程中的位置' },
+    { title: 'TPM、FPKM、CPM 与有效长度', href: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm', description: '表达定量的单位与归一化' },
+    { title: '统计检验与多重校正', href: '/wiki-bioinfo/foundations/probability-and-graphs', description: '假设检验与 FDR 校正原理' },
   ]}
 />
 

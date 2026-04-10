@@ -5,6 +5,8 @@ title: "图算法基础"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '先理解 BFS/DFS 的差异，再看最短路径和连通性问题会更顺。',
     '很多生物信息学问题都可以抽象成图问题，理解图算法能帮你看到不同任务之间的共性。',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' },
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
   ]}
 />
 
@@ -386,9 +396,12 @@ Dijkstra 算法用于在带权图中找到单源最短路径。
 - Algorithm Design, Kleinberg & Tardos
 - Bioinformatics Algorithms: An Active Learning Approach
 
-## 相关页面
-
-- [算法与复杂度](./algorithms-and-complexity.mdx)
-- [概率、图与动态规划预备](./probability-and-graphs.mdx)
-- [de Bruijn graph 组装](../assembly/de-bruijn.mdx)
-- [系统发育树概览](../phylogeny/index.mdx)
+<RelatedLinks
+  links={[
+    { title: 'de Bruijn graph 组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: 'de Bruijn graph 是图算法在基因组组装中最经典的应用。' },
+    { title: '系统发育树概览', to: '/wiki-bioinfo/phylogeny/index', description: '系统发育树的构建和遍历本质上是图算法问题。' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '序列比对可以看作在网格图上寻找最优路径的 DP 问题。' },
+    { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '图论的概率基础，为图算法提供数学工具。' },
+    { title: '欧拉路径与哈密顿路径', to: '/wiki-bioinfo/foundations/eulerian-hamiltonian-paths', description: '欧拉路径是组装图遍历的核心，哈密顿路径对应 OLC 组装。' },
+  ]}
+/>

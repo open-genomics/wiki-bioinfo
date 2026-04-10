@@ -50,9 +50,29 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 <SectionNavigator
   items={[
     {
-      title: '常用数据库与资源',
+      title: '常用数据库与资源总览',
       to: '/docs/databases/common-resources',
-      description: '按真实分析任务理解 NCBI、Ensembl、UniProt、PDB、KEGG、GEO / SRA 等资源分别适合回答什么问题。',
+      description: '按真实分析任务理解 NCBI、Ensembl、UniProt、PDB、KEGG、GEO/SRA 等资源分别适合回答什么问题。建立"按问题选资源"的决策框架。',
+    },
+    {
+      title: 'NCBI 资源体系',
+      to: '/docs/databases/ncbi',
+      description: 'Gene、RefSeq、SRA、PubMed 等子系统的对象类型、标识符体系和查询策略。',
+    },
+    {
+      title: 'Ensembl 基因组注释',
+      to: '/docs/databases/ensembl',
+      description: '基因/转录本/蛋白质层级结构、Ensembl ID 体系、VEP 变异注释和多物种比较。',
+    },
+    {
+      title: 'UniProt 蛋白质知识库',
+      to: '/docs/databases/uniprot',
+      description: 'Swiss-Prot/TrEMBL 质量差异、蛋白质功能注释、结构域和跨数据库映射。',
+    },
+    {
+      title: 'PDB 蛋白质结构数据库',
+      to: '/docs/databases/pdb',
+      description: '实验结构测定方法、分辨率、结构文件格式，以及与 AlphaFold 的关系。',
     },
     {
       title: '数据库搜索与索引算法',

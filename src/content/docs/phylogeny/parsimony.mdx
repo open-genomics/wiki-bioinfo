@@ -4,7 +4,9 @@ title: "Parsimony算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Parsimony（简约法）通过寻找需要最少进化变化的系统发育树来推断物种关系，使用Fitch算法和Sankoff算法高效计算单个位点的最小变化数。"
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心思想是在所有可能的树中选择需要最少替换事件的那一棵',
     'Fitch算法处理无权重的字符状态，Sankoff算法处理带权重的替换模型',
     '是理解位点级系统发育推断的经典方法，连接距离法和概率模型',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '系统发育树基础', href: '/wiki-bioinfo/phylogeny/phylogenetic-tree-basics', description: '系统发育树的概念与表示' },
+    { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'Parsimony 分析的输入数据' },
+    { title: '动态规划', href: '/wiki-bioinfo/foundations/dynamic-programming', description: 'Fitch 和 Sankoff 算法的基础' },
   ]}
 />
 
@@ -343,7 +353,7 @@ Sankoff算法为每个节点和每个字符状态计算最小代价。
 ### 启发式搜索：最近邻交换 (NNI)
 由于无法穷举所有树，生物学家通常使用局部搜索算法，如 **最近邻交换 (Nearest Neighbor Interchange, NNI)**：
 
-1.  **定义邻居**：在树中，每一条内部边都连接着四个子树（记为 A, B, C, D）。通过重新排列这四个子树的连接方式，可以产生三种不同的树拓扑。这三棵树在搜索空间中被称为“邻居”。
+1.  **定义邻居**：在树中，每一条内部边都连接着四个子树（记为 A, B, C, D）。通过重新排列这四个子树的连接方式，可以产生三种不同的树拓扑。这三棵树在搜索空间中被称为"邻居"。
 2.  **贪心移动**：从一棵初始树开始，计算所有邻居树的简约得分。
 3.  **迭代**：如果某个邻居的得分更好，则移动到该树并重复过程；否则停止。
 
@@ -451,9 +461,11 @@ Parsimony在真实工具中的应用：
 - Sankoff, D. (1975). Minimal mutation trees of sequences. *SIAM Journal on Applied Mathematics*, 28(1), 35-42.
 - Felsenstein, J. (2004). *Inferring phylogenies*. Sinauer associates.
 
-## 相关页面
-
-- [距离方法概览](./distance-methods.mdx)
-- [加法系统发育（Additive Phylogeny）](./additive-phylogeny.mdx)
-- [Maximum Likelihood](./maximum-likelihood.mdx)
-- [多序列比对（MSA）](../alignment/multiple-sequence-alignment.mdx)
+<RelatedLinks
+  links={[
+    { title: 'Maximum Likelihood', to: '/wiki-bioinfo/phylogeny/maximum-likelihood', description: '概率模型驱动的现代系统发育方法' },
+    { title: 'Neighbor-Joining 算法', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '距离矩阵建树的替代方法' },
+    { title: '加法系统发育', to: '/wiki-bioinfo/phylogeny/additive-phylogeny', description: '加性树的理论基础' },
+    { title: '多序列比对（MSA）', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'Parsimony 分析的输入数据' }
+  ]}
+/>

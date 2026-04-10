@@ -4,8 +4,8 @@ title: "多组学整合策略"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="多组学整合不是简单把多个矩阵拼起来，而是要先想清楚数据来源、分析目标和组学特性，再选择合适的整合策略。早期、中期和后期整合各有适用场景，没有万能方案。"
@@ -13,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '整合前必须先明确：数据是否匹配、目标是什么、组学特性差异有多大',
     '早期整合简单但受尺度差异和缺失值限制，后期整合解释清晰但跨组学交互利用不足',
     '现代方法多采用中期整合（先学低维表示再整合），但也要根据具体问题选择'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms' },
+    { title: '批次效应与数据协调', to: '/wiki-bioinfo/multi-omics/batch-effect-and-harmonization' },
+    { title: '概率模型基础', to: '/wiki-bioinfo/models/index' },
   ]}
 />
 
@@ -384,9 +392,11 @@ model_survival.fit(X, y)
 - Wang et al., *Similarity network fusion for aggregating data types on a genomic scale* (Nature Methods, 2014)
 - Chaudhary et al., *Deep learning-based multi-omics integration robustly predicts survival in liver cancer* (Nature Communications, 2018)
 
-## 相关页面
-
-- [批次效应与 harmonization](./batch-effect-and-harmonization.md)
-- [单细胞 multiome](./single-cell-multiome.md)
-- [单细胞组学](../single-cell/index.mdx)
-- [表观基因组学](../epigenomics/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '批次效应与数据协调', to: '/wiki-bioinfo/multi-omics/batch-effect-and-harmonization', description: '整合前必须处理的技术偏差' },
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms', description: '具体整合算法的技术细节' },
+    { title: '单细胞 Multiome', to: '/wiki-bioinfo/multi-omics/single-cell-multiome', description: '单细胞多模态整合的典型案例' },
+    { title: '单细胞组学', to: '/wiki-bioinfo/single-cell/index', description: '单细胞分析基础' }
+  ]}
+/>

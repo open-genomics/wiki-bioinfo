@@ -107,17 +107,17 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 变异数据库：dbSNP、ClinVar、gnomAD
 
-这类资源看起来都“和变异有关”，但回答的问题并不一样：
+这类资源看起来都"和变异有关"，但回答的问题并不一样：
 
-- **dbSNP**：更偏“这个变异是否是已知记录”；
-- **ClinVar**：更偏“这个变异是否有临床解释与审阅状态”；
-- **gnomAD**：更偏“这个变异在人群中常见还是罕见”。
+- **dbSNP**：更偏"这个变异是否是已知记录"；
+- **ClinVar**：更偏"这个变异是否有临床解释与审阅状态"；
+- **gnomAD**：更偏"这个变异在人群中常见还是罕见"。
 
 因此，把它们视为同义资源会直接导致解释偏差。
 
 ### 蛋白与功能资源：UniProt、PDB、KEGG
 
-这类资源不一定定义“坐标上的注释对象”，但它们对解释层非常重要：
+这类资源不一定定义"坐标上的注释对象"，但它们对解释层非常重要：
 
 - UniProt 把 gene / transcript 进一步接到 protein 层功能上；
 - PDB 提供结构层线索；
@@ -127,7 +127,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 公共数据与队列资源：GEO、SRA、TCGA
 
-这类资源的关键不是“有没有数据”，而是先判断你需要哪一种对象：
+这类资源的关键不是"有没有数据"，而是先判断你需要哪一种对象：
 
 - 原始测序 reads；
 - 项目或样本元信息；

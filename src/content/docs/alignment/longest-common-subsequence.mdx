@@ -4,7 +4,9 @@ title: "最长公共子序列（LCS）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +15,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     'LCS 是最简化的序列相似性度量，只考虑匹配、插入和删除',
     '通过动态规划求解，与曼哈顿游客问题有相似的递推结构',
     'LCS 长度与编辑距离有直接数学关系：d(v,w) = n + m - 2·s(v,w)',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '理解 LCS 递推关系的前置知识' },
+    { title: '曼哈顿游客问题', href: '/wiki-bioinfo/foundations/manhattan-tourist', description: 'LCS 与网格最长路径问题的几何对应' },
+    { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '与 LCS 有直接数学关系的相似性度量' },
   ]}
 />
 
@@ -250,3 +260,13 @@ LCS 是理解序列相似性分析的最佳起点：
 
 - Jones, N. C., & Pevzner, P. A. (2004). *An Introduction to Bioinformatics Algorithms*. MIT Press. (Chapter 6.5)
 - Cormen, T. H., et al. (2022). *Introduction to Algorithms* (4th ed.). MIT Press. (Chapter 14.4)
+
+<RelatedLinks
+  links={[
+    { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '允许替换操作的 LCS 扩展，两者有直接的数量关系' },
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '在 LCS 基础上引入错配罚分和 gap 罚分的全局比对' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '从 LCS 思想扩展而来的局部比对算法' },
+    { title: '曼哈顿游客问题', to: '/wiki-bioinfo/foundations/manhattan-tourist', description: 'LCS 与网格最长路径问题的几何对应' },
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: '理解 LCS 递推关系的前置知识' },
+  ]}
+/>

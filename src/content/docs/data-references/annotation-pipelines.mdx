@@ -1,0 +1,235 @@
+---
+title: "基因组注释管线：从序列到功能注释的自动化流程"
+description: "基因组注释的自动化流程如何识别基因、转录本、功能域和调控元件"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="基因组注释（Genome Annotation）是将原始 DNA 序列转化为功能信息的过程：识别基因位置、外显子-内含子结构、转录本、蛋白质产物、调控元件和非编码 RNA。理解注释管线的步骤、证据来源和质量评估，是正确解读注释结果的前提。"
+  bullets={[
+    '注释管线分为两步：结构注释（基因在哪里）+ 功能注释（基因做什么）',
+    '证据来源：RNA-seq、cDNA、蛋白质同源性、从头预测',
+    '主要注释系统：Ensembl（自动化）、GENCODE（人工 + 自动）、NCBI RefSeq',
+    '质量评估：完整性（BUSCO）、一致性（与已知注释比较）',
+    '注释版本随时间更新，不同版本可能有显著差异',
+  ]}
+/>
+
+## 是什么
+
+**基因组注释**是将原始 DNA 序列转化为生物学功能信息的系统化过程。它回答两个核心问题：
+
+1. **结构注释（Structural Annotation）**：基因在哪里？外显子/内含子边界是什么？
+2. **功能注释（Functional Annotation）**：基因做什么？编码什么蛋白质？参与什么通路？
+
+### 注释层级
+
+```
+DNA 序列
+  ↓ 结构注释
+基因位置 → 外显子/内含子 → 转录本 → 蛋白质
+  ↓ 功能注释
+功能域 → GO 注释 → 通路 → 调控关系
+```
+
+## 为什么重要
+
+基因组注释是**所有下游分析的基础**：
+
+- **RNA-seq 定量**：依赖 GTF 文件识别基因和转录本
+- **变异解释**：需要注释判断变异是否落在 coding/exonic/splice 区域
+- **功能富集**：依赖 GO、通路注释解释基因集
+- **比较基因组学**：需要注释进行跨物种基因映射
+
+**关键认知**：注释不是"绝对真理"，而是**基于计算预测和证据的推断**。不同注释系统可能给出不同的基因模型。
+
+<PrerequisitesBox
+  items={[
+    '理解中心法则：DNA → RNA → 蛋白质',
+    '了解 GTF/GFF 格式：注释文件的标准格式',
+    '了解参考基因组：注释基于特定参考版本',
+  ]}
+/>
+
+## 注释管线的核心步骤
+
+<WorkflowSteps
+  steps={[
+    {
+      title: '重复序列屏蔽',
+      description: '识别并屏蔽重复元素（LINE、SINE、LTR），避免误识别为基因。',
+      hint: '重复序列占人类基因组 ~50%，必须先屏蔽再进行基因预测。',
+    },
+    {
+      title: '基因预测',
+      description: '从头预测（ab initio）或基于同源性的基因识别。',
+      hint: '从头预测使用 HMM 模型（如 AUGUSTUS），同源性使用 BLAST 比对已知蛋白。',
+    },
+    {
+      title: '转录本构建',
+      description: '整合 RNA-seq、cDNA 证据，构建完整的转录本模型。',
+      hint: 'RNA-seq 提供剪接位点证据，cDNA 提供完整转录本序列。',
+    },
+    {
+      title: '功能注释',
+      description: '添加 GO 术语、通路信息、蛋白域、酶分类号。',
+      hint: '通过 InterProScan、BLAST 比对已知数据库获取功能信息。',
+    },
+    {
+      title: '质量评估',
+      description: '使用 BUSCO 等工具评估注释完整性和一致性。',
+      hint: 'BUSCO 检测保守单拷贝同源基因的存在/缺失。',
+    },
+  ]}
+/>
+
+## 证据来源
+
+### 三类主要证据
+
+| 证据类型 | 来源 | 优势 | 局限 |
+|---------|------|------|------|
+| **RNA-seq** | 转录组测序 | 实验证据，覆盖所有表达基因 | 依赖表达水平，低表达基因可能遗漏 |
+| **cDNA/EST** | 全长 cDNA 序列 | 完整转录本结构 | 覆盖不全，质量参差不齐 |
+| **蛋白质同源性** | 已知蛋白质序列 | 跨物种保守基因识别 | 物种特异基因可能遗漏 |
+
+### 从头预测（Ab Initio）
+
+不依赖实验证据，仅使用序列特征进行基因预测：
+
+| 特征 | 说明 |
+|------|------|
+| **开放阅读框（ORF）** | 起始密码子到终止密码子 |
+| **剪接位点信号** | GT-AG 规则（供体-受体位点） |
+| **密码子偏好性** | 编码区 vs 非编码区的密码子使用差异 |
+| **启动子特征** | TATA box、CpG 岛 |
+
+**常用工具**：AUGUSTUS、GENSCAN、GlimmerHMM
+
+## 主要注释系统
+
+### 三大注释体系
+
+| 系统 | 方法 | 更新频率 | 质量 |
+|------|------|---------|------|
+| **Ensembl** | 自动化管线 | 每年 2-4 次 | 高，自动化 + 质量控制 |
+| **GENCODE** | Ensembl + 人工审编 | 每年 2-4 次 | 最高，人工确认关键基因 |
+| **NCBI RefSeq** | 自动化 + 人工 | 持续更新 | 高，部分人工审编 |
+
+### GENCODE 注释层级
+
+GENCODE 是 ENCODE 项目的官方注释，提供最高质量的人类基因组注释：
+
+| 标签 | 含义 | 置信度 |
+|------|------|--------|
+| **KNOWN** | 已知基因，实验验证 | 最高 |
+| **NOVEL** | 新预测基因 | 中等 |
+| **PUTATIVE** | 预测但未经实验验证 | 较低 |
+
+## 注释版本管理
+
+### 版本命名
+
+```
+GENCODE v42 (GRCh38)
+        ↑      ↑
+        版本号  参考版本
+```
+
+### 版本间差异
+
+| 变化类型 | 说明 | 影响 |
+|---------|------|------|
+| **新增基因** | 新识别的基因 | 计数变化 |
+| **删除基因** | 证据不足的基因被移除 | 旧注释中的基因可能不存在 |
+| **转录本更新** | 修正外显子边界 | 坐标变化 |
+| **功能注释更新** | GO 术语、通路更新 | 功能解释变化 |
+
+**关键注意**：不同版本的注释可能给出不同的基因数量和结构。分析中应记录使用的注释版本。
+
+## 质量评估
+
+### BUSCO 评估
+
+**BUSCO（Benchmarking Universal Single-Copy Orthologs）** 评估注释完整性：
+
+```bash
+busco -i annotation.fa -l vertebrata_odb10 -m geno
+```
+
+| 指标 | 含义 | 优质阈值 |
+|------|------|---------|
+| **Complete** | 找到完整单拷贝同源基因 | > 90% |
+| **Fragmented** | 只找到部分 | < 5% |
+| **Missing** | 未找到 | < 5% |
+
+### 其他评估方法
+
+| 方法 | 评估内容 |
+|------|---------|
+| **与已知注释比较** | 基因数量、外显子数量分布 |
+| **RNA-seq 覆盖度** | 注释基因是否被 RNA-seq 支持 |
+| **蛋白质同源性** | 注释蛋白是否有同源匹配 |
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '注释下载：Ensembl、GENCODE、NCBI 提供 GTF/GFF 文件',
+    '注释整合：gffread、agat 工具和比较不同注释',
+    '质量评估：BUSCO 评估注释完整性',
+    '可视化：IGV、UCSC 浏览器查看注释轨道',
+    'RNA-seq 定量：featureCounts、HTSeq 使用 GTF 进行基因计数',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**注释 = 绝对真理**：注释是计算预测 + 证据整合，可能存在错误或遗漏。',
+    '**所有注释系统给出相同结果**：Ensembl、GENCODE、RefSeq 的基因数量和结构可能不同。',
+    '**基因数量越多越好**：过度预测会产生假阳性基因，质量比数量更重要。',
+    '**注释版本无关紧要**：不同版本的基因模型可能不同，应记录并使用一致版本。',
+    '**RNA-seq 足以注释所有基因**：低表达基因、组织特异基因可能在特定 RNA-seq 数据中不表达。',
+  ]}
+/>
+
+## 本章小结
+
+- 基因组注释将原始 DNA 序列转化为功能信息：结构注释 + 功能注释
+- 证据来源：RNA-seq、cDNA、蛋白质同源性、从头预测
+- 三大注释系统：Ensembl（自动）、GENCODE（人工 + 自动）、NCBI RefSeq
+- 质量评估使用 BUSCO 等工具检测完整性
+- 注释版本随时间更新，分析中应记录使用的版本
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'GTF/GFF/BED 格式',
+      to: '/docs/formats/gtf-gff-bed',
+      label: '数据格式',
+      description: '注释文件的标准格式和坐标系统。',
+    },
+    {
+      title: 'Ensembl 基因组注释',
+      to: '/docs/databases/ensembl',
+      label: '注释系统',
+      description: 'Ensembl 的注释流程和 ID 体系。',
+    },
+    {
+      title: 'RNA-seq 定量分析',
+      to: '/docs/workflows/rna-seq',
+      label: '应用层',
+      description: '使用 GTF 注释进行基因表达定量。',
+    },
+  ]}
+/>

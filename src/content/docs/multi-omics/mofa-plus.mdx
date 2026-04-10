@@ -4,8 +4,9 @@ title: "MOFA+（Multi-Omics Factor Analysis）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="MOFA+ 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，可处理缺失数据并提供不确定性估计。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心是贝叶斯因子分析框架，每组学对共享因子有不同敏感度',
     '可自然处理缺失数据，这是相比 NMF 和 CCA 的关键优势',
     '提供不确定性估计，适合小样本或噪声大的场景',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: '多组学整合策略', to: '/wiki-bioinfo/multi-omics/integration-strategies' },
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms' },
+    { title: '概率模型基础', to: '/wiki-bioinfo/models/index' },
   ]}
 />
 
@@ -613,11 +622,11 @@ ARD 有帮助，但仍需要：
 - Argelaguet, R., et al. (2018). "Multi-Omics Factor Analysis: a framework for unsupervised integration of multi-omics data sets".
 - R. Argelaguet, et al. (2019). "MOFA+: a statistical framework for comprehensive integration of multi-omics data".
 
-## 相关页面
-
-- [整合算法概览](./integration-algorithms.md)
-- [联合NMF](./joint-nmf.mdx)
-- [典型相关分析](./canonical-correlation-analysis.mdx)
-- [相似性网络融合](./similarity-network-fusion.mdx)
-- [单细胞 multiome](./single-cell-multiome.md)
-- [机器学习基础](../ml-bioinfo/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms', description: 'MOFA+ 在整合算法中的定位' },
+    { title: '联合 NMF', to: '/wiki-bioinfo/multi-omics/joint-nmf', description: '非负矩阵分解的整合方法' },
+    { title: '典型相关分析', to: '/wiki-bioinfo/multi-omics/canonical-correlation-analysis', description: '基于相关性的整合方法' },
+    { title: '单细胞 Multiome', to: '/wiki-bioinfo/multi-omics/single-cell-multiome', description: 'MOFA+ 的典型应用场景' }
+  ]}
+/>

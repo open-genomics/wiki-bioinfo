@@ -4,6 +4,8 @@ title: "动态规划基础：曼哈顿游客问题"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '理解动态规划的核心思想：分解问题、存储子问题解、避免重复计算',
     '掌握曼哈顿游客问题的递推关系和算法实现',
     '理解DP与序列比对的联系'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '分治算法基础', href: '/wiki-bioinfo/foundations/divide-and-conquer' },
+    { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' }
   ]}
 />
 
@@ -274,10 +284,30 @@ DPCHANGE(M, c, d)
 
 理解曼哈顿游客问题是掌握序列比对、基因预测等生物信息学核心算法的第一步。
 
-## 相关页面
+## 常见误区
 
-- [Needleman-Wunsch 全局比对](../alignment/needleman-wunsch.mdx
-- [Smith-Waterman 局部比对](../alignment/smith-waterman.mdx
-- [编辑距离](../alignment/edit-distance.mdx
-- [仿射空隙罚分](../alignment/gotoh.mdx
-- [空间高效比对（Hirschberg）](../alignment/hirschberg.mdx
+### 动态规划就是填表
+
+填表只是实现手段。动态规划的核心是三个要素：最优子结构、重叠子问题、无后效性。很多问题可以设计出 DP 方案但不一定需要显式填表（如带记忆化的递归）。反之，盲目填表而不验证这三个前提条件，可能导致错误结果。
+
+### 所有递归问题都能用动态规划优化
+
+只有存在"重叠子问题"时，动态规划才有优势。例如，归并排序的递归子问题是相互独立的（不重叠），此时分治比 DP 更自然。判断一个递归问题是否适合 DP，关键是看子问题的解是否被多次重复计算。
+
+### DP 表的值就是最优解
+
+DP 表存储的通常只是最优值（如最长路径的权重），而非最优解本身。要恢复具体的最优路径或方案，需要在填表时记录决策方向（回溯指针），然后通过回溯重建。在空间受限时，回溯需要特殊的技巧（如 Hirschberg 算法）。
+
+### 动态规划的时间复杂度总是 O(n²)
+
+DP 的时间复杂度取决于状态空间大小和每个状态的转移代价。一维 DP 可以是 O(n)（如换钱问题），二维 DP 是 O(nm)（如序列比对），三维 DP 可以是 O(nmp)（如剪接比对）。不能将 DP 与 O(n²) 简单等价。
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 全局比对', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '全局比对的经典 DP 算法，直接源自曼哈顿游客问题的思路。' },
+    { title: 'Smith-Waterman 局部比对', to: '/wiki-bioinfo/alignment/smith-waterman', description: '在 DP 框架下寻找最优局部相似区域。' },
+    { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '编辑距离是 DP 的另一个经典应用，与序列比对紧密相关。' },
+    { title: '仿射空隙罚分', to: '/wiki-bioinfo/alignment/gotoh', description: '对基础 DP 比对的扩展，引入更合理的空隙罚分模型。' },
+    { title: '分治算法基础', to: '/wiki-bioinfo/foundations/divide-and-conquer', description: 'Hirschberg 算法展示了分治如何优化 DP 的空间复杂度。' },
+  ]}
+/>

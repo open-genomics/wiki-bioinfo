@@ -4,6 +4,8 @@ title: "Footprinting 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '核心原理：转录因子结合物理阻碍 Tn5 插入，形成"足迹"信号',
     '关键挑战：校正 Tn5 序列偏好、区分蛋白保护与其他信号凹陷',
     '方法演进：从基于统计检验的 Wellington 到深度学习方法'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'ATAC-seq', href: '/wiki-bioinfo/epigenomics/atac-seq', description: 'ATAC-seq 实验原理与数据特点' },
+    { title: 'PWM / PSSM', href: '/wiki-bioinfo/models/pwm-pssm', description: '转录因子结合偏好性模型' },
+    { title: 'MACS2 峰调用算法', href: '/wiki-bioinfo/epigenomics/macs2-peak-calling', description: '开放染色质区域的识别' },
   ]}
 />
 
@@ -383,9 +393,11 @@ Bulk 数据中，不同细胞类型的信号混合：
 - Schep, A. N., et al. (2017). chromVAR: inferring transcription-factor-associated accessibility from single-cell epigenomic data. *Nature Methods*.
 - Neph, S., et al. (2012). An expansive human regulatory lexicon encoded in transcription factor footprints. *Nature*.
 
-## 相关页面
-
-- [ATAC-seq](./atac-seq.mdx)
-- [ChIP-seq 概览](./chip-seq-overview.mdx)
-- [PWM / PSSM](../models/pwm-pssm.mdx)
-- [统计检验与多重校正](../foundations/probability-and-graphs.mdx)
+<RelatedLinks
+  links={[
+    { title: 'ATAC-seq', to: '/wiki-bioinfo/epigenomics/atac-seq', description: 'ATAC-seq 实验原理与数据分析' },
+    { title: 'ChIP-seq 概览', to: '/wiki-bioinfo/epigenomics/chip-seq-overview', description: '染色质免疫沉淀测序基础' },
+    { title: 'PWM / PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: '转录因子结合偏好性模型' },
+    { title: '统计检验与多重校正', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: 'Footprint 检验的统计学基础' }
+  ]}
+/>

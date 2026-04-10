@@ -1,0 +1,235 @@
+---
+title: "参考基因组版本历史：从 hg19 到 GRCh38 的演进"
+description: "参考基因组版本体系、主要差异、以及如何选择合适的参考版本"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+
+<SummaryBox
+  summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
+  bullets={[
+    'GRCh37（hg19）和 GRCh38（hg38）是两个主要人类参考版本',
+    'GRCh38 修复了 GRCh37 中的错误，新增 alternate loci 和 decoy 序列',
+    '补丁更新（如 GRCh38.p12 → p14）修复局部错误，不改变整体坐标',
+    'UCSC（hg19/hg38）和 Ensembl/NCBI（GRCh37/GRCh38）命名不同但指向同一版本',
+    '版本混用是分析中最常见的错误来源之一',
+  ]}
+/>
+
+## 是什么
+
+**参考基因组版本**是人类基因组的标准化表示，定义了整个基因组的序列内容和坐标系统。所有比对、注释和变异检测都相对于特定版本进行。
+
+### 版本命名体系
+
+| 命名体系 | 格式 | 示例 | 说明 |
+|---------|------|------|------|
+| **RefSeq/Ensembl** | GRChXX | GRCh37, GRCh38 | 官方命名（Genome Reference Consortium） |
+| **UCSC** | hgXX | hg19, hg38 | UCSC 浏览器命名，广泛使用 |
+
+### 对应关系
+
+| 官方名称 | UCSC 名称 | 发布年份 | 当前状态 |
+|---------|----------|---------|---------|
+| **GRCh37** | hg19 | 2009 | 历史版本，仍广泛使用 |
+| **GRCh38** | hg38 | 2013 | 当前推荐版本 |
+
+## 为什么重要
+
+参考版本选择是分析流程中的**第一个关键决策**，影响：
+
+- **坐标系统**：所有变异位置都相对于特定版本
+- **注释兼容性**：GTF、数据库注释必须与参考版本匹配
+- **结果可比性**：不同版本的结果不能直接比较
+- **工具兼容性**：某些工具或数据库可能仅支持特定版本
+
+**关键认知**：GRCh37 和 GRCh38 不是"同一个基因组的不同表示"，而是**不同的坐标系统**。同一变异在两个版本中的坐标可能不同。
+
+<PrerequisitesBox
+  items={[
+    '理解参考基因组的概念：代表人类基因组的标准化序列',
+    '了解 FASTA 格式：参考序列的文件表示',
+    '如果不熟悉坐标系统，先阅读参考基因组、坐标系统与注释',
+  ]}
+/>
+
+## GRCh37 vs GRCh38：主要差异
+
+### 序列内容变化
+
+| 特性 | GRCh37 (hg19) | GRCh38 (hg38) |
+|------|--------------|--------------|
+| **总长度** | ~3.1 Gb | ~3.1 Gb |
+| **染色体数量** | 24（chr1-22, X, Y） | 24 + alternate loci |
+| **Gaps 数量** | ~300 个 | ~80 个（修复 ~200 个） |
+| **错误修复** | 基线 | 修复 ~1000 个碱基错误 |
+| **Alternate loci** | 无 | 新增 261 个 alternate haplotypes |
+| **Decoy 序列** | 无 | 新增未定位 scaffolds |
+
+### 坐标变化
+
+由于序列修复和插入，**约 5-10% 的区域在两个版本中坐标不同**：
+
+| 变化类型 | 影响范围 | 示例 |
+|---------|---------|------|
+| **碱基修复** | 局部（几个 bp） | 错误碱基更正 |
+| **插入/缺失** | 区域坐标偏移 | 插入新序列，下游坐标全部偏移 |
+| **着丝粒/端粒** | 大幅改进 | GRCh38 改进了重复区域表示 |
+
+### 实际影响示例
+
+```
+变异: chr1:12345 A>G (GRCh37)
+      ↓ liftover
+      chr1:12400 A>G (GRCh38)  # 坐标偏移 55bp
+```
+
+**这为什么重要**：如果使用 GRCh37 的坐标查询 GRCh38 的数据库，会得到错误结果或查询失败。
+
+## 补丁更新机制
+
+### 补丁类型
+
+| 类型 | 前缀 | 说明 | 影响 |
+|------|------|------|------|
+| **Major release** | GRCh37, GRCh38 | 主版本更新 | 大规模坐标变化 |
+| **Patch** | GRCh38.p1, p2, ... | 修复局部错误 | 局部坐标变化 |
+| **Novel patch** | GRCh38.p12_NOVEL | 新增序列 | 增加新区域 |
+| **Fix patch** | GRCh38.p12_FIX | 修复错误 | 修正局部序列 |
+
+### 补丁版本号
+
+```
+GRCh38.p14
+      ↑
+      patch 版本号（14）
+```
+
+**关键注意**：
+- 补丁更新通常**不影响主要坐标**，只修复局部错误
+- 分析中应记录使用的完整版本号（包括 patch）
+- 不同机构可能使用不同 patch 版本，但坐标通常兼容
+
+## 如何选择合适的参考版本
+
+### 决策框架
+
+<ComparisonTable
+  leftTitle="选择 GRCh38/hg38"
+  rightTitle="选择 GRCh37/hg19"
+  rows={[
+    {
+      aspect: '新项目',
+      left: '推荐：当前标准，注释质量更高',
+      right: '不推荐：历史版本，仅用于兼容旧数据',
+    },
+    {
+      aspect: '公共数据比较',
+      left: '如果公共数据集使用 GRCh38',
+      right: '如果公共数据集（如 TCGA）使用 GRCh37',
+    },
+    {
+      aspect: '注释资源',
+      left: 'Ensembl、GENCODE 优先支持 GRCh38',
+      right: '某些旧注释仍基于 GRCh37',
+    },
+    {
+      aspect: '工具兼容性',
+      left: '现代工具默认支持 GRCh38',
+      right: '旧工具可能仅支持 GRCh37',
+    },
+  ]}
+/>
+
+### 实际建议
+
+| 场景 | 推荐版本 | 原因 |
+|------|---------|------|
+| 全新项目 | **GRCh38** | 最新注释、更少错误、社区趋势 |
+| 与 TCGA 比较 | **GRCh37** | TCGA 数据基于 hg19 |
+| 临床检测 | **GRCh38** | ClinVar、ACMG 推荐使用 |
+| 历史数据整合 | **取决于数据** | 需要统一所有数据到同一版本 |
+
+## 版本转换：Liftover
+
+当需要在两个版本之间转换坐标时，使用 **liftover** 工具：
+
+```bash
+# 使用 UCSC liftOver
+liftOver input.bed hg19ToHg38.over.chain output.bed unlifted.bed
+
+# 使用 CrossMap（支持 BAM/VCF/BED）
+CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
+```
+
+### Liftover 的局限
+
+| 问题 | 说明 |
+|------|------|
+| **不是 100% 成功** | 约 1-5% 的区域无法映射（新序列、大重排） |
+| **不是双向等价** | GRCh37 → GRCh38 的转换不完全可逆 |
+| **不转移变异** | 只转换坐标，不调整 REF/ALT 等位基因 |
+| **可能引入错误** | 复杂区域的映射可能不准确 |
+
+**建议**：优先从一开始就使用正确的参考版本，而不是依赖 liftover 转换。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '参考下载：NCBI、Ensembl、UCSC 提供 GRCh37/GRCh38 FASTA 和 GTF',
+    'Liftover 工具：UCSC liftOver、CrossMap 转换坐标',
+    '比对工具：BWA、Bowtie2 需要为每个参考版本构建独立索引',
+    '注释工具：VEP、ANNOVAR 需要指定参考版本以使用正确注释',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**hg19 = GRCh37 完全等价**：大部分相同，但 UCSC 添加了额外的 chrM 和 unplaced scaffolds。',
+    '**补丁版本无关紧要**：不同 patch 版本可能修复关键错误，应记录完整版本号。',
+    '**Liftover 完美**：约 1-5% 的区域无法成功映射，复杂区域映射可能不准确。',
+    '**参考版本只影响坐标**：参考版本还影响注释质量、数据库兼容性和工具选择。',
+    '**GRCh38 只是"更好的 GRCh37"**：GRCh38 添加了 alternate loci 和 decoy，结构上不同。',
+  ]}
+/>
+
+## 本章小结
+
+- GRCh37（hg19）和 GRCh38（hg38）是两个主要人类参考版本
+- GRCh38 修复错误、新增 alternate loci，是当前推荐版本
+- 版本混用是分析中最常见的错误来源
+- Liftover 可转换坐标，但不完美，应优先使用正确版本
+- 分析中应记录完整的参考版本（包括 patch）
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      label: '基础层',
+      description: '理解坐标系统和注释体系的基本概念。',
+    },
+    {
+      title: '参考版本与 liftover',
+      to: '/docs/data-references/reference-versions-and-liftover',
+      label: '技术细节',
+      description: 'liftover 算法原理和坐标转换技术。',
+    },
+    {
+      title: 'FASTA 格式',
+      to: '/docs/formats/fasta-format',
+      label: '数据格式',
+      description: '参考基因组 FASTA 文件的结构和索引。',
+    },
+  ]}
+/>

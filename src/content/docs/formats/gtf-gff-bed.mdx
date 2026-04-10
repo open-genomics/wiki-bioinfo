@@ -1,0 +1,232 @@
+---
+title: "GTF/GFF/BED 格式：基因组注释与区间表示"
+description: "GTF、GFF 和 BED 如何编码基因组注释结构和区间集合，以及它们的坐标系统差异"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+
+<SummaryBox
+  summary="GTF/GFF 编码层级化基因组注释（gene-transcript-exon 结构），BED 编码简洁区间集合。理解它们的层级结构、坐标系统差异（1-based vs 0-based）和语义不等价性，是 RNA-seq 定量、peak 分析和功能注释的前提。"
+  bullets={[
+    'GTF 是 GFF2 的严格子集，强制 gene_id/transcript_id 属性',
+    'GFF3 支持更灵活的层级结构和任意属性',
+    'BED 是扁平区间列表，不强制层级关系',
+    'GTF 使用 1-based closed 坐标，BED 使用 0-based half-open 坐标',
+    '格式选择直接影响下游工具兼容性和区间运算正确性',
+  ]}
+/>
+
+## 是什么
+
+这三种格式都编码**基因组上的位置信息**，但抽象层次不同：
+
+| 格式 | 编码对象 | 抽象层次 | 典型用途 |
+|------|---------|---------|---------|
+| **GTF/GFF** | 基因结构注释 | 层级化（gene → transcript → exon） | RNA-seq 定量、变异功能注释 |
+| **BED** | 区间集合 | 扁平（无层级关系） | Peak 区域、靶标 panel、CNV 区间 |
+
+## GTF / GFF：层级化注释结构
+
+### GTF 格式（Gene Transfer Format）
+
+九列制表符分隔：
+
+```
+chr1  HAVANA  gene  11869  14409  .  +  .  gene_id "ENSG00000223972"; gene_type "transcribed_unprocessed_pseudogene";
+```
+
+| 列号 | 字段 | 说明 |
+|------|------|------|
+| 1 | seqname | 参考序列名称（chr1） |
+| 2 | source | 注释来源（HAVANA、ENSEMBL） |
+| 3 | feature | 特征类型（gene、transcript、exon、CDS） |
+| 4 | start | 1-based 起始坐标 |
+| 5 | end | 1-based 终止坐标 |
+| 6 | score | 置信度（`.` 表示无） |
+| 7 | strand | 链方向（`+` / `-` / `.`） |
+| 8 | phase | 阅读框相位（0/1/2，仅 CDS 有效） |
+| 9 | attributes | 键值对属性（gene_id、transcript_id 等） |
+
+### GFF3 格式（General Feature Format v3）
+
+与 GTF 类似，但：
+- 支持更灵活的层级关系（通过 `Parent` 属性）
+- 属性使用 `=` 分隔（GTF 使用空格）
+- 支持任意特征类型
+
+```
+chr1  HAVANA  gene  11869  14409  .  +  .  ID=ENSG00000223972;Name=DDX11L1
+chr1  HAVANA  mRNA  11869  14409  .  +  .  ID=transcript:ENST00000;Parent=ENSG00000223972
+chr1  HAVANA  exon  11869  12227  .  +  .  Parent=transcript:ENST00000
+```
+
+### 层级结构示例
+
+```
+gene: ENSG00000223972 (chr1:11869-14409)
+  ├── transcript: ENST000001
+  │     ├── exon: 11869-12227
+  │     ├── exon: 12613-12721
+  │     └── exon: 13221-14409
+  └── transcript: ENST000002
+        ├── exon: 11869-12227
+        └── exon: 12900-14409
+```
+
+## BED：扁平区间集合
+
+### 基本格式（3 列必需）
+
+```
+chr1  1000  5000
+chr2  300   800
+```
+
+### 扩展格式（最多 12 列）
+
+```
+chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
+```
+
+| 列号 | 字段 | 必需？ | 说明 |
+|------|------|--------|------|
+| 1 | chrom | ✓ | 染色体 |
+| 2 | start | ✓ | 0-based 起始 |
+| 3 | end | ✓ | 终止（half-open） |
+| 4 | name | ✗ | 区间名称 |
+| 5 | score | ✗ | 分数（0-1000） |
+| 6 | strand | ✗ | 链方向 |
+| 7 | thickStart | ✗ | 显示起始（如 CDS） |
+| 8 | thickEnd | ✗ | 显示终止 |
+| 9 | itemRgb | ✗ | RGB 颜色 |
+| 10 | blockCount | ✗ | 外显子/块数量 |
+| 11 | blockSizes | ✗ | 各块大小（逗号分隔） |
+| 12 | blockStarts | ✗ | 各块起始（逗号分隔） |
+
+### 典型应用场景
+
+- **ChIP-seq peaks**：`chr1  1000  1500  peak_1  950`
+- **Exome panel**：靶标区域列表
+- **CNV regions**：拷贝数变异区间
+- **Windowing**：基因组分窗统计
+
+## 坐标系统差异（关键！）
+
+<ComparisonTable
+  leftTitle="GTF/GFF（1-based, closed）"
+  rightTitle="BED（0-based, half-open）"
+  rows={[
+    {
+      aspect: '起始坐标',
+      left: '1-based：第一个碱基编号为 1',
+      right: '0-based：第一个碱基编号为 0',
+    },
+    {
+      aspect: '区间表示',
+      left: 'closed：[start, end] 都包含',
+      right: 'half-open：[start, end) 包含 start，不包含 end',
+    },
+    {
+      aspect: '示例',
+      left: '1-100 表示第 1 到第 100 个碱基（共 100bp）',
+      right: '0-100 表示第 1 到第 100 个碱基（共 100bp）',
+    },
+    {
+      aspect: '转换',
+      left: 'GTF → BED：start - 1',
+      right: 'BED → GTF：start + 1',
+    },
+  ]}
+/>
+
+**这是最常见的错误来源之一**。混淆坐标系统会导致区间偏移 1bp，可能使 peak 注释错误或变异功能判断失误。
+
+## GTF vs GFF vs BED：何时使用哪个
+
+<ComparisonTable
+  leftTitle="左侧格式"
+  rightTitle="右侧格式"
+  rows={[
+    {
+      aspect: 'RNA-seq 定量',
+      left: 'GTF（featureCounts、HTSeq 需要 gene/transcript 层级结构）',
+      right: 'BED 不适用（无层级关系，无法区分 gene/exon）',
+    },
+    {
+      aspect: 'ChIP-seq peaks',
+      left: 'GTF 可用但过重（只需要区间，不需要 gene 结构）',
+      right: 'BED 更适合（轻量、区间运算方便）',
+    },
+    {
+      aspect: '变异功能注释',
+      left: 'GTF/GFF（需要知道变异是否落在 exon/intron/UTR）',
+      right: 'BED 可用于快速区间查询，但无法区分特征类型',
+    },
+    {
+      aspect: 'Exome panel 设计',
+      left: 'GTF 可提取目标基因的 exon 区间',
+      right: 'BED 是标准交付格式（靶标区域列表）',
+    },
+  ]}
+/>
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    'RNA-seq 定量：featureCounts、HTSeq 以 BAM + GTF 为输入，输出基因/转录本计数矩阵',
+    'ChIP-seq：MACS2 输出 peak 区域为 BED 格式',
+    '变异注释：VEP、SnpEff 使用 GTF/GFF 判断变异是否落在 coding/exonic/splice 区域',
+    '基因组浏览器：IGV、UCSC 支持导入 GTF/BED 作为注释轨道',
+    '区间运算：bedtools、bedops 以 BED 为主要输入格式',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**坐标系统混淆**：直接将 GTF 的 start 当作 BED 的 start 使用，导致区间偏移 1bp。',
+    '**GTF 与 BED 功能等价**：两者虽然都表示"区间"，但 GTF 是层级注释结构，BED 是扁平区间列表，语义不等价。',
+    '**GTF = GFF**：GTF 是 GFF2 的严格子集，但 GFF3 有更灵活的属性定义，工具兼容性不同。',
+    '**注释版本不匹配**：使用 GRCh37 的 BAM 配合 GRCh38 的 GTF，导致坐标无法映射。',
+    '**phase 字段误用**：phase（0/1/2）仅对 CDS 特征有效，gene/exon 特征应为 `.`。',
+  ]}
+/>
+
+## 本章小结
+
+- GTF/GFF 编码**层级化基因组注释**（gene → transcript → exon）
+- BED 编码**扁平区间集合**（peaks、panel、CNV）
+- GTF 使用 **1-based closed** 坐标，BED 使用 **0-based half-open** 坐标
+- 格式选择取决于下游工具需求和区间运算类型
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/docs/foundations/reference-and-annotation',
+      label: '基础层',
+      description: '理解注释格式必须与参考版本和坐标系统协同使用。',
+    },
+    {
+      title: 'RNA-seq 定量分析',
+      to: '/docs/workflows/rna-seq',
+      label: '应用层',
+      description: 'GTF 在表达定量中的关键作用。',
+    },
+    {
+      title: 'ChIP-seq 总览',
+      to: '/docs/epigenomics/chip-seq-overview',
+      label: '应用层',
+      description: 'MACS2 输出 peak 区域为 BED 格式。',
+    },
+  ]}
+/>

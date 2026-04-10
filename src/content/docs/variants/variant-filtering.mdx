@@ -4,14 +4,23 @@ title: "DNA-seq 变异过滤与质量控制"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成'真变异'。"
   bullets={[
     '理解 QUAL、DP、AF、FILTER 等 VCF 字段的大致含义，比死记具体软件参数更重要。',
     '过滤逻辑高度依赖 caller、样本类型和设计，下面只提供通用直觉，不是固定阈值菜单。',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: 'DNA-seq 变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview' },
+    { title: '常见文件格式概览', to: '/wiki-bioinfo/formats/common-file-formats' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index' },
   ]}
 />
 
@@ -147,11 +156,13 @@ $$\text{Keep}(v) = \begin{cases} \text{True} & \text{if } DP(v) \geq DP_{\min} \
 - 仅凭单个字段（例如 QUAL）做一刀切过滤；
 - 把某套阈值原封不动复制到不同平台和 caller；
 - 忽略重复或低复杂度区域的特殊性；
-- 把 PASS 理解成“绝对真实变异”。
+- 把 PASS 理解成"绝对真实变异"。
 
-## 相关页面
-
-- [DNA-seq 变异检测总览](./variant-calling-overview.mdx)
-- [序列比对](../alignment/index.mdx)
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
-- [常见文件格式概览](../formats/common-file-formats.mdx)
+<RelatedLinks
+  links={[
+    { title: 'DNA-seq 变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '过滤在变异检测流程中的位置' },
+    { title: '序列比对', to: '/wiki-bioinfo/alignment/index', description: '比对质量影响过滤决策' },
+    { title: '常见文件格式概览', to: '/wiki-bioinfo/formats/common-file-formats', description: 'VCF/BAM 等核心文件格式' },
+    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '深度与错误模型的基础' }
+  ]}
+/>

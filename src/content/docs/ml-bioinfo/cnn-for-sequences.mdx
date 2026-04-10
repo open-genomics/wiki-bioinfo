@@ -4,7 +4,8 @@ title: "卷积神经网络（CNN）在序列中的应用"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '卷积核可以学习到位置无关的 motif',
     '池化层实现位置不变性',
     '计算效率高，适合大规模数据',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '序列深度学习', href: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体框架' },
+    { title: 'PWM / PSSM', href: '/wiki-bioinfo/models/pwm-pssm', description: '传统 motif 表示方法与 CNN 的关系' },
+    { title: '转录因子结合位点', href: '/wiki-bioinfo/epigenomics/tf-binding-sites', description: 'CNN 应用场景的生物学背景' },
   ]}
 />
 
@@ -344,10 +353,11 @@ $$
 - Kelley, D. R., et al. (2016). Basset: Learning the regulatory code of the accessible genome with deep convolutional neural networks. *Genome research*, 26(7), 990-999.
 - Quang, D., & Xie, X. (2016). DanQ: a hybrid convolutional and recurrent deep neural network for quantifying the function of DNA sequences. *Nucleic acids research*, 44(11), e107.
 
-## 相关页面
-
-- [序列深度学习](./deep-learning-for-sequences.mdx)
-- [嵌入与语言模型](./embeddings-and-language-models.mdx)
-- [RNN/LSTM for Sequences](./rnn-lstm-for-sequences.mdx)
-- [Transformer for Sequences](./transformer-for-sequences.mdx)
-- [PWM / PSSM](../models/pwm-pssm.mdx)
+<RelatedLinks
+  links={[
+    { title: '序列深度学习', to: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体概览' },
+    { title: 'RNN/LSTM for Sequences', to: '/wiki-bioinfo/ml-bioinfo/rnn-lstm-for-sequences', description: 'CNN 的互补架构，擅长长程依赖建模' },
+    { title: 'Transformer for Sequences', to: '/wiki-bioinfo/ml-bioinfo/transformer-for-sequences', description: '全局注意力的现代序列建模架构' },
+    { title: 'PWM / PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'CNN 卷积核学习的 motif 与传统 PWM 的关系' }
+  ]}
+/>

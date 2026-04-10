@@ -4,7 +4,8 @@ title: "PWM 与 PSSM"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -16,6 +17,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   ]}
 />
 
+<PrerequisitesBox
+  links={[
+    { title: 'Motif 寻找', href: '/wiki-bioinfo/models/motif-finding' },
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { title: '贝叶斯推断基础', href: '/wiki-bioinfo/models/bayesian-inference' },
+  ]}
+/>
+
 ## 是什么
 
 PWM（Position Weight Matrix，位置权重矩阵）和 PSSM（Position-Specific Scoring Matrix，位置特异打分矩阵）是描述序列 motif 的经典表示方式。
@@ -24,13 +33,13 @@ PWM（Position Weight Matrix，位置权重矩阵）和 PSSM（Position-Specific
 
 ## 要解决什么生物信息学问题
 
-很多真实序列模式并不是“固定字符串”，而是：
+很多真实序列模式并不是"固定字符串"，而是：
 
 - 某些位置非常保守；
 - 某些位置允许多种字符；
 - 整体上呈现统计偏好而不是绝对规则。
 
-PWM / PSSM 让我们可以用矩阵形式刻画这种偏好，并用一个统一框架来“打分”候选序列片段。
+PWM / PSSM 让我们可以用矩阵形式刻画这种偏好，并用一个统一框架来"打分"候选序列片段。
 
 ## 数学模型
 
@@ -259,14 +268,17 @@ $$
 
 ### motif 一定对应一个固定的 consensus 串
 
-不对。很多 motif 的本质正是“位置相关的偏好”，不是单个固定字符串。
+不对。很多 motif 的本质正是"位置相关的偏好"，不是单个固定字符串。
 
 ### 高分 motif 就等于真实结合位点
 
 不一定。高分说明片段与模型相似，但是否真实绑定还需要结合背景频率、局部结构和实验数据。
 
-## 相关页面
-
-- [Motif 寻找](./motif-finding.mdx)
-- [隐马尔可夫模型](./hmm.mdx)
-- [Pseudo-alignment 与表达定量](../transcriptomics/pseudo-alignment-and-quantification.mdx)
+<RelatedLinks
+  links={[
+    { title: 'Motif discovery 的算法路线', to: '/wiki-bioinfo/models/motif-discovery-algorithms', description: 'Motif discovery 的输出通常是 PWM/PSSM 形式的 motif 模型。' },
+    { title: 'Motif 寻找', to: '/wiki-bioinfo/models/motif-finding', description: 'PWM/PSSM 是 motif 扫描的核心表示方法。' },
+    { title: 'Profile HMM', to: '/wiki-bioinfo/models/profile-hmm', description: 'Profile HMM 是 PWM 的强大扩展，能显式建模插入和缺失。' },
+    { title: '贝叶斯推断基础', to: '/wiki-bioinfo/models/bayesian-inference', description: 'PWM 的伪计数本质上是贝叶斯先验的一种体现。' },
+  ]}
+/>

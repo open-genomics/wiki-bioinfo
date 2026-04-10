@@ -4,7 +4,9 @@ title: "图遍历算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '重点理解DFS和BFS的差异，以及Hamiltonian path的NP难性质',
     '图遍历算法在组装中用于路径恢复、错误检测和图简化',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
+    { title: 'de Bruijn graph 组装', href: '/wiki-bioinfo/assembly/de-bruijn' },
+    { title: '测序杂交（SBH）', href: '/wiki-bioinfo/assembly/sequencing-by-hybridization' },
   ]}
 />
 
@@ -358,3 +368,13 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 - [OLC：Overlap-Layout-Consensus](./olc.mdx)
 - [重复序列、分叉与图清理](./repeats-and-graph-cleaning.mdx)
 - [概率、图与动态规划预备](../foundations/probability-and-graphs.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'de Bruijn graph 组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: '基于 k-mer 与 de Bruijn 图的组装方法' },
+    { title: 'OLC：Overlap-Layout-Consensus', to: '/wiki-bioinfo/assembly/olc', description: '基于重叠关系的经典组装范式' },
+    { title: '重复序列、分叉与图清理', to: '/wiki-bioinfo/assembly/repeats-and-graph-cleaning', description: '图清理策略在组装中的应用' },
+    { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '图论基础概念与算法预备知识' },
+    { title: '测序杂交（SBH）', to: '/wiki-bioinfo/assembly/sequencing-by-hybridization', description: '欧拉路径问题在测序中的经典应用' },
+  ]}
+/>

@@ -4,6 +4,8 @@ description: 基因组组装中重复序列导致的图拓扑问题（tips、bub
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -13,6 +15,14 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
     '测序错误制造假分叉（tips、bubbles），需要根据 coverage 和长度识别清理',
     '图清理是做结构判断而非机械删边，需权衡任务目标与数据特征',
     '真实场景中通常需要多轮迭代清理才能收敛',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: 'de Bruijn graph 组装', href: '/wiki-bioinfo/assembly/de-bruijn' },
+    { title: '测序 reads、coverage 与错误模型', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' },
+    { title: '图遍历算法', href: '/wiki-bioinfo/assembly/graph-traversal-algorithms' },
   ]}
 />
 
@@ -381,3 +391,13 @@ Bubble 是指从同一点分出、稍后又重新汇合的两条短路径。
 - [OLC：Overlap-Layout-Consensus](./olc)
 - [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage)
 - [组装评估](./assembly-evaluation)
+
+<RelatedLinks
+  links={[
+    { title: 'de Bruijn graph 组装', to: '/wiki-bioinfo/assembly/de-bruijn', description: '图清理所基于的 de Bruijn 图模型' },
+    { title: 'OLC：Overlap-Layout-Consensus', to: '/wiki-bioinfo/assembly/olc', description: 'OLC 范式中重叠图的结构与清理' },
+    { title: '图遍历算法', to: '/wiki-bioinfo/assembly/graph-traversal-algorithms', description: 'DFS/BFS 在图清理中的遍历策略' },
+    { title: '测序 reads、coverage 与错误模型', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解 coverage 分布对图清理阈值选择的影响' },
+    { title: '组装评估', to: '/wiki-bioinfo/assembly/assembly-evaluation', description: '图清理对组装质量的影响评估' },
+  ]}
+/>

@@ -4,7 +4,8 @@ title: "Minimap2 比对算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Minimap2 是当前最广泛使用的长读长比对工具。其核心 seed-chain-align 框架通过粗定位-链式筛选-精细比对的三阶段策略，将长读长比对从 O(m×n) 降低到近线性复杂度。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     'Chaining：使用动态规划将 seeds 聚类为共线性链，过滤假阳性匹配',
     'Alignment：在链约束区域内使用带状动态规划进行精确比对',
     '三阶段渐进策略平衡了速度、内存和准确性'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '重叠检测算法', href: '/wiki-bioinfo/long-read/overlap-detection', description: 'Minimizer 索引的核心概念' },
+    { title: '序列比对基础', href: '/wiki-bioinfo/alignment/index', description: '动态规划比对的通用框架' },
+    { title: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '长读长测序技术的特点' },
   ]}
 />
 
@@ -380,10 +389,11 @@ Minimap2 支持多种模式：
 - Li, H. (2016). Minimap and miniasm: fast mapping and de novo assembly for noisy long sequences. *Bioinformatics*, 32(14), 2103-2110.
 - Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
 
-## 相关页面
-
-- [重叠检测算法](./overlap-detection.mdx)
-- [Consensus 算法](./consensus-algorithm.mdx)
-- [PacBio 与 Nanopore](./pacbio-nanopore.mdx)
-- [序列比对基础](../alignment/index.mdx)
-- [序列比对](../alignment/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '重叠检测算法', to: '/wiki-bioinfo/long-read/overlap-detection', description: 'Minimap 的核心思想来源' },
+    { title: 'Consensus 算法', to: '/wiki-bioinfo/long-read/consensus-algorithm', description: '利用比对结果进行序列纠错' },
+    { title: 'PacBio 与 Nanopore', to: '/wiki-bioinfo/long-read/pacbio-nanopore', description: 'Minimap2 支持的技术平台' },
+    { title: '序列比对基础', to: '/wiki-bioinfo/alignment/index', description: '比对的通用算法框架' }
+  ]}
+/>

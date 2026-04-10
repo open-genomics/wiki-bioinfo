@@ -1,0 +1,235 @@
+---
+title: "Ensembl 基因组注释：基因、转录本与变异注释体系"
+description: "Ensembl 如何组织基因组注释、转录本层级对象和多物种比较基因组学资源"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="Ensembl 是领先的基因组注释数据库，提供 gene/transcript/protein 层级结构、变异注释和多物种比较基因组学。理解其对象体系（Ensembl ID）、注释流程（automated annotation）和版本系统，是 RNA-seq 定量和变异解释的基础。"
+  bullets={[
+    'Ensembl 使用稳定的 Ensembl ID 体系（ENSG/ENST/ENSP），不依赖易变的基因符号',
+    '注释流程自动化，定期更新版本号（如 GRCh38.p14 + Ensembl v110）',
+    '提供基因、转录本、蛋白质、变异、调控等多层级注释',
+    '支持多物种比较（Comparative Genomics）和同源基因映射',
+    'VEP（Variant Effect Predictor）是标准的变异功能注释工具',
+  ]}
+/>
+
+## 是什么
+
+**Ensembl** 是欧洲分子生物学实验室（EMBL-EBI）维护的基因组注释数据库，提供自动化的基因注释、转录本结构、变异影响预测和多物种比较基因组学资源。
+
+### 核心资源概览
+
+| 资源 | 对象类型 | 标识符 | 典型用途 |
+|------|---------|--------|---------|
+| **Ensembl Genes** | 基因注释记录 | ENSG（如 ENSG00000141510） | 查询基因结构、转录本列表 |
+| **Ensembl Transcripts** | 转录本模型 | ENST（如 ENST00000269305） | 获取转录本序列、外显子结构 |
+| **Ensembl Proteins** | 蛋白质产物 | ENSP（如 ENSP00000269305） | 获取蛋白序列、功能域 |
+| **Ensembl Variants** | 遗传变异 | rsID / Ensembl 变异 ID | 查询变异功能影响 |
+| **Ensembl Regulation** | 调控元件 | Regulatory Feature ID | 查询启动子、增强子区域 |
+| **Ensembl Compara** | 同源基因 | 多物种同源关系 | 跨物种基因映射 |
+
+## 为什么重要
+
+Ensembl 是生物信息学分析的**注释标准来源**：
+
+- **RNA-seq 定量**：featureCounts、HTSeq 使用 Ensembl GTF 进行基因/转录本计数
+- **变异注释**：VEP 基于 Ensembl 注释体系预测变异功能影响
+- **转录本层级分析**：Ensembl 提供完整的 gene → transcript → protein 结构
+- **跨物种比较**：Ensembl Compara 支持同源基因识别和系统发育分析
+
+**关键认知**：Ensembl 使用**自动化注释流程**，与 NCBI 的人工审编（RefSeq）形成互补。两者注释结果可能不同，但都广泛使用。
+
+<PrerequisitesBox
+  items={[
+    '理解中心法则：基因 → 转录本 → 蛋白质的层级关系',
+    '了解 GTF/GFF 格式：Ensembl 注释的标准输出格式',
+    '了解参考基因组版本：GRCh38/hg38 是当前标准',
+  ]}
+/>
+
+## Ensembl ID 体系
+
+### 稳定标识符
+
+Ensembl 使用稳定的 ID 体系，不随基因符号变化而变化：
+
+| ID 类型 | 前缀 | 示例 | 说明 |
+|---------|------|------|------|
+| **Gene** | ENSG | ENSG00000141510 | TP53 基因 |
+| **Transcript** | ENST | ENST00000269305 | TP53 转录本 1 |
+| **Protein** | ENSP | ENSP00000269305 | TP53 蛋白产物 1 |
+| **Exon** | ENSE | ENSE00000123456 | 外显子 |
+
+### Ensembl ID vs Gene Symbol
+
+| 特性 | Ensembl ID | Gene Symbol |
+|------|-----------|-------------|
+| **稳定性** | 稳定，不随注释变化 | 可能随注释更新而变化 |
+| **唯一性** | 唯一对应一个对象 | 可能存在歧义 |
+| **层级** | 区分 gene/transcript/protein | 通常只指基因层 |
+| **推荐使用** | 分析流程和数据库映射 | 人工阅读和文献交流 |
+
+**TP53 示例**：
+- Gene: `ENSG00000141510` (TP53)
+- Transcripts: `ENST00000269305` (canonical), `ENST00000503591`, `ENST00000504986`, ...
+- 一个基因符号对应多个转录本，转录本之间功能可能不同
+
+## Ensembl 注释流程
+
+### 自动化注释管线
+
+Ensembl 使用自动化流程进行基因组注释：
+
+1. **证据收集**：整合 RNA-seq、cDNA、蛋白质同源性等证据
+2. **基因预测**：使用基因预测算法（如 AUGUSTUS）识别基因结构
+3. **转录本构建**：基于证据构建转录本模型
+4. **功能注释**：添加蛋白域、GO 注释、通路信息
+5. **变异注释**：预测变异对转录本的影响
+
+### 注释版本系统
+
+Ensembl 版本号随每次更新递增：
+
+| 版本 | 发布日期 | 主要变化 |
+|------|---------|---------|
+| **Ensembl 110** | 2024 | 最新人类注释，新增转录本 |
+| **Ensembl 109** | 2023 | 多物种更新 |
+| **Ensembl 75** | 2013 | GRCh38 首次支持 |
+
+**关键注意**：不同 Ensembl 版本的注释可能不同（新增/删除转录本、调整基因边界）。分析中应记录使用的版本号。
+
+## Ensembl GTF 注释文件
+
+Ensembl 提供标准 GTF 文件用于下游分析：
+
+```
+chr1  HAVANA  gene  11869  14409  .  +  .  gene_id "ENSG00000223972"; gene_name "DDX11L1"; gene_biotype "transcribed_unprocessed_pseudogene";
+chr1  HAVANA  transcript  11869  14409  .  +  .  gene_id "ENSG00000223972"; transcript_id "ENST00000456328"; gene_name "DDX11L1";
+chr1  HAVANA  exon  11869  12227  .  +  .  gene_id "ENSG00000223972"; transcript_id "ENST00000456328"; exon_number "1";
+```
+
+### 关键字段
+
+| 属性 | 说明 |
+|------|------|
+| `gene_id` | Ensembl Gene ID（ENSG） |
+| `gene_name` | Gene Symbol（如 TP53） |
+| `transcript_id` | Ensembl Transcript ID（ENST） |
+| `gene_biotype` | 基因生物类型（protein_coding、lncRNA、pseudogene 等） |
+| `exon_number` | 外显子序号 |
+
+### Canonical Transcript
+
+Ensembl 为每个基因指定一个**canonical transcript**（代表转录本），选择标准包括：
+
+- 最长 CDS（编码序列）
+- 最长蛋白质产物
+- 包含所有常见外显子
+
+**使用建议**：在基因-level 分析中，使用 canonical transcript 作为代表；在转录本-level 分析中，保留所有转录本。
+
+## VEP：变异效应预测器
+
+**VEP（Variant Effect Predictor）** 是 Ensembl 提供的变异功能注释工具：
+
+### 输入输出
+
+- **输入**：VCF 格式或变异列表（chr:pos ref/alt）
+- **输出**：每个变异的功能影响注释
+
+### 注释内容
+
+| 注释类型 | 说明 |
+|---------|------|
+| **Consequence** | 变异类型（missense、synonymous、frameshift 等） |
+| **Gene/Symbol** | 影响的基因和转录本 |
+| **SIFT/PolyPhen** | 致病性预测分数 |
+| **CADD** | 综合致病性分数 |
+| **ClinVar** | 临床意义（如有） |
+| **gnomAD** | 群体频率（如有） |
+
+### 使用方式
+
+```bash
+# 命令行
+vep -i input.vcf -o output.vcf --cache --everything
+
+# Web 界面
+# https://www.ensembl.org/Tools/VEP
+```
+
+## 多物种比较基因组学
+
+Ensembl Compara 提供跨物种比较资源：
+
+| 功能 | 说明 |
+|------|------|
+| **Orthologs** | 直系同源基因（不同物种间的同源基因） |
+| **Paralogs** | 旁系同源基因（同一物种内的复制基因） |
+| **Gene Trees** | 基因家族系统发育树 |
+| **Whole-genome alignment** | 全基因组比对 |
+
+**应用示例**：将小鼠基因 `Trp53` 映射到人类 `TP53`，进行跨物种功能比较。
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    'RNA-seq 定量：下载 Ensembl GTF，与参考基因组 FASTA 配合使用',
+    '变异注释：VEP 或 SnpEff 使用 Ensembl 注释预测变异功能影响',
+    '同源基因映射：Ensembl BioMart 批量查询跨物种同源基因',
+    '基因组浏览器：Ensembl Genome Browser 可视化基因结构和变异证据',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**Ensembl = NCBI**：两者是不同的注释体系，Ensembl 使用自动化流程，NCBI 有人工审编（RefSeq）。',
+    '**Gene Symbol 足够**：一个 Gene Symbol 可能对应多个转录本，需要使用 Ensembl ID 区分。',
+    '**注释版本无关紧要**：不同 Ensembl 版本的基因注释可能不同，应记录版本号。',
+    '**Canonical transcript = 唯一重要转录本**：canonical 只是代表，其他转录本可能有重要功能。',
+    '**VEP 注释 = 绝对真理**：VEP 预测基于计算模型，需要实验验证功能影响。',
+  ]}
+/>
+
+## 本章小结
+
+- Ensembl 是领先的**自动化基因组注释**数据库
+- 使用稳定的 Ensembl ID 体系（ENSG/ENST/ENSP），区分基因/转录本/蛋白质层级
+- 提供标准 GTF 文件用于 RNA-seq 定量和变异注释
+- VEP 是标准的变异功能注释工具
+- Ensembl Compara 支持多物种比较基因组学
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'NCBI 资源体系',
+      to: '/docs/databases/ncbi',
+      label: '对比资源',
+      description: 'NCBI Gene/RefSeq 与 Ensembl 的注释体系比较。',
+    },
+    {
+      title: 'GTF/GFF/BED 格式',
+      to: '/docs/formats/gtf-gff-bed',
+      label: '数据格式',
+      description: 'Ensembl GTF 文件的结构和坐标系统。',
+    },
+    {
+      title: 'RNA-seq 定量分析',
+      to: '/docs/workflows/rna-seq',
+      label: '应用层',
+      description: '使用 Ensembl GTF 进行基因表达定量。',
+    },
+  ]}
+/>

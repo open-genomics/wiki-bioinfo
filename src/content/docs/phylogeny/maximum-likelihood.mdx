@@ -4,7 +4,9 @@ title: "Maximum Likelihood算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Maximum Likelihood（最大似然）通过在给定演化模型下寻找最可能产生观测序列的系统发育树，使用Pruning算法高效计算似然值，是现代系统发育分析的主流方法。"
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心思想是在给定替换模型下，找到使观测数据概率最大的树和参数',
     'Pruning算法（Felsenstein的pruning algorithm）通过动态规划高效计算似然值',
     '是理解模型化系统发育推断的关键，连接了概率论和进化生物学',
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: 'Neighbor-Joining 算法', href: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '距离矩阵建树的基础方法' },
+    { title: 'Parsimony 算法', href: '/wiki-bioinfo/phylogeny/parsimony', description: '位点级系统发育推断的对比方法' },
+    { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'ML 分析的输入数据' },
   ]}
 />
 
@@ -417,10 +427,11 @@ Maximum Likelihood在真实工具中的应用：
 - Felsenstein, J. (2004). *Inferring phylogenies*. Sinauer associates.
 - Yang, Z. (2006). *Computational molecular evolution*. Oxford University Press.
 
-## 相关页面
-
-- [Parsimony](./parsimony.mdx)
-- [距离方法概览](./distance-methods.mdx)
-- [UPGMA算法](./upgma.mdx)
-- [Neighbor-Joining算法](./neighbor-joining.mdx)
-- [多序列比对（MSA）](../alignment/multiple-sequence-alignment.mdx)
+<RelatedLinks
+  links={[
+    { title: 'Parsimony 算法', to: '/wiki-bioinfo/phylogeny/parsimony', description: '无需概率模型的最简变化方法' },
+    { title: 'Neighbor-Joining 算法', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: 'ML 常用的初始化方法' },
+    { title: 'UPGMA 算法', to: '/wiki-bioinfo/phylogeny/upgma', description: '基于分子钟假设的层次聚类方法' },
+    { title: '多序列比对（MSA）', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'ML 分析的输入数据准备' }
+  ]}
+/>

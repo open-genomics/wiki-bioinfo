@@ -4,8 +4,8 @@ title: "联合非负矩阵分解（Joint NMF）"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
-
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Joint NMF 通过在多个组学矩阵间共享基矩阵，强制它们在低维空间对齐，是多组学整合中最直观的矩阵分解方法。"
@@ -13,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     '核心思想是假设不同组学共享某些潜在的生物学因子',
     '非负约束使结果具有生物学可解释性',
     '是理解多组学矩阵分解方法的入门算法',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { title: '多组学整合策略', to: '/wiki-bioinfo/multi-omics/integration-strategies' },
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms' },
+    { title: '典型相关分析', to: '/wiki-bioinfo/multi-omics/canonical-correlation-analysis' },
   ]}
 />
 
@@ -128,9 +136,9 @@ $$
 
 **算法1：Joint NMF 初始化**
 
-```
-输入：K个组学矩阵 X^\{(1)\}, ..., X^\{(K)\}，潜在维度 r
-输出：初始 W, H^\{(1)\}, ..., H^\{(K)\}
+```text
+输入：K个组学矩阵 X^{(1)}, ..., X^{(K)}，潜在维度 r
+输出：初始 W, H^{(1)}, ..., H^{(K)}
 
 1. 对每个组学 k：
    a. 使用标准 NMF 分解 X^\{(k)\} = W^\{(k)\} H^\{(k)\}
@@ -150,9 +158,9 @@ $$
 
 **算法2：Joint NMF 交替最小化**
 
-```
-输入：K个组学矩阵 X^\{(1)\}, ..., X^\{(K)\}，初始 W, H^\{(1)\}, ..., H^\{(K)\}
-输出：优化后的 W, H^\{(1)\}, ..., H^\{(K)\}
+```text
+输入：K个组学矩阵 X^{(1)}, ..., X^{(K)}，初始 W, H^{(1)}, ..., H^{(K)}
+输出：优化后的 W, H^{(1)}, ..., H^{(K)}
 
 重复直到收敛：
 1. 固定 H^\{(1)\}, ..., H^\{(K)\}，更新 W：
@@ -466,10 +474,11 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
 - Yang, Z., & Michailidis, G. (2016). "A non-negative matrix factorization method for detecting modules in heterogeneous multi-omics data"
 - Argelaguet, R., et al. (2018). "Multi-Omics Factor Analysis-a framework for unsupervised integration of multi-omics data sets"
 
-## 相关页面
-
-- [整合算法概览](./integration-algorithms.md)
-- [典型相关分析](./canonical-correlation-analysis.mdx)
-- [MOFA+](./mofa-plus.mdx)
-- [相似性网络融合](./similarity-network-fusion.mdx)
-- [机器学习基础](../ml-bioinfo/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '整合算法概览', to: '/wiki-bioinfo/multi-omics/integration-algorithms', description: 'Joint NMF 在整合算法中的定位' },
+    { title: '典型相关分析', to: '/wiki-bioinfo/multi-omics/canonical-correlation-analysis', description: '优化跨组学相关性的替代方法' },
+    { title: 'MOFA+', to: '/wiki-bioinfo/multi-omics/mofa-plus', description: '因子分析框架下的整合方法' },
+    { title: '相似性网络融合', to: '/wiki-bioinfo/multi-omics/similarity-network-fusion', description: '基于图的整合方法' }
+  ]}
+/>

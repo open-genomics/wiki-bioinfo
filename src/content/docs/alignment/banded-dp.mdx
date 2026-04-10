@@ -4,7 +4,8 @@ title: "带状动态规划"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +13,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '核心假设是两条序列的相似度较高，最优路径不会偏离主对角线太远',
     '它是 seed-and-extend 策略中扩展阶段常用的优化方法',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: 'Needleman-Wunsch 算法', href: '/wiki-bioinfo/alignment/needleman-wunsch', description: '带状 DP 所基于的标准全局比对算法' },
+    { title: 'Smith-Waterman 算法', href: '/wiki-bioinfo/alignment/smith-waterman', description: '带状 DP 同样适用于局部比对' },
+    { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '理解 DP 递推关系的基础' },
   ]}
 />
 
@@ -273,3 +282,13 @@ $$
 - [Smith-Waterman 算法](./smith-waterman.mdx)
 - [BLAST：基于 seed-and-extend 的局部搜索](./blast.mdx)
 - [Minimap2 比对算法](../long-read/minimap2-alignment.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '带状 DP 所基于的标准全局比对动态规划算法' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '局部比对的标准动态规划算法，同样可以使用带状优化' },
+    { title: 'Hirschberg 算法', to: '/wiki-bioinfo/alignment/hirschberg', description: '将全局比对空间复杂度优化到线性，与带状 DP 互补' },
+    { title: '编辑距离', to: '/wiki-bioinfo/alignment/edit-distance', description: '序列比对的最简形式，理解 DP 递推关系的起点' },
+    { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: '基于 seed-and-extend 的实际工具，扩展阶段常用带状 DP' },
+  ]}
+/>

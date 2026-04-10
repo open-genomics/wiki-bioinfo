@@ -5,6 +5,8 @@ title: "分治算法基础"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '先理解归并排序的分治思想，再看快速排序的随机化策略会更顺。',
     '分治思想也体现在系统发育树构建、多重序列比对等生物信息学任务中。',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' },
+    { name: '随机化算法', href: '/wiki-bioinfo/foundations/randomized-algorithms' },
+    { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
   ]}
 />
 
@@ -288,7 +298,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 标准的动态规划比对算法（如 Needleman-Wunsch）需要 $O(nm)$ 的空间来存储得分矩阵。
 - 对于两条长度为 100,000 的序列，矩阵需要 $10^{10}$ 个单元格。
 - 假设每个单元格 4 字节，则需要 **40 GB** 内存。
-- 这种“空间爆炸”使得长序列比对在普通机器上变得不可能。
+- 这种"空间爆炸"使得长序列比对在普通机器上变得不可能。
 
 ### Hirschberg 算法的直觉
 Hirschberg 算法的核心发现是：虽然计算最优得分需要整张表，但我们可以在 $O(n)$ 空间内计算出**任意一列的得分向量**。
@@ -425,9 +435,12 @@ KD-tree 用于高维空间查询：
 - Algorithm Design, Kleinberg & Tardos
 - 系统发育树构建相关教材
 
-## 相关页面
-
-- [算法与复杂度](./algorithms-and-complexity.mdx)
-- [概率、图与动态规划预备](./probability-and-graphs.mdx)
-- [系统发育树概览](../phylogeny/index.mdx)
-- [多重序列比对](../alignment/multiple-sequence-alignment.mdx)
+<RelatedLinks
+  links={[
+    { title: '动态规划基础', to: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: 'DP 与分治都是处理子问题的范式，核心区别在于子问题是否重叠。' },
+    { title: '随机化算法', to: '/wiki-bioinfo/foundations/randomized-algorithms', description: '随机化快速排序是分治与随机化的经典结合。' },
+    { title: '系统发育树概览', to: '/wiki-bioinfo/phylogeny/index', description: 'UPGMA 等距离法本质上是自底向上的分治策略。' },
+    { title: '多重序列比对', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'ClustalW 的渐进式比对是分治思想在序列分析中的典型应用。' },
+    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '分治算法的复杂度分析框架与主定理。' },
+  ]}
+/>

@@ -4,7 +4,9 @@ title: "编辑距离"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
 <SummaryBox
@@ -12,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
   bullets={[
     '先掌握状态定义和递推关系，再去看全局/局部比对会更顺。',
     '它不是现代比对工具的完整算法，但几乎是所有后续打分模型的起点。',
+  ]}
+/>
+
+<PrerequisitesBox
+  links={[
+    { title: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: 'DP 的核心思想与最优子结构' },
+    { title: '最长公共子序列', href: '/wiki-bioinfo/alignment/longest-common-subsequence', description: '与编辑距离有直接数学关系' },
+    { title: '曼哈顿游客问题', href: '/wiki-bioinfo/foundations/manhattan-tourist', description: '理解 DP 网格路径的几何直观' },
   ]}
 />
 
@@ -23,7 +33,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 - 删除（delete）
 - 替换（substitute）
 
-如果每种操作的代价都设为 1，那么编辑距离描述的是两个字符串之间最直接的“变换成本”。
+如果每种操作的代价都设为 1，那么编辑距离描述的是两个字符串之间最直接的"变换成本"。
 
 ## 要解决什么生物信息学问题
 
@@ -33,7 +43,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 - 某个 read 是否可能来自某段参考基因组？
 - 一个变异位点更像是替换、插入还是缺失？
 
-编辑距离把这些“相似不相似”的直觉问题，转成了一个可以计算、可以优化的问题。虽然真实的序列比对通常会使用更复杂的打分体系，但编辑距离依然是理解比对算法的最短路径。
+编辑距离把这些"相似不相似"的直觉问题，转成了一个可以计算、可以优化的问题。虽然真实的序列比对通常会使用更复杂的打分体系，但编辑距离依然是理解比对算法的最短路径。
 
 ## 数学模型
 
@@ -132,7 +142,7 @@ $$
 - **最优子结构**：大问题的最优解由小问题最优解组成；
 - **重叠子问题**：很多中间状态会被反复访问。
 
-例如在比对两个长序列时，“前 50 个字符与前 60 个字符的最优代价”可能会被多个后续状态共同依赖。动态规划通过缓存中间结果避免重复计算。
+例如在比对两个长序列时，"前 50 个字符与前 60 个字符的最优代价"可能会被多个后续状态共同依赖。动态规划通过缓存中间结果避免重复计算。
 
 ## 复杂度与适用前提
 
@@ -160,7 +170,7 @@ $$
 - 拼接、纠错和模糊匹配中的基础距离概念；
 - 教材中 Needleman–Wunsch 和 Smith–Waterman 的出发点。
 
-可以把它理解成“最简单的序列比对模型”。后面的全局比对、局部比对、打分矩阵和 affine gap penalty，都是在这个模型上不断加入更真实的生物学假设。
+可以把它理解成"最简单的序列比对模型"。后面的全局比对、局部比对、打分矩阵和 affine gap penalty，都是在这个模型上不断加入更真实的生物学假设。
 
 ## 常见误区
 
@@ -193,3 +203,13 @@ $$
 - [打分矩阵与 gap 罚分](./scoring-matrices.mdx)
 - [索引结构概览](../sequence/indexing.mdx)
 - [RNA-seq 工作流概览](../workflows/rna-seq.mdx)
+
+<RelatedLinks
+  links={[
+    { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '在编辑距离基础上引入打分矩阵的全局比对算法' },
+    { title: '最长公共子序列', to: '/wiki-bioinfo/alignment/longest-common-subsequence', description: '与编辑距离有直接数学关系的序列相似性度量' },
+    { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '从编辑距离扩展而来的局部比对算法' },
+    { title: '全局比对与局部比对', to: '/wiki-bioinfo/alignment/global-local', description: '比对策略的选择与适用场景' },
+    { title: '打分矩阵与 gap 罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '编辑距离的简化假设如何被更真实的打分模型替代' },
+  ]}
+/>

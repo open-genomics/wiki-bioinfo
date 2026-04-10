@@ -4,7 +4,8 @@ title: "重叠检测算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     'Minimap 的 minimizer 采样通过选取代表性 k-mer 构建索引',
     'MHAP 的 MinHash 通过概率估计快速筛选候选',
     '两类方法都基于"共享特征暗示重叠"的核心思想'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '长读长组装', href: '/wiki-bioinfo/long-read/long-read-assembly', description: '重叠检测在组装中的作用' },
+    { title: 'k-mer 与序列索引', href: '/wiki-bioinfo/alignment/k-mer-indexing', description: 'k-mer 索引的基础概念' },
+    { title: '序列比对基础', href: '/wiki-bioinfo/alignment/index', description: '局部比对的基本原理' },
   ]}
 />
 
@@ -325,9 +334,11 @@ Minimap2 是当前最流行的长读长比对工具，它扩展了原始 Minimap
 - Berlin, K., et al. (2015). Assembling large genomes with single-molecule sequencing and locality-sensitive hashing. *Nature biotechnology*, 33(6), 623-630.
 - Roberts, M., et al. (2004). Reducing storage requirements for biological sequence comparison. *Bioinformatics*, 20(18), 3363-3369.
 
-## 相关页面
-
-- [长读长组装](./long-read-assembly.mdx)
-- [Minimap2 比对算法](./minimap2-alignment.mdx)
-- [consensus 算法](./consensus-algorithm.mdx)
-- [序列比对基础](../alignment/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '长读长组装', to: '/wiki-bioinfo/long-read/long-read-assembly', description: '重叠检测在组装中的核心作用' },
+    { title: 'Minimap2 比对算法', to: '/wiki-bioinfo/long-read/minimap2-alignment', description: '基于 minimizer 的快速比对' },
+    { title: 'Consensus 算法', to: '/wiki-bioinfo/long-read/consensus-algorithm', description: '利用重叠信息进行序列纠错' },
+    { title: '序列比对基础', to: '/wiki-bioinfo/alignment/index', description: '比对算法的通用框架' }
+  ]}
+/>

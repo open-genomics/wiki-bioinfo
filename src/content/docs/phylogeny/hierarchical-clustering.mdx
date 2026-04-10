@@ -59,11 +59,11 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 3. 距离更新策略 (Linkage)
 
-如何定义“两个簇之间的距离”是算法的核心，不同的策略会产生完全不同的树形：
+如何定义"两个簇之间的距离"是算法的核心，不同的策略会产生完全不同的树形：
 
 | 策略 | 定义 | 特点 |
 | :--- | :--- | :--- |
-| **Single Linkage** | 两个簇中最近点对的距离 | 易产生“链状”结构，对噪声敏感。 |
+| **Single Linkage** | 两个簇中最近点对的距离 | 易产生"链状"结构，对噪声敏感。 |
 | **Complete Linkage** | 两个簇中最远点对的距离 | 倾向于产生紧凑的球形簇。 |
 | **Average Linkage** | 所有点对距离的算术平均 | **即 UPGMA 的核心**，在稳健性上表现均衡。 |
 
@@ -89,9 +89,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PitfallsBox
   items={[
-    '不要过度解读根节点：层次聚类的根节点通常只是最后合并的结果，不一定代表“祖先”。',
+    '不要过度解读根节点：层次聚类的根节点通常只是最后合并的结果，不一定代表"祖先"。',
     '预处理至关重要：由于基于距离，数据是否经过 Log 转换或标准化会极大地改变聚类结果。',
-    'Chaining Effect：使用 Single Linkage 时，要警惕异常值将原本不相关的簇“钩”在一起。'
+    'Chaining Effect：使用 Single Linkage 时，要警惕异常值将原本不相关的簇"钩"在一起。'
   ]}
 />
 

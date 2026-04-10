@@ -1,0 +1,221 @@
+---
+title: "UniProt 蛋白质知识库：序列、功能与注释整合"
+description: "UniProt 如何组织蛋白质序列、功能注释、结构域和跨数据库映射资源"
+---
+
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
+<SummaryBox
+  summary="UniProt 是蛋白质序列与功能注释的统一入口。理解 Swiss-Prot（人工审编）与 TrEMBL（自动注释）的质量差异、Accession 体系、以及蛋白层级注释（功能、结构域、PTM、互作），是从基因走向功能解释的关键。"
+  bullets={[
+    'Swiss-Prot：高质量人工审编，经过实验验证的蛋白质记录',
+    'TrEMBL：自动注释，覆盖更广但质量未经人工确认',
+    'Accession（如 P04637）是稳定的蛋白质标识符',
+    '提供功能、结构域、翻译后修饰（PTM）、亚细胞定位等注释',
+    '跨数据库映射：连接基因数据库（Ensembl/NCBI）、结构数据库（PDB）、通路数据库（KEGG/Reactome）',
+  ]}
+/>
+
+## 是什么
+
+**UniProt（Universal Protein Resource）** 是全球最全面的蛋白质序列与功能注释数据库，由 EMBL-EBI、SIB 和 PIR 联合维护。
+
+### 核心组成
+
+| 子库 | 质量 | 规模 | 说明 |
+|------|------|------|------|
+| **Swiss-Prot** | 人工审编（Reviewed） | ~56 万条 | 高质量，经过实验验证和文献确认 |
+| **TrEMBL** | 自动注释（Unreviewed） | ~2.2 亿条 | 覆盖广，但未经人工确认 |
+
+### 核心信息
+
+每条 UniProt 记录包含：
+
+- **蛋白质序列**：氨基酸序列（FASTA 格式）
+- **功能注释**：分子功能、生物学过程、细胞组分（Gene Ontology）
+- **结构域**：保守功能域（Pfam、InterPro）
+- **翻译后修饰（PTM）**：磷酸化、乙酰化、泛素化等
+- **亚细胞定位**：蛋白质在细胞中的位置
+- **变异信息**：自然变异、致病变变、药物反应
+- **跨数据库链接**：PDB、KEGG、Reactome、ClinVar 等
+
+## 为什么重要
+
+UniProt 是从**基因/转录本走向蛋白质功能解释**的关键桥梁：
+
+- **蛋白质功能注释**：提供实验验证的分子功能和生物学过程
+- **结构域识别**：保守功能域暗示蛋白质的催化活性或结合特性
+- **变异解释**：氨基酸替换如何影响蛋白质功能或稳定性
+- **药物靶点**：已知药物-蛋白质相互作用信息
+- **跨物种映射**：直系同源蛋白质的功能保守性
+
+**关键认知**：基因-level 注释（Ensembl/NCBI Gene）告诉你"这个基因在哪里"，UniProt 告诉你"这个蛋白质做什么"。
+
+<PrerequisitesBox
+  items={[
+    '理解中心法则：DNA → RNA → 蛋白质的翻译过程',
+    '了解氨基酸编码和蛋白质基本结构',
+    '如果不熟悉基因数据库，先阅读 Ensembl 或 NCBI 资源页面',
+  ]}
+/>
+
+## Accession 体系
+
+### 稳定的蛋白质标识符
+
+UniProt Accession 是稳定的标识符，不随蛋白质命名变化而变化：
+
+| Accession | 示例 | 说明 |
+|-----------|------|------|
+| **6 位字符** | P04637 | 经典格式（如人类 TP53 蛋白） |
+| **10 位字符** | A0A024B7W1 | 扩展格式（新测序物种） |
+
+### Accession vs 蛋白质名称
+
+| 特性 | Accession | 蛋白质名称 |
+|------|-----------|-----------|
+| **稳定性** | 稳定，不变化 | 可能随命名约定变化 |
+| **唯一性** | 唯一对应一条蛋白质 | 可能存在同义命名 |
+| **推荐使用** | 数据库查询和程序分析 | 人工阅读和文献交流 |
+
+**TP53 蛋白示例**：
+- Accession: `P04637`
+- 蛋白质名称: Cellular tumor antigen p53
+- 基因名称: TP53
+- 物种: Human
+
+## Swiss-Prot vs TrEMBL
+
+### 质量差异
+
+| 特性 | Swiss-Prot | TrEMBL |
+|------|-----------|--------|
+| **注释方式** | 人工审编 + 实验验证 | 自动注释（计算预测） |
+| **置信度** | 高，经过文献确认 | 中等，需要实验验证 |
+| **覆盖度** | 较小（~56 万条） | 很大（~2.2 亿条） |
+| **更新频率** | 持续人工更新 | 自动批量更新 |
+
+### 何时使用哪个
+
+| 场景 | 推荐 | 原因 |
+|------|------|------|
+| 查询已知人类蛋白功能 | Swiss-Prot | 高质量人工注释 |
+| 新测序物种蛋白质 | TrEMBL | Swiss-Prot 可能尚未覆盖 |
+| 大规模批量分析 | TrEMBL | 覆盖更全 |
+| 临床或药物开发 | Swiss-Prot | 置信度高 |
+
+**建议**：优先使用 Swiss-Prot，对于未覆盖的蛋白质再查询 TrEMBL。
+
+## 蛋白质注释层级
+
+### 1. 功能注释（Function）
+
+描述蛋白质的分子功能和生物学角色：
+
+```
+FUNCTION: Acts as a tumor suppressor in many tumor types; 
+induces growth arrest or apoptosis depending on the 
+physiological circumstances and cell type.
+```
+
+### 2. 结构域（Domains）
+
+保守功能域暗示蛋白质的催化或结合活性：
+
+| 结构域 | 位置 | 功能 |
+|--------|------|------|
+| **Transactivation domain** | 1-43 | 转录激活 |
+| **DNA-binding domain** | 94-292 | DNA 结合 |
+| **Tetramerization domain** | 323-356 | 四聚体形成 |
+
+### 3. 翻译后修饰（PTM）
+
+| PTM 类型 | 位置 | 功能影响 |
+|---------|------|---------|
+| **Phosphorylation** | Ser-15, Ser-20 | 稳定蛋白质，激活转录 |
+| **Acetylation** | Lys-382 | 增强 DNA 结合 |
+| **Ubiquitination** | Lys-48 | 蛋白酶体降解 |
+
+### 4. 变异与疾病
+
+自然变异和致病变异信息：
+
+```
+VARIANT: Pro 72 → Arg (dbSNP:rs1042522)
+  - Associated with increased apoptosis and cancer susceptibility
+  
+DISEASE: Mutations in TP53 are found in >50% of human cancers
+```
+
+## 跨数据库映射
+
+UniProt 充当**蛋白质世界的中心枢纽**，连接其他数据库：
+
+| 目标数据库 | 映射内容 | 示例 |
+|-----------|---------|------|
+| **Ensembl/NCBI Gene** | 基因 → 蛋白质 | ENSG00000141510 → P04637 |
+| **PDB** | 蛋白质 → 三维结构 | P04637 → 1TUP（p53 tetramer） |
+| **KEGG/Reactome** | 蛋白质 → 通路 | P04637 → hsa04115（p53 signaling） |
+| **ClinVar** | 变异 → 临床意义 | P04637:Arg248Trp → Pathogenic |
+| **DrugBank** | 蛋白质 → 药物 | P04637 → 药物靶点 |
+
+## 与真实工具或流程的连接
+
+<ToolMappingBox
+  items={[
+    '蛋白质序列获取：UniProt 下载 FASTA 序列用于序列分析或比对',
+    '功能注释映射：通过 UniProt ID 批量获取 GO 注释和通路信息',
+    '变异解释：氨基酸替换查询 UniProt 了解功能影响和临床意义',
+    '结构映射：UniProt → PDB 交叉引用获取已知三维结构',
+    '药物靶点：查询已知药物-蛋白质相互作用信息',
+  ]}
+/>
+
+## 常见概念误区
+
+<PitfallsBox
+  items={[
+    '**Swiss-Prot = TrEMBL**：两者质量差异显著，Swiss-Prot 经过人工确认，TrEMBL 是自动注释。',
+    '**蛋白质名称是稳定标识符**：应使用 Accession（如 P04637），而非蛋白质名称。',
+    '**基因注释 = 蛋白质注释**：基因-level 注释告诉你位置，蛋白质-level 注释告诉你功能。',
+    '**UniProt 只有人类蛋白质**：UniProt 覆盖所有物种，包括微生物和植物。',
+    '**PTM 信息适用于所有条件**：PTM 是条件依赖的，不同细胞状态或刺激下可能不同。',
+  ]}
+/>
+
+## 本章小结
+
+- UniProt 是**蛋白质序列与功能注释**的统一入口
+- Swiss-Prot（人工审编）质量高，TrEMBL（自动注释）覆盖广
+- Accession 是稳定的蛋白质标识符
+- 提供功能、结构域、PTM、变异、跨数据库映射等注释
+- 从基因走向蛋白质功能解释的关键桥梁
+
+## 相关页面
+
+<RelatedLinks
+  links={[
+    {
+      title: 'Ensembl 基因组注释',
+      to: '/docs/databases/ensembl',
+      label: '上游资源',
+      description: '从基因到蛋白质的映射：Ensembl → UniProt',
+    },
+    {
+      title: 'PDB 蛋白质结构数据库',
+      to: '/docs/databases/pdb',
+      label: '下游资源',
+      description: 'UniProt 蛋白质的三维结构信息。',
+    },
+    {
+      title: '蛋白质组学总览',
+      to: '/docs/proteomics/',
+      label: '应用层',
+      description: '大规模蛋白质研究与功能注释的实验方法。',
+    },
+  ]}
+/>

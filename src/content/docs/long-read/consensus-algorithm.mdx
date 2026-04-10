@@ -4,7 +4,8 @@ title: "Consensus 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <SummaryBox
   summary="Consensus 算法通过整合多条覆盖同一区域的 reads 信息，生成高质量共识序列。它是降低长读长测序错误率、提升组装质量的关键步骤。"
@@ -13,6 +14,14 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
     'Racon 使用部分顺序图（POA）和动态规划计算最优共识',
     'Medaka 使用神经网络直接从原始信号预测碱基',
     '共识算法同时解决组装 polishing 和 read 纠错问题'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { title: '重叠检测算法', href: '/wiki-bioinfo/long-read/overlap-detection', description: 'Consensus 依赖的 read 重叠关系' },
+    { title: '序列比对基础', href: '/wiki-bioinfo/alignment/index', description: '多序列比对的核心概念' },
+    { title: '长读长组装', href: '/wiki-bioinfo/long-read/long-read-assembly', description: '组装 polishing 的上下文' },
   ]}
 />
 
@@ -269,9 +278,11 @@ PacBio 生态使用不同的 consensus 算法：
 - Wick, R. R., et al. (2019). Integrating mapping, assembly and haplotype variant estimation of single-molecule sequencing data using the Medaka genome analysis toolkit. *bioRxiv*.
 - Lee, H., et al. (2014). Error correction and assembly complexity of single molecule sequencing reads. *BioRxiv*.
 
-## 相关页面
-
-- [长读长组装](./long-read-assembly.mdx)
-- [重叠检测算法](./overlap-detection.mdx)
-- [PacBio 与 Nanopore](./pacbio-nanopore.mdx)
-- [序列比对基础](../alignment/index.mdx)
+<RelatedLinks
+  links={[
+    { title: '长读长组装', to: '/wiki-bioinfo/long-read/long-read-assembly', description: 'Consensus 在组装 polishing 中的应用' },
+    { title: '重叠检测算法', to: '/wiki-bioinfo/long-read/overlap-detection', description: '组装前识别 read 重叠关系' },
+    { title: 'PacBio 与 Nanopore', to: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '长读长技术平台对比' },
+    { title: '序列比对基础', to: '/wiki-bioinfo/alignment/index', description: '比对算法的通用框架' }
+  ]}
+/>

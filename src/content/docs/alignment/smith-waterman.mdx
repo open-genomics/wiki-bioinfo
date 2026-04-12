@@ -4,8 +4,11 @@ title: "Smith-Waterman 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '打分矩阵与 gap 罚分', href: '/wiki-bioinfo/alignment/scoring-matrices', description: '影响局部比对结果的打分体系' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -234,14 +240,18 @@ AT
 
 ## 与 Needleman-Wunsch 的对比
 
-| 特性 | Needleman-Wunsch | Smith-Waterman |
-|------|------------------|----------------|
-| 比对类型 | 全局比对 | 局部比对 |
-| 边界条件 | `F[i][0] = i·g`, `F[0][j] = j·g` | `H[i][0] = 0`, `H[0][j] = 0` |
-| 递推公式 | 3 个选项 | 4 个选项（多一个 0） |
-| 回溯起点 | 固定在 `(m, n)` | 矩阵中的最大值位置 |
-| 回溯终点 | 固定在 `(0, 0)` | 遇到 0 时停止 |
-| 适用场景 | 序列整体相似 | 寻找局部保守片段 |
+<ComparisonTable
+  leftTitle="Needleman-Wunsch"
+  rightTitle="Smith-Waterman"
+  rows={[
+    { aspect: '比对类型', left: '全局比对', right: '局部比对' },
+    { aspect: '边界条件', left: '`F[i][0] = i·g`, `F[0][j] = j·g`', right: '`H[i][0] = 0`, `H[0][j] = 0`' },
+    { aspect: '递推公式', left: '3 个选项', right: '4 个选项（多一个 0）' },
+    { aspect: '回溯起点', left: '固定在 `(m, n)`', right: '矩阵中的最大值位置' },
+    { aspect: '回溯终点', left: '固定在 `(0, 0)`', right: '遇到 0 时停止' },
+    { aspect: '适用场景', left: '序列整体相似', right: '寻找局部保守片段' }
+  ]}
+/>
 
 ## 与真实工具或流程的连接
 
@@ -257,23 +267,16 @@ Smith-Waterman 算法是：
 - **硬件加速**：使用 GPU 或 FPGA 加速 Smith-Waterman
 - **索引技术**：结合 FM-index 等索引结构缩小搜索空间
 
-## 常见误区
-
-### 局部比对一定比全局比对更先进
-
-不是。局部和全局比对解决的是不同的问题，选择哪种取决于具体任务。
-
-### Smith-Waterman 只能找到一个局部比对
-
-不是。矩阵中可能有多个最大值，每个对应一个或多个最优局部比对。
-
-### 得分最高的局部比对就是生物学意义最强的
-
-不一定。得分依赖于打分体系，生物学解释还需要考虑上下文和功能信息。
-
-### Smith-Waterman 已经过时
-
-不是。虽然大规模搜索常用启发式方法，但 Smith-Waterman 仍然是精确局部比对的标准算法，在小规模搜索和基准测试中仍有重要价值。
+<PitfallsBox
+  pitfalls={[
+    '局部比对一定比全局比对更先进：',
+    '不是。局部和全局比对解决的是不同的问题，选择哪种取决于具体任务。',
+    'Smith-Waterman 只能找到一个局部比对：',
+    '不是。矩阵中可能有多个最大值，每个对应一个或多个最优局部比对。',
+    '得分最高的局部比对就是生物学意义最强的：',
+    '不一定。得分依赖于打分体系，生物学解释还需要考虑上下文和功能信息。'
+  ]}
+/>
 
 ## 算法优化
 

@@ -9,7 +9,17 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+
+<PrerequisitesBox
+  items={[
+    {name: 'VCF/BCF 格式', href: '/docs/formats/vcf-bcf-format'},
+    {name: 'DNA-seq 变异检测总览', href: '/docs/variants/variant-calling-overview'},
+    {name: '变异注释与优先级排序', href: '/docs/clinical-variants/variant-annotation-and-prioritization'},
+  ]}
+/>
 
 <SummaryBox
   summary="ACMG/AMP 框架为临床变异解释提供了一套标准化的证据整合规则。其核心在于将不同来源的证据（群体频率、功能预测、家系分离、文献报道等）标准化为具有明确强度的条目，通过组合规则整合为 Pathogenic / Likely pathogenic / VUS / Likely benign / Benign 五级分类。"
@@ -19,6 +29,9 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
     '组合规则而非机械打分：特定证据组合对应特定分类，边界情况仍需专业判断',
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 变异解释的核心流程
 
@@ -368,27 +381,16 @@ ACMG 框架是变异解释的核心逻辑，但实际工作中还需要：
 
 因此，ACMG 框架是连接"原始变异数据"和"临床报告"的关键桥梁。
 
-## 常见误区
-
-### ACMG 是完全机械打分，不需要判断
-
-不对。ACMG 提供的是规则框架，但很多边界情况（如证据冲突、家系不完整、基因机制不明确）仍需要专业判断。
-
-### VUS 就等于没意义，可以直接忽略
-
-不对。VUS 表示当前证据不足以明确分类，但它可能随着新证据出现而重新分类。在遗传咨询中需要谨慎解释，而不是简单排除。
-
-### Likely pathogenic 就等于百分之百确定
-
-不对。"Likely" 本身就表示有不确定性边界，临床决策时需要结合其他证据和患者具体情况。
-
-### 只要满足某个证据标准，就可以直接分类
-
-不对。必须同时考虑正反两方面证据，不能只看致病证据而忽略良性证据。
-
-### 所有实验室使用 ACMG 就会得到完全相同的结果
-
-不对。不同实验室在证据收集、阈值设定、专业判断上可能仍有差异，ACMG 只是降低了不一致性，而不是完全消除。
+<PitfallsBox
+  pitfalls={[
+    'ACMG 是完全机械打分，不需要判断：',
+    '不对。ACMG 提供的是规则框架，但很多边界情况（如证据冲突、家系不完整、基因机制不明确）仍需要专业判断。',
+    'VUS 就等于没意义，可以直接忽略：',
+    '不对。VUS 表示当前证据不足以明确分类，但它可能随着新证据出现而重新分类。在遗传咨询中需要谨慎解释，而不是简单排除。',
+    'Likely pathogenic 就等于百分之百确定：',
+    '不对。"Likely" 本身就表示有不确定性边界，临床决策时需要结合其他证据和患者具体情况。'
+  ]}
+/>
 
 ## 参考资料
 

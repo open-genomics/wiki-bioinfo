@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="基因预测是从基因组序列中识别基因位置和结构的计算过程。真核生物基因常被内含子分割成外显子，需要专门的算法来识别基因边界和剪接位点。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '动态规划基础', href: '/docs/foundations/dynamic-programming-basics' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 什么是基因预测
 
@@ -149,23 +154,16 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
-## 常见误区
-
-### 长的 ORF 一定是真实基因
-
-ORF（开放阅读框）只是基因存在的必要条件，远非充分条件。随机 DNA 中也会出现较长的偶然 ORF；反之，真实基因可能因为测序或组装错误而不形成完整 ORF。特别是在真核生物中，基因被内含子分割，简单的 ORF 扫描几乎无法工作。
-
-### 统计方法和相似性方法选一个就够了
-
-两类方法各有盲区：统计方法可能发现全新基因但准确率有限；相似性方法准确率高但只能找到有已知同源物的基因。现代基因预测工具（如 Augustus、GENSCAN）通常将两者结合，再加上 RNA-seq 等转录组证据，才能获得可靠的注释结果。
-
-### 基因预测结果可以直接当作"真值"使用
-
-基因预测输出的是"模型下最合理的解释"，而非实验验证的事实。即使最好的 ab initio 预测工具，在外显子边界、起始位点等细节上也经常出错。实际注释流程中，预测结果通常需要人工审查或与实验证据交叉验证。
-
-### 人类基因预测工具可以直接用于其他物种
-
-不同物种的基因结构差异很大——密码子使用偏好、内含子长度分布、剪接信号强度都因物种而异。用人类数据训练的 HMM 直接预测小鼠基因组，准确率会显著下降。好的基因预测工具需要针对目标物种重新训练或微调参数。
+<PitfallsBox
+  pitfalls={[
+    '长的 ORF 一定是真实基因：',
+    'ORF（开放阅读框）只是基因存在的必要条件，远非充分条件。随机 DNA 中也会出现较长的偶然 ORF；反之，真实基因可能因为测序或组装错误而不形成完整 ORF。特别是在真核生物中，基因被内含子分割，简单的 ORF 扫描几乎无法工作。',
+    '统计方法和相似性方法选一个就够了：',
+    '两类方法各有盲区：统计方法可能发现全新基因但准确率有限；相似性方法准确率高但只能找到有已知同源物的基因。现代基因预测工具（如 Augustus、GENSCAN）通常将两者结合，再加上 RNA-seq 等转录组证据，才能获得可靠的注释结果。',
+    '基因预测结果可以直接当作"真值"使用：',
+    '基因预测输出的是"模型下最合理的解释"，而非实验验证的事实。即使最好的 ab initio 预测工具，在外显子边界、起始位点等细节上也经常出错。实际注释流程中，预测结果通常需要人工审查或与实验证据交叉验证。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

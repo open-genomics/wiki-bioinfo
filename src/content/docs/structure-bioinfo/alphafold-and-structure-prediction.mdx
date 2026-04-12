@@ -8,6 +8,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="AlphaFold 是深度学习驱动的蛋白质结构预测系统，它从序列和进化信息出发，学习残基之间的相对几何关系，输出三维坐标和置信度。理解其核心思想有助于正确解读预测结果：它不是记忆已知结构，而是学习折叠的物理规律。"
@@ -25,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '共进化信息的来源' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 引言：蛋白质折叠问题的历史
 
@@ -52,6 +56,11 @@ AlphaFold 的核心输入包括：
 - **可选模板**：已知同源蛋白的结构坐标
 
 MSA 至关重要。进化相关的序列中，共同进化的残基对（在 MSA 中呈现相关变异）往往空间上接近——这是**共进化（co-evolution）**的原理。
+
+<figure>
+  <img src="/img/illustrations/alphafold-pipeline.svg" alt="AlphaFold 结构预测流水线：从序列输入、MSA、几何关系到 3D 模型输出" />
+  <figcaption>AlphaFold 结构预测流水线：从序列到三维结构的完整信息流</figcaption>
+</figure>
 
 ### 模型：学习几何关系
 

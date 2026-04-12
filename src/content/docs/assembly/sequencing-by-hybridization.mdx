@@ -6,6 +6,8 @@ title: "测序杂交（Sequencing by Hybridization, SBH）"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '最短超串问题', href: '/wiki-bioinfo/assembly/shortest-superstring' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 什么是测序杂交 (SBH)？
 
@@ -306,27 +311,16 @@ SBH问题提供了重要的算法设计启示：
 
 虽然SBH本身未能成为主流测序技术，但它为理解生物信息学中的图论方法提供了经典案例。
 
-## 常见误区
-
-### 欧拉路径建模使 SBH 变得简单，因此可以用于真实组装
-
-欧拉路径建模虽然将计算复杂度从 NP-完全降到了多项式时间，但这是建立在"完美谱"（即已知所有 l-mer 且无错误）的假设之上的。实际杂交实验中，假阳性和假阴性使得谱不完整且含有噪声，导致欧拉路径无法直接应用。这也是 SBH 未能成为主流测序方法的核心原因之一。
-
-### SBH 的欧拉路径建模与 de Bruijn 图组装是同一件事
-
-虽然两者都使用欧拉路径和 k-mer，但存在本质区别：SBH 的 k-mer 来自探针杂交（实验获取），而 de Bruijn 图组装的 k-mer 来自读段分解（计算提取）。SBH 面临的是信号噪声问题，de Bruijn 图组装面临的是测序错误和覆盖度不均匀问题。两者的容错策略截然不同。
-
-### 哈密顿路径建模"没有用"
-
-虽然哈密顿路径建模在实践中不可行（NP-完全），但它揭示了组合搜索问题的一个本质：同一问题可以有不同的建模方式，而建模选择直接决定了算法效率。这一启示在生物信息学中反复出现（如比对、组装、motif 寻找），是理解"算法设计"与"问题建模"关系的关键案例。
-
-### 探针长度 l 越大，SBH 效果越好
-
-探针长度 l 增大确实提高了杂交特异性，但代价是探针总数呈指数增长（$4^l$），导致芯片成本和复杂度急剧上升。同时，较长的探针意味着更少的 k-mer 种类被检测到，降低了覆盖度。l 的选择是一个特异性与覆盖度之间的权衡，并非越大越好。
-
-### SBH 已经被完全淘汰
-
-虽然 SBH 作为从头测序方法确实被淘汰，但其核心思想——通过 k-mer 谱重构序列——在现代方法中以不同形式延续。k-mer 频谱分析用于基因组特征估计，de Bruijn 图组装继承了欧拉路径的建模思想，而 DNA 微阵列（基因芯片）仍在基因分型和基因表达分析中广泛应用。
+<PitfallsBox
+  pitfalls={[
+    '欧拉路径建模使 SBH 变得简单，因此可以用于真实组装：',
+    '欧拉路径建模虽然将计算复杂度从 NP-完全降到了多项式时间，但这是建立在"完美谱"（即已知所有 l-mer 且无错误）的假设之上的。实际杂交实验中，假阳性和假阴性使得谱不完整且含有噪声，导致欧拉路径无法直接应用。这也是 SBH 未能成为主流测序方法的核心原因之一。',
+    'SBH 的欧拉路径建模与 de Bruijn 图组装是同一件事：',
+    '虽然两者都使用欧拉路径和 k-mer，但存在本质区别：SBH 的 k-mer 来自探针杂交（实验获取），而 de Bruijn 图组装的 k-mer 来自读段分解（计算提取）。SBH 面临的是信号噪声问题，de Bruijn 图组装面临的是测序错误和覆盖度不均匀问题。两者的容错策略截然不同。',
+    '哈密顿路径建模"没有用"：',
+    '虽然哈密顿路径建模在实践中不可行（NP-完全），但它揭示了组合搜索问题的一个本质：同一问题可以有不同的建模方式，而建模选择直接决定了算法效率。这一启示在生物信息学中反复出现（如比对、组装、motif 寻找），是理解"算法设计"与"问题建模"关系的关键案例。'
+  ]}
+/>
 
 ## 相关页面
 

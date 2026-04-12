@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="k-means 是一种经典的划分式聚类算法，旨在将数据点分配到 k 个簇中，使每个点到其所属簇中心的平方距离之和最小。在生物信息学中，它常用于初步探索基因表达模式。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '层次聚类', href: '/wiki-bioinfo/phylogeny/hierarchical-clustering' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 要解决什么生物信息学问题？
 
@@ -162,23 +167,16 @@ k-means 特别适合处理"扁平"的聚类任务：
 | **噪声鲁棒性** | 差 | 中等 | 较好 |
 | **时间复杂度** | $O(n \cdot k \cdot d)$ | $O(n^2)$ | $O(n^3)$ |
 
-## 10. 常见误区
-
-### "k-means 适用于所有类型的生物数据"
-
-k-means 使用欧几里得距离，这意味着它假设所有维度是等权重的且可比较的。对于基因表达数据，不同基因的表达量级可能差异巨大，如果不进行标准化，高表达基因会主导聚类结果。
-
-### "SSE 最小化等价于找到生物学上正确的聚类"
-
-SSE 是一个纯数学的优化目标，它并不直接反映生物学的"正确性"。一个 SSE 很低的聚类可能只是因为数据中存在一些技术性批次效应 (Batch Effect)，而非真实的生物学分组。
-
-### "k-means 结果可以用来直接推断基因调控网络"
-
-k-means 只能告诉你哪些基因的表达模式相似，但不能直接告诉你它们是否受到同一转录因子的调控。共表达是共调控的必要条件而非充分条件。
-
-### "多次运行 k-means 总能找到全局最优"
-
-虽然多次运行可以降低陷入局部最优的概率，但不能保证找到全局最优。特别是当 $k$ 较大或数据维度较高时，局部最优解的数量会急剧增加。
+<PitfallsBox
+  pitfalls={[
+    '"k-means 适用于所有类型的生物数据"：',
+    'k-means 使用欧几里得距离，这意味着它假设所有维度是等权重的且可比较的。对于基因表达数据，不同基因的表达量级可能差异巨大，如果不进行标准化，高表达基因会主导聚类结果。',
+    '"SSE 最小化等价于找到生物学上正确的聚类"：',
+    'SSE 是一个纯数学的优化目标，它并不直接反映生物学的"正确性"。一个 SSE 很低的聚类可能只是因为数据中存在一些技术性批次效应 (Batch Effect)，而非真实的生物学分组。',
+    '"k-means 结果可以用来直接推断基因调控网络"：',
+    'k-means 只能告诉你哪些基因的表达模式相似，但不能直接告诉你它们是否受到同一转录因子的调控。共表达是共调控的必要条件而非充分条件。'
+  ]}
+/>
 
 ## 11. 与真实工具的连接
 

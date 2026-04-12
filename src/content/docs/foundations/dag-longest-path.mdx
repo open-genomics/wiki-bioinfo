@@ -4,8 +4,11 @@ title: "DAG 最长路径问题"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="DAG 最长路径问题是曼哈顿游客问题的推广形式，用于在任意有向无环图中寻找权重最大的路径，广泛应用于基因预测、序列组装和进化分析。"
@@ -25,6 +28,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   ]}
 />
 
+<PageHeaderMeta section="Foundations" />
+
+
 ## 是什么
 
 **DAG 最长路径问题**是曼哈顿游客问题（Manhattan Tourist Problem）的推广形式。它不再局限于规则的网格结构，而是适用于任意的**有向无环图（Directed Acyclic Graph, DAG）**。
@@ -40,12 +46,16 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 与曼哈顿游客问题的关系
 
-| 特性 | 曼哈顿游客 | DAG 最长路径 |
-|------|-----------|-------------|
-| 图结构 | 规则的 $n \times m$ 网格 | 任意的有向无环图 |
-| 边方向 | 只能向南或向东 | 任意（只要不形成环） |
-| 拓扑排序 | 隐含的（行列顺序） | 显式计算或利用 DAG 特性 |
-| 应用 | 教学示例、基础 DP | 复杂的生物信息学问题 |
+<ComparisonTable
+  leftTitle="曼哈顿游客"
+  rightTitle="DAG 最长路径"
+  rows={[
+    { aspect: '图结构', left: '规则的 $n \times m$ 网格', right: '任意的有向无环图' },
+    { aspect: '边方向', left: '只能向南或向东', right: '任意（只要不形成环）' },
+    { aspect: '拓扑排序', left: '隐含的（行列顺序）', right: '显式计算或利用 DAG 特性' },
+    { aspect: '应用', left: '教学示例、基础 DP', right: '复杂的生物信息学问题' }
+  ]}
+/>
 
 **关系**：曼哈顿游客问题是 DAG 最长路径问题的特例——网格结构天然构成一个 DAG。
 
@@ -306,23 +316,16 @@ DAG 最长路径算法可以处理负权重边：
 - **方法 1**：添加超级源点/汇点，连接到所有实际的源点/汇点
 - **方法 2**：对每个源点分别运行算法，取最大值
 
-## 常见误区
-
-### DAG 最长路径算法可以用于一般图
-
-不能。一般图（含环）的最长路径问题是 NP-hard 的。DAG 最长路径算法的核心依赖——拓扑排序——在有环图上无法执行。如果图中有正权环，"最长路径"的概念本身就不存在（可以无限绕环增加权重）。
-
-### 拓扑排序结果唯一
-
-同一 DAG 可以有多种合法的拓扑排序。不同的拓扑排序不影响最终的最长路径权重值（因为 DP 递推保证了正确性），但会影响计算的中间过程和回溯路径的构造顺序。
-
-### 最长路径权重之和最大等价于经过的顶点最多
-
-这是两个完全不同的优化目标。例如在 Exon Chaining 中，我们希望总权重最大（选高分外显子），而不是选尽可能多的外显子。一个包含很多低分外显子的链可能总权重远低于少数几个高分外显子的链。
-
-### 曼哈顿游客问题只是 DAG 最长路径的特例，没有独立价值
-
-曼哈顿游客问题确实是 DAG 最长路径的特例（规则网格图），但它提供了极其重要的教学直觉：二维 DP 表格的填充过程直接对应序列比对中的得分矩阵计算。理解这个特例是掌握 Needleman-Wunsch 和 Smith-Waterman 算法的关键一步。
+<PitfallsBox
+  pitfalls={[
+    'DAG 最长路径算法可以用于一般图：',
+    '不能。一般图（含环）的最长路径问题是 NP-hard 的。DAG 最长路径算法的核心依赖——拓扑排序——在有环图上无法执行。如果图中有正权环，"最长路径"的概念本身就不存在（可以无限绕环增加权重）。',
+    '拓扑排序结果唯一：',
+    '同一 DAG 可以有多种合法的拓扑排序。不同的拓扑排序不影响最终的最长路径权重值（因为 DP 递推保证了正确性），但会影响计算的中间过程和回溯路径的构造顺序。',
+    '最长路径权重之和最大等价于经过的顶点最多：',
+    '这是两个完全不同的优化目标。例如在 Exon Chaining 中，我们希望总权重最大（选高分外显子），而不是选尽可能多的外显子。一个包含很多低分外显子的链可能总权重远低于少数几个高分外显子的链。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

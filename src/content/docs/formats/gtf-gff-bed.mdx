@@ -9,6 +9,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="GTF/GFF 编码层级化基因组注释（gene-transcript-exon 结构），BED 编码简洁区间集合。理解它们的层级结构、坐标系统差异（1-based vs 0-based）和语义不等价性，是 RNA-seq 定量、peak 分析和功能注释的前提。"
@@ -20,6 +21,16 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
     '格式选择直接影响下游工具兼容性和区间运算正确性',
   ]}
 />
+
+<PrerequisitesBox
+  items={[
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: '生物学基础对象', href: '/docs/foundations/biology-basics'},
+  ]}
+/>
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 是什么
 
@@ -227,6 +238,16 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
       to: '/docs/epigenomics/chip-seq-overview',
       label: '应用层',
       description: 'MACS2 输出 peak 区域为 BED 格式。',
+    },
+    {
+      title: '基因组注释管线',
+      to: '/docs/data-references/annotation-pipelines',
+      description: 'GTF/GFF 注释文件由 Ensembl、GENCODE 等注释管线生成。',
+    },
+    {
+      title: 'Ensembl 基因组注释',
+      to: '/docs/databases/ensembl',
+      description: 'Ensembl GTF 的结构和 Ensembl ID 体系。',
     },
   ]}
 />

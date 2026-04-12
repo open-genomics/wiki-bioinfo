@@ -9,6 +9,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
@@ -20,6 +21,9 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
     '版本混用是分析中最常见的错误来源之一',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 是什么
 
@@ -52,9 +56,8 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <PrerequisitesBox
   items={[
-    '理解参考基因组的概念：代表人类基因组的标准化序列',
-    '了解 FASTA 格式：参考序列的文件表示',
-    '如果不熟悉坐标系统，先阅读参考基因组、坐标系统与注释',
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: 'FASTA 格式', href: '/docs/formats/fasta-format'},
   ]}
 />
 
@@ -230,6 +233,11 @@ CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
       to: '/docs/formats/fasta-format',
       label: '数据格式',
       description: '参考基因组 FASTA 文件的结构和索引。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      description: '参考版本选择如何直接影响变异检测和下游解释。',
     },
   ]}
 />

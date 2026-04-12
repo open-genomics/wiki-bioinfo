@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="想象你是一个在曼哈顿旅游的游客，想从 (0,0) 走到 (n,m)，每条街道（边）都有不同数量的景点。你的目标是走过景点总数最多的路径。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '概率与图基础', href: '/wiki/foundations/probability-and-graphs' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 1. 是什么
 
@@ -300,12 +305,14 @@ TOPOLOGICALSORT(G)
 
 这一策略的核心仍然是动态规划，只是将其限制在局部小范围内运行，从而实现了在基因组尺度上的高效比对。
 
-## 常见误区
-
-- **误区一：认为曼哈顿旅游问题只能处理水平/垂直移动**。原始问题确实如此，但引入对角线移动后，它就自然地扩展为序列比对问题。这一扩展是理解 Needleman-Wunsch 算法的关键一步。
-- **误区二：混淆"路径权重"与"路径长度"**。曼哈顿旅游问题求的是权重之和最大的路径，而非经过边数最少的路径（后者是 BFS 的标准问题）。
-- **误区三：认为 DP 表的值就是路径本身**。DP 表只记录了最优权重，要恢复路径需要进行回溯。如果不记录每一步的决策方向，就无法重建路径。
-- **误区四：忽视空间复杂度**。对于长序列比对，$O(nm)$ 的空间需求可能是比时间需求更严重的瓶颈。Hirschberg 算法和线性空间 DP 是解决这一问题的关键技术。
+<PitfallsBox
+  pitfalls={[
+    '误区一：认为曼哈顿旅游问题只能处理水平/垂直移动。原始问题确实如此，但引入对角线移动后，它就自然地扩展为序列比对问题。这一扩展是理解 Needleman-Wunsch 算法的关键一步。',
+    '误区二：混淆"路径权重"与"路径长度"。曼哈顿旅游问题求的是权重之和最大的路径，而非经过边数最少的路径（后者是 BFS 的标准问题）。',
+    '误区三：认为 DP 表的值就是路径本身。DP 表只记录了最优权重，要恢复路径需要进行回溯。如果不记录每一步的决策方向，就无法重建路径。',
+    '误区四：忽视空间复杂度。对于长序列比对，$O(nm)$ 的空间需求可能是比时间需求更严重的瓶颈。Hirschberg 算法和线性空间 DP 是解决这一问题的关键技术。'
+  ]}
+/>
 
 ## 相关页面
 

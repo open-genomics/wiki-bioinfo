@@ -4,8 +4,11 @@ title: "煎饼翻转问题"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="煎饼翻转问题是基因组重排的简化模型，研究用最少的前缀反转将排列排序。它是排序 by 反转问题的特例，也是著名的算法谜题。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '贪心算法', href: '/wiki/foundations/greedy-algorithms' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 是什么
 
@@ -184,11 +190,15 @@ BREAKPOINTPANCAKESORT(π):
 
 ### 与一般反转排序的对比
 
-| 特性 | 任意区间反转 | 仅前缀反转 |
-|------|-----------|-----------|
-| 最优解计算 | 多项式时间 (Hannenhalli-Pevzner) | NP-难 |
-| 实际应用 | 基因组重排分析 | 理论模型 |
-| 算法复杂度 | $O(n^4)$ 最初，现已优化 | 近似算法 |
+<ComparisonTable
+  leftTitle="任意区间反转"
+  rightTitle="仅前缀反转"
+  rows={[
+    { aspect: '最优解计算', left: '多项式时间 (Hannenhalli-Pevzner)', right: 'NP-难' },
+    { aspect: '实际应用', left: '基因组重排分析', right: '理论模型' },
+    { aspect: '算法复杂度', left: '$O(n^4)$ 最初，现已优化', right: '近似算法' }
+  ]}
+/>
 
 ## 教育价值
 
@@ -247,23 +257,16 @@ BREAKPOINTPANCAKESORT(π):
   ]}
 />
 
-## 常见误区
-
-### 煎饼翻转和一般反转排序只是操作范围的区别
-
-虽然煎饼翻转只允许前缀反转，但这一限制从根本上改变了问题的计算性质。一般反转排序在有符号排列下有多项式时间精确算法，而煎饼翻转即使是无符号版本也是 NP-难的。限制操作集可以将一个"可解"的问题变为"难解"的问题——这一洞察在算法设计中具有普遍意义。
-
-### Gates 的上界 5(n+1)/3 已经是最优的
-
-Gates-Papadimitriou 上界证明的是"任何排列都能在这么多步内完成排序"，但它不是紧上界——存在排列不需要这么多步。目前已知最优算法的近似比约为 1.375，但最优解的计算仍是 NP-难的。上界和下界之间的差距说明我们对这个问题的理解还不完全。
-
-### 煎饼翻转问题只有理论意义
-
-虽然煎饼翻转本身是算法谜题，但它建模的"受限操作下的重排"问题在生物学中有真实对应。例如，某些基因组重排事件确实受到操作约束（如某些染色体区域的反转倾向于从端粒开始）。理解受限操作如何改变问题复杂度，对设计实际算法有指导价值。
-
-### 简单贪心算法"每次翻最大元素到正确位置"已经很接近最优
-
-贪心算法的近似比可能达到 $(n-1)/2$，对于排列 $n\ 1\ 2\ \ldots\ n{-}1$ 需要约 $n{-}1$ 步而最优只需 2 步。这不是"接近最优"，而是系统性失效。贪心策略的"短视"特性在这个问题上表现得尤为突出。
+<PitfallsBox
+  pitfalls={[
+    '煎饼翻转和一般反转排序只是操作范围的区别：',
+    '虽然煎饼翻转只允许前缀反转，但这一限制从根本上改变了问题的计算性质。一般反转排序在有符号排列下有多项式时间精确算法，而煎饼翻转即使是无符号版本也是 NP-难的。限制操作集可以将一个"可解"的问题变为"难解"的问题——这一洞察在算法设计中具有普遍意义。',
+    'Gates 的上界 5(n+1)/3 已经是最优的：',
+    'Gates-Papadimitriou 上界证明的是"任何排列都能在这么多步内完成排序"，但它不是紧上界——存在排列不需要这么多步。目前已知最优算法的近似比约为 1.375，但最优解的计算仍是 NP-难的。上界和下界之间的差距说明我们对这个问题的理解还不完全。',
+    '煎饼翻转问题只有理论意义：',
+    '虽然煎饼翻转本身是算法谜题，但它建模的"受限操作下的重排"问题在生物学中有真实对应。例如，某些基因组重排事件确实受到操作约束（如某些染色体区域的反转倾向于从端粒开始）。理解受限操作如何改变问题复杂度，对设计实际算法有指导价值。'
+  ]}
+/>
 
 ## 总结
 

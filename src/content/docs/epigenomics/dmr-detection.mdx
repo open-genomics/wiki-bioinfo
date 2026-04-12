@@ -6,6 +6,8 @@ title: "DMR 检测算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'HMM 与 Viterbi 算法', href: '/wiki-bioinfo/models/viterbi-forward-backward', description: '贝叶斯分段方法的算法基础' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题背景
 
@@ -257,26 +262,16 @@ C++ 工具，特点：
 - 使用分段算法
 - 适用于大规模数据
 
-## 常见误区
-
-### DMR 一定对应基因表达变化
-
-不一定。甲基化和表达的关系复杂：
-- 启动子高甲基化通常与沉默相关
-- Gene body 甲基化有时与活跃转录相关
-- 需要结合染色质状态和其他调控信息解释
-
-### 覆盖越高，结果越可靠
-
-不一定。高覆盖可能带来技术偏差，且生物学变异仍然存在。关键是平衡覆盖深度和样本数量。
-
-### 单个显著 CpG 就可以报告为 DMR
-
-不是。单个 CpG 的差异可能是技术噪声，区域层面的分析更稳健。
-
-### 不同工具的结果应该完全一致
-
-不是。不同工具使用不同的统计模型和参数选择，结果会有差异。应该关注生物学上一致的高置信 DMR。
+<PitfallsBox
+  pitfalls={[
+    'DMR 一定对应基因表达变化：',
+    '不一定。甲基化和表达的关系复杂：',
+    '启动子高甲基化通常与沉默相关',
+    'Gene body 甲基化有时与活跃转录相关',
+    '需要结合染色质状态和其他调控信息解释',
+    '覆盖越高，结果越可靠：'
+  ]}
+/>
 
 ## 算法优化与变体
 

@@ -5,11 +5,15 @@ title: "序列比对"
 
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 
 序列比对是生物信息学最核心的基础任务之一。
 
 它既是独立问题，也是很多流程的入口：mapping、注释、同源分析、组装和系统发育都与它密切相关。
+
+
+<PageHeaderMeta section="Core Methods" />
 
 ## 这一部分在全站中的位置
 
@@ -110,7 +114,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 ## 视觉化：alignment 方法与 mapper 技术栈
 
 <figure>
-  <img src="/wiki-bioinfo/img/figures/alignment-mapper-stack.png" alt="Layered diagram showing sequence representations, alignment models, seed-and-extend strategy, and real-world tools like BLAST, BWA, and minimap2" />
+  <img src="/wiki-bioinfo/img/figures/alignment-mapper-stack.webp" alt="Layered diagram showing sequence representations, alignment models, seed-and-extend strategy, and real-world tools like BLAST, BWA, and minimap2" />
   <figcaption>从序列表示与索引，到编辑距离与动态规划，再到 seed-and-extend 与具体工具（BLAST / BWA / minimap2）的技术栈示意。</figcaption>
 </figure>
 

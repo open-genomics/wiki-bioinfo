@@ -7,6 +7,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <PageHeaderMeta
@@ -283,44 +284,16 @@ $$\log \mu_{ij} = \log s_j + \text{condition}_j \cdot \beta_i + \text{batch}_j \
 - 样本设计存在混杂因素
 - transcript 层与 gene 层目标混用
 
-## 常见误区与算法边界
-
-### 1. 混淆统计显著性与生物学重要性
-
-- p-value 小 ≠ 生物学意义大
-- 小 fold change（LFC < 0.5）即使统计显著，可能无生物学功能
-- 建议同时考虑效应大小和显著性
-
-### 2. 忽略模型假设检验
-
-DESeq2/edgeR 假设：
-- 大多数基因无差异表达（用于归一化因子估计）
-- 离散度-均值关系可被捕获
-
-如果大多数基因都差异表达，归一化可能失效。
-
-### 3. 多重比较中的 "cherry-picking"
-
-错误做法：
-- 先观察数据，发现某个基因"看起来"有差异
-- 然后仅对该基因做检验
-
-后果：破坏了 FDR 控制的前提，实际假阳性率远高于设定阈值。
-
-### 4. 直接对 TPM/FPKM 做 t-test
-
-**统计模型不匹配**：
-- TPM 是连续值，但 counts 是离散整数
-- t-test 假设方差齐性，但 RNA-seq 数据具有均值-方差依赖
-- TPM 未考虑 library composition bias
-
-**正确做法**：
-
-| 分析目标 | 数据输入 | 统计方法 |
-|---------|---------|---------|
-| 差异表达检测 | 原始 counts | DESeq2/edgeR（NB-GLM）|
-| 可视化/探索性分析 | TPM/log-TPM | PCA、聚类、热图 |
-| 基因集富集 | 排序的基因列表 | GSEA、clusterProfiler |
+<PitfallsBox
+  pitfalls={[
+    '混淆统计显著性与生物学重要性：',
+    'p-value 小 ≠ 生物学意义大',
+    '小 fold change（LFC < 0.5）即使统计显著，可能无生物学功能',
+    '建议同时考虑效应大小和显著性',
+    '忽略模型假设检验：',
+    'DESeq2/edgeR 假设：'
+  ]}
+/>
 
 ## 相关算法与扩展阅读
 

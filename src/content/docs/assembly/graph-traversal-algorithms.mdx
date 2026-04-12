@@ -4,9 +4,12 @@ title: "图遍历算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '测序杂交（SBH）', href: '/wiki-bioinfo/assembly/sequencing-by-hybridization' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -176,12 +182,16 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 与Eulerian Path的区别
 
-| 特性 | Eulerian Path | Hamiltonian Path |
-|------|--------------|------------------|
-| 定义 | 访问每条边恰好一次 | 访问每个顶点恰好一次 |
-| 复杂度 | 多项式时间可解 | NP完全 |
-| 组装应用 | de Bruijn graph的路径问题 | OLC组装的路径问题 |
-| 判断条件 | 基于顶点度数 | 无简单判断条件 |
+<ComparisonTable
+  leftTitle="Eulerian Path"
+  rightTitle="Hamiltonian Path"
+  rows={[
+    { aspect: '定义', left: '访问每条边恰好一次', right: '访问每个顶点恰好一次' },
+    { aspect: '复杂度', left: '多项式时间可解', right: 'NP完全' },
+    { aspect: '组装应用', left: 'de Bruijn graph的路径问题', right: 'OLC组装的路径问题' },
+    { aspect: '判断条件', left: '基于顶点度数', right: '无简单判断条件' }
+  ]}
+/>
 
 ### 算法描述
 
@@ -340,21 +350,16 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 - **错误检测**：通过遍历识别异常结构
 - **图简化**：使用遍历策略简化复杂图结构
 
-## 常见误区
-
-### Hamiltonian path是组装的唯一解
-
-不是。由于NP难性质，实际组装器使用启发式方法，不一定找到Hamiltonian path，而是找到"足够好"的路径。
-
-### DFS总是比BFS好
-
-不是。DFS和BFS各有优势：
-- DFS适合寻找路径和检测环
-- BFS适合寻找最短路径和层次分析
-
-### 图遍历总能找到最优解
-
-对于NP完全问题（如Hamiltonian path），图遍历不一定能找到最优解。实际中需要使用启发式和近似算法。
+<PitfallsBox
+  pitfalls={[
+    'Hamiltonian path是组装的唯一解：',
+    '不是。由于NP难性质，实际组装器使用启发式方法，不一定找到Hamiltonian path，而是找到"足够好"的路径。',
+    'DFS总是比BFS好：',
+    '不是。DFS和BFS各有优势：',
+    'DFS适合寻找路径和检测环',
+    'BFS适合寻找最短路径和层次分析'
+  ]}
+/>
 
 ## 参考资料
 

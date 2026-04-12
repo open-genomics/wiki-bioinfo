@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '曼哈顿游客问题', href: '/wiki-bioinfo/foundations/manhattan-tourist', description: '理解 DP 网格路径的几何直观' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -172,24 +177,16 @@ $$
 
 可以把它理解成"最简单的序列比对模型"。后面的全局比对、局部比对、打分矩阵和 affine gap penalty，都是在这个模型上不断加入更真实的生物学假设。
 
-## 常见误区
-
-### 编辑距离越小，就一定是更好的生物学解释
-
-不一定。编辑距离只反映最小操作数，不一定反映更真实的进化过程或测序错误模型。
-
-### 替换和插入/删除应该永远同价
-
-在教学模型里可以这样设定，但真实比对通常不会这么简单。
-
-### 编辑距离就是序列比对的全部
-
-不是。它只是最基础的抽象，真实系统往往还需要：
-
-- 打分矩阵
-- gap 开启/延长罚分
-- 局部比对
-- 索引加速
+<PitfallsBox
+  pitfalls={[
+    '编辑距离越小，就一定是更好的生物学解释：',
+    '不一定。编辑距离只反映最小操作数，不一定反映更真实的进化过程或测序错误模型。',
+    '替换和插入/删除应该永远同价：',
+    '在教学模型里可以这样设定，但真实比对通常不会这么简单。',
+    '编辑距离就是序列比对的全部：',
+    '不是。它只是最基础的抽象，真实系统往往还需要：'
+  ]}
+/>
 
 ## 参考资料
 

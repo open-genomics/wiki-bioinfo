@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'Viterbi、Forward 与 Backward', href: '/wiki-bioinfo/models/viterbi-forward-backward' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -298,19 +303,16 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
 
 它是从"简单 motif 打分"走向"序列家族概率建模"的关键一步。
 
-## 常见误区
-
-### Profile HMM 只是更长的 PWM
-
-不是。它的关键优势不是"更长"，而是显式建模插入和缺失。
-
-### 有了 PWM 就没必要用 Profile HMM
-
-不一定。对于带 gap 和长度变化的序列家族，Profile HMM 往往更自然、更强大。
-
-### Profile HMM 只能用于蛋白序列
-
-虽然在蛋白家族分析中特别常见，但它本质上是一般的序列 profile 概率模型，也可推广到其他类型的序列家族问题。
+<PitfallsBox
+  pitfalls={[
+    'Profile HMM 只是更长的 PWM：',
+    '不是。它的关键优势不是"更长"，而是显式建模插入和缺失。',
+    '有了 PWM 就没必要用 Profile HMM：',
+    '不一定。对于带 gap 和长度变化的序列家族，Profile HMM 往往更自然、更强大。',
+    'Profile HMM 只能用于蛋白序列：',
+    '虽然在蛋白家族分析中特别常见，但它本质上是一般的序列 profile 概率模型，也可推广到其他类型的序列家族问题。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

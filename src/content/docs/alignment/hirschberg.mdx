@@ -4,8 +4,11 @@ title: "Hirschberg 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '分治法', href: '/wiki-bioinfo/foundations/divide-and-conquer', description: 'Hirschberg 所使用的分治策略基础' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -213,12 +219,16 @@ ACATA-G
 
 ## 与 Needleman-Wunsch 的对比
 
-| 特性 | Needleman-Wunsch | Hirschberg |
-|------|------------------|------------|
-| 时间复杂度 | O(mn) | O(mn) |
-| 空间复杂度 | O(mn) | O(min(m,n)) |
-| 实现复杂度 | 简单 | 较复杂（递归） |
-| 适用场景 | 短序列或内存充足 | 长序列或内存受限 |
+<ComparisonTable
+  leftTitle="Needleman-Wunsch"
+  rightTitle="Hirschberg"
+  rows={[
+    { aspect: '时间复杂度', left: 'O(mn)', right: 'O(mn)' },
+    { aspect: '空间复杂度', left: 'O(mn)', right: 'O(min(m,n))' },
+    { aspect: '实现复杂度', left: '简单', right: '较复杂（递归）' },
+    { aspect: '适用场景', left: '短序列或内存充足', right: '长序列或内存受限' }
+  ]}
+/>
 
 ## 算法优缺点
 
@@ -248,23 +258,16 @@ Hirschberg 算法本身较少直接用于现代生物信息学工具，主要因
 - 在需要精确比对但内存受限的场景
 - 为其他算法优化提供理论基础
 
-## 常见误区
-
-### Hirschberg 总是比 Needleman-Wunsch 更好
-
-不是。Hirschberg 的优势只在空间受限或序列很长时明显。对于短序列，Needleman-Wunsch 可能更快且更简单。
-
-### Hirschberg 是近似算法
-
-不是。Hirschberg 得到的是与 Needleman-Wunsch 完全相同的最优比对，不是近似解。
-
-### Hirschberg 只能用于全局比对
-
-标准 Hirschberg 确实是为全局比对设计的，但其思想可以扩展到局部比对。
-
-### Hirschberg 解决了所有序列比对的性能问题
-
-不是。它只解决了空间问题，时间复杂度仍然是 O(mn)。对于大规模数据，仍需要其他优化策略。
+<PitfallsBox
+  pitfalls={[
+    'Hirschberg 总是比 Needleman-Wunsch 更好：',
+    '不是。Hirschberg 的优势只在空间受限或序列很长时明显。对于短序列，Needleman-Wunsch 可能更快且更简单。',
+    'Hirschberg 是近似算法：',
+    '不是。Hirschberg 得到的是与 Needleman-Wunsch 完全相同的最优比对，不是近似解。',
+    'Hirschberg 只能用于全局比对：',
+    '标准 Hirschberg 确实是为全局比对设计的，但其思想可以扩展到局部比对。'
+  ]}
+/>
 
 ## 参考资料
 

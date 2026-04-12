@@ -6,6 +6,8 @@ title: "生物信息学算法总览"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '序列基础概念', href: '/wiki-bioinfo/sequence/index' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么需要算法视角
 
@@ -279,23 +284,16 @@ $$
 - **阅读源码**：理解工具中的算法实现
 - **性能分析**：用真实数据测试不同算法
 
-## 常见误区
-
-### 算法越复杂越好
-
-不是。简单算法如果足够用，往往更可靠、更易维护。复杂度应该与问题难度匹配。
-
-### 最优解总是必需的
-
-不是。很多实际问题中，快速得到足够好的解比等待最优解更有价值。
-
-### 算法与工具是两回事
-
-不是。理解算法是理解工具行为、调试问题、优化参数的基础。
-
-### 理论复杂度等于实际性能
-
-不是。常数因子、缓存友好性、并行效率等因素都很重要。
+<PitfallsBox
+  pitfalls={[
+    '算法越复杂越好：',
+    '不是。简单算法如果足够用，往往更可靠、更易维护。复杂度应该与问题难度匹配。',
+    '最优解总是必需的：',
+    '不是。很多实际问题中，快速得到足够好的解比等待最优解更有价值。',
+    '算法与工具是两回事：',
+    '不是。理解算法是理解工具行为、调试问题、优化参数的基础。'
+  ]}
+/>
 
 ## 参考资料
 

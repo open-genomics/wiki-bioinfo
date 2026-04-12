@@ -6,6 +6,8 @@ title: "Needleman-Wunsch 算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '打分矩阵与 gap 罚分', href: '/wiki-bioinfo/alignment/scoring-matrices', description: '比对打分体系的详细说明' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -228,23 +233,16 @@ Needleman-Wunsch 算法本身很少直接用于大规模数据分析，主要因
 
 现代工具如 BLAST、BWA 等虽不直接使用 Needleman-Wunsch，但其扩展阶段的精确比对仍然基于类似的动态规划原理。
 
-## 常见误区
-
-### 全局比对总是优于局部比对
-
-不是。全局比对强制两条序列从头到尾对齐，如果两条序列只有局部相似，全局比对可能产生误导性结果。
-
-### Needleman-Wunsch 是唯一的比对算法
-
-不是。它只是全局比对的一种实现，还有 [Smith-Waterman（局部）](./smith-waterman.mdx)、[Hirschberg（线性空间）](./hirschberg.mdx) 等变体。
-
-### 得分越高，生物学意义越强
-
-不一定。得分依赖于打分体系的选择，不同的参数设置会产生不同的最优比对。
-
-### 只有一个最优比对
-
-不一定。当存在多条得分相同的路径时，可能存在多个等价的最优比对。
+<PitfallsBox
+  pitfalls={[
+    '全局比对总是优于局部比对：',
+    '不是。全局比对强制两条序列从头到尾对齐，如果两条序列只有局部相似，全局比对可能产生误导性结果。',
+    'Needleman-Wunsch 是唯一的比对算法：',
+    '不是。它只是全局比对的一种实现，还有 [Smith-Waterman（局部）](./smith-waterman.mdx)、[Hirschberg（线性空间）](./hirschberg.mdx) 等变体。',
+    '得分越高，生物学意义越强：',
+    '不一定。得分依赖于打分体系的选择，不同的参数设置会产生不同的最优比对。'
+  ]}
+/>
 
 ## 算法优化与变体
 

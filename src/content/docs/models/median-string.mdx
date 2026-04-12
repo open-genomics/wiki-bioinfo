@@ -6,6 +6,8 @@ title: "Median String问题"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'PWM 与 PSSM', href: '/wiki-bioinfo/models/pwm-pssm' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 问题定义
 
@@ -186,23 +191,16 @@ Median String问题是NP-困难的，这意味着：
 - 对于大问题必须使用启发式方法
 - 近似算法是实际选择
 
-## 常见误区
-
-### Median String 和 Motif Finding 是两个独立的问题
-
-两者在数学上完全等价：$\min TotalDistance(v, DNA) = l \cdot t - \max Score(s, DNA)$。解决一个就自动解决了另一个。它们的区别仅在于搜索空间不同：Motif Finding 的搜索空间是 $(n-l+1)^t$（取决于序列条数），Median String 的搜索空间是 $4^l$（取决于 motif 长度）。当序列很多但 motif 较短时，从 Median String 入手更高效。
-
-### Median String 一定出现在输入序列中
-
-Median String 是一个"虚拟"的字符串，它不一定等于任何一条输入序列中的任何 l-mer。它是所有 l-mer 在某种"平均意义"下的最优代表，类似于多序列比对中的 consensus 序列。这与直觉上"从序列里挑一个"的想法不同。
-
-### 穷举搜索 4^l 个字符串总是比穷举搜索位置组合快
-
-当 $l$ 较大但序列条数 $t$ 较小时，$4^l$ 可能远大于 $(n-l+1)^t$。选择从哪个问题入手，需要比较两个搜索空间的实际大小。对于 $l=15, t=10$ 的典型参数，$4^{15} \approx 10^9$ 而 $(491)^{10} \approx 10^{27}$，此时 Median String 的搜索空间确实更小。
-
-### 分支定界的下界估计越简单越好
-
-下界估计的质量直接决定了剪枝效果。过于松的下界（如假设剩余位置的最小距离为 0）几乎不剪枝，算法退化为穷举搜索。基于分割的下界（将 l-mer 分成两段分别估计）虽然计算稍复杂，但能显著提升剪枝效率，是实际实现中的关键优化。
+<PitfallsBox
+  pitfalls={[
+    'Median String 和 Motif Finding 是两个独立的问题：',
+    '两者在数学上完全等价：$\min TotalDistance(v, DNA) = l \cdot t - \max Score(s, DNA)$。解决一个就自动解决了另一个。它们的区别仅在于搜索空间不同：Motif Finding 的搜索空间是 $(n-l+1)^t$（取决于序列条数），Median String 的搜索空间是 $4^l$（取决于 motif 长度）。当序列很多但 motif 较短时，从 Median String 入手更高效。',
+    'Median String 一定出现在输入序列中：',
+    'Median String 是一个"虚拟"的字符串，它不一定等于任何一条输入序列中的任何 l-mer。它是所有 l-mer 在某种"平均意义"下的最优代表，类似于多序列比对中的 consensus 序列。这与直觉上"从序列里挑一个"的想法不同。',
+    '穷举搜索 4^l 个字符串总是比穷举搜索位置组合快：',
+    '当 $l$ 较大但序列条数 $t$ 较小时，$4^l$ 可能远大于 $(n-l+1)^t$。选择从哪个问题入手，需要比较两个搜索空间的实际大小。对于 $l=15, t=10$ 的典型参数，$4^{15} \approx 10^9$ 而 $(491)^{10} \approx 10^{27}$，此时 Median String 的搜索空间确实更小。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

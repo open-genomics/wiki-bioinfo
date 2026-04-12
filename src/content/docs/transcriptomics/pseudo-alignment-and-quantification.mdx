@@ -6,6 +6,9 @@ description: 介绍 RNA-seq 表达定量的算法策略：从精确比对转向 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 
 <SummaryBox
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'TPM、FPKM、CPM 与有效长度', href: '/wiki-bioinfo/transcriptomics/tpm-fpkm-cpm', description: '定量后的归一化方法' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -146,6 +152,18 @@ EM 算法只需在这些等价类上迭代，而非逐个处理 5 个 reads。
 
 ## 算法复杂度与适用条件分析
 
+<ComparisonTable
+  leftTitle="传统比对 (STAR/HISAT2)"
+  rightTitle="Pseudo-alignment (Salmon/Kallisto)"
+  rows={[
+    { aspect: '核心操作', left: '寻找 read 在基因组上的最佳位置', right: '判断 read 与哪个转录本兼容' },
+    { aspect: '比对精度', left: '碱基级精确坐标', right: '转录本级兼容性判断' },
+    { aspect: '速度', left: '较慢（需要完整 DP 比对）', right: '快 10-50 倍（k-mer 查询）' },
+    { aspect: '输出格式', left: 'BAM/SAM（完整比对信息）', right: '定量矩阵（TPM/Counts）' },
+    { aspect: '下游差异表达', left: '需额外定量步骤（featureCounts）', right: '直接输出定量结果' },
+  ]}
+/>
+
 ### 时间复杂度总结
 
 | 算法步骤 | 传统比对 | Pseudo-alignment |
@@ -190,27 +208,16 @@ Pseudo-alignment 算法**假设参考转录组注释是完备的**。如果：
 
 此时需要额外的生物学假设或过滤策略。
 
-## 常见误区
-
-### Pseudo-alignment 精度不如传统比对，因此结果不可靠
-
-Pseudo-alignment 在表达定量任务上的精度并不低于传统比对，甚至在某些场景下更优。因为传统比对在面对多映射 read 时也需要做出任意选择或丢弃，而 pseudo-alignment 的 EM 算法通过概率模型更合理地处理了归属不确定性。精度差异主要取决于参考注释的完备性，而非比对方法本身。
-
-### Kallisto/Salmon 的速度优势来自"跳过了比对"
-
-这种说法不够准确。Pseudo-alignment 并非跳过比对，而是用一种更轻量的兼容性判断替代了碱基级精确比对。核心加速来自两方面：k-mer 索引的 O(1) 查询（而非 FM-index 的对数级搜索）和等价类聚合（将数百万 reads 压缩为少量等价类再运行 EM）。这是一种算法策略的转变，而非简单的"偷工减料"。
-
-### EM 算法一定会收敛到全局最优
-
-EM 算法只保证收敛到似然函数的局部极大值，而非全局最大值。在丰度参数的初始值选择不当时，EM 可能收敛到较差的解。实践中，Salmon 和 Kallisto 通过在线学习（逐 read 更新）和合理的初始化策略来缓解这一问题，但不能完全消除局部最优的风险。
-
-### 等价类数量越少，定量结果越好
-
-等价类数量少意味着大量 reads 被归入相同的兼容性集合，这虽然提高了计算效率，但也意味着这些 reads 无法被区分。极端情况下，如果所有 reads 都兼容所有转录本（等价类只有一个），定量结果将完全退化。等价类数量是参考注释复杂度和序列相似性的反映，而非定量质量的指标。
-
-### Pseudo-alignment 可以替代所有比对需求
-
-Pseudo-alignment 仅适用于"已知转录本的表达定量"这一特定场景。如果需要发现新转录本、分析剪接位点、检测基因组变异或研究融合基因，仍必须使用传统 spliced alignment（如 STAR、HISAT2）。将 pseudo-alignment 用于其设计范围之外的任务会导致信息丢失和错误结论。
+<PitfallsBox
+  pitfalls={[
+    'Pseudo-alignment 精度不如传统比对，因此结果不可靠：',
+    'Pseudo-alignment 在表达定量任务上的精度并不低于传统比对，甚至在某些场景下更优。因为传统比对在面对多映射 read 时也需要做出任意选择或丢弃，而 pseudo-alignment 的 EM 算法通过概率模型更合理地处理了归属不确定性。精度差异主要取决于参考注释的完备性，而非比对方法本身。',
+    'Kallisto/Salmon 的速度优势来自"跳过了比对"：',
+    '这种说法不够准确。Pseudo-alignment 并非跳过比对，而是用一种更轻量的兼容性判断替代了碱基级精确比对。核心加速来自两方面：k-mer 索引的 O(1) 查询（而非 FM-index 的对数级搜索）和等价类聚合（将数百万 reads 压缩为少量等价类再运行 EM）。这是一种算法策略的转变，而非简单的"偷工减料"。',
+    'EM 算法一定会收敛到全局最优：',
+    'EM 算法只保证收敛到似然函数的局部极大值，而非全局最大值。在丰度参数的初始值选择不当时，EM 可能收敛到较差的解。实践中，Salmon 和 Kallisto 通过在线学习（逐 read 更新）和合理的初始化策略来缓解这一问题，但不能完全消除局部最优的风险。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

@@ -8,7 +8,17 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+
+<PrerequisitesBox
+  items={[
+    {name: '变异注释与优先级排序', href: '/docs/clinical-variants/variant-annotation-and-prioritization'},
+    {name: 'ACMG 指南', href: '/docs/clinical-variants/acmg-guidelines'},
+    {name: '算法与复杂度', href: '/docs/foundations/algorithms-and-complexity'},
+  ]}
+/>
 
 <SummaryBox
   summary="算法在临床变异解释中扮演证据整合与决策支持的角色。从变异优先级排序、ACMG 自动化分类、致病性预测到 de novo 检测和家系分离分析，算法帮助处理海量数据、整合多维证据、量化不确定性，但最终临床判断仍需人工审核。"
@@ -19,6 +29,9 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
     '算法是辅助工具而非替代：最终临床判断仍需结合家系背景、文献更新和患者沟通',
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 算法驱动的解释工作流
 
@@ -72,6 +85,11 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 4. 基因-表型匹配：计算基因已知疾病与患者表型的相似度
 5. 综合评分：多维度证据整合为单一排序分数
 ```
+
+<figure>
+  <img src="/img/illustrations/variant-prioritization.svg" alt="临床变异优先级排序流水线：从 VCF 列表经频率过滤、功能影响、表型匹配到候选收敛" />
+  <figcaption>临床变异优先级排序流水线：从大量变异逐步收敛到候选致病变异</figcaption>
+</figure>
 
 ### 基因-表型匹配算法
 
@@ -299,12 +317,14 @@ De novo 检测工具通常输出质量分数（如 Q-score），反映：
 - **文献和数据库更新**：新证据可能改变分类；
 - **患者和医生沟通**：算法分数需要转化为临床语言。
 
-## 常见误区
-
-- **算法分数越高越可靠**：分数只是优先级排序，不等于临床确定性；
-- **ACMG 自动分类可以直接报告**：仍需人工审核证据冲突和上下文；
-- **致病性预测可以替代其他证据**：它只是 supporting 证据的一种；
-- **CNV 算法输出就是真实事件**：需要覆盖度、断点和验证证据支持。
+<PitfallsBox
+  pitfalls={[
+    '算法分数越高越可靠：分数只是优先级排序，不等于临床确定性；',
+    'ACMG 自动分类可以直接报告：仍需人工审核证据冲突和上下文；',
+    '致病性预测可以替代其他证据：它只是 supporting 证据的一种；',
+    'CNV 算法输出就是真实事件：需要覆盖度、断点和验证证据支持。'
+  ]}
+/>
 
 ## 相关页面
 

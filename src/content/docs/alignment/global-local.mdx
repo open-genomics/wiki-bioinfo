@@ -4,8 +4,11 @@ description: 理解 Needleman-Wunsch 全局比对与 Smith-Waterman 局部比对
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='序列比对并不只有一种「对齐方式」。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。'
@@ -24,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '曼哈顿旅游问题', href: '/wiki-bioinfo/foundations/manhattan-tourist' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 是什么
 
@@ -82,6 +88,11 @@ F(i, 0) &= i \cdot g, \quad i = 1, 2, \ldots, m \\
 F(0, j) &= j \cdot g, \quad j = 1, 2, \ldots, n
 \end{aligned}
 $$
+
+<figure>
+  <img src="/img/illustrations/alignment-grid.svg" alt="全局比对 DP 矩阵的网格示意图" />
+  <figcaption>全局比对与局部比对的 DP 矩阵填充过程对比</figcaption>
+</figure>
 
 这意味着如果序列 A 的前 $i$ 个字符要与空串对齐，就必须付出 $i$ 个 Gap 的代价。同理，空串与序列 B 的前 $j$ 个字符对齐，需要 $j$ 个 Gap。
 
@@ -200,13 +211,17 @@ T A C G T
 
 ### 对比总结
 
-| 特性 | 全局比对 (NW) | 局部比对 (SW) |
-| :--- | :--- | :--- |
-| **应用场景** | 比较近缘物种的同源基因。 | 寻找结构域、Motif、Read 定位。 |
-| **矩阵初始化** | 惩罚首行首列（$i \cdot g$）。 | 首行首列全为 0。 |
-| **递推公式** | 取三个方向的最大值。 | 取四个方向（含 0）的最大值。 |
-| **回溯位置** | 必须从 $(n, m)$ 开始。 | 从矩阵内任意最大值处开始。 |
-| **本例最优得分** | 2 | 8 |
+<ComparisonTable
+  leftTitle="全局比对 (NW)"
+  rightTitle="局部比对 (SW)"
+  rows={[
+    { aspect: '**应用场景**', left: '比较近缘物种的同源基因。', right: '寻找结构域、Motif、Read 定位。' },
+    { aspect: '**矩阵初始化**', left: '惩罚首行首列（$i \cdot g$）。', right: '首行首列全为 0。' },
+    { aspect: '**递推公式**', left: '取三个方向的最大值。', right: '取四个方向（含 0）的最大值。' },
+    { aspect: '**回溯位置**', left: '必须从 $(n, m)$ 开始。', right: '从矩阵内任意最大值处开始。' },
+    { aspect: '**本例最优得分**', left: '2', right: '8' }
+  ]}
+/>
 
 ## 6. 复杂度分析
 
@@ -249,23 +264,16 @@ T A C G T
 - **SSEARCH**：使用 Smith-Waterman 进行数据库搜索的精确工具，适用于小规模数据库或需要最高敏感性的场景。
 - **短序列比对器**（如 BWA-SW、Bowtie2 的局部模式）：针对下一代测序数据的局部比对工具，核心思想源自 Smith-Waterman，但通过 BWT 索引大幅加速。
 
-## 8. 常见误区
-
-### 全局比对总能给出更好的生物学结果
-
-不是。全局比对强制对齐全部字符，如果两条序列只有局部相似（如共享一个功能结构域但其余部分完全不同），全局比对会因为强制对齐不相关区域而给出误导性结果。
-
-### 局部比对只能找到一个相似片段
-
-Smith-Waterman 矩阵中可能存在多个高分区域。标准算法只报告最高分的一个，但可以通过修改回溯策略来提取所有得分超过阈值的局部比对（即"Waterman-Eggert"方法）。
-
-### 局部比对是全局比对的"改进版"
-
-不是。它们解决的是不同的问题。局部比对多了一个"引入 0"的选项，这是针对特定场景的修改，并非在所有情况下都优于全局比对。如果两条序列确实整体同源，全局比对能提供更完整的演化信息。
-
-### Gap 罚分在两种比对中的作用相同
-
-虽然递推中 Gap 罚分的处理方式相同，但在全局比对中，首行首列的初始化已经隐含了对端点 Gap 的惩罚（$F(i,0) = i \cdot g$），而局部比对中端点 Gap 是免费的（$H(i,0) = 0$）。这意味着局部比对允许比对从序列的任意位置开始，而全局比对不允许。
+<PitfallsBox
+  pitfalls={[
+    '全局比对总能给出更好的生物学结果：',
+    '不是。全局比对强制对齐全部字符，如果两条序列只有局部相似（如共享一个功能结构域但其余部分完全不同），全局比对会因为强制对齐不相关区域而给出误导性结果。',
+    '局部比对只能找到一个相似片段：',
+    'Smith-Waterman 矩阵中可能存在多个高分区域。标准算法只报告最高分的一个，但可以通过修改回溯策略来提取所有得分超过阈值的局部比对（即"Waterman-Eggert"方法）。',
+    '局部比对是全局比对的"改进版"：',
+    '不是。它们解决的是不同的问题。局部比对多了一个"引入 0"的选项，这是针对特定场景的修改，并非在所有情况下都优于全局比对。如果两条序列确实整体同源，全局比对能提供更完整的演化信息。'
+  ]}
+/>
 
 ## 相关页面
 

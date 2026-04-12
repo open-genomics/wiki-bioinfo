@@ -9,6 +9,7 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="基因组注释（Genome Annotation）是将原始 DNA 序列转化为功能信息的过程：识别基因位置、外显子-内含子结构、转录本、蛋白质产物、调控元件和非编码 RNA。理解注释管线的步骤、证据来源和质量评估，是正确解读注释结果的前提。"
@@ -20,6 +21,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     '注释版本随时间更新，不同版本可能有显著差异',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 是什么
 
@@ -51,9 +55,9 @@ DNA 序列
 
 <PrerequisitesBox
   items={[
-    '理解中心法则：DNA → RNA → 蛋白质',
-    '了解 GTF/GFF 格式：注释文件的标准格式',
-    '了解参考基因组：注释基于特定参考版本',
+    {name: '生物学基础对象', href: '/docs/foundations/biology-basics'},
+    {name: 'GTF/GFF/BED 格式', href: '/docs/formats/gtf-gff-bed'},
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
   ]}
 />
 
@@ -230,6 +234,11 @@ busco -i annotation.fa -l vertebrata_odb10 -m geno
       to: '/docs/workflows/rna-seq',
       label: '应用层',
       description: '使用 GTF 注释进行基因表达定量。',
+    },
+    {
+      title: '参考基因组版本历史',
+      to: '/docs/data-references/reference-genome-history',
+      description: '注释版本与参考基因组版本的对应关系。',
     },
   ]}
 />

@@ -5,6 +5,8 @@ title: "表观基因组学"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="表观基因组学研究不改变 DNA 序列的可遗传调控机制，包括 DNA 甲基化、组蛋白修饰、染色质可及性等。它是理解基因表达调控、细胞命运决定和疾病发生的关键层面。"
@@ -14,6 +16,9 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
     '分析技术：ChIP-seq、ATAC-seq、亚硫酸氢盐测序等'
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题背景
 
@@ -278,52 +283,16 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 - 统计检验结果（p-value、FDR、效应量）
 - 功能注释结果（富集分析）
 
-## 常见误区与正确理解
-
-### 误区 1：甲基化 = 基因沉默
-
-**误解**：DNA 甲基化总是抑制基因表达。
-
-**正确理解**：甲基化-表达关系高度依赖位置：
-- **启动子甲基化**：通常抑制转录
-- **基因体甲基化**：常与活跃转录正相关
-- **增强子甲基化**：动态变化反映活性状态
-
-### 误区 2：ChIP-seq 峰 = 功能位点
-
-**误解**：ChIP-seq 检测到的峰就是功能调控位点。
-
-**正确理解**：峰表示蛋白质结合或修饰富集，但功能需要验证：
-- 结合是否影响基因表达？
-- 位点是否保守？
-- 遗传变异是否影响性状？
-
-### 误区 3：ATAC-seq 只检测开放染色质
-
-**误解**：ATAC-seq 信号仅反映染色质的物理可及性。
-
-**正确理解**：ATAC-seq 信号是多因素的复合反映：
-- 核小体定位（保护片段大小分布）
-- 转录因子结合（footprint 信号）
-- Tn5 序列偏好（需要校正）
-
-### 误区 4：表观遗传变化都是可逆的
-
-**误解**：表观遗传标记可以随时添加或去除。
-
-**正确理解**：可逆性有限制：
-- 某些印记在发育早期建立后难以改变
-- 衰老相关的表观遗传漂移难以逆转
-- 跨代遗传的表观遗传改变可能稳定传递数代
-
-### 误区 5：三维结构变化导致表达变化
-
-**误解**：染色质相互作用的变化是基因表达改变的原因。
-
-**正确理解**：因果关系是双向的：
-- 结构变化可能启用新的调控相互作用
-- 基因表达变化也可能重塑染色质结构
-- 需要时序数据或扰动实验验证因果方向
+<PitfallsBox
+  pitfalls={[
+    '误区 1：甲基化 = 基因沉默：',
+    '误解：DNA 甲基化总是抑制基因表达。',
+    '正确理解：甲基化-表达关系高度依赖位置：',
+    '启动子甲基化：通常抑制转录',
+    '基因体甲基化：常与活跃转录正相关',
+    '增强子甲基化：动态变化反映活性状态'
+  ]}
+/>
 
 ## 推荐阅读顺序
 

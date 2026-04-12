@@ -6,6 +6,8 @@ title: "Footprinting 算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'MACS2 峰调用算法', href: '/wiki-bioinfo/epigenomics/macs2-peak-calling', description: '开放染色质区域的识别' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题背景
 
@@ -310,31 +315,16 @@ Footprinting 通常作为 ATAC-seq 分析的下游步骤：
    - 结合 ChIP-seq：验证特定转录因子结合
    - 结合 scATAC-seq：细胞类型特异性调控
 
-## 常见误区
-
-### Footprint 存在就证明转录因子结合
-
-不一定。Footprint 是间接证据，可能由其他 DNA 结合蛋白或结构因素引起。需要其他证据（如 ChIP-seq）验证。
-
-### 没有 footprint 就没有转录因子结合
-
-不一定。某些因素可能导致 footprint 不可检测：
-- 数据深度不足
-- 转录因子结合时间短
-- 多个因子竞争结合
-- Tn5 偏好校正不充分
-
-### 所有 motif 都应该检测到 footprint
-
-不是。Motif 存在只是潜在结合位点，实际结合依赖于：
-- 细胞类型特异性
-- 转录因子表达水平
-- 协同因子存在
-- 染色质环境
-
-### Footprint 算法可以替代 ChIP-seq
-
-不能。Footprinting 提供的是推断证据，ChIP-seq 提供的是直接结合证据。两者互补，不能互相替代。
+<PitfallsBox
+  pitfalls={[
+    'Footprint 存在就证明转录因子结合：',
+    '不一定。Footprint 是间接证据，可能由其他 DNA 结合蛋白或结构因素引起。需要其他证据（如 ChIP-seq）验证。',
+    '没有 footprint 就没有转录因子结合：',
+    '不一定。某些因素可能导致 footprint 不可检测：',
+    '数据深度不足',
+    '转录因子结合时间短'
+  ]}
+/>
 
 ## 算法挑战与限制
 

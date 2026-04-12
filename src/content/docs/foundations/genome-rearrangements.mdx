@@ -6,6 +6,8 @@ title: "基因组重排与反转排序"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="基因组重排研究物种进化过程中基因组结构的变化，特别是通过反转（inversion）事件改变基因顺序。反转排序问题是要找到将一个基因组排列转换为目标排列所需的最少反转次数。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '近似算法', href: '/wiki/foundations/approximation-algorithms' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 生物学背景
 
@@ -244,23 +249,16 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 
 某些遗传疾病与特定的基因组重排相关，理解这些重排有助于诊断和治疗。
 
-## 常见误区
-
-### 反转距离就是两个基因组间的"进化距离"
-
-反转距离度量的是将一个排列转换为另一个所需的最少反转次数，它是结构差异的一种度量，但不直接等同于进化距离。实际进化中可能同时发生反转、易位、转座等多种事件，且同一位置可能经历多次重排。将反转距离直接解释为"进化步骤数"会低估真实的进化历史。
-
-### 贪心反转排序（前缀固定法）在实际中够用了
-
-虽然贪心方法概念直观，但其近似比在最坏情况下可能达到 $O(n)$（如排列 $n\ 1\ 2\ \ldots\ n{-}1$ 需要约 $n{-}1$ 步而最优只需 2 步）。基于断点的改进算法有 4-近似保证，但仍不够理想。实际基因组重排分析通常使用更复杂的算法（如 Hannenhalli-Pevzner 算法）或启发式方法。
-
-### 同源区块的划分是客观的
-
-同源区块的识别本身依赖参数选择和算法策略。不同的划分粒度（粗粒度 vs 细粒度）会得到不同的同源区块集合，进而影响反转距离的计算。同源区块的边界可能模糊不清，尤其在序列高度保守的区域。
-
-### 排序 by 反转问题已有高效的精确算法
-
-排序 by 反转问题在无符号排列中是 NP-困难的。虽然有符号排列（考虑基因方向性）存在多项式时间算法（Hannenhalli-Pevzner 算法），但其实现复杂且对特殊情况的处理繁琐。大多数实际工具仍依赖近似算法或启发式方法。
+<PitfallsBox
+  pitfalls={[
+    '反转距离就是两个基因组间的"进化距离"：',
+    '反转距离度量的是将一个排列转换为另一个所需的最少反转次数，它是结构差异的一种度量，但不直接等同于进化距离。实际进化中可能同时发生反转、易位、转座等多种事件，且同一位置可能经历多次重排。将反转距离直接解释为"进化步骤数"会低估真实的进化历史。',
+    '贪心反转排序（前缀固定法）在实际中够用了：',
+    '虽然贪心方法概念直观，但其近似比在最坏情况下可能达到 $O(n)$（如排列 $n\ 1\ 2\ \ldots\ n{-}1$ 需要约 $n{-}1$ 步而最优只需 2 步）。基于断点的改进算法有 4-近似保证，但仍不够理想。实际基因组重排分析通常使用更复杂的算法（如 Hannenhalli-Pevzner 算法）或启发式方法。',
+    '同源区块的划分是客观的：',
+    '同源区块的识别本身依赖参数选择和算法策略。不同的划分粒度（粗粒度 vs 细粒度）会得到不同的同源区块集合，进而影响反转距离的计算。同源区块的边界可能模糊不清，尤其在序列高度保守的区域。'
+  ]}
+/>
 
 ## 相关页面
 

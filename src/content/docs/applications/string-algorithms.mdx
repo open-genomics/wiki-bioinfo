@@ -6,6 +6,8 @@ title: "字符串算法与索引结构"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '动态规划算法', href: '/wiki-bioinfo/applications/dynamic-programming' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么需要字符串算法与索引
 
@@ -508,23 +513,16 @@ FindRepeats(SA, LCP, min_length):
 - **变异处理**：处理 SNP、indel
 - **质量控制**：过滤低质量 reads
 
-## 常见误区
-
-### 索引越大越好
-
-不是。索引应在查询速度与内存使用之间取得平衡。FM-index 通过压缩实现了良好的权衡。
-
-### Suffix Array 总是比 Suffix Tree 好
-
-不是。Suffix Tree 支持某些操作（如最长公共子串查询）更为直接，但实现更复杂。
-
-### BWT 只用于压缩
-
-不是。BWT 的可逆性和 LF-mapping 使其成为强大的索引结构基础。
-
-### 近似匹配只能用启发式
-
-不是。某些索引结构（如 FM-index）支持精确的近似匹配搜索。
+<PitfallsBox
+  pitfalls={[
+    '索引越大越好：',
+    '不是。索引应在查询速度与内存使用之间取得平衡。FM-index 通过压缩实现了良好的权衡。',
+    'Suffix Array 总是比 Suffix Tree 好：',
+    '不是。Suffix Tree 支持某些操作（如最长公共子串查询）更为直接，但实现更复杂。',
+    'BWT 只用于压缩：',
+    '不是。BWT 的可逆性和 LF-mapping 使其成为强大的索引结构基础。'
+  ]}
+/>
 
 ## 学习路径
 

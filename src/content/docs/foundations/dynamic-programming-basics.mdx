@@ -6,6 +6,8 @@ title: "动态规划基础：曼哈顿游客问题"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 什么是动态规划
 
@@ -284,23 +289,16 @@ DPCHANGE(M, c, d)
 
 理解曼哈顿游客问题是掌握序列比对、基因预测等生物信息学核心算法的第一步。
 
-## 常见误区
-
-### 动态规划就是填表
-
-填表只是实现手段。动态规划的核心是三个要素：最优子结构、重叠子问题、无后效性。很多问题可以设计出 DP 方案但不一定需要显式填表（如带记忆化的递归）。反之，盲目填表而不验证这三个前提条件，可能导致错误结果。
-
-### 所有递归问题都能用动态规划优化
-
-只有存在"重叠子问题"时，动态规划才有优势。例如，归并排序的递归子问题是相互独立的（不重叠），此时分治比 DP 更自然。判断一个递归问题是否适合 DP，关键是看子问题的解是否被多次重复计算。
-
-### DP 表的值就是最优解
-
-DP 表存储的通常只是最优值（如最长路径的权重），而非最优解本身。要恢复具体的最优路径或方案，需要在填表时记录决策方向（回溯指针），然后通过回溯重建。在空间受限时，回溯需要特殊的技巧（如 Hirschberg 算法）。
-
-### 动态规划的时间复杂度总是 O(n²)
-
-DP 的时间复杂度取决于状态空间大小和每个状态的转移代价。一维 DP 可以是 O(n)（如换钱问题），二维 DP 是 O(nm)（如序列比对），三维 DP 可以是 O(nmp)（如剪接比对）。不能将 DP 与 O(n²) 简单等价。
+<PitfallsBox
+  pitfalls={[
+    '动态规划就是填表：',
+    '填表只是实现手段。动态规划的核心是三个要素：最优子结构、重叠子问题、无后效性。很多问题可以设计出 DP 方案但不一定需要显式填表（如带记忆化的递归）。反之，盲目填表而不验证这三个前提条件，可能导致错误结果。',
+    '所有递归问题都能用动态规划优化：',
+    '只有存在"重叠子问题"时，动态规划才有优势。例如，归并排序的递归子问题是相互独立的（不重叠），此时分治比 DP 更自然。判断一个递归问题是否适合 DP，关键是看子问题的解是否被多次重复计算。',
+    'DP 表的值就是最优解：',
+    'DP 表存储的通常只是最优值（如最长路径的权重），而非最优解本身。要恢复具体的最优路径或方案，需要在填表时记录决策方向（回溯指针），然后通过回溯重建。在空间受限时，回溯需要特殊的技巧（如 Hirschberg 算法）。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

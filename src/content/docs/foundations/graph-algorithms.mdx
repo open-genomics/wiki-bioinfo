@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 是什么
 
@@ -355,34 +360,16 @@ Dijkstra 算法用于在带权图中找到单源最短路径。
 - **序列相似性网络**：构建序列间的最小相似性连接
 - **进化树构建**：某些距离法构建树的变种
 
-## 常见误区
-
-### BFS 和 DFS 只是理论工具
-
-不是。在实际工具中：
-- BWA 的 seed 搜索类似 BFS 思想
-- 组装图的遍历和简化大量使用 DFS
-- 系统发育树的搜索和评估本质上是图遍历问题
-
-### 最短路径算法只能用在地理地图
-
-不是。在生物信息学中：
-- 比对网格图上的路径就是最短路径问题
-- 组装图中的路径优化也是最短路径问题
-- 进化距离的计算也经常用到最短路径
-
-### 图一定要显式存储
-
-不是。很多生物信息学工具使用隐式图：
-- 比对的网格图是隐式的，不实际存储所有顶点
-- de Bruijn graph 的某些表示也是隐式的
-
-### 图算法总是最优的
-
-不是。很多生物信息学问题：
-- 图规模太大，精确算法不可行
-- 需要启发式或近似算法
-- 最优解不一定是生物学上最合理的解
+<PitfallsBox
+  pitfalls={[
+    'BFS 和 DFS 只是理论工具：',
+    '不是。在实际工具中：',
+    'BWA 的 seed 搜索类似 BFS 思想',
+    '组装图的遍历和简化大量使用 DFS',
+    '系统发育树的搜索和评估本质上是图遍历问题',
+    '最短路径算法只能用在地理地图：'
+  ]}
+/>
 
 ## 与其他算法的连接
 

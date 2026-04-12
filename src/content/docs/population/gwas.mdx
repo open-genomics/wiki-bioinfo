@@ -9,6 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="GWAS 是一种在全基因组范围内系统扫描遗传变异，寻找与复杂表型（如高度、疾病易感性）存在统计学关联的 SNP 的方法。它将基因定位从传统的家系连锁分析推向了大规模群体的病例-对照研究。"
@@ -27,6 +28,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     { name: '变异检测总览', href: '/wiki-bioinfo/variants/variant-calling-overview' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 统计模型：寻找关联的刻度
 
@@ -172,6 +176,12 @@ $$P < 1 \times 10^{-5}$$
 ## 5. 可视化与质量评估
 
 ### 曼哈顿图 (Manhattan Plot)
+
+<figure>
+  <img src="/img/illustrations/gwas-manhattan.svg" alt="GWAS 曼哈顿图：各染色体 SNP 的 -log10(p) 分布与全基因组显著性阈值" />
+  <figcaption>GWAS 曼哈顿图：显著性信号以"块状"出现在特定染色体区域</figcaption>
+</figure>
+
 - **横轴**：染色体位置。
 - **纵轴**：$-\log_{10}(P)$ 值。
 - **直觉**：显著的位点会像曼哈顿的高楼大厦一样拔地而起。

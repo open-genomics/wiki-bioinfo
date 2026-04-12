@@ -2,10 +2,17 @@
 description: 空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略
 title: "去卷积与细胞映射"
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 是什么
 
 **空间去卷积（Spatial Deconvolution）** 是一类将空间转录组 spot 的混合表达信号分解为各细胞类型贡献比例的计算方法。由于大多数空间平台（如 10x Visium）的一个 spot 包含多个细胞，直接读取的表达值是这些细胞表达谱的加权平均。去卷积的目标是利用单细胞 RNA-seq（scRNA-seq）提供的参考图谱，反推每个 spot 中各细胞类型的组成比例。
@@ -178,7 +185,7 @@ $$
 
 | 工具 | 时间复杂度 | 空间复杂度 | 适用规模 |
 |------|-----------|-----------|----------|
-| SPOTlight (NMF) | $O(GKS \cdot I)$ | $O(GK + GS)$ | 中等规模（<10k spots） |
+| SPOTlight (NMF) | $O(GKS \cdot I)$ | $O(GK + GS)$ | 中等规模（{'<'}10k spots） |
 | RCTD | $O(GKS \cdot I)$ | $O(GK + GS)$ | 中等规模 |
 | cell2location | $O(GKS \cdot I \cdot V)$ | $O(GK + GS + KV)$ | 大规模（需 GPU 加速） |
 
@@ -247,22 +254,16 @@ scRNA-seq 参考数据
 - **富集区域**：某些区域可能由单一类型主导（如淋巴滤泡）
 - **异常模式**：纯肿瘤区域内出现免疫细胞比例，可能提示浸润
 
-## 常见误区
 
-- **"去卷积比例就是精确细胞数"**
-  - 比例反映的是对表达信号的贡献，受细胞大小、RNA 含量影响
-
-- **"参考 scRNA-seq 数据集越大越好"**
-  - 参考的组织来源、实验条件、病理状态应与空间样本匹配，而非单纯追求细胞数
-
-- **"每个 spot 应该有清晰的主导细胞类型"**
-  - 许多生物学区域（如炎症区、发育过渡区）本来就是混合态，均匀比例本身可能是有效信号
-
-- **"去卷积可以检测参考中没有的细胞类型"**
-  - 去卷积只能分配已知类型，novel cell type detection 需先进行无监督分析
-
-- **"去卷积结果与组织图像不一致就是错误"**
-  - 组织图像（H&E）反映形态学，去卷积反映分子特征，两者可以互补
+<PitfallsBox
+  pitfalls={[
+    '"去卷积比例就是精确细胞数"',
+    '"参考 scRNA-seq 数据集越大越好"',
+    '"每个 spot 应该有清晰的主导细胞类型"',
+    '"去卷积可以检测参考中没有的细胞类型"',
+    '"去卷积结果与组织图像不一致就是错误"'
+  ]}
+/>
 
 ## 参考资料
 

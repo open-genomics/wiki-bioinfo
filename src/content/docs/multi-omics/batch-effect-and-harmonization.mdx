@@ -2,10 +2,17 @@
 description: 多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。
 title: "批次效应与数据协调"
 ---
-
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。"
+/>
 
+<PageHeaderMeta section="Applications" />
 ## 问题定义
 
 ### 什么是批次效应
@@ -145,37 +152,16 @@ $$
 - 细胞类型混合指数（Cell Type Mixing Index）
 - 伪时间相关性（Pseudotime Correlation）
 
-## 常见误区与注意事项
 
-### 误区 1：可视化混合即整合成功
-
-UMAP 图中批次混合良好**不**等同于整合成功。可能的情况：
-- 真实的生物学差异被过度校正消除
-- 不同细胞类型被错误地混合在一起
-
-**正确做法**：结合细胞类型标签、批次指标、下游任务综合评估。
-
-### 误区 2：单一指标评估
-
-整合质量是多维度的，单一指标可能产生误导。
-
-**正确做法**：建立包含批次去除、生物学保留、下游一致性的综合评估体系。
-
-### 误区 3：所有批次差异都应去除
-
-某些情况下批次与生物学条件部分耦合（confounded）：
-- 疾病组与对照组由不同实验室处理
-- 不同发育阶段使用不同测序平台
-
-**正确做法**：分析批次-生物学关联结构，避免机械校正。
-
-### 误区 4：校正后再分析
-
-校正后的数据可能不再适合某些统计检验（如差异表达）。
-
-**正确做法**：
-- 整合/聚类/可视化使用校正后的数据
-- 差异分析建议使用原始数据 + 批次作为协变量
+<PitfallsBox
+  pitfalls={[
+    '真实的生物学差异被过度校正消除',
+    '不同细胞类型被错误地混合在一起',
+    '疾病组与对照组由不同实验室处理',
+    '不同发育阶段使用不同测序平台',
+    '整合/聚类/可视化使用校正后的数据'
+  ]}
+/>
 
 ## 方法选择指南
 

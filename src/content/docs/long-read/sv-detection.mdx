@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="结构变异（Structural Variation, SV）通常指基因组中大于 50 bp 的变异。长读长测序通过跨越变异断点，为解析缺失、重复、倒位和易位等复杂重排提供了前所未有的分辨率。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 要解决什么生物信息学问题？
 
@@ -63,6 +68,11 @@ $$R = I_1 \cdot V_1 \cdot I_2 \cdot V_2 \cdots I_k \cdot V_k \cdot I_{k+1}$$
 其中每个 $I_j$ 是与所有 Reads 一致的区间，每个 $V_j$ 是包含变异的区间。目标是最大化一致区间的总长度，同时保持变异区间的数量尽可能少。
 
 ## 4. 核心算法信号
+
+<figure>
+  <img src="/img/illustrations/long-read-sv.svg" alt="长读长结构变异检测证据：split-read 与覆盖度信号示意" />
+  <figcaption>长读长检测 SV 的核心信号：Split-read、覆盖度波动与不正常比对方向</figcaption>
+</figure>
 
 长读长 SV Caller（如 Sniffles, cuteSV）通过分析 BAM 文件中的非正常比对信号来工作：
 
@@ -194,23 +204,16 @@ SV Caller 的处理：
   ]}
 />
 
-## 12. 常见误区
-
-### "SV Caller 报告的变异都是真实的"
-
-SV Caller 的输出中通常包含一定比例的假阳性。尤其是在重复区域、低覆盖度区域和端粒附近，假阳性率会显著升高。所有候选 SV 都需要经过严格的质量过滤和（如果可能的话）实验验证。
-
-### "VCF 文件中的 SV 断点坐标是精确的"
-
-虽然长读长 SV 检测的断点精度远高于短读长（通常在几十 bp 以内），但受限于测序错误和比对偏差，断点坐标仍可能存在数十 bp 的偏差。
-
-### "结构变异只影响编码区"
-
-实际上，大部分 SV 发生在基因组的非编码区域。非编码区 SV 可以通过改变调控元件（如增强子、沉默子）的位置或拷贝数来影响基因表达。
-
-### "所有大于 50 bp 的变异都叫 SV"
-
-50 bp 是一个常用的操作阈值，但不同研究者和工具可能使用不同的阈值。有些文献将阈值设在 1 kb 以上。在使用和比较不同工具的结果时，需要明确变异大小的定义范围。
+<PitfallsBox
+  pitfalls={[
+    '"SV Caller 报告的变异都是真实的"：',
+    'SV Caller 的输出中通常包含一定比例的假阳性。尤其是在重复区域、低覆盖度区域和端粒附近，假阳性率会显著升高。所有候选 SV 都需要经过严格的质量过滤和（如果可能的话）实验验证。',
+    '"VCF 文件中的 SV 断点坐标是精确的"：',
+    '虽然长读长 SV 检测的断点精度远高于短读长（通常在几十 bp 以内），但受限于测序错误和比对偏差，断点坐标仍可能存在数十 bp 的偏差。',
+    '"结构变异只影响编码区"：',
+    '实际上，大部分 SV 发生在基因组的非编码区域。非编码区 SV 可以通过改变调控元件（如增强子、沉默子）的位置或拷贝数来影响基因表达。'
+  ]}
+/>
 
 ## 相关页面
 

@@ -9,6 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="Hardy–Weinberg 平衡（HWE）是群体遗传学的理论基石。它证明了在理想条件下，等位基因频率和基因型频率将在代际间保持不变。这一模型为识别进化压力和评估测序质量提供了关键参照。"
@@ -26,6 +27,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     { name: '变异检测总览', href: '/wiki-bioinfo/variants/variant-calling-overview' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 理想群体的稳定性
 

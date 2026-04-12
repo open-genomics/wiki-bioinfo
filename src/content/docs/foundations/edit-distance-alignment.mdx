@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="编辑距离是度量两个字符串相似度的最小编辑操作数，序列比对则通过插入空格使字符串对齐。这两种概念都通过动态规划解决，是生物信息学中最基础的序列比较方法。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '序列与字符串', href: '/docs/foundations/sequences-and-strings' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 什么是编辑距离
 
@@ -227,23 +232,16 @@ TATA-
   ]}
 />
 
-## 常见误区
-
-### 编辑距离越小，两条序列的生物学关系越近
-
-编辑距离度量的是字符串层面的差异，不能直接等同于进化距离或功能相似性。不同区域的选择压力不同——编码区的同义突变不改变蛋白质，而非编码区的突变可能影响调控。需要结合替换矩阵（如 PAM、BLOSUM）和进化模型来评估生物学意义上的距离。
-
-### 全局比对总是比局部比对"更好"
-
-两者解决的是不同的问题。全局比对适合比较两条长度相近、整体同源的序列（如同源蛋白）；局部比对适合在长序列中寻找保守域或在数据库中搜索相似片段。对不相关序列做全局比对，结果往往没有生物学意义。
-
-### 空位罚分可以随意设定
-
-空位罚分直接影响比对结果的质量。线性罚分假设每个空位的代价相同，但生物学上，一个长 gap（如大片段插入/缺失）的产生机制与多个短 gap 不同。仿射空位罚分（区分 gap 开启和延伸代价）更符合实际，也是大多数专业工具的默认选择。
-
-### BLAST 使用的是完整的动态规划
-
-BLAST 使用的是 seed-and-extend 启发式策略，而非完整的 Smith-Waterman DP。它先用精确匹配的短种子（seed）快速定位候选区域，再在局部用 DP 精化比对。这使得 BLAST 远快于完整 DP，但可能遗漏某些低相似度的匹配。
+<PitfallsBox
+  pitfalls={[
+    '编辑距离越小，两条序列的生物学关系越近：',
+    '编辑距离度量的是字符串层面的差异，不能直接等同于进化距离或功能相似性。不同区域的选择压力不同——编码区的同义突变不改变蛋白质，而非编码区的突变可能影响调控。需要结合替换矩阵（如 PAM、BLOSUM）和进化模型来评估生物学意义上的距离。',
+    '全局比对总是比局部比对"更好"：',
+    '两者解决的是不同的问题。全局比对适合比较两条长度相近、整体同源的序列（如同源蛋白）；局部比对适合在长序列中寻找保守域或在数据库中搜索相似片段。对不相关序列做全局比对，结果往往没有生物学意义。',
+    '空位罚分可以随意设定：',
+    '空位罚分直接影响比对结果的质量。线性罚分假设每个空位的代价相同，但生物学上，一个长 gap（如大片段插入/缺失）的产生机制与多个短 gap 不同。仿射空位罚分（区分 gap 开启和延伸代价）更符合实际，也是大多数专业工具的默认选择。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

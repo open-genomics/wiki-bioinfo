@@ -6,6 +6,10 @@ title: "多组学整合策略"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 
 <SummaryBox
   summary="多组学整合不是简单把多个矩阵拼起来，而是要先想清楚数据来源、分析目标和组学特性，再选择合适的整合策略。早期、中期和后期整合各有适用场景，没有万能方案。"
@@ -24,11 +28,19 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   ]}
 />
 
+<PageHeaderMeta section="Applications" />
+
+
 ## 问题定义
 
 ### 什么是多组学整合
 
 **多组学整合（Multi-Omics Integration）** 是指同时分析来自不同生物学层次的数据（基因组、转录组、表观组、蛋白组、代谢组等），以获得比单一组学更全面的生物学理解。
+
+<figure>
+  <img src="/img/illustrations/multiomics-integration.svg" alt="多组学整合概念图：DNA/RNA/染色质数据经共享潜空间映射到表型、机制与预测" />
+  <figcaption>多组学整合概念图：不同组学层次的数据通过共享表示空间实现信息融合</figcaption>
+</figure>
 
 ### 整合场景分类
 
@@ -159,6 +171,19 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 - 分别做差异分析，然后取交集或 union；
 - 分别做富集分析，然后看哪些通路在多个组学中都显著；
 - 分别训练预测模型，然后集成模型预测结果。
+
+<ComparisonTable
+  leftTitle="早期整合"
+  rightTitle="中期整合"
+  rows={[
+    { aspect: '核心操作', left: '直接拼接特征矩阵', right: '先学低维表示再整合' },
+    { aspect: '跨组学交互', left: '模型可直接捕获', right: '在共享空间中捕获' },
+    { aspect: '尺度差异', left: '敏感——需仔细归一化', right: '鲁棒——各组学独立编码' },
+    { aspect: '缺失数据', left: '困难——拼接需要完整数据', right: '可处理——各组学独立编码' },
+    { aspect: '计算复杂度', left: '低（单模型）', right: '中（多编码器+整合）' },
+    { aspect: '可解释性', left: '依赖模型类型', right: '较高（潜空间可解释）' },
+  ]}
+/>
 
 ## 案例研究
 
@@ -323,6 +348,16 @@ model_survival.fit(X, y)
 
 ## 选择策略的关键问题
 
+<DecisionMatrix
+  rows={[
+    { scenario: '样本完全匹配、组学少、特征维度接近', recommendation: '早期整合', rationale: '实现简单，模型可直接捕获跨组学交互' },
+    { scenario: '组学尺度差异大、部分样本有缺失', recommendation: '中期整合（MOFA+/SNF）', rationale: '各组学独立编码，天然处理尺度和缺失问题' },
+    { scenario: '更关注结果解释而非预测性能', recommendation: '后期整合', rationale: '每个组学独立分析，结果易解释' },
+    { scenario: '单细胞多模态数据（如 10x Multiome）', recommendation: '中期整合（WNN/MOFA+）', rationale: '同一细胞的多模态数据适合在潜空间整合' },
+    { scenario: '队列级跨平台数据整合', recommendation: '中期整合 + 批次校正', rationale: '先处理批次效应，再在共享空间整合' },
+  ]}
+/>
+
 在开始整合前，需要先回答：
 
 ### 数据匹配性
@@ -364,27 +399,16 @@ model_survival.fit(X, y)
 - 为临床预测提供更鲁棒的模型；
 - 为实验设计提供多组学证据支持。
 
-## 常见误区
-
-### 组学越多越好
-
-不对。如果问题不清晰，更多数据只会增加噪声和计算负担。先明确科学问题，再决定需要哪些组学。
-
-### 整合就是拼接矩阵
-
-不对。早期整合只是其中一种策略，而且往往不是最优的。需要根据数据特性和分析目标选择合适的策略。
-
-### 所有组学都该强行映射到统一空间
-
-不对。有些时候后期整合更合理，特别是当不同组学需要完全不同的分析方法时。
-
-### 整合结果一定比单一组学好
-
-不一定。如果整合方法选择不当，或者数据质量不匹配，整合可能引入更多噪声。需要用独立数据验证整合是否真的带来提升。
-
-### 忽略批次效应
-
-不对。不同组学、不同平台、不同批次之间的批次效应可能在整合时被放大，导致虚假关联。整合前必须做好批次校正。
+<PitfallsBox
+  pitfalls={[
+    '组学越多越好：',
+    '不对。如果问题不清晰，更多数据只会增加噪声和计算负担。先明确科学问题，再决定需要哪些组学。',
+    '整合就是拼接矩阵：',
+    '不对。早期整合只是其中一种策略，而且往往不是最优的。需要根据数据特性和分析目标选择合适的策略。',
+    '所有组学都该强行映射到统一空间：',
+    '不对。有些时候后期整合更合理，特别是当不同组学需要完全不同的分析方法时。'
+  ]}
+/>
 
 ## 参考资料
 

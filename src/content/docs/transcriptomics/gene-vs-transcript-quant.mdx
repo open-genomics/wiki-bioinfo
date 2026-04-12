@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="RNA-seq 定量可以在两个维度进行：转录本层（Isoform-level）提供了精细的剪接信息，而基因层（Gene-level）则在统计上更稳健。理解这两者的转化逻辑是差异表达分析的关键。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '伪比对与定量算法', href: '/wiki-bioinfo/transcriptomics/pseudo-alignment-and-quantification' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 是什么
 
@@ -125,40 +130,16 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
 | **共表达网络分析 (WGCNA)** | **基因层** | 网络节点通常定义为基因，且需要较高的数据稳健性。 |
 | **蛋白质丰度预测** | **转录本层** | 不同的剪接变体可能编码不同的蛋白质产物，需要转录本级信息来预测。 |
 
-## 5. 常见误区
-
-### 5.1 先做基因层比对再定量
-
-直接把 Reads 比对到基因区间（即忽略剪接结构，只看基因的外显子-内含子边界）会导致严重的定量错误。原因在于：
-
-- 不同转录本共享外显子的比例差异巨大。简单地把所有外显子上的 Reads 加起来，会高估短转录本的贡献、低估长转录本的贡献。
-- 内含子保留（Intron Retention）等剪接事件的 Reads 会被错误地计算在内。
-
-**正确流程**：比对到转录组/基因组（保留剪接信息） -> 转录本层定量 -> 聚合到基因层。
-
-### 5.2 忽略 Isoform Switching
-
-如果一个基因的 Isoform A 减少而 Isoform B 增加，基因层的总表达量可能显示"无显著变化"，从而漏掉重要的生物学发现。这在癌症研究中尤其危险——很多肿瘤驱动基因的功能变化正是通过剪接变体的切换实现的。
-
-**建议做法**：即使主要分析在基因层进行，也应在转录本级做一次探索性分析（如通过 PCA 或热图检查转录本比例），以发现潜在的 Isoform Switching 事件。
-
-### 5.3 在差异表达分析中直接使用 TPM/FPKM
-
-TPM 和 FPKM 是归一化的相对丰度，不适合直接用于 DESeq2/edgeR 等工具的差异表达分析。这些工具的统计模型（如负二项分布 Negative Binomial Distribution）是基于原始计数（Raw Counts）建立的，需要计数数据的离散性质来正确估计方差。
-
-**正确做法**：使用 `tximport` 将转录本级定量转化为"长度校正后的有效计数"（Length-Adjusted Counts），然后输入 DESeq2。TPM 仅用于可视化（如热图、箱线图）和样本间趋势比较。
-
-### 5.4 对低丰度转录本过度解读
-
-转录本级定量对低丰度转录本的估计极不稳定。一个仅有几个 Reads 支持的转录本，其 TPM 估计值的置信区间可能跨越好几个数量级。在解读转录本级结果时，应：
-
-- 设置最低表达阈值（如 TPM > 1 或 CPM > 1）。
-- 关注支持 Reads 数量而非仅看 TPM 数值。
-- 使用 Bootstrap 置信区间（Salmon 默认输出）评估估计的可靠性。
-
-### 5.5 聚合时忽略参考注释版本
-
-不同版本的参考转录组注释（如 GENCODE v38 vs. v44）在基因-转录本的归属关系上可能存在差异。如果定量工具使用一个版本的注释，而聚合工具（如 `tximport`）使用另一个版本，会导致基因-转录本映射错误。**始终确保定量和聚合使用同一版本的注释文件。**
+<PitfallsBox
+  pitfalls={[
+    '先做基因层比对再定量：',
+    '直接把 Reads 比对到基因区间（即忽略剪接结构，只看基因的外显子-内含子边界）会导致严重的定量错误。原因在于：',
+    '不同转录本共享外显子的比例差异巨大。简单地把所有外显子上的 Reads 加起来，会高估短转录本的贡献、低估长转录本的贡献。',
+    '内含子保留（Intron Retention）等剪接事件的 Reads 会被错误地计算在内。',
+    '正确流程：比对到转录组/基因组（保留剪接信息） -> 转录本层定量 -> 聚合到基因层。',
+    '忽略 Isoform Switching：'
+  ]}
+/>
 
 ## 相关页面
 

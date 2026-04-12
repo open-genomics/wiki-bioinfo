@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="基于质谱的蛋白质组学通过测量肽段的质荷比（m/z）来推断蛋白质身份。核心流程包括：离子化、MS1 全扫描、MS2 碎裂谱获取，以及通过谱图重建或数据库搜索鉴定肽段序列。"
@@ -26,7 +28,15 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
+<PageHeaderMeta section="Applications" />
+
+
 ## 1. 是什么
+
+<figure>
+  <img src="/img/illustrations/proteomics-ms.svg" alt="质谱蛋白质组学流程：蛋白样本、酶解、LC 分离、质谱检测与肽段鉴定" />
+  <figcaption>基于质谱的蛋白质组学 "底向上" 策略流水线</figcaption>
+</figure>
 
 串联质谱（Tandem Mass Spectrometry, MS/MS）是现代蛋白质组学的核心实验技术。其基本原理是通过测量带电肽段离子的质荷比（Mass-to-Charge Ratio, $m/z$）和碎片离子的质量分布，来推断蛋白质的氨基酸序列和修饰状态。
 
@@ -157,31 +167,16 @@ $$P^* = \arg\max_{P} \text{Score}(T(P), S)$$
 - **蛋白质互作组学**：结合免疫沉淀（Immunoprecipitation）与质谱（AP-MS），绘制蛋白质-蛋白质相互作用网络。
 - **临床生物标志物发现**：从体液（如血液、尿液）中筛选疾病特异性蛋白标志物。
 
-## 5. 常见误区
-
-### 5.1 混淆质量与质荷比
-
-质谱仪测量的是 $m/z$ 而非纯质量。一个质量为 1000 Da 的肽段，如果携带 2 个电荷，其 $m/z = 501$。在解读谱图时，必须先确定离子的电荷态（Charge State），才能还原真实质量。大多数现代质谱软件可以自动识别电荷态，但在处理低质量精度数据或重叠同位素分布时，电荷态判定可能出错。
-
-### 5.2 忽视同位素分布
-
-自然界的碳、氢、氮、氧等元素都存在重同位素（如 $^{13}\text{C}$）。一个含有 $n$ 个碳原子的肽段会呈现一个同位素包络（Isotopic Envelope），而非单个尖峰。在高分辨率谱图中，同位素分布的形状本身就是辅助鉴定的重要信息。如果忽略同位素效应，可能导致：
-
-- 错误地将同位素峰识别为独立化合物。
-- 在低分辨率谱图中误判电荷态。
-
-### 5.3 DDA 的选择偏差
-
-DDA 模式总是优先碎裂高丰度离子，这意味着低丰度蛋白的肽段可能永远不会被选中进行 MS2 碎裂。这种内在的选择偏差导致：
-
-- 同一样本在不同运行之间的鉴定结果不一致。
-- 低丰度蛋白（往往是信号转导分子）容易被遗漏。
-
-DIA 模式在一定程度上缓解了这一问题，但需要更复杂的数据分析流程。
-
-### 5.4 忽略胰蛋白酶的漏切
-
-胰蛋白酶酶切并非 100% 完全。大约 10--20% 的肽段会包含漏切位点（Missed Cleavage），即本应被切断的 Arg/Lys 位点未被切割。在数据库搜索时，如果漏切参数设置过严（如不允许漏切），会漏掉大量真实肽段；设置过宽则会扩大搜索空间，降低鉴定效率。通常允许 1--2 个漏切位点。
+<PitfallsBox
+  pitfalls={[
+    '混淆质量与质荷比：',
+    '质谱仪测量的是 $m/z$ 而非纯质量。一个质量为 1000 Da 的肽段，如果携带 2 个电荷，其 $m/z = 501$。在解读谱图时，必须先确定离子的电荷态（Charge State），才能还原真实质量。大多数现代质谱软件可以自动识别电荷态，但在处理低质量精度数据或重叠同位素分布时，电荷态判定可能出错。',
+    '忽视同位素分布：',
+    '自然界的碳、氢、氮、氧等元素都存在重同位素（如 $^{13}\text{C}$）。一个含有 $n$ 个碳原子的肽段会呈现一个同位素包络（Isotopic Envelope），而非单个尖峰。在高分辨率谱图中，同位素分布的形状本身就是辅助鉴定的重要信息。如果忽略同位素效应，可能导致：',
+    '错误地将同位素峰识别为独立化合物。',
+    '在低分辨率谱图中误判电荷态。'
+  ]}
+/>
 
 ## 相关页面
 

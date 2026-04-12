@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="MOFA+ 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，可处理缺失数据并提供不确定性估计。"
@@ -567,44 +569,19 @@ for factor_idx in range(n_factors):
 - 展示每个因子解释的方差比例
 - 评估因子重要性
 
-## 常见误区
 
-### MOFA+ 总是比 NMF 好
+<PageHeaderMeta section="Applications" />
 
-不一定。如果：
-- 数据完整无缺失
-- 不需要不确定性估计
-- 计算资源有限
-
-NMF 可能更合适。
-
-### 因子数越多越好
-
-不是。过多因子会导致：
-- 过拟合
-- 因子难以解释
-- 计算成本增加
-
-### ARD 参数可以完全自动选择因子
-
-ARD 有帮助，但仍需要：
-- 结合 ELBO 曲线
-- 考虑可解释性
-- 下游任务验证
-
-### MOFA+ 只能用于连续数据
-
-不是。MOFA+ 支持多种数据类型：
-- 连续：高斯似然
-- 二值：伯努利似然
-- 计数：泊松似然
-
-### 因子可以直接解释为生物学过程
-
-需要验证：
-- 与已知标签的相关性
-- 通路富集分析
-- 稳定性分析
+<PitfallsBox
+  pitfalls={[
+    'MOFA+ 总是比 NMF 好：',
+    '不一定。如果：',
+    '数据完整无缺失',
+    '不需要不确定性估计',
+    '计算资源有限',
+    'NMF 可能更合适。'
+  ]}
+/>
 
 ## 扩展方法
 

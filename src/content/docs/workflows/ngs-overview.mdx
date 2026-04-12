@@ -2,10 +2,17 @@
 title: "NGS 流程总览"
 description: 高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 是什么
 
 NGS（Next-Generation Sequencing）流程总览关注的是：从原始测序数据到最终可解释结果，这条分析链路通常经过哪些阶段、每一步依赖什么输入输出，以及错误会如何在流程中传播。
@@ -118,13 +125,15 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
 
 真正使用具体工具时，最重要的不是记住某个命令，而是理解工具在流程中的位置、输入输出和它对后续步骤的影响。
 
-## 常见误区
 
-- 只要工具能跑通，流程就算正确；
-- 下游结果异常时，只需要在最后一步调参数；
-- 工具名等于流程本身；
-- 参考版本、注释版本和文件格式不一致也问题不大。
-
+<PitfallsBox
+  pitfalls={[
+    '只要工具能跑通，流程就算正确；',
+    '下游结果异常时，只需要在最后一步调参数；',
+    '工具名等于流程本身；',
+    '参考版本、注释版本和文件格式不一致也问题不大。'
+  ]}
+/>
 <RelatedLinks
   links={[
     { title: '质量控制（QC）总览', to: '/wiki-bioinfo/workflows/qc-overview', description: 'NGS 流程的入口质控步骤' },

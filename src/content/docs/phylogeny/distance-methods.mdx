@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能「解释」这些距离的树。'
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 要解决什么生物信息学问题？
 
@@ -178,23 +183,16 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 - 序列之间具有足够的相似性，可以进行可靠的比对。
 - 距离矩阵中不应存在过多的缺失值。
 
-## 10. 常见误区
-
-### "p-distance 和 Jukes-Cantor 距离差别不大"
-
-对于高度分化的序列，两者的差别可以非常大。当 $p$ 接近 $75\%$（Jukes-Cantor 模型的上限）时，Jukes-Cantor 距离趋向无穷大，而 p-distance 仍然只是一个有限的分数。
-
-### "距离法已经过时，应该总是用最大似然法"
-
-距离法在大规模系统发育分析中仍然不可替代。例如，当需要构建包含数万个物种的树时，ML 方法在计算上不可行，而 NJ 可以在合理时间内完成。现代实践中，距离法常用于初步分析和作为 ML 方法的初始化。
-
-### "距离矩阵中所有值都需要精确"
-
-距离矩阵中某些值的不精确性对最终树拓扑的影响可能较小。树构建算法对"长枝"（距离较大的边）通常更敏感。
-
-### "距离法只能用于 DNA 序列"
-
-距离法可以用于任何可以定义距离的数据类型，包括蛋白质序列、形态学特征、基因表达数据等。
+<PitfallsBox
+  pitfalls={[
+    '"p-distance 和 Jukes-Cantor 距离差别不大"：',
+    '对于高度分化的序列，两者的差别可以非常大。当 $p$ 接近 $75\%$（Jukes-Cantor 模型的上限）时，Jukes-Cantor 距离趋向无穷大，而 p-distance 仍然只是一个有限的分数。',
+    '"距离法已经过时，应该总是用最大似然法"：',
+    '距离法在大规模系统发育分析中仍然不可替代。例如，当需要构建包含数万个物种的树时，ML 方法在计算上不可行，而 NJ 可以在合理时间内完成。现代实践中，距离法常用于初步分析和作为 ML 方法的初始化。',
+    '"距离矩阵中所有值都需要精确"：',
+    '距离矩阵中某些值的不精确性对最终树拓扑的影响可能较小。树构建算法对"长枝"（距离较大的边）通常更敏感。'
+  ]}
+/>
 
 ## 11. 与真实工具的连接
 

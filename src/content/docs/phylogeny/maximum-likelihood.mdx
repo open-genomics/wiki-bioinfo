@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Maximum Likelihood（最大似然）通过在给定演化模型下寻找最可能产生观测序列的系统发育树，使用Pruning算法高效计算似然值，是现代系统发育分析的主流方法。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: 'ML 分析的输入数据' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -371,27 +376,16 @@ Maximum Likelihood是Bayesian方法的特例：
 - 可能陷入局部最优
 - 需要较多的计算资源
 
-## 常见误区
-
-### Maximum Likelihood总是得到正确答案
-
-不是。Maximum Likelihood找到的是在给定模型下最可能产生数据的树，但如果模型错误，结果也可能错误。
-
-### Maximum Likelihood不需要任何假设
-
-不是。Maximum Likelihood依赖于：
-- 位点独立演化
-- 替换模型的正确性
-- 树的拓扑结构（虽然搜索）
-- 序列比对的准确性
-
-### Maximum Likelihood比Parsimony总是更好
-
-不一定。在某些情况下（如序列非常相似、演化速率恒定），Parsimony可能同样有效且更快。
-
-### Maximum Likelihood只能用于DNA序列
-
-不是。Maximum Likelihood可以用于蛋白质序列、密码子序列、形态学数据等，只需要合适的替换模型。
+<PitfallsBox
+  pitfalls={[
+    'Maximum Likelihood总是得到正确答案：',
+    '不是。Maximum Likelihood找到的是在给定模型下最可能产生数据的树，但如果模型错误，结果也可能错误。',
+    'Maximum Likelihood不需要任何假设：',
+    '不是。Maximum Likelihood依赖于：',
+    '位点独立演化',
+    '替换模型的正确性'
+  ]}
+/>
 
 ## 与真实工具的连接
 

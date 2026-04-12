@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -26,6 +28,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '哈希表', href: '/wiki-bioinfo/sequence/hash-tables' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 算法历史
 
@@ -317,19 +322,16 @@ Boyer-Moore本身在现代生物信息学工具中不常直接使用，但：
 - 基于后缀的索引（如FM-index）
 - 这些方法通过预处理建立索引，查询时达到亚线性时间
 
-## 常见误区
-
-### Boyer-Moore总是比KMP快
-
-不一定。Boyer-Moore在最坏情况下可能比KMP慢，但在实际应用中往往更快。选择哪种算法取决于具体场景。
-
-### Boyer-Moore需要两个规则都实现
-
-实际上，简化版的Boyer-Moore可以只实现bad character rule，在很多情况下已经足够快。完整的Boyer-Moore同时使用两个规则以获得更好的性能。
-
-### Boyer-Moore适合小字母表
-
-Boyer-Moore在大字母表（如蛋白质序列）上效果更好，因为bad character rule更容易实现大跨度跳跃。在小字母表（如DNA）上，优势可能不明显。
+<PitfallsBox
+  pitfalls={[
+    'Boyer-Moore总是比KMP快：',
+    '不一定。Boyer-Moore在最坏情况下可能比KMP慢，但在实际应用中往往更快。选择哪种算法取决于具体场景。',
+    'Boyer-Moore需要两个规则都实现：',
+    '实际上，简化版的Boyer-Moore可以只实现bad character rule，在很多情况下已经足够快。完整的Boyer-Moore同时使用两个规则以获得更好的性能。',
+    'Boyer-Moore适合小字母表：',
+    'Boyer-Moore在大字母表（如蛋白质序列）上效果更好，因为bad character rule更容易实现大跨度跳跃。在小字母表（如DNA）上，优势可能不明显。'
+  ]}
+/>
 
 ## 历史注记
 

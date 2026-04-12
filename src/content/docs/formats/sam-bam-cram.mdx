@@ -9,6 +9,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="SAM/BAM/CRAM 编码的是比对结果——reads 在参考基因组坐标系中的定位。理解其核心字段（FLAG、CIGAR、MAPQ、TAGs），是解读变异证据、可视化检查和下游分析的基础。"
@@ -20,6 +21,9 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
     '三者语义等价，仅在存储效率和访问方式上有差异',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 是什么
 
@@ -80,9 +84,9 @@ SAM/BAM 是分析流程中的**核心证据层**：
 
 <PrerequisitesBox
   items={[
-    '理解 FASTQ 格式：比对前的原始 reads 容器',
-    '理解参考基因组坐标系统：1-based vs 0-based',
-    '了解比对的基本概念：mapper 如何将 reads 定位到参考上',
+    {name: 'FASTQ 格式', href: '/docs/formats/fastq-format'},
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: '全局比对与局部比对', href: '/docs/alignment/global-local'},
   ]}
 />
 
@@ -291,6 +295,11 @@ $$MAPQ = -10 \log_{10}(P_{mapping\ error})$$
       to: '/docs/alignment/',
       label: '算法层',
       description: '理解比对算法（BWA、Bowtie2）如何生成 SAM/BAM。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/docs/variants/variant-calling-overview',
+      description: 'BAM 是变异检测的直接输入，read pileup 是变异证据的来源。',
     },
   ]}
 />

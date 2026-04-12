@@ -4,10 +4,12 @@ description: "PDB 如何存储和组织蛋白质三维结构，以及与 AlphaFo
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="PDB（Protein Data Bank）是全球唯一的实验测定生物大分子三维结构数据库。理解结构文件的格式（PDB/mmCIF）、测定方法（X-ray、NMR、Cryo-EM）和结构质量指标（分辨率、R-factor），是从序列走向结构功能解释的基础。"
@@ -19,6 +21,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     'AlphaFold DB 提供计算预测结构，与 PDB 实验结构互补',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 是什么
 
@@ -55,9 +60,8 @@ PDB 结构信息是**从序列走向功能机制**的关键证据：
 
 <PrerequisitesBox
   items={[
-    '理解蛋白质基本结构：一级、二级、三级、四级结构',
-    '了解氨基酸类型和侧链特性',
-    '如果不熟悉蛋白质功能注释，先阅读 UniProt 页面',
+    {name: '蛋白结构基础', href: '/docs/structure-bioinfo/protein-structure-basics'},
+    {name: 'UniProt 蛋白质知识库', href: '/docs/databases/uniprot'},
   ]}
 />
 
@@ -154,13 +158,17 @@ ATOM 2 C CA MET 1 26.266 25.413 2.842
 
 ### 两种结构来源
 
-| 特性 | PDB（实验） | AlphaFold DB（预测） |
-|------|-----------|-------------------|
-| **来源** | 实验测定 | 深度学习预测 |
-| **覆盖度** | ~20 万条 | ~2 亿条（覆盖几乎所有已知蛋白） |
-| **可靠性** | 实验验证，高置信度 | 预测置信度因区域而异（pLDDT） |
-| **动态信息** | 可能包含多个构象 | 通常单一构象 |
-| **配体/复合体** | 可包含配体、DNA、其他蛋白 | 仅预测单个蛋白质链 |
+<ComparisonTable
+  leftTitle="PDB（实验）"
+  rightTitle="AlphaFold DB（预测）"
+  rows={[
+    { aspect: '**来源**', left: '实验测定', right: '深度学习预测' },
+    { aspect: '**覆盖度**', left: '~20 万条', right: '~2 亿条（覆盖几乎所有已知蛋白）' },
+    { aspect: '**可靠性**', left: '实验验证，高置信度', right: '预测置信度因区域而异（pLDDT）' },
+    { aspect: '**动态信息**', left: '可能包含多个构象', right: '通常单一构象' },
+    { aspect: '**配体/复合体**', left: '可包含配体、DNA、其他蛋白', right: '仅预测单个蛋白质链' }
+  ]}
+/>
 
 ### 如何使用
 
@@ -226,6 +234,12 @@ ATOM 2 C CA MET 1 26.266 25.413 2.842
       to: '/docs/structure-bioinfo/structure-alignment-and-fold',
       label: '算法层',
       description: '如何量化结构相似性。',
+    },
+    {
+      title: 'FASTA 格式',
+      to: '/docs/formats/fasta-format',
+      label: '数据格式',
+      description: 'PDB 结构对应的蛋白质 FASTA 序列。',
     },
   ]}
 />

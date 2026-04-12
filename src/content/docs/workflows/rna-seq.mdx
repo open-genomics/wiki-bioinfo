@@ -6,6 +6,8 @@ title: "RNA-seq 工作流概览"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="这是一页把 RNA-seq 从原始 reads 一路串到定量、归一化、差异分析与功能解释的总览页面，重点是建立流程地图而不是记命令。"
@@ -22,6 +24,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '数据库与资源', to: '/wiki-bioinfo/databases/index' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 是什么
 
@@ -150,7 +155,7 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
 ## 与真实工具或流程的连接
 
 <figure>
-  <img src="/wiki-bioinfo/img/figures/rnaseq-workflow.png" alt="RNA-seq workflow from reads and QC through alignment or pseudo-alignment, quantification, normalization, and differential expression" />
+  <img src="/wiki-bioinfo/img/figures/rnaseq-workflow.webp" alt="RNA-seq workflow from reads and QC through alignment or pseudo-alignment, quantification, normalization, and differential expression" />
   <figcaption>RNA-seq 分析主线：从 reads 与质控，到 mapping / pseudo-alignment，再到定量、归一化与差异表达。</figcaption>
 </figure>
 
@@ -161,12 +166,14 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
 - 是否存在明显批次效应；
 - 参考和注释版本是否完全匹配。
 
-## 常见误区
-
-- gene-level 和 transcript-level 分析可以混为一谈；
-- pseudo-alignment 更快，所以对所有 RNA-seq 问题都更好；
-- 差异分析只要调 p 值阈值，不需要回头看质控和注释背景；
-- 生物学重复的重要性低于流程细节。
+<PitfallsBox
+  pitfalls={[
+    'gene-level 和 transcript-level 分析可以混为一谈；',
+    'pseudo-alignment 更快，所以对所有 RNA-seq 问题都更好；',
+    '差异分析只要调 p 值阈值，不需要回头看质控和注释背景；',
+    '生物学重复的重要性低于流程细节。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

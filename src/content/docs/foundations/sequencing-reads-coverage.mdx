@@ -4,9 +4,12 @@ description: 理解测序读段（Reads）的观测特性、深度（Coverage）
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="在生物信息学中，我们处理的不是完整的基因组，而是由测序仪随机产生的碎片化读段（Reads）。覆盖度（Coverage）不仅是数据量的衡量指标，更是后续统计推断（如变异检测、组装）的信心来源。"
@@ -25,7 +28,15 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
+<PageHeaderMeta section="Foundations" />
+
+
 ## 1. Reads：基因组的局部观测
+
+<figure>
+  <img src="/img/illustrations/sequencing-by-synthesis.svg" alt="边合成边测序（SBS）原理：可逆终止荧光核苷酸的循环读取" />
+  <figcaption>边合成边测序（Sequencing-by-Synthesis, SBS）的基本原理</figcaption>
+</figure>
 
 测序仪通过物理或化学手段将长 DNA 分子打断并读取出的短片段称为 **Reads**（读段）。Reads 是所有下游分析（比对、组装、变异检测）的原始输入。
 
@@ -54,14 +65,18 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### 短读长与长读长的权衡
 
-| 特性 | 短读长 (Short Reads) | 长读长 (Long Reads) |
-| :--- | :--- | :--- |
-| **典型平台** | Illumina (NovaSeq, HiSeq) | PacBio HiFi, Oxford Nanopore |
-| **读长** | 100-300 bp | 10-100+ kb |
-| **单碱基准确率** | ~99.9% (Q30) | HiFi ~99.9%；ONT ~95-97% (Q13-17) |
-| **错误模式** | 以替换（Substitution）为主 | 以插入/缺失（Indel）为主 |
-| **优势** | 低错误率、高通量、低成本 | 长片段信息、跨越重复区域 |
-| **局限** | 难以组装大片段重复 | 较高错误率、较高成本 |
+<ComparisonTable
+  leftTitle="短读长 (Short Reads)"
+  rightTitle="长读长 (Long Reads)"
+  rows={[
+    { aspect: '**典型平台**', left: 'Illumina (NovaSeq, HiSeq)', right: 'PacBio HiFi, Oxford Nanopore' },
+    { aspect: '**读长**', left: '100-300 bp', right: '10-100+ kb' },
+    { aspect: '**单碱基准确率**', left: '~99.9% (Q30)', right: 'HiFi ~99.9%；ONT ~95-97% (Q13-17)' },
+    { aspect: '**错误模式**', left: '以替换（Substitution）为主', right: '以插入/缺失（Indel）为主' },
+    { aspect: '**优势**', left: '低错误率、高通量、低成本', right: '长片段信息、跨越重复区域' },
+    { aspect: '**局限**', left: '难以组装大片段重复', right: '较高错误率、较高成本' }
+  ]}
+/>
 
 ## 2. 覆盖度 (Coverage) 与深度 (Depth)
 
@@ -193,12 +208,14 @@ $$Q = -10 \log_{10} P_{error}$$
 - **基因组组装**：需要足够高的覆盖度来保证 k-mer 的连通性。对于杂合基因组，有效覆盖度减半，需要更高的原始测序深度。
 - **RNA-seq**：覆盖度分布与基因表达水平直接相关。高表达基因的覆盖度可达数千倍，而低表达基因可能只有几条 Read。
 
-## 常见误区
-
-- **误区一：将"覆盖度"等同于"数据质量"**。覆盖度是数据量的指标，不直接反映数据质量。100 倍覆盖度的低质量数据可能不如 30 倍覆盖度的高质量数据有用。
-- **误区二：忽视覆盖度的分布不均匀性**。Lander-Waterman 公式假设覆盖度服从泊松分布，但实际数据由于 GC 偏好性和其他偏差，分布远不如理论均匀。某些基因组区域可能存在"覆盖盲区"。
-- **误区三：忽略 Read 方向信息**。单端测序丢失了 DNA 片段的方向和距离信息，这些信息对于结构变异检测和基因组组装的 Scaffolding 至关重要。
-- **误区四：混淆"碱基质量"与"比对质量"**。碱基质量（Base Quality, BQ）衡量的是测序仪读取该碱基的可靠性；比对质量（Mapping Quality, MapQ）衡量的是将这条 Read 比对到当前位置的可信度。两者是独立的指标。
+<PitfallsBox
+  pitfalls={[
+    '误区一：将"覆盖度"等同于"数据质量"。覆盖度是数据量的指标，不直接反映数据质量。100 倍覆盖度的低质量数据可能不如 30 倍覆盖度的高质量数据有用。',
+    '误区二：忽视覆盖度的分布不均匀性。Lander-Waterman 公式假设覆盖度服从泊松分布，但实际数据由于 GC 偏好性和其他偏差，分布远不如理论均匀。某些基因组区域可能存在"覆盖盲区"。',
+    '误区三：忽略 Read 方向信息。单端测序丢失了 DNA 片段的方向和距离信息，这些信息对于结构变异检测和基因组组装的 Scaffolding 至关重要。',
+    '误区四：混淆"碱基质量"与"比对质量"。碱基质量（Base Quality, BQ）衡量的是测序仪读取该碱基的可靠性；比对质量（Mapping Quality, MapQ）衡量的是将这条 Read 比对到当前位置的可信度。两者是独立的指标。'
+  ]}
+/>
 
 ## 相关页面
 

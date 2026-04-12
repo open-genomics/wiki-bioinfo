@@ -6,6 +6,8 @@ title: "限制性图谱构建"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="限制性图谱（restriction mapping）是通过限制性酶切实验确定 DNA 分子上酶切位点位置的技术。核心计算问题是根据片段长度数据推断酶切位点的顺序和位置。"
@@ -22,6 +24,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '算法复杂度', href: '/wiki/foundations/algorithms-and-complexity' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 生物学背景
 
@@ -250,23 +255,16 @@ PPDP 可以分解为两个独立的 PDP：
   ]}
 />
 
-## 常见误区
-
-### 部分消化问题（PDP）的解总是唯一的
-
-PDP 可能存在多个解——不同的位点集合可能产生相同的距离多重集。即使分支定界找到了一个解，也不能保证它是唯一的。在实验中，测量误差会进一步增加解的不唯一性。实际应用中通常需要结合其他实验证据来消歧。
-
-### 凝胶电泳可以精确测量所有片段长度
-
-凝胶电泳的分辨率有限，特别是对于长度接近的片段，区分能力下降。短片段（< 50 bp）和长片段（> 20 kb）的测量误差更大。PDP 算法假设输入的距离集合是精确的，但实际实验数据必然带有噪声，需要算法能够容忍一定程度的误差。
-
-### 分支定界一定能高效求解 PDP
-
-虽然 PDP 的距离约束提供了很强的剪枝能力，但在某些精心构造的输入上，分支定界仍可能退化为接近穷举搜索。剪枝效果依赖于距离约束的"紧度"——如果很多位点之间的距离相同，剪枝效果就会大打折扣。
-
-### 限制性图谱在测序时代已经没有意义
-
-虽然高通量测序在很大程度上取代了限制性图谱作为基因组作图的主要手段，但限制性图谱仍用于验证组装结果（特别是结构变异）、研究表观遗传学（如甲基化敏感的限制性酶）以及在某些快速诊断场景中。它是一种互补而非被淘汰的技术。
+<PitfallsBox
+  pitfalls={[
+    '部分消化问题（PDP）的解总是唯一的：',
+    'PDP 可能存在多个解——不同的位点集合可能产生相同的距离多重集。即使分支定界找到了一个解，也不能保证它是唯一的。在实验中，测量误差会进一步增加解的不唯一性。实际应用中通常需要结合其他实验证据来消歧。',
+    '凝胶电泳可以精确测量所有片段长度：',
+    '凝胶电泳的分辨率有限，特别是对于长度接近的片段，区分能力下降。短片段（< 50 bp）和长片段（> 20 kb）的测量误差更大。PDP 算法假设输入的距离集合是精确的，但实际实验数据必然带有噪声，需要算法能够容忍一定程度的误差。',
+    '分支定界一定能高效求解 PDP：',
+    '虽然 PDP 的距离约束提供了很强的剪枝能力，但在某些精心构造的输入上，分支定界仍可能退化为接近穷举搜索。剪枝效果依赖于距离约束的"紧度"——如果很多位点之间的距离相同，剪枝效果就会大打折扣。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

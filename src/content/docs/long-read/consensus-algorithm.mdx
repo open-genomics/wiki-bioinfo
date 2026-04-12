@@ -4,8 +4,11 @@ title: "Consensus 算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Consensus 算法通过整合多条覆盖同一区域的 reads 信息，生成高质量共识序列。它是降低长读长测序错误率、提升组装质量的关键步骤。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '长读长组装', href: '/wiki-bioinfo/long-read/long-read-assembly', description: '组装 polishing 的上下文' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题引入：如何从噪声中恢复真相
 
@@ -197,14 +203,18 @@ A → C → G → T → A → C
 
 ### Racon vs Medaka 对比
 
-| 特征 | Racon | Medaka |
-|------|-------|--------|
-| 输入 | 碱基序列 + 质量 | 原始信号 |
-| 算法 | POA + 动态规划 | 神经网络 |
-| 适用平台 | PacBio / Nanopore | 主要为 Nanopore |
-| 速度 | 快 | 中等（GPU 加速） |
-| 准确性 | 高 | 更高（对 Nanopore） |
-| 迭代 | 支持多轮 | 通常一轮 |
+<ComparisonTable
+  leftTitle="Racon"
+  rightTitle="Medaka"
+  rows={[
+    { aspect: '输入', left: '碱基序列 + 质量', right: '原始信号' },
+    { aspect: '算法', left: 'POA + 动态规划', right: '神经网络' },
+    { aspect: '适用平台', left: 'PacBio / Nanopore', right: '主要为 Nanopore' },
+    { aspect: '速度', left: '快', right: '中等（GPU 加速）' },
+    { aspect: '准确性', left: '高', right: '更高（对 Nanopore）' },
+    { aspect: '迭代', left: '支持多轮', right: '通常一轮' }
+  ]}
+/>
 
 ### 推荐流程
 
@@ -258,19 +268,14 @@ PacBio 生态使用不同的 consensus 算法：
 - **Arrow**：基于条件随机场（CRF）的 consensus
 - **CCS**：Circular Consensus Sequencing，通过多次测序生成 HiFi reads
 
-## 常见误区
-
-**Consensus 总是提高准确性**
-不一定。如果 reads 质量极差或覆盖度严重不均（如某些区域只有 1-2×），consensus 可能引入系统性错误而非纠正错误。
-
-**覆盖度越高越好**
-不是。Polishing 的边际收益递减，通常 30-50× 覆盖度已足够。过高覆盖度会显著增加计算成本。
-
-**一轮 polishing 就足够**
-取决于数据质量。高错误率数据（如原始 Nanopore CLR）通常需要 2-3 轮 Racon 迭代才能收敛。
-
-**Racon 和 Medaka 可以互换**
-不是。Racon 需要碱基质量分数，适合处理已 basecalled 的数据；Medaka 直接处理原始信号，需要特定的测序化学版本模型。
+<PitfallsBox
+  pitfalls={[
+    'Consensus 总是提高准确性 不一定。如果 reads 质量极差或覆盖度严重不均（如某些区域只有 1-2×），consensus 可能引入系统性错误而非纠正错误。',
+    '覆盖度越高越好 不是。Polishing 的边际收益递减，通常 30-50× 覆盖度已足够。过高覆盖度会显著增加计算成本。',
+    '一轮 polishing 就足够 取决于数据质量。高错误率数据（如原始 Nanopore CLR）通常需要 2-3 轮 Racon 迭代才能收敛。',
+    'Racon 和 Medaka 可以互换 不是。Racon 需要碱基质量分数，适合处理已 basecalled 的数据；Medaka 直接处理原始信号，需要特定的测序化学版本模型。'
+  ]}
+/>
 
 ## 参考资料
 

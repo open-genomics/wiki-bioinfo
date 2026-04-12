@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="定量蛋白质组学旨在比较不同生物条件下蛋白质的相对或绝对丰度。通过质谱技术，我们可以捕捉细胞在不同状态下蛋白水平的动态变化，这是理解生命过程的关键。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '数据库搜索与 FDR', href: '/wiki-bioinfo/proteomics/database-search-and-fdr' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 是什么
 
@@ -129,35 +134,16 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 通过定量标记结合亲和纯化（Affinity Purification, AP-MS），可以定量比较诱饵蛋白（Bait Protein）与互作蛋白在实验组和对照组中的富集程度，从而鉴定真实的蛋白互作网络。
 
-## 5. 常见误区
-
-### 5.1 缺失值的盲目插补
-
-蛋白质组学数据中缺失值并非完全随机产生（MCAR），而是往往与蛋白丰度本身相关——低丰度蛋白更容易缺失（MNAR, Missing Not At Random）。简单的均值插补或零值填充会严重扭曲统计分布。推荐的做法包括：
-
-- 使用低丰度分布（如从检测下限附近的分布中）进行随机插补。
-- 利用最近邻方法（KNN Imputation）或基于概率模型的插补（如 Perseus 中的 Imputation from Normal Distribution）。
-- 在差异分析中使用能够处理缺失值的统计方法（如 Limma 的 `voom` 框架或 MSstats）。
-
-### 5.2 TMT/iTRAQ 的比例压缩效应
-
-等质量标签的一个固有问题是**比例压缩（Ratio Compression）**。当同一个 MS1 前体离子中混合了来自不同标记通道的肽段时，MS2 碎裂可能同时"看到"多个前体离子，导致报告离子强度被"稀释"，真实的倍数差异被压缩趋向于 1。解决方案包括：
-
-- 使用 MS3 扫描策略（SPS-MS3），在 MS2 选择碎片后，再次碎裂 MS2 碎片以获得更纯净的报告离子信号。
-- 减少每个 MS1 窗口中的共洗脱肽段数量（如使用更窄的 MS1 隔离窗口）。
-
-### 5.3 忽视蛋白推断的不确定性
-
-质谱数据鉴定的是肽段，而非蛋白质。从肽段到蛋白质的推断（Protein Inference）存在不确定性：一组肽段可能对应多个蛋白质（蛋白家族）。直接忽略这种不确定性可能导致：
-
-- 假阳性蛋白被错误地报告为"已鉴定"。
-- 差异分析中蛋白丰度的估计偏差。
-
-工具如 Fido 和 ProteinProphet 提供了基于概率模型的蛋白推断方法，可以给出每个蛋白质鉴定的置信度。
-
-### 5.4 过度依赖单一定量方法
-
-每种定量策略都有其适用范围和偏差来源。将不同方法的结果进行交叉验证（如 LFQ 结果与 TMT 结果的一致性检验）可以显著提高结论的可靠性。
+<PitfallsBox
+  pitfalls={[
+    '缺失值的盲目插补：',
+    '蛋白质组学数据中缺失值并非完全随机产生（MCAR），而是往往与蛋白丰度本身相关——低丰度蛋白更容易缺失（MNAR, Missing Not At Random）。简单的均值插补或零值填充会严重扭曲统计分布。推荐的做法包括：',
+    '使用低丰度分布（如从检测下限附近的分布中）进行随机插补。',
+    '利用最近邻方法（KNN Imputation）或基于概率模型的插补（如 Perseus 中的 Imputation from Normal Distribution）。',
+    '在差异分析中使用能够处理缺失值的统计方法（如 Limma 的 voom 框架或 MSstats）。',
+    'TMT/iTRAQ 的比例压缩效应：'
+  ]}
+/>
 
 ## 相关页面
 

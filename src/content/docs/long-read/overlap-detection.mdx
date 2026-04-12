@@ -4,8 +4,11 @@ title: "重叠检测算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '序列比对基础', href: '/wiki-bioinfo/alignment/index', description: '局部比对的基本原理' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题引入：组合爆炸的困境
 
@@ -156,13 +162,17 @@ $$
 
 ### Minimap vs MHAP
 
-| 特征 | Minimap | MHAP |
-|------|---------|------|
-| 核心方法 | 空间采样（minimizer） | 概率估计（MinHash） |
-| 索引大小 | 较小（~2N/w） | 中等（N×h） |
-| 敏感性 | 高（保留局部结构） | 可调（通过 h 控制） |
-| 速度 | 极快 | 快 |
-| 适用场景 | 一般组装 | 极高错误率数据 |
+<ComparisonTable
+  leftTitle="Minimap"
+  rightTitle="MHAP"
+  rows={[
+    { aspect: '核心方法', left: '空间采样（minimizer）', right: '概率估计（MinHash）' },
+    { aspect: '索引大小', left: '较小（~2N/w）', right: '中等（N×h）' },
+    { aspect: '敏感性', left: '高（保留局部结构）', right: '可调（通过 h 控制）' },
+    { aspect: '速度', left: '极快', right: '快' },
+    { aspect: '适用场景', left: '一般组装', right: '极高错误率数据' }
+  ]}
+/>
 
 ## 复杂度分析
 
@@ -290,23 +300,16 @@ Minimap2 是当前最流行的长读长比对工具，它扩展了原始 Minimap
 - **纠错工具**：Racon、Medaka 等依赖 Minimap 的重叠信息
 - **SV 检测**：Sniffles2 等使用 Minimap2 进行 read 比对
 
-## 常见误区
-
-### Minimizer 越多越好
-
-不是。过多的 minimizer 会增加索引大小和候选对数，反而降低效率。需要根据数据特征调整窗口大小。
-
-### 相似度阈值越高越好
-
-不是。过高的阈值会遗漏真实重叠，特别是对于高错误率的数据。需要平衡敏感性和特异性。
-
-### MinHash 和 Minimap 互斥
-
-不是。两种方法可以结合使用，MinHash 用于粗筛，Minimap 用于精确验证。
-
-### 重叠检测只用于组装
-
-不是。重叠检测还用于纠错、phasing、质量控制等多种场景。
+<PitfallsBox
+  pitfalls={[
+    'Minimizer 越多越好：',
+    '不是。过多的 minimizer 会增加索引大小和候选对数，反而降低效率。需要根据数据特征调整窗口大小。',
+    '相似度阈值越高越好：',
+    '不是。过高的阈值会遗漏真实重叠，特别是对于高错误率的数据。需要平衡敏感性和特异性。',
+    'MinHash 和 Minimap 互斥：',
+    '不是。两种方法可以结合使用，MinHash 用于粗筛，Minimap 用于精确验证。'
+  ]}
+/>
 
 ## 算法优化
 

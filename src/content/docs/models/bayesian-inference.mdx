@@ -4,9 +4,12 @@ title: "贝叶斯推断基础"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'EM 算法', href: '/wiki-bioinfo/models/em-algorithm' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -277,42 +283,31 @@ $$
 \theta \sim P(\theta | \phi), \quad \phi \sim P(\phi)
 $$
 
-## 常见误区
-
-### 贝叶斯方法总是更好
-
-不是。贝叶斯方法的优势在于：
-- 小样本情况
-- 需要不确定性量化
-- 有可靠的先验知识
-
-在大样本情况下，频率学派和贝叶斯学派的结果通常一致。
-
-### 先验选择很主观
-
-确实，先验选择带有主观性，但：
-- 可以使用无信息先验减少主观性
-- 先验的影响会随着数据增加而减弱
-- 敏感性分析可以评估先验的影响
-
-### 贝叶斯计算总是很慢
-
-对于简单模型，贝叶斯方法可以很快（有解析解）。对于复杂模型，虽然计算成本高，但现代计算方法和硬件已经使很多贝叶斯分析变得可行。
-
-### 后验分布就是"正确答案"
-
-后验分布是基于模型和先验的推断结果。如果模型或先验不合适，后验分布可能误导。需要模型检验和敏感性分析。
+<PitfallsBox
+  pitfalls={[
+    '贝叶斯方法总是更好：',
+    '不是。贝叶斯方法的优势在于：',
+    '需要不确定性量化',
+    '有可靠的先验知识',
+    '在大样本情况下，频率学派和贝叶斯学派的结果通常一致。',
+    '先验选择很主观：'
+  ]}
+/>
 
 ## 与频率学派的比较
 
-| 特性 | 频率学派 | 贝叶斯学派 |
-|------|---------|-----------|
-| 参数观点 | 固定未知常数 | 随机变量 |
-| 推断基础 | 重复抽样 | 条件概率 |
-| 不确定性 | 置信区间 | 可信区间 |
-| 先验信息 | 不使用 | 明确使用 |
-| 计算复杂度 | 通常较低 | 可能较高 |
-| 小样本表现 | 可能不稳定 | 可以更稳定 |
+<ComparisonTable
+  leftTitle="频率学派"
+  rightTitle="贝叶斯学派"
+  rows={[
+    { aspect: '参数观点', left: '固定未知常数', right: '随机变量' },
+    { aspect: '推断基础', left: '重复抽样', right: '条件概率' },
+    { aspect: '不确定性', left: '置信区间', right: '可信区间' },
+    { aspect: '先验信息', left: '不使用', right: '明确使用' },
+    { aspect: '计算复杂度', left: '通常较低', right: '可能较高' },
+    { aspect: '小样本表现', left: '可能不稳定', right: '可以更稳定' }
+  ]}
+/>
 
 ## 参考资料
 

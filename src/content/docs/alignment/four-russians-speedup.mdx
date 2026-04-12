@@ -6,6 +6,8 @@ title: "Four Russians 加速技术"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Four Russians 加速技术通过预计算小块的比对得分，将全局序列比对的时间复杂度从 O(n²) 优化到 O(n²/log n)，是动态规划加速的经典方法。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -251,27 +256,16 @@ Four Russians 技术同样适用于 LCS 问题：
 | SIMD 加速 | 实用性强，硬件支持 | 依赖特定指令集 |
 | GPU 并行 | 适合超大规模数据 | 数据传输开销 |
 
-## 常见误区
-
-### Four Russians 技术是实用的通用加速方案
-
-不是。Four Russians 技术在现代 CPU 上往往不如 SIMD 指令加速或 GPU 并行化实用。预计算查找表的随机内存访问模式对 CPU 缓存非常不友好，理论上的 $O(n^2 / \log n)$ 优势在真实硬件上可能被缓存未命中完全抵消。它更适合作为理解算法加速原理的教学案例，而非生产环境的直接实现方案。
-
-### 查找表空间可以忽略不计
-
-查找表大小为 $O(4^{2t})$，当块大小 $t = \Theta(\log n)$ 时空间为 $O(n^{1.5})$。对于 $n = 10^6$，这意味着约 $10^9$ 个条目的查找表，内存占用可达数 GB。在实际应用中，内存访问的开销可能远超时间上的收益。
-
-### Four Russians 技术适用于所有比对问题
-
-Four Russians 技术最初针对的是无罚分的 LCS 问题，推广到带罚分的比对（如 Needleman-Wunsch 或 Smith-Waterman）时，块对齐的状态编码会显著复杂化。对于仿射 Gap 罚分，需要同时编码 Gap 开启/延长的状态，查找表的条目数会大幅增加，使得该方法变得不可行。
-
-### 时间复杂度 $O(n^2 / \log n)$ 意味着对所有 $n$ 都更快
-
-Four Russians 技术只在序列足够长时才有加速效果。当 $n$ 较小时（如 $n < 1000$），预计算查找表的开销可能超过主算法的收益。理论分析中 $t = \Theta(\log n)$ 的最优块大小选择，在实际中往往不适用——真实的最佳 $t$ 通常在 4-8 之间，远小于理论值。
-
-### Four Russians 技术与 BWT 索引或 seed-and-extend 是同一种思路
-
-不是。Four Russians 是对动态规划本身的加速，通过预计算-查表减少单元格计算量；而 BWT 索引和 seed-and-extend 是启发式方法，通过跳过不可能的区域来减少搜索空间。两者解决的是不同层面的问题：前者优化"已知需要比对的区域"的计算效率，后者优化"哪些区域值得比对"。
+<PitfallsBox
+  pitfalls={[
+    'Four Russians 技术是实用的通用加速方案：',
+    '不是。Four Russians 技术在现代 CPU 上往往不如 SIMD 指令加速或 GPU 并行化实用。预计算查找表的随机内存访问模式对 CPU 缓存非常不友好，理论上的 $O(n^2 / \log n)$ 优势在真实硬件上可能被缓存未命中完全抵消。它更适合作为理解算法加速原理的教学案例，而非生产环境的直接实现方案。',
+    '查找表空间可以忽略不计：',
+    '查找表大小为 $O(4^{2t})$，当块大小 $t = \Theta(\log n)$ 时空间为 $O(n^{1.5})$。对于 $n = 10^6$，这意味着约 $10^9$ 个条目的查找表，内存占用可达数 GB。在实际应用中，内存访问的开销可能远超时间上的收益。',
+    'Four Russians 技术适用于所有比对问题：',
+    'Four Russians 技术最初针对的是无罚分的 LCS 问题，推广到带罚分的比对（如 Needleman-Wunsch 或 Smith-Waterman）时，块对齐的状态编码会显著复杂化。对于仿射 Gap 罚分，需要同时编码 Gap 开启/延长的状态，查找表的条目数会大幅增加，使得该方法变得不可行。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

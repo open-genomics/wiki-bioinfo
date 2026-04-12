@@ -6,6 +6,8 @@ title: "联合非负矩阵分解（Joint NMF）"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Joint NMF 通过在多个组学矩阵间共享基矩阵，强制它们在低维空间对齐，是多组学整合中最直观的矩阵分解方法。"
@@ -437,36 +439,19 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
 
 使用 `NMF` 包或 `MultiAssayExperiment` 生态系统。
 
-## 常见误区
 
-### Joint NMF 总能得到生物学有意义的因子
+<PageHeaderMeta section="Applications" />
 
-不一定。需要结合：
-- 先验知识验证
-- 下游任务性能
-- 稳定性分析
-
-### 非负约束总是合理的
-
-对于某些数据（如标准化后的 z-score），非负约束可能不合适。需要先进行数据变换。
-
-### 潜在维度越大越好
-
-不是。过大的 r 会导致：
-- 过拟合
-- 因子难以解释
-- 计算成本增加
-
-### 不同组学必须共享完全相同的因子
-
-不一定。有些变体允许部分共享、部分特异的因子。
-
-### Joint NMF 可以处理缺失数据
-
-标准 Joint NMF 不能直接处理缺失数据。需要：
-- 填充缺失值
-- 使用加权版本
-- 改用 MOFA+ 等贝叶斯方法
+<PitfallsBox
+  pitfalls={[
+    'Joint NMF 总能得到生物学有意义的因子：',
+    '不一定。需要结合：',
+    '先验知识验证',
+    '下游任务性能',
+    '非负约束总是合理的：',
+    '对于某些数据（如标准化后的 z-score），非负约束可能不合适。需要先进行数据变换。'
+  ]}
+/>
 
 ## 参考资料
 

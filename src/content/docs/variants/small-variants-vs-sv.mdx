@@ -9,6 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="变异检测（Variant Calling）在不同尺度上采用完全不同的算法。Small Variants 依赖局部堆叠（Pileup）的统计特征，而结构变异（SV）则需要整合全基因组范围的非正常比对信号。"
@@ -27,6 +28,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     { name: '编辑距离与比对基础', href: '/wiki-bioinfo/alignment/edit-distance' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 变异尺度的分界线
 
@@ -156,6 +160,11 @@ $$Z = \frac{\text{IS} - \mu}{\sigma}$$
 $|Z| > 3$ 的 Read Pair 被视为异常。在候选区域中，如果异常 Read Pair 的数量超过统计阈值（如 Poisson 分布的 $P < 0.01$），则报告为一个候选 SV。
 
 ## 5. Read Depth 与 CNV 检测
+
+<figure>
+  <img src="/img/illustrations/cnv-interpretation.svg" alt="CNV 染色体区间解读：正常与异常拷贝数区域对比" />
+  <figcaption>CNV 检测中的 Read Depth 信号与拷贝数解读</figcaption>
+</figure>
 
 ### 滑动窗口法
 

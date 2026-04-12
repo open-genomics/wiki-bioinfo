@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="面对数十亿碱基的基因组，直接处理长字符串往往效率低下。k-mer（长度为 k 的连续子串）是生物信息学中最基础的离散化表示方法，它是统计序列特征、构建索引和组装图的基石。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '哈希表', href: '/wiki-bioinfo/sequence/hash-tables' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 什么是 k-mer？
 
@@ -193,19 +198,16 @@ k-mer 是现代组装算法的核心抽象。
 | **Kraken2** | 物种分类 | $k=35$ 的精确 k-mer 匹配 + 最小完美哈希 |
 | **Minimap2** | Read Mapping | Minimizers（一种稀疏 k-mer 采样） |
 
-## 7. 常见误区
-
-### k-mer 越长越好
-
-不一定。过长的 $k$ 值会导致：测序错误产生的错误 k-mer 大量占据存储空间；图中出现过多孤立节点（Dead Ends），使得欧拉路径难以找到。实践中通常通过分析 k-mer 频谱来选择合适的 $k$。
-
-### k-mer 计数结果可以直接当作基因组大小
-
-k-mer 频谱的主峰高度大致对应基因组中单拷贝区域的 k-mer 频率 $c$（即覆盖度）。基因组大小的估计值为 $\frac{\text{总 k-mer 数}}{c}$，但需要排除重复序列和错误 k-mer 的干扰。
-
-### de Bruijn 图组装只需要选一个 $k$ 值
-
-现代组装器（如 SPAdes）通常使用多 $k$ 策略，先在小 $k$ 值下获得连通性更好的图，再逐步增大 $k$ 值以消除歧义，最终合并结果。
+<PitfallsBox
+  pitfalls={[
+    'k-mer 越长越好：',
+    '不一定。过长的 $k$ 值会导致：测序错误产生的错误 k-mer 大量占据存储空间；图中出现过多孤立节点（Dead Ends），使得欧拉路径难以找到。实践中通常通过分析 k-mer 频谱来选择合适的 $k$。',
+    'k-mer 计数结果可以直接当作基因组大小：',
+    'k-mer 频谱的主峰高度大致对应基因组中单拷贝区域的 k-mer 频率 $c$（即覆盖度）。基因组大小的估计值为 $\frac{\text{总 k-mer 数}}{c}$，但需要排除重复序列和错误 k-mer 的干扰。',
+    'de Bruijn 图组装只需要选一个 $k$ 值：',
+    '现代组装器（如 SPAdes）通常使用多 $k$ 策略，先在小 $k$ 值下获得连通性更好的图，再逐步增大 $k$ 值以消除歧义，最终合并结果。'
+  ]}
+/>
 
 ## 相关页面
 

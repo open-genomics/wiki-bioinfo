@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '近似算法', href: '/wiki-bioinfo/foundations/approximation-algorithms' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 为什么需要穷举搜索
 
@@ -369,29 +374,16 @@ BRANCHANDBOUNDMOTIFSEARCH(DNA, t, n, l)
 - **多重序列比对**：某些精确比对算法使用分支定界
 - **组合优化**：许多生物信息学中的组合优化问题使用分支定界变种
 
-## 常见误区
-
-### 分支定界总是比穷举快
-
-不一定。如果：
-- 下界太松，剪枝效果差
-- 问题约束弱，难以剪枝
-- 最坏情况下可能和穷举一样慢
-
-### 分支定界一定能找到最优解
-
-是的，如果：
-- 下界估计正确
-- 剪枝策略正确
-- 搜索完整
-
-但实践中可能因为：
-- 计算资源限制提前终止
-- 实现错误
-
-### 分支定界只适用于小问题
-
-不是。对于有强约束的问题，即使规模较大也可能高效求解。关键是约束强度和下界紧度。
+<PitfallsBox
+  pitfalls={[
+    '分支定界总是比穷举快：',
+    '不一定。如果：',
+    '下界太松，剪枝效果差',
+    '问题约束弱，难以剪枝',
+    '最坏情况下可能和穷举一样慢',
+    '分支定界一定能找到最优解：'
+  ]}
+/>
 
 <RelatedLinks
   links={[

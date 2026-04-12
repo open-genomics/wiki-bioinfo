@@ -8,6 +8,8 @@ BioInfo Wiki 采用开源协作模式，通过 GitHub 的 Issue 和 Pull Request
 
 ## 1. 贡献流程
 
+![开源贡献工作流：Issue、Draft、Review 到 Merge](/img/illustrations/community-workflow.svg)
+
 ### 1.1 准备工作
 
 1. **阅读相关文档**：

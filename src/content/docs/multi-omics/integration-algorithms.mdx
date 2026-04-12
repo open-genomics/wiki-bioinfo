@@ -2,10 +2,17 @@
 description: 多组学整合的核心算法：矩阵分解、因子分析与深度学习方法。
 title: "整合算法"
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="多组学整合的核心算法：矩阵分解、因子分析与深度学习方法。"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 问题定义
 
 ### 什么是多组学整合算法
@@ -248,13 +255,15 @@ $$
 - **下游任务性能**：分类、聚类、差异表达
 - **可解释性**：因子与已知生物学通路的重叠
 
-## 常见误区
 
-- **算法越复杂越好**：简单方法在小数据上可能更稳健
-- **忽略数据质量**：好的算法救不了坏的数据
-- **过度拟合**：多组学维度高，容易过拟合
-- **忽视生物学解释**：统计显著不等于生物学有意义
-
+<PitfallsBox
+  pitfalls={[
+    '算法越复杂越好：简单方法在小数据上可能更稳健',
+    '忽略数据质量：好的算法救不了坏的数据',
+    '过度拟合：多组学维度高，容易过拟合',
+    '忽视生物学解释：统计显著不等于生物学有意义'
+  ]}
+/>
 <RelatedLinks
   links={[
     { title: '多组学整合策略', to: '/wiki-bioinfo/multi-omics/integration-strategies', description: '整合策略的选择原则' },

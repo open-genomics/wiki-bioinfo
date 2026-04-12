@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="SNF 通过为每组学构建样本相似性网络，然后迭代融合这些网络，实现多组学数据的整合，不依赖于数据分布假设。"
@@ -564,38 +566,19 @@ W <- SNF(list(W1, W2), K = 20, t = 20)
 labels <- spectralClustering(W, K = 3)
 ```
 
-## 常见误区
 
-### 相似性网络越密越好
+<PageHeaderMeta section="Applications" />
 
-不是。过于密集的网络会：
-- 增加计算开销
-- 引入噪声
-- 降低局部结构的可区分性
-
-### SNF 可以处理缺失数据
-
-标准 SNF 不能。需要：
-- 填充缺失值
-- 使用改进方法（如基于矩阵补全的 SNF）
-
-### 迭代次数越多越好
-
-不是。过多迭代可能导致：
-- 过度平滑
-- 丢失组学特异信息
-- 计算浪费
-
-### SNF 只能用于两组数据
-
-不是。SNF 可以轻松扩展到多组学（>2 组）。
-
-### 相似性度量可以任意选择
-
-需要考虑：
-- 数据类型
-- 生物学意义
-- 计算效率
+<PitfallsBox
+  pitfalls={[
+    '相似性网络越密越好：',
+    '不是。过于密集的网络会：',
+    '增加计算开销',
+    '降低局部结构的可区分性',
+    'SNF 可以处理缺失数据：',
+    '标准 SNF 不能。需要：'
+  ]}
+/>
 
 ## 优化技巧
 

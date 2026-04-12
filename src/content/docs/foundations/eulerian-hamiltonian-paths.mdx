@@ -6,6 +6,8 @@ title: "欧拉路径与哈密顿路径"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="欧拉路径和哈密顿路径是图论中的两个经典问题，在计算复杂度和生物信息学应用上有本质区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全问题。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: 'SBH 测序', href: '/wiki/assembly/sequencing-by-hybridization' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 是什么
 
@@ -279,23 +284,16 @@ def eulerian_path(graph):
   ]}
 />
 
-## 常见误区
-
-### 欧拉路径和哈密顿路径只是"边 vs 顶点"的文字游戏
-
-虽然定义上确实一个是遍历所有边、一个是遍历所有顶点，但这一差异导致了根本性的计算复杂度区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全的。在基因组组装中，Pevzner 提出的关键洞察正是通过 de Bruijn 图将哈密顿问题转化为欧拉问题，从而使大规模组装成为可能。
-
-### de Bruijn 图方法解决了所有组装难题
-
-de Bruijn 图将组装从哈密顿问题转化为欧拉问题，解决了计算复杂度问题，但重复序列导致的路径歧义性仍然存在。当基因组中有长重复序列时，图中会出现多个可能的欧拉路径，需要借助配对末端信息（paired-end reads）或其他策略来消歧。计算效率问题解决了，但生物学上的歧义性问题依然存在。
-
-### 欧拉路径存在就意味着唯一
-
-欧拉路径可能不唯一。一个图中可能存在多条不同的欧拉路径，尤其在有重复 k-mer 的情况下。在测序应用中，这意味着即使图结构正确，也可能产生多种可能的序列重建结果。
-
-### 柯尼斯堡七桥问题证明了"无解"
-
-柯尼斯堡七桥问题证明的是"不存在欧拉回路"（回到起点的路径），但可以证明存在欧拉路径（不回到起点）。更准确地说，欧拉证明了存在性的充要条件：除起点和终点外，所有顶点的度数必须为偶数。这是图论中第一个重要定理，其价值远超"七座桥"这个具体问题。
+<PitfallsBox
+  pitfalls={[
+    '欧拉路径和哈密顿路径只是"边 vs 顶点"的文字游戏：',
+    '虽然定义上确实一个是遍历所有边、一个是遍历所有顶点，但这一差异导致了根本性的计算复杂度区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全的。在基因组组装中，Pevzner 提出的关键洞察正是通过 de Bruijn 图将哈密顿问题转化为欧拉问题，从而使大规模组装成为可能。',
+    'de Bruijn 图方法解决了所有组装难题：',
+    'de Bruijn 图将组装从哈密顿问题转化为欧拉问题，解决了计算复杂度问题，但重复序列导致的路径歧义性仍然存在。当基因组中有长重复序列时，图中会出现多个可能的欧拉路径，需要借助配对末端信息（paired-end reads）或其他策略来消歧。计算效率问题解决了，但生物学上的歧义性问题依然存在。',
+    '欧拉路径存在就意味着唯一：',
+    '欧拉路径可能不唯一。一个图中可能存在多条不同的欧拉路径，尤其在有重复 k-mer 的情况下。在测序应用中，这意味着即使图结构正确，也可能产生多种可能的序列重建结果。'
+  ]}
+/>
 
 ## 总结
 

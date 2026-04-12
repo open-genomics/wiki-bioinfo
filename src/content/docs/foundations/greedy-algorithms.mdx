@@ -4,8 +4,11 @@ title: "贪心算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="贪心算法在每一步选择中都采取当前状态下最优的选择，希望通过局部最优达到全局最优。它简单、高效，但在处理复杂生物学问题时常因陷入局部最优而失效。"
@@ -23,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '基因组重排', href: '/wiki-bioinfo/foundations/genome-rearrangements' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 1. 贪心策略的核心
 
@@ -181,20 +187,26 @@ $$A \leq c \cdot OPT$$
 
 在实践中，"贪心算法"和"启发式方法（Heuristic）"这两个概念有时会被混淆：
 
-| 特性 | 贪心算法 | 启发式方法 |
-| :--- | :--- | :--- |
-| **选择策略** | 每步选当前最优 | 基于经验规则或直觉 |
-| **理论保证** | 可能有近似比保证 | 通常没有理论保证 |
-| **设计依据** | 数学上的贪心选择性质 | 实践中的经验和实验 |
-| **可分析性** | 较高 | 较低 |
+<ComparisonTable
+  leftTitle="贪心算法"
+  rightTitle="启发式方法"
+  rows={[
+    { aspect: '**选择策略**', left: '每步选当前最优', right: '基于经验规则或直觉' },
+    { aspect: '**理论保证**', left: '可能有近似比保证', right: '通常没有理论保证' },
+    { aspect: '**设计依据**', left: '数学上的贪心选择性质', right: '实践中的经验和实验' },
+    { aspect: '**可分析性**', left: '较高', right: '较低' }
+  ]}
+/>
 
 许多生物信息学工具使用的方法严格来说是"启发式"而非"贪心"。例如，BLAST 的种子-扩展策略是一种启发式方法——它不能保证找到所有相似区域，但在实践中效果极好。
 
-## 常见误区
-
-- **误区一：认为贪心算法总是"快但差"**。贪心算法在某些问题上（如 Dijkstra、Huffman 编码）可以保证找到全局最优解，而且比动态规划更快。问题在于，很多生物信息学问题不满足贪心选择性质。
-- **误区二：混淆"贪心"与"近似算法"**。贪心是一种算法设计策略，近似算法是一个更广泛的概念。有些近似算法并不使用贪心策略（如线性规划松弛舍入法）。
-- **误区三：认为"启发式"就是"不好的方法"**。在实际的生物信息学工具中，启发式方法往往是必需的。问题规模通常远超精确算法的处理能力，而启发式方法可以在合理时间内给出足够好的结果。
+<PitfallsBox
+  pitfalls={[
+    '误区一：认为贪心算法总是"快但差"。贪心算法在某些问题上（如 Dijkstra、Huffman 编码）可以保证找到全局最优解，而且比动态规划更快。问题在于，很多生物信息学问题不满足贪心选择性质。',
+    '误区二：混淆"贪心"与"近似算法"。贪心是一种算法设计策略，近似算法是一个更广泛的概念。有些近似算法并不使用贪心策略（如线性规划松弛舍入法）。',
+    '误区三：认为"启发式"就是"不好的方法"。在实际的生物信息学工具中，启发式方法往往是必需的。问题规模通常远超精确算法的处理能力，而启发式方法可以在合理时间内给出足够好的结果。'
+  ]}
+/>
 
 ## 相关页面
 

@@ -4,8 +4,11 @@ title: "聚类与 UMAP 降维"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的「维度灾难」。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。'
@@ -137,13 +140,17 @@ $$
 
 ### Leiden vs Louvain
 
-| 特性 | Louvain | Leiden |
-|------|---------|--------|
-| **核心策略** | 贪心模块度优化 | 贪心优化 + 局部连接性检查 |
-| **已发现问题** | 可能产生断开的社区 | 保证社区内部连通 |
-| **分辨率控制** | 通过 resolution 参数 | 通过 resolution 参数 |
-| **计算速度** | 略快 | 略慢但更稳定 |
-| **推荐场景** | 快速探索 | 正式分析（推荐） |
+<ComparisonTable
+  leftTitle="Louvain"
+  rightTitle="Leiden"
+  rows={[
+    { aspect: '**核心策略**', left: '贪心模块度优化', right: '贪心优化 + 局部连接性检查' },
+    { aspect: '**已发现问题**', left: '可能产生断开的社区', right: '保证社区内部连通' },
+    { aspect: '**分辨率控制**', left: '通过 resolution 参数', right: '通过 resolution 参数' },
+    { aspect: '**计算速度**', left: '略快', right: '略慢但更稳定' },
+    { aspect: '**推荐场景**', left: '快速探索', right: '正式分析（推荐）' }
+  ]}
+/>
 
 ### 分辨率参数 (Resolution)
 
@@ -193,14 +200,18 @@ $$
 
 ### UMAP vs t-SNE
 
-| 特性 | UMAP | t-SNE |
-|------|------|-------|
-| **理论基础** | 黎曼几何与代数拓扑 | KL 散度最小化 |
-| **计算速度** | 较快 | 较慢 |
-| **全局结构保持** | 较好 | 较差 |
-| **可重复性** | 较好（随机种子更稳定） | 较差 |
-| **新数据投影** | 支持 transform | 不支持（需重新计算） |
-| **参数敏感性** | 较低 | 较高 |
+<ComparisonTable
+  leftTitle="UMAP"
+  rightTitle="t-SNE"
+  rows={[
+    { aspect: '**理论基础**', left: '黎曼几何与代数拓扑', right: 'KL 散度最小化' },
+    { aspect: '**计算速度**', left: '较快', right: '较慢' },
+    { aspect: '**全局结构保持**', left: '较好', right: '较差' },
+    { aspect: '**可重复性**', left: '较好（随机种子更稳定）', right: '较差' },
+    { aspect: '**新数据投影**', left: '支持 transform', right: '不支持（需重新计算）' },
+    { aspect: '**参数敏感性**', left: '较低', right: '较高' }
+  ]}
+/>
 
 **重要提醒**：
 - **UMAP 距离不具有定量意义**：两个点在 UMAP 图上离得远，不代表它们的进化距离远。
@@ -208,6 +219,11 @@ $$
 - **UMAP 形状不能代表真实的生物学结构**：簇的"拉伸"或"桥接"可能是参数选择或随机种子的产物。
 
 ## 7. Worked Example：从矩阵到 UMAP
+
+<figure>
+  <img src="/img/illustrations/scrna-umap.svg" alt="scRNA-seq UMAP 聚类可视化：不同细胞类型的二维分布" />
+  <figcaption>UMAP 可视化：不同颜色代表不同细胞类型的聚类结果</figcaption>
+</figure>
 
 假设我们有 6 个细胞、4 个基因的简化表达矩阵：
 
@@ -313,22 +329,19 @@ sc.tl.leiden(adata, resolution=0.8)
 sc.tl.umap(adata)
 ```
 
-## 11. 常见误区
 
-- **"UMAP 簇就是细胞类型"**
-  - UMAP 的簇形状受参数和随机种子影响，可能出现人工连接或分离。始终以聚类标签为准，UMAP 仅作辅助可视化。
+<PageHeaderMeta section="Applications" />
 
-- **"聚类的分辨率越高越好"**
-  - 过高的分辨率会产生碎片化的社区，将生物学上同质的细胞人为分开。应通过 marker 基因验证来选择合理的分辨率。
-
-- **"PCA 的主成分数量不重要"**
-  - 使用过多主成分会将噪音引入聚类；使用过少则会丢失生物学信号。推荐使用 30-50 个主成分，并通过 JackStraw 检验验证。
-
-- **"所有高变异基因都应该用于聚类"**
-  - 高变异基因可能包含技术噪音（如线粒体基因、核糖体基因）。通常需要先过滤这些基因，再进行降维和聚类。
-
-- **"不同批次的细胞可以不经校正直接合并聚类"**
-  - 批次效应会导致同一细胞类型在不同批次中被分开聚类。需要先进行批次校正（如 Harmony, scVI, BBKNN），再进行聚类。
+<PitfallsBox
+  pitfalls={[
+    '"UMAP 簇就是细胞类型"',
+    'UMAP 的簇形状受参数和随机种子影响，可能出现人工连接或分离。始终以聚类标签为准，UMAP 仅作辅助可视化。',
+    '"聚类的分辨率越高越好"',
+    '过高的分辨率会产生碎片化的社区，将生物学上同质的细胞人为分开。应通过 marker 基因验证来选择合理的分辨率。',
+    '"PCA 的主成分数量不重要"',
+    '使用过多主成分会将噪音引入聚类；使用过少则会丢失生物学信号。推荐使用 30-50 个主成分，并通过 JackStraw 检验验证。'
+  ]}
+/>
 
 ## 参考资料
 

@@ -2,10 +2,17 @@
 title: "质量控制（QC）总览"
 description: NGS 数据质量控制的核心指标（FastQC）、接头去除（Trimming）与过滤策略。
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="NGS 数据质量控制的核心指标（FastQC）、接头去除（Trimming）与过滤策略。"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 是什么
 
 质量控制（quality control, QC）关注的是：在 raw reads 进入比对、组装、定量或变异检测之前，先判断数据质量是否达到了可分析的基本条件，以及有哪些系统性问题需要先识别和处理。
@@ -159,10 +166,10 @@ QC 并不是独立步骤，而是后续决策的前提：
 
 ## 后续阅读
 
-- [NGS 流程总览](./ngs-overview.md)
-- [RNA-seq 工作流概览](./rna-seq.mdx)
-- [常见文件格式概览](../formats/common-file-formats.mdx)
-- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage.mdx)
+- [NGS 流程总览](./ngs-overview)
+- [RNA-seq 工作流概览](./rna-seq)
+- [常见文件格式概览](../formats/common-file-formats)
+- [测序 reads、coverage 与错误模型](../foundations/sequencing-reads-coverage)
 
 <RelatedLinks
   links={[

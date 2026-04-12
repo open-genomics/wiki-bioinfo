@@ -6,6 +6,8 @@ title: "细胞 Barcode 与 UMI"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="在单细胞测序中，我们面临两个核心挑战：如何识别 Read 来自哪个细胞？以及如何区分真实的分子与 PCR 重复？细胞 Barcode 与 UMI (Unique Molecular Identifier) 正是为此设计的分子标签。"
@@ -23,6 +25,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '测序 Reads 与覆盖度', href: '/wiki-bioinfo/foundations/sequencing-reads-coverage' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 细胞 Barcode：标记空间身份
 
@@ -168,19 +173,16 @@ UMI 去重与计数（cellranger count / UMI-tools）
 - **定量阶段**：通过 UMI 去重获得无 PCR 偏差的基因表达矩阵。
 - **多样本整合**：通过基因型或样本特异性 Barcode 实现多样本混池测序（如 Demuxlet, CellHashing）。
 
-## 8. 常见误区
-
-- **"UMI 完全消除了 PCR 偏差"**
-  - UMI 去重能校正 PCR 扩增的不均匀性，但无法解决捕获效率差异、转录本长度偏差等问题。UMI 计数仍然需要归一化才能进行跨细胞比较。
-
-- **"UMI 越长越好"**
-  - UMI 长度需要在分子区分能力和测序成本之间平衡。10 bp 的 UMI 空间（约 $10^6$）对于绝大多数单细胞实验已经足够，更长的 UMI 会挤占 Read 中可用于 cDNA 比对的空间。
-
-- **"膝点以上的所有 Barcode 都是真实细胞"**
-  - 膝点图只能过滤空液滴，无法区分单细胞与 Doublet（双联体）。Doublet 的 UMI 总数可能比许多单细胞更高。Doublet 检测需要专门的算法（如 Scrublet）。
-
-- **"所有 Barcode 纠错都是安全的"**
-  - 过于激进的纠错可能将两个碰巧汉明距离为 1 的不同 Barcode 合并。特别是在高细胞密度实验中，Barcode 碰撞的风险不可忽略。
+<PitfallsBox
+  pitfalls={[
+    '"UMI 完全消除了 PCR 偏差"',
+    'UMI 去重能校正 PCR 扩增的不均匀性，但无法解决捕获效率差异、转录本长度偏差等问题。UMI 计数仍然需要归一化才能进行跨细胞比较。',
+    '"UMI 越长越好"',
+    'UMI 长度需要在分子区分能力和测序成本之间平衡。10 bp 的 UMI 空间（约 $10^6$）对于绝大多数单细胞实验已经足够，更长的 UMI 会挤占 Read 中可用于 cDNA 比对的空间。',
+    '"膝点以上的所有 Barcode 都是真实细胞"',
+    '膝点图只能过滤空液滴，无法区分单细胞与 Doublet（双联体）。Doublet 的 UMI 总数可能比许多单细胞更高。Doublet 检测需要专门的算法（如 Scrublet）。'
+  ]}
+/>
 
 ## 参考资料
 

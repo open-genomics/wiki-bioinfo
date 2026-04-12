@@ -2,20 +2,32 @@
 description: spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与解释上的差异
 title: "spot 与单细胞"
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与解释上的差异"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 核心差别
 
 单细胞 RNA-seq（scRNA-seq）与空间转录组（ST）最根本的差别在于**基本测量单位**的不同：
 
-| 维度 | scRNA-seq | spot-based ST |
-|------|-----------|---------------|
-| **基本单位** | 单个细胞（cell） | 捕获区域（spot） |
-| **测量对象** | 单个细胞的转录组 | 局部区域内所有细胞的混合转录组 |
-| **空间信息** | ❌ 解离后丢失 | ✅ 保留二维坐标 |
-| **分辨率** | 单细胞 | 取决于 spot 大小（通常多细胞） |
+<ComparisonTable
+  leftTitle="scRNA-seq"
+  rightTitle="spot-based ST"
+  rows={[
+    { aspect: '**基本单位**', left: '单个细胞（cell）', right: '捕获区域（spot）' },
+    { aspect: '**测量对象**', left: '单个细胞的转录组', right: '局部区域内所有细胞的混合转录组' },
+    { aspect: '**空间信息**', left: '❌ 解离后丢失', right: '✅ 保留二维坐标' },
+    { aspect: '**分辨率**', left: '单细胞', right: '取决于 spot 大小（通常多细胞）' }
+  ]}
+/>
 
 <PrerequisitesBox
   items={[
@@ -150,22 +162,16 @@ scRNA-seq 数据
 - **空间数据质量过低**：增加测序深度或更换技术平台
 - **存在空间特有的细胞状态**：scRNA-seq 可能无法捕获（如特定微环境下的细胞）
 
-## 常见误区
 
-- **"空间数据一定比单细胞更高级"**
-  - 两者解决的是不同问题，不存在绝对优劣
-
-- **"单细胞注释可以直接搬到每个 spot"**
-  - spot 的混合性质必须通过统计模型处理
-
-- **"spot 边界就是真实组织边界"**
-  - spot 是人工采样单位，可能与解剖边界错位
-
-- **"高分辨率空间平台可以完全替代 scRNA-seq"**
-  - 即使达到单细胞分辨率，检测深度和基因覆盖仍可能受限
-
-- **"整合分析可以恢复完美单细胞分辨率"**
-  - 去卷积是概率推断，存在不确定性
+<PitfallsBox
+  pitfalls={[
+    '"空间数据一定比单细胞更高级"',
+    '"单细胞注释可以直接搬到每个 spot"',
+    '"spot 边界就是真实组织边界"',
+    '"高分辨率空间平台可以完全替代 scRNA-seq"',
+    '"整合分析可以恢复完美单细胞分辨率"'
+  ]}
+/>
 
 ## 参考资料
 

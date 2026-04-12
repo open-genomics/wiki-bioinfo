@@ -8,6 +8,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="FASTA 编码参考序列（reference sequence）——整个生物信息学坐标系统的骨架。理解其简单结构、索引机制（.fai）和版本体系，是比对、注释和变异检测的前提。"
@@ -18,6 +19,8 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     '不同参考版本（GRCh37 vs GRCh38）的 FASTA 序列不同，不能混用',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
 
 ## 是什么
 
@@ -55,8 +58,8 @@ FASTA 是分析流程的**坐标骨架**：
 
 <PrerequisitesBox
   items={[
-    '理解参考基因组的概念：GRCh38、GRCh37 等版本体系',
-    '了解 IUPAC 碱基编码：A/C/G/T/N 等字符的含义',
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: '序列与字符串', href: '/docs/foundations/sequences-and-strings'},
   ]}
 />
 
@@ -203,6 +206,16 @@ samtools faidx reference.fa.gz
       to: '/docs/data-references/reference-versions-and-liftover',
       label: '版本管理',
       description: '如何在不同参考版本之间转换坐标。',
+    },
+    {
+      title: '参考基因组版本历史',
+      to: '/docs/data-references/reference-genome-history',
+      description: 'GRCh37 到 GRCh38 的演进细节和版本选择指南。',
+    },
+    {
+      title: '数据库资源',
+      to: '/docs/databases/',
+      description: 'NCBI、Ensembl 等数据库提供参考基因组 FASTA 下载。',
     },
   ]}
 />

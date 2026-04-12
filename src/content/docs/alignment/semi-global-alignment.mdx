@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '理解 DP 递推关系的起点' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -303,21 +308,16 @@ S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 
 如果两条序列预期高度相似，可以使用带状动态规划，将复杂度降低到 $O(k \cdot \min(m,n))$，其中 $k$ 是带宽。
 
-## 常见误区
-
-### 半全局比对就是局部比对
-
-不是。局部比对可以从序列的任意位置开始和结束，而半全局比对仍然要求至少覆盖一条序列的大部分。
-
-### 半全局比对总是比全局比对好
-
-不是。选择哪种比对方式取决于具体任务：
-- 如果两条序列长度相近且需要完全比较，全局比对更合适
-- 如果一条序列明显较短或只需要寻找重叠，半全局比对更合适
-
-### 半全局比对的端部gap完全不罚分
-
-这取决于具体实现。有些变体只允许一端gap不罚分，有些允许两端。需要根据具体应用选择合适的变体。
+<PitfallsBox
+  pitfalls={[
+    '半全局比对就是局部比对：',
+    '不是。局部比对可以从序列的任意位置开始和结束，而半全局比对仍然要求至少覆盖一条序列的大部分。',
+    '半全局比对总是比全局比对好：',
+    '不是。选择哪种比对方式取决于具体任务：',
+    '如果两条序列长度相近且需要完全比较，全局比对更合适',
+    '如果一条序列明显较短或只需要寻找重叠，半全局比对更合适'
+  ]}
+/>
 
 ## 参考资料
 

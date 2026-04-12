@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='在简单的线性罚分模型中，每个 Gap 字符代价相同。但在生物学中，一次连续的插入或缺失（Indel）事件比多个离散事件更易发生。仿射 Gap 罚分通过区分「开启」和「延长」代价，完美解决了这一直觉问题。'
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 是什么
 
@@ -299,28 +304,16 @@ Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(m
 
 这三种机制的共同特点是：**一次事件产生一个连续的 Gap**。仿射罚分模型正是对这一生物学现实的数学抽象。
 
-## 9. 常见误区
-
-### Gap 开启罚分越大越好
-
-不是。过大的 $\rho$ 会使算法倾向于用错配替代 Gap，导致比对中出现大量不合理的错配。过小的 $\rho$ 又会使 Gap 太多。合理的参数应该反映真实的进化过程——在蛋白质比对中，$\rho / \sigma$ 的比值通常在 5-11 之间。
-
-### 仿射罚分总是优于线性罚分
-
-在计算效率上，仿射罚分有约 9 倍的常数因子开销。对于超大规模数据（如全基因组比对），线性罚分有时会被用于初步筛选，仿射罚分用于精细对齐。此外，线性罚分在理论分析中更简洁，有时被用于算法复杂度的推导。
-
-### 仿射罚分能完全解决 Gap 建模问题
-
-仿射罚分是一个简化模型。真实的 Indel 事件可能遵循更复杂的分布（如对数正态分布），而且不同类型的区域（编码区 vs 非编码区）的 Gap 概率也不同。一些更高级的模型（如 Profile HMM 中的 Gap 发射概率）提供了更灵活的 Gap 建模方式。
-
-### 三矩阵模型是唯一的实现方式
-
-除了三矩阵模型外，还有其他实现仿射罚分的方法：
-
-- **双矩阵模型**：通过将 Gap 开启代价编码到匹配矩阵的对角线转移中，可以减少到两个矩阵，但公式更复杂。
-- **单矩阵 + 额外变量**：在某些特殊情况下，可以通过在单矩阵中引入额外的状态变量来实现，但通用性较差。
-
-三矩阵模型因其简洁性和通用性，是最广泛使用的实现方式。
+<PitfallsBox
+  pitfalls={[
+    'Gap 开启罚分越大越好：',
+    '不是。过大的 $\rho$ 会使算法倾向于用错配替代 Gap，导致比对中出现大量不合理的错配。过小的 $\rho$ 又会使 Gap 太多。合理的参数应该反映真实的进化过程——在蛋白质比对中，$\rho / \sigma$ 的比值通常在 5-11 之间。',
+    '仿射罚分总是优于线性罚分：',
+    '在计算效率上，仿射罚分有约 9 倍的常数因子开销。对于超大规模数据（如全基因组比对），线性罚分有时会被用于初步筛选，仿射罚分用于精细对齐。此外，线性罚分在理论分析中更简洁，有时被用于算法复杂度的推导。',
+    '仿射罚分能完全解决 Gap 建模问题：',
+    '仿射罚分是一个简化模型。真实的 Indel 事件可能遵循更复杂的分布（如对数正态分布），而且不同类型的区域（编码区 vs 非编码区）的 Gap 概率也不同。一些更高级的模型（如 Profile HMM 中的 Gap 发射概率）提供了更灵活的 Gap 建模方式。'
+  ]}
+/>
 
 ## 相关页面
 

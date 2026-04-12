@@ -6,6 +6,8 @@ title: "概率算法与统计推断"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '动态规划算法', href: '/wiki-bioinfo/applications/dynamic-programming' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么需要概率方法
 
@@ -591,23 +596,16 @@ $$
 - **近似**：变分推断近似 MCMC
 - **预处理**：缓存中间结果
 
-## 常见误区
-
-### p < 0.05 就显著
-
-不一定。需要考虑多重检验、效应大小、先验知识等因素。
-
-### 贝叶斯方法总是更好
-
-不是。贝叶斯方法需要先验，计算成本较高。在某些场景下，频率方法更为合适。
-
-### MCMC 总是收敛
-
-不是。MCMC 可能陷入局部最优，需要诊断其收敛性。
-
-### 模型越复杂越好
-
-不是。复杂模型容易过拟合，需要模型选择。
+<PitfallsBox
+  pitfalls={[
+    'p < 0.05 就显著：',
+    '不一定。需要考虑多重检验、效应大小、先验知识等因素。',
+    '贝叶斯方法总是更好：',
+    '不是。贝叶斯方法需要先验，计算成本较高。在某些场景下，频率方法更为合适。',
+    'MCMC 总是收敛：',
+    '不是。MCMC 可能陷入局部最优，需要诊断其收敛性。'
+  ]}
+/>
 
 ## 实践建议
 

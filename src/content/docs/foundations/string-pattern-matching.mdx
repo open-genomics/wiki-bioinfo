@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '序列表示与索引', href: '/wiki-bioinfo/sequence/index' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 是什么
 
@@ -327,33 +332,16 @@ BLAST 并不直接使用上述算法，但借鉴了思想：
 - **Minimizer sketch**：用采样代替完整匹配，加速大规模搜索
 - **k-mer hash table**：类似 Rabin-Karp 的哈希思想
 
-## 常见误区
-
-### KMP 总是最优的
-
-不是。在实际应用中：
-- Boyer-Moore 在长模式和自然文本中往往更快
-- 现代工具更多使用索引结构（如 FM-index）而非经典匹配算法
-- 选择算法要考虑字符集大小、模式长度、数据特征
-
-### 模式匹配就是序列比对
-
-不是。模式匹配是：
-- 查找精确或近似匹配的子串
-- 通常不涉及 gap 和打分矩阵
-
-序列比对是：
-- 允许插入、删除、替换
-- 使用复杂的打分系统
-- 可以处理全局或局部比对
-
-### 只需要懂一种算法就够了
-
-不是。不同算法适合不同场景：
-- 短模式、简单场景：朴素算法够用
-- 模式有重复：KMP 有优势
-- 长模式、大字符集：Boyer-Moore 更快
-- 多模式：Rabin-Karp 易扩展
+<PitfallsBox
+  pitfalls={[
+    'KMP 总是最优的：',
+    '不是。在实际应用中：',
+    'Boyer-Moore 在长模式和自然文本中往往更快',
+    '现代工具更多使用索引结构（如 FM-index）而非经典匹配算法',
+    '选择算法要考虑字符集大小、模式长度、数据特征',
+    '模式匹配就是序列比对：'
+  ]}
+/>
 
 ## 与其他算法的连接
 

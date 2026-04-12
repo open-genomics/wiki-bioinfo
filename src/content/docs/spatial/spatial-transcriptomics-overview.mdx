@@ -2,10 +2,17 @@
 description: 空间转录组学的技术原理、数据结构与标准分析流程
 title: "空间转录组总览"
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="空间转录组学的技术原理、数据结构与标准分析流程"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 是什么
 
 **空间转录组学（Spatial Transcriptomics）** 是一类在保留组织切片空间位置信息的同时，测量基因表达水平的技术。与单细胞 RNA-seq（scRNA-seq）输出 `gene × cell` 矩阵不同，空间转录组输出的是 `gene × location` 矩阵，其中 location 带有二维空间坐标。
@@ -176,19 +183,15 @@ UMI 计数 → gene × spot 矩阵
 
 两者整合是空间转录组分析的标准范式。
 
-## 常见误区
 
-- **"有空间坐标就等于单细胞分辨率"**
-  - 多数平台一个 spot 包含多个细胞，需经过去卷积才能推断细胞组成
-
-- **"空间图上颜色深浅反映绝对表达量"**
-  - 颜色深浅受归一化方法、捕获效率、显示范围影响，不能直接比较
-
-- **"空间聚类结果一定对应真实解剖区域"**
-  - 聚类受图像质量、批次效应、技术噪声影响，需要结合组织学验证
-
-- **"空间转录组可以完全替代原位杂交"**
-  - 空间转录组是高通量筛选工具，验证仍需靶向的原位技术
+<PitfallsBox
+  pitfalls={[
+    '"有空间坐标就等于单细胞分辨率"',
+    '"空间图上颜色深浅反映绝对表达量"',
+    '"空间聚类结果一定对应真实解剖区域"',
+    '"空间转录组可以完全替代原位杂交"'
+  ]}
+/>
 
 ## 参考资料
 

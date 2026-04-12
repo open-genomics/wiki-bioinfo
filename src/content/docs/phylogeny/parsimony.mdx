@@ -4,9 +4,12 @@ title: "Parsimony算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Parsimony（简约法）通过寻找需要最少进化变化的系统发育树来推断物种关系，使用Fitch算法和Sankoff算法高效计算单个位点的最小变化数。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '动态规划', href: '/wiki-bioinfo/foundations/dynamic-programming', description: 'Fitch 和 Sankoff 算法的基础' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -397,13 +403,17 @@ Parsimony的一个主要问题是长枝吸引：
 
 ## 与Maximum Likelihood的比较
 
-| 特性 | Parsimony | Maximum Likelihood |
-|------|-----------|-------------------|
-| 优化目标 | 最少变化 | 最大似然 |
-| 模型 | 无显式模型 | 显式替换模型 |
-| 计算 | 较快 | 较慢 |
-| 长枝吸引 | 容易受影响 | 相对鲁棒 |
-| 统计框架 | 无 | 有 |
+<ComparisonTable
+  leftTitle="Parsimony"
+  rightTitle="Maximum Likelihood"
+  rows={[
+    { aspect: '优化目标', left: '最少变化', right: '最大似然' },
+    { aspect: '模型', left: '无显式模型', right: '显式替换模型' },
+    { aspect: '计算', left: '较快', right: '较慢' },
+    { aspect: '长枝吸引', left: '容易受影响', right: '相对鲁棒' },
+    { aspect: '统计框架', left: '无', right: '有' }
+  ]}
+/>
 
 ## 优缺点总结
 
@@ -421,25 +431,16 @@ Parsimony的一个主要问题是长枝吸引：
 - 无法提供统计置信度
 - 搜索最优树是NP难问题
 
-## 常见误区
-
-### Parsimony总是选择最简单的树
-
-不是。Parsimony选择的是"需要最少替换事件"的树，这不一定是结构最简单的树。
-
-### Parsimony不需要任何假设
-
-不是。Parsimony隐含假设：
-- 位点独立演化
-- 不同类型的替换代价相同（除非使用Sankoff算法）
-- 替换事件是稀疏的
-
-### Parsimony已经过时
-
-不是。虽然Maximum Likelihood和Bayesian方法更流行，但Parsimony仍然：
-- 适合某些类型的数据（如形态学）
-- 是教学和理解的重要工具
-- 在某些快速分析场景中仍有价值
+<PitfallsBox
+  pitfalls={[
+    'Parsimony总是选择最简单的树：',
+    '不是。Parsimony选择的是"需要最少替换事件"的树，这不一定是结构最简单的树。',
+    'Parsimony不需要任何假设：',
+    '不是。Parsimony隐含假设：',
+    '位点独立演化',
+    '不同类型的替换代价相同（除非使用Sankoff算法）'
+  ]}
+/>
 
 ## 与真实工具的连接
 

@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='如果说 Trie 是为了「找一批模式」而设计的，那么 Suffix Tree 就是为了「在一个文本中找任何子串」而设计的。它通过压缩所有后缀的共享前缀，将 $O(n^2)$ 的 Suffix Trie 降至 $O(n)$ 空间。'
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 算法历史
 
@@ -199,23 +204,16 @@ FM-index (空间最小，查询 $O(m)$)
 
 Suffix Tree 是理论分析的首选工具（直观、功能完整），Suffix Array 是实现折中（平衡空间与速度），FM-index 是工业标准（极致压缩）。
 
-## 7. 常见误区
-
-### Suffix Tree 和 Suffix Trie 是同一个东西
-
-不是。Suffix Trie 将每个后缀的每个字符都展开为独立的节点，空间为 $O(n^2)$。Suffix Tree 通过路径压缩将单分支链合并，空间降为 $O(n)$。两者的功能相同，但空间效率有本质区别。
-
-### Suffix Tree 可以直接用于近似匹配
-
-不可以。Suffix Tree 仅支持精确子串匹配。要实现近似匹配，需要在 Suffix Tree 的基础上结合动态规划（如 Landau-Vishkin 算法），利用 LCP (Longest Common Prefix) 信息跳过已经精确匹配的部分，将近似匹配的时间降至 $O(kn)$，其中 $k$ 为允许的错误数。
-
-### Suffix Tree 在现代工具中已被淘汰
-
-Suffix Tree 的构建算法思想（如 Ukkonen 的在线算法）仍然是 Suffix Array 构建算法的理论基础。MUMmer 等工具仍然在使用 Suffix Tree 的变体。在实际的 Read Mapping 中，FM-index 因空间优势而更受欢迎，但 Suffix Tree 的理论价值不可替代。
-
-### Suffix Tree 只能处理单条序列
-
-通过构建广义后缀树 (Generalized Suffix Tree)，可以同时处理多条序列。只需在每条序列末尾添加不同的哨兵字符（如 `$`、`#`），然后统一构建即可。这为最长公共子串、多序列重复分析等问题提供了统一的框架。
+<PitfallsBox
+  pitfalls={[
+    'Suffix Tree 和 Suffix Trie 是同一个东西：',
+    '不是。Suffix Trie 将每个后缀的每个字符都展开为独立的节点，空间为 $O(n^2)$。Suffix Tree 通过路径压缩将单分支链合并，空间降为 $O(n)$。两者的功能相同，但空间效率有本质区别。',
+    'Suffix Tree 可以直接用于近似匹配：',
+    '不可以。Suffix Tree 仅支持精确子串匹配。要实现近似匹配，需要在 Suffix Tree 的基础上结合动态规划（如 Landau-Vishkin 算法），利用 LCP (Longest Common Prefix) 信息跳过已经精确匹配的部分，将近似匹配的时间降至 $O(kn)$，其中 $k$ 为允许的错误数。',
+    'Suffix Tree 在现代工具中已被淘汰：',
+    'Suffix Tree 的构建算法思想（如 Ukkonen 的在线算法）仍然是 Suffix Array 构建算法的理论基础。MUMmer 等工具仍然在使用 Suffix Tree 的变体。在实际的 Read Mapping 中，FM-index 因空间优势而更受欢迎，但 Suffix Tree 的理论价值不可替代。'
+  ]}
+/>
 
 ## 相关页面
 

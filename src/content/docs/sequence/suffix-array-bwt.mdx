@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="当参考序列达到 3Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: 'Suffix Tree', href: '/wiki-bioinfo/sequence/suffix-tree' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -80,6 +85,11 @@ $$SA[i] = j \iff T[j \dots n-1] \text{ 是字典序第 } i \text{ 小的后缀}$
 | Prefix Doubling | $O(n \log^2 n)$ | $O(n)$ | 每次倍增排序前缀长度 |
 | SA-IS | $O(n)$ | $O(n)$ | 线性时间构建，实际中表现优异 |
 | libdivsufsort | $O(n)$ | $O(n)$ | 实用工具，被 BWA 等广泛使用 |
+
+<figure>
+  <img src="/img/illustrations/bwt-construction.svg" alt="BWT 构造过程：循环位移排序与最后一列提取" />
+  <figcaption>BWT 构造过程示意：循环位移排序后提取最后一列</figcaption>
+</figure>
 
 ### 2. Burrows-Wheeler Transform (BWT)
 
@@ -271,13 +281,15 @@ BWT 和 FM-index 的应用远不止序列比对：
 - **重复序列分析**：BWT 中的连续相同字符区域对应基因组中的重复序列；
 - **文本压缩**：BWT 变换后的文本经过 Move-to-Front 编码和算术编码，可以达到极高的压缩比。
 
-## 常见误区
-
-- **混淆 BWT 与压缩算法**：BWT 本身不压缩数据，它只是一种排列变换。真正的压缩需要配合后续的编码步骤（如 Move-to-Front + 算术编码）。在索引应用中，BWT 的价值在于它支持后向搜索，而非压缩。
-- **认为 FM-index 只能做精确匹配**：虽然基本的后向搜索只支持精确匹配，但通过扩展（如回溯搜索、seed-and-extend 策略），FM-index 也能支持带 mismatch 和 gap 的比对。BWA-MEM 就是这一思路的典型实现。
-- **忽视终止符 `$` 的作用**：在理论描述中，`$` 的字典序最小，确保每个后缀都是不同的。在实际实现中，终止符的处理需要特别注意，否则可能导致索引构建或查询出错。
-- **混淆 SA 和 BWT 的关系**：SA 存储的是后缀的起始位置，BWT 存储的是排序矩阵的最后一列。两者可以互相推导，但服务不同的查询需求。SA 支持二分查找，BWT 支持后向搜索。
-- **认为 BWT 过时了**：虽然 minimizer 等新索引技术在长读长比对中表现优异，但 BWT/FM-index 在短读长比对中仍然是主流方案，且在理论上具有最优的压缩性能。
+<PitfallsBox
+  pitfalls={[
+    '混淆 BWT 与压缩算法：BWT 本身不压缩数据，它只是一种排列变换。真正的压缩需要配合后续的编码步骤（如 Move-to-Front + 算术编码）。在索引应用中，BWT 的价值在于它支持后向搜索，而非压缩。',
+    '认为 FM-index 只能做精确匹配：虽然基本的后向搜索只支持精确匹配，但通过扩展（如回溯搜索、seed-and-extend 策略），FM-index 也能支持带 mismatch 和 gap 的比对。BWA-MEM 就是这一思路的典型实现。',
+    '忽视终止符 $ 的作用：在理论描述中，$ 的字典序最小，确保每个后缀都是不同的。在实际实现中，终止符的处理需要特别注意，否则可能导致索引构建或查询出错。',
+    '混淆 SA 和 BWT 的关系：SA 存储的是后缀的起始位置，BWT 存储的是排序矩阵的最后一列。两者可以互相推导，但服务不同的查询需求。SA 支持二分查找，BWT 支持后向搜索。',
+    '认为 BWT 过时了：虽然 minimizer 等新索引技术在长读长比对中表现优异，但 BWT/FM-index 在短读长比对中仍然是主流方案，且在理论上具有最优的压缩性能。'
+  ]}
+/>
 
 ## 相关页面
 

@@ -4,9 +4,12 @@ title: "序列深度学习"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="生物序列本质上是离散符号的线性排列。深度学习通过将这些符号转化为连续的数值嵌入（Embeddings），利用卷积、递归和注意力机制，捕获隐藏在碱基序列背后的复杂生物学规律。"
@@ -25,6 +28,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: 'Motif 寻找', href: '/wiki-bioinfo/models/motif-finding' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 是什么
 
@@ -180,13 +186,15 @@ $$
 - **蛋白质设计**：利用预训练语言模型生成具有目标属性的全新蛋白质序列；
 - **宏基因组分析**：对宏基因组 contigs 进行功能注释和分类。
 
-## 常见误区
-
-- **"深度学习不需要生物学知识"**：虽然模型能自动提取特征，但好的特征编码（如物理化学性质）、合理的任务定义和正确的评估指标都需要领域知识。领域知识也帮助判断模型结果是否合理。
-- **"预训练模型开箱即用"**：预训练模型的嵌入在不同任务上的效果差异很大。某些任务（如远缘同源检测）可能需要重新训练或设计特定的微调策略。
-- **"模型越大越好"**：更大的模型确实通常效果更好，但计算成本和部署难度也大幅增加。在很多实际场景中，一个经过良好微调的小模型可能比一个未经优化的超大模型更实用。
-- **"深度学习能解决所有问题"**：深度学习在数据量充足、模式可学习的问题上表现优异。但对于样本量极小、机制明确的任务（如简单的酶活性预测），传统方法可能更高效且更可解释。
-- **忽视序列的特殊性**：生物序列与自然语言有本质区别：碱基/氨基酸不是任意的符号，它们具有明确的物理化学性质和进化约束。直接套用 NLP 的模型设计而不考虑这些特殊性，可能不是最优策略。
+<PitfallsBox
+  pitfalls={[
+    '"深度学习不需要生物学知识"：虽然模型能自动提取特征，但好的特征编码（如物理化学性质）、合理的任务定义和正确的评估指标都需要领域知识。领域知识也帮助判断模型结果是否合理。',
+    '"预训练模型开箱即用"：预训练模型的嵌入在不同任务上的效果差异很大。某些任务（如远缘同源检测）可能需要重新训练或设计特定的微调策略。',
+    '"模型越大越好"：更大的模型确实通常效果更好，但计算成本和部署难度也大幅增加。在很多实际场景中，一个经过良好微调的小模型可能比一个未经优化的超大模型更实用。',
+    '"深度学习能解决所有问题"：深度学习在数据量充足、模式可学习的问题上表现优异。但对于样本量极小、机制明确的任务（如简单的酶活性预测），传统方法可能更高效且更可解释。',
+    '忽视序列的特殊性：生物序列与自然语言有本质区别：碱基/氨基酸不是任意的符号，它们具有明确的物理化学性质和进化约束。直接套用 NLP 的模型设计而不考虑这些特殊性，可能不是最优策略。'
+  ]}
+/>
 
 ## 相关页面
 

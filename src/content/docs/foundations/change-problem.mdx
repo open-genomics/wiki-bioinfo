@@ -6,6 +6,8 @@ title: "换钱问题"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="换钱问题要求用最少数量的硬币凑齐给定的金额。它是理解动态规划（DP）优于贪心算法的典型案例。"
@@ -22,6 +24,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '递归与迭代', href: '/wiki/foundations/algorithms-and-complexity' },
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 问题定义
 
@@ -123,11 +128,11 @@ CHANGE(M, c)
 - 在组装和注释中，很多打分函数都可抽象为"有限动作集合 + 最优子结构"的 DP 模式。
 - 当状态空间扩大到二维/三维时，换钱问题提供的是"如何定义状态和转移"的最小可用范式。
 
-## 常见误区
-
-1. **把贪心当作通解**：只有在特定币值体系下贪心才总是最优。
-2. **混淆问题目标**：最少硬币数、组合总数、是否可达是三类不同问题。
-3. **忽略不可达状态**：实现时需要为不可达金额保留 $\infty$（或哨兵值）语义。
+<PitfallsBox
+  pitfalls={[
+    '1. 把贪心当作通解：只有在特定币值体系下贪心才总是最优。 2. 混淆问题目标：最少硬币数、组合总数、是否可达是三类不同问题。 3. 忽略不可达状态：实现时需要为不可达金额保留 $\infty$（或哨兵值）语义。'
+  ]}
+/>
 
 ## 相关页面
 

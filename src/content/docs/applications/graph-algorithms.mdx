@@ -6,6 +6,8 @@ title: "图算法在生物信息学中的应用"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '生物信息学算法总览', href: '/wiki-bioinfo/applications/algorithms-overview' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么图算法重要
 
@@ -449,23 +454,16 @@ D [ 9  10   8   0 ]
 - **igraph**：图算法库
 - **NetworkX**：Python 图分析库
 
-## 常见误区
-
-### 图越大，算法越慢
-
-不一定。算法复杂度取决于顶点数 V 与边数 E 的关系。稀疏图（E ≈ V）的算法可能比稠密图（E ≈ V²）快得多。
-
-### 最短路径总是唯一的
-
-不是。可能存在多条相同长度的最短路径。
-
-### 树总是最优的
-
-不是。树结构可能丢失某些信息（如水平基因转移等）。
-
-### 图算法只能用于静态图
-
-不是。动态图算法可以处理随时间变化的图。
+<PitfallsBox
+  pitfalls={[
+    '图越大，算法越慢：',
+    '不一定。算法复杂度取决于顶点数 V 与边数 E 的关系。稀疏图（E ≈ V）的算法可能比稠密图（E ≈ V²）快得多。',
+    '最短路径总是唯一的：',
+    '不是。可能存在多条相同长度的最短路径。',
+    '树总是最优的：',
+    '不是。树结构可能丢失某些信息（如水平基因转移等）。'
+  ]}
+/>
 
 ## 实践建议
 

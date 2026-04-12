@@ -7,6 +7,9 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <SummaryBox
   summary="RNA-seq 表达量归一化是消除测序深度和基因长度偏差、实现跨样本可比性的关键步骤。本节对比 CPM、FPKM、TPM 的归一化逻辑，并引入有效长度的概念。"
@@ -24,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: 'RNA-seq 工作流', href: '/wiki-bioinfo/workflows/rna-seq' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 是什么
 
@@ -208,6 +214,20 @@ TPM 总和验证：$637209 + 286524 + 76267 = 1000000$。
 
 ## 6. 复杂度与适用前提
 
+### CPM vs FPKM vs TPM 对比
+
+<ComparisonTable
+  leftTitle="CPM（每百万计数）"
+  rightTitle="TPM（每百万转录本）"
+  rows={[
+    { aspect: '归一化维度', left: '仅校正测序深度', right: '同时校正测序深度和基因长度' },
+    { aspect: '跨样本可比性', left: '有限——受基因长度分布影响', right: '好——总量恒为 $10^6$' },
+    { aspect: '适用场景', left: '同一样本内基因间比较；差异表达原始输入', right: '跨样本基因表达比较' },
+    { aspect: '统计性质', left: '保持原始计数的离散分布', right: '归一化比例值，丢失方差信息' },
+    { aspect: 'DESeq2/edgeR 兼容', left: '推荐——使用原始计数', right: '不推荐——统计模型假设被破坏' },
+  ]}
+/>
+
 ### 计算复杂度
 
 所有三种归一化方法的时间复杂度均为 $O(N)$（$N$ 为基因/转录本数量），计算开销可忽略不计。真正的计算瓶颈在于上游的 Reads 比对或伪比对步骤。
@@ -239,43 +259,16 @@ $$\text{Salmon/Kallisto（转录本级定量）} \xrightarrow{\text{tximport}} \
 
 其中 `tximport` 负责将转录本级的 TPM 和有效计数聚合为基因级的长度校正计数，DESeq2 使用原始计数性质的数据进行统计建模。TPM 仅用于可视化和样本间趋势比较。
 
-## 8. 常见误区
-
-### 8.1 用 TPM/FPKM 做差异表达分析
-
-DESeq2、edgeR、limma-voom 等差异表达分析工具的统计模型（如负二项分布）依赖于原始计数的离散性质。TPM 和 FPKM 是经过归一化的比例值，丢失了原始计数中的方差信息（如测序深度信息被"烧掉"了），直接用于这些工具会导致：
-
-- 统计检验的 P-value 不准确。
-- 检验的自由度被错误估计。
-- 多重检验校正的基础失效。
-
-**正确做法**：使用 `tximport` 生成的长度校正计数（Length-Adjusted Counts）或原始计数输入 DESeq2。
-
-### 8.2 混淆 FPKM 与 TPM 的数值含义
-
-由于 FPKM 和 TPM 的数值范围相似（都在 0 到数十万之间），很容易混淆两者的含义。关键区别在于：
-
-- FPKM 的总量因样本而异。
-- TPM 的总量恒为 $10^6$。
-
-如果直接比较两个样本中同一个基因的 FPKM 绝对值来推断倍数变化，结果可能不准确。**跨样本比较时，始终优先使用 TPM。**
-
-### 8.3 忽略 GC 含量和序列偏好
-
-RNA-seq 文库构建和 PCR 扩增过程中，GC 含量和序列特征会影响 Reads 的产生概率。高 GC 含量的转录本往往被系统性低估。Salmon 和 Kallisto 提供了 GC 偏好校正选项（`--gcBias`），建议在正式分析中启用。
-
-### 8.4 对低表达基因的 TPM 过度解读
-
-TPM 的估计不确定性随表达量降低而急剧增大。一个 TPM = 0.1 的基因可能对应 0 个 Reads，也可能对应 1 个 Reads——两者的统计含义截然不同。在解读低表达基因的 TPM 时，应同时关注原始计数和置信区间。
-
-### 8.5 忽视多联体基因 (Multi-mapping Genes)
-
-当 Reads 比对到多个基因位点（如重复序列区域或高度同源的基因家族）时，不同的定量工具处理方式不同：
-- **HTSeq-count**：默认丢弃多重比对 Reads。
-- **featureCounts**：提供 `-M` 选项分配多重比对 Reads。
-- **Salmon/Kallisto**：通过 EM 算法将多重比对 Reads 按比例分配到兼容的转录本。
-
-处理方式的差异可能导致相同数据在不同工具下的定量结果出现系统性差异。
+<PitfallsBox
+  pitfalls={[
+    '用 TPM/FPKM 做差异表达分析：',
+    'DESeq2、edgeR、limma-voom 等差异表达分析工具的统计模型（如负二项分布）依赖于原始计数的离散性质。TPM 和 FPKM 是经过归一化的比例值，丢失了原始计数中的方差信息（如测序深度信息被"烧掉"了），直接用于这些工具会导致：',
+    '统计检验的 P-value 不准确。',
+    '检验的自由度被错误估计。',
+    '多重检验校正的基础失效。',
+    '正确做法：使用 tximport 生成的长度校正计数（Length-Adjusted Counts）或原始计数输入 DESeq2。'
+  ]}
+/>
 
 ## 相关页面
 

@@ -10,6 +10,7 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 
 <SummaryBox
@@ -20,6 +21,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '选择数据库时应先明确研究问题涉及什么对象类型，再寻找对应的资源族。',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 问题背景
 
@@ -51,8 +55,8 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PrerequisitesBox
   items={[
-    '先理解参考基因组、坐标系统与注释，因为很多数据库对象都绑定在特定 assembly 和注释版本上。',
-    'gene、transcript、protein、variant、sample / dataset 是不同层次的对象，不应直接互换。',
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: '生物学基础对象', href: '/docs/foundations/biology-basics'},
     '很多数据库页面同时显示多个交叉引用，但交叉引用并不等于对象本体完全相同。',
   ]}
 />
@@ -243,6 +247,16 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       to: '/docs/formats/common-file-formats',
       label: '文件接口',
       description: '数据库对象最终往往通过 FASTA、GTF、VCF 等文件格式进入实际流程。',
+    },
+    {
+      title: '临床变异解释',
+      to: '/docs/clinical-variants/',
+      description: 'ClinVar、gnomAD 等变异数据库在 ACMG 致病性评估中的使用。',
+    },
+    {
+      title: 'VCF/BCF 格式',
+      to: '/docs/formats/vcf-bcf-format',
+      description: '变异数据库信息通常以 VCF 格式附加到变异注释中。',
     },
   ]}
 />

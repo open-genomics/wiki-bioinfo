@@ -4,8 +4,11 @@ description: 从编辑距离走向真实序列比对，理解 PAM 和 BLOSUM 替
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='真实序列比对不能假设「所有错误代价相同」。打分矩阵通过量化氨基酸替换的可能性，Gap 罚分通过区分开启与延长代价，共同构建了模拟进化过程的评价体系。'
@@ -23,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 是什么
 
@@ -103,12 +109,16 @@ PAM 矩阵的构建分为以下几个步骤：
 
 ### PAM vs BLOSUM 的核心区别
 
-| 特性 | PAM | BLOSUM |
-| :--- | :--- | :--- |
-| **构建方式** | 进化模型外推 | 直接统计观测 |
-| **数据来源** | 全长蛋白质序列对 | 保守区块 (Blocks) |
-| **数值含义** | 进化时间步数（越大越远） | 聚类阈值（越大越近） |
-| **优点** | 理论基础清晰，可外推 | 直接反映真实数据，更实用 |
+<ComparisonTable
+  leftTitle="PAM"
+  rightTitle="BLOSUM"
+  rows={[
+    { aspect: '**构建方式**', left: '进化模型外推', right: '直接统计观测' },
+    { aspect: '**数据来源**', left: '全长蛋白质序列对', right: '保守区块 (Blocks)' },
+    { aspect: '**数值含义**', left: '进化时间步数（越大越远）', right: '聚类阈值（越大越近）' },
+    { aspect: '**优点**', left: '理论基础清晰，可外推', right: '直接反映真实数据，更实用' }
+  ]}
+/>
 
 在实际使用中，BLOSUM 62 是最广泛使用的默认选择，因为它在大多数场景下表现稳健。
 
@@ -212,23 +222,16 @@ $$s(a, b) = \lambda \cdot \log \frac{P_{observed}(a, b)}{P_{expected}(a, b)}$$
 - **BWA** 等短序列比对工具通常使用简单的匹配/错配得分（如匹配 +1，错配 -3，Gap Open -6，Gap Extend -1），因为核酸的替换模式比蛋白质简单。
 - **替换矩阵数据库**：NCBI 提供了完整的 PAM 和 BLOSUM 系列矩阵，可在 NCBI FTP 站点下载。
 
-## 11. 常见误区
-
-### BLOSUM62 永远是最好的选择
-
-不是。BLOSUM62 是一个通用默认值，但在特定场景下可能不是最优的。如果搜索远缘同源，BLOSUM45 或 PAM250 可能更合适；如果比较高度保守的序列，BLOSUM80 可能更好。
-
-### PAM 和 BLOSUM 是完全独立的体系
-
-实际上它们在某种程度上是等价的。PAM 250 和 BLOSUM 45 大致对应相同的进化距离。研究表明，在相同进化距离下，两者产生的比对结果高度一致。选择哪一种更多是历史和使用习惯的问题。
-
-### 得分为正就意味着生物学上有意义
-
-不一定。正得分只说明该替换比随机期望更频繁，但不一定意味着具有功能意义。得分只是一个统计指标，生物学解释还需要结合蛋白质结构、功能位点等信息。
-
-### Gap 罚分的参数可以随意设置
-
-Gap 罚分参数的选择对比对结果影响很大。开启罚分过大，比对会倾向于产生长 Gap 而非短错配；开启罚分过小，比对会被大量碎片化的 Gap 污染。实践中，应该根据序列的相似度和长度选择合理的参数范围。
+<PitfallsBox
+  pitfalls={[
+    'BLOSUM62 永远是最好的选择：',
+    '不是。BLOSUM62 是一个通用默认值，但在特定场景下可能不是最优的。如果搜索远缘同源，BLOSUM45 或 PAM250 可能更合适；如果比较高度保守的序列，BLOSUM80 可能更好。',
+    'PAM 和 BLOSUM 是完全独立的体系：',
+    '实际上它们在某种程度上是等价的。PAM 250 和 BLOSUM 45 大致对应相同的进化距离。研究表明，在相同进化距离下，两者产生的比对结果高度一致。选择哪一种更多是历史和使用习惯的问题。',
+    '得分为正就意味着生物学上有意义：',
+    '不一定。正得分只说明该替换比随机期望更频繁，但不一定意味着具有功能意义。得分只是一个统计指标，生物学解释还需要结合蛋白质结构、功能位点等信息。'
+  ]}
+/>
 
 ## 相关页面
 

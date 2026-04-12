@@ -10,6 +10,7 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 
 <SummaryBox
@@ -20,6 +21,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '理解层级关系有助于正确解释结果，并识别分析流程中的潜在问题。',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 问题背景
 
@@ -55,9 +59,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PrerequisitesBox
   items={[
-    '先理解参考基因组、坐标系统与注释，因为很多格式的意义都依赖参考背景。',
-    '理解不同任务的"结果文件"并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
-    '如果你更想看具体格式保存什么和不保存什么，再去读常见文件格式概览。',
+    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    '理解同一个流程中不同任务的"结果文件"并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
+    {name: '常见文件格式概览', href: '/docs/formats/common-file-formats'},
   ]}
 />
 

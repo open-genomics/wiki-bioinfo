@@ -8,6 +8,8 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="CNV 和结构变异通常涉及更大的基因组区间和更多基因，其临床解释比 SNV 更为复杂。评估需要综合考虑区间大小、基因内容、剂量敏感性、复发性区域及表型匹配度，而非简单的'越大越危险'。"
@@ -17,6 +19,9 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
     '小范围但打断关键基因的缺失，可能比大范围但基因稀疏的缺失更具致病性',
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## CNV 评估的核心逻辑
 
@@ -164,15 +169,9 @@ CNV 的临床分类同样遵循 ACMG 框架，但证据类型有所调整：
 | **BS1/BA1** | 在人群数据库中高频出现，无致病报道 |
 | **BP1** | 涉及基因功能丧失与已知机制不符 |
 
-## 常见误区
-
-<PrerequisitesBox
-  items={[
-    '仅根据 CNV 长度判断致病性，忽视基因内容和剂量敏感性',
-    '将算法检测输出直接等同于真实生物学事件，忽视验证和质量控制',
-    '假设 SV 仅影响编码区，忽视调控区、非编码 RNA 和位置效应',
-    '忽视技术平台差异，将不同方法的结果直接等同比较',
-    '孤立评估 CNV，不与 SNV、表型和家系信息整合',
+<PitfallsBox
+  pitfalls={[
+    '<PrerequisitesBox items={[ \'仅根据 CNV 长度判断致病性，忽视基因内容和剂量敏感性\', \'将算法检测输出直接等同于真实生物学事件，忽视验证和质量控制\', \'假设 SV 仅影响编码区，忽视调控区、非编码 RNA 和位置效应\', \'忽视技术平台差异，将不同方法的结果直接等同比较\', \'孤立评估 CNV，不与 SNV、表型和家系信息整合\', ]} />'
   ]}
 />
 

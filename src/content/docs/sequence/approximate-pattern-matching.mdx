@@ -4,8 +4,11 @@ description: "编辑距离、汉明距离与近似匹配算法，理解如何处
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="近似模式匹配允许在文本中查找与模式串有最多k个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -276,12 +282,16 @@ BLAST(query, database):
 
 ### BLAST vs 精确算法的权衡
 
-| 特性 | 精确 DP | BLAST |
-|------|---------|-------|
-| 速度 | 慢（$O(nm)$）| 快（启发式）|
-| 敏感性 | 100% | 可能遗漏弱相似性 |
-| 显著性评估 | 无 | E-value |
-| 适用场景 | 短序列、精确需求 | 大数据库搜索 |
+<ComparisonTable
+  leftTitle="精确 DP"
+  rightTitle="BLAST"
+  rows={[
+    { aspect: '速度', left: '慢（$O(nm)$）', right: '快（启发式）' },
+    { aspect: '敏感性', left: '100%', right: '可能遗漏弱相似性' },
+    { aspect: '显著性评估', left: '无', right: 'E-value' },
+    { aspect: '适用场景', left: '短序列、精确需求', right: '大数据库搜索' }
+  ]}
+/>
 
 ## 实际应用案例
 
@@ -336,27 +346,16 @@ BLAST(query, database):
 - 蛋白质比对：考虑 BLOSUM/PAM 矩阵
 - DNA 比对：考虑转换/颠换偏好
 
-## 常见误区
-
-### 编辑距离越小，匹配越"有意义"
-
-编辑距离小只表示两个序列在字符层面相似，但并不自动意味着它们具有生物学相关性。例如，两个随机的低复杂度序列（如 poly-A 尾）可能编辑距离很小，但毫无生物学意义。判断匹配的生物学意义需要结合统计显著性评估（如 E-value）、功能注释和进化上下文，而非仅看距离数值。
-
-### BLAST 的 E-value 越小，同源性越强
-
-E-value 反映的是在当前数据库大小下，随机产生同等或更好得分的期望次数。E-value 小说明匹配不太可能是随机产生的，但并不意味着同源关系"强"。一个短的高保守域匹配可能 E-value 极小但只覆盖蛋白质的一小部分；而一个较弱的全长匹配可能更能反映整体的进化关系。解读 BLAST 结果需要综合考虑 E-value、覆盖率（coverage）和一致性（identity）。
-
-### k 值（允许的差异数）可以根据经验法则统一设定
-
-不同应用场景对 k 值的需求差异很大。SNP 检测通常只需 k=1；Illumina 测序 reads 比对（错误率约 0.1-1%）一般 k=2-3；长读长比对（错误率 5-15%）可能需要 k=10 以上；而远缘同源搜索中 k 可能达到序列长度的 20-30%。统一设定 k 值而不考虑数据特性和生物学问题，会导致大量漏检或假阳性。
-
-### 动态规划是"精确"的，而启发式方法是"近似"的
-
-这种区分容易产生误导。动态规划确实能在给定得分矩阵和罚分方案下找到数学上的最优比对，但得分方案本身就是一个参数化的模型——不同的得分矩阵（如 BLOSUM62 vs PAM250）会产生不同的"最优"比对。启发式方法（如 BLAST）牺牲的是搜索的完备性（可能遗漏极弱的相似性），而非比对本身的精度——在种子扩展阶段仍使用精确的动态规划。
-
-### q-gram 过滤的鸽巢原理保证了不会遗漏任何匹配
-
-鸽巢原理只保证了至少有一个 q-gram 片段精确匹配，前提是模式被均匀分割且差异数为 k。但在实际实现中，如果 q-gram 索引本身存在错误（如参考序列中的变异），或 k 的估计不准确，仍可能遗漏真实匹配。此外，鸽巢原理对编辑距离（含插入/删除）的保证弱于对汉明距离的保证，因为 indel 会改变 q-gram 的边界。
+<PitfallsBox
+  pitfalls={[
+    '编辑距离越小，匹配越"有意义"：',
+    '编辑距离小只表示两个序列在字符层面相似，但并不自动意味着它们具有生物学相关性。例如，两个随机的低复杂度序列（如 poly-A 尾）可能编辑距离很小，但毫无生物学意义。判断匹配的生物学意义需要结合统计显著性评估（如 E-value）、功能注释和进化上下文，而非仅看距离数值。',
+    'BLAST 的 E-value 越小，同源性越强：',
+    'E-value 反映的是在当前数据库大小下，随机产生同等或更好得分的期望次数。E-value 小说明匹配不太可能是随机产生的，但并不意味着同源关系"强"。一个短的高保守域匹配可能 E-value 极小但只覆盖蛋白质的一小部分；而一个较弱的全长匹配可能更能反映整体的进化关系。解读 BLAST 结果需要综合考虑 E-value、覆盖率（coverage）和一致性（identity）。',
+    'k 值（允许的差异数）可以根据经验法则统一设定：',
+    '不同应用场景对 k 值的需求差异很大。SNP 检测通常只需 k=1；Illumina 测序 reads 比对（错误率约 0.1-1%）一般 k=2-3；长读长比对（错误率 5-15%）可能需要 k=10 以上；而远缘同源搜索中 k 可能达到序列长度的 20-30%。统一设定 k 值而不考虑数据特性和生物学问题，会导致大量漏检或假阳性。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

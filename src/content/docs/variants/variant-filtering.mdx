@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成'真变异'。"
@@ -23,6 +25,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '序列比对', to: '/wiki-bioinfo/alignment/index' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -151,12 +156,14 @@ $$\text{Keep}(v) = \begin{cases} \text{True} & \text{if } DP(v) \geq DP_{\min} \
 
 因此，它是连接 caller 输出与结果解释的一层关键桥梁。
 
-## 常见误区
-
-- 仅凭单个字段（例如 QUAL）做一刀切过滤；
-- 把某套阈值原封不动复制到不同平台和 caller；
-- 忽略重复或低复杂度区域的特殊性；
-- 把 PASS 理解成"绝对真实变异"。
+<PitfallsBox
+  pitfalls={[
+    '仅凭单个字段（例如 QUAL）做一刀切过滤；',
+    '把某套阈值原封不动复制到不同平台和 caller；',
+    '忽略重复或低复杂度区域的特殊性；',
+    '把 PASS 理解成"绝对真实变异"。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

@@ -6,6 +6,8 @@ title: "Viterbi、Forward 与 Backward"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 为什么需要 Viterbi？
 
@@ -293,19 +298,16 @@ G C G A
 - **一般 HMM 分析**：
   - 需要根据任务目标选择"整体路径"还是"位点后验"。
 
-## 常见误区
-
-### Viterbi 等于 HMM 的全部
-
-不是。它只是 decoding 问题的经典解法之一；Forward 和 Backward 处理的是不同问题。
-
-### 每个位点最可能状态拼起来，就是最可能路径
-
-不一定。局部最优的逐位选择不一定构成全局最优路径。
-
-### Forward / Backward 只是理论公式，没有实际作用
-
-不是。它们是评估模型和做 posterior 推断的核心，也是很多学习算法的基础。
+<PitfallsBox
+  pitfalls={[
+    'Viterbi 等于 HMM 的全部：',
+    '不是。它只是 decoding 问题的经典解法之一；Forward 和 Backward 处理的是不同问题。',
+    '每个位点最可能状态拼起来，就是最可能路径：',
+    '不一定。局部最优的逐位选择不一定构成全局最优路径。',
+    'Forward / Backward 只是理论公式，没有实际作用：',
+    '不是。它们是评估模型和做 posterior 推断的核心，也是很多学习算法的基础。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

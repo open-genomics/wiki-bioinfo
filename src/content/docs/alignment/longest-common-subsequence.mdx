@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '与 LCS 有直接数学关系的相似性度量' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -209,19 +214,16 @@ LCS 问题对应一个**编辑图**（Edit Graph）：
 
 在这个图中，LCS 对应**最长路径**问题。
 
-## 常见误区
-
-### LCS 就是最佳比对
-
-不一定。LCS 只考虑匹配，不考虑错配的代价。在生物学应用中，我们通常需要更复杂的打分方案来反映真实的进化或功能关系。
-
-### 只有一个 LCS
-
-可能有多个不同的序列都是最长公共子序列。例如，v = ABCBDAB，w = BDCABA，可能有多个长度为 4 的公共子序列。
-
-### LCS 长度直接反映生物学相似性
-
-LCS 忽略了错配的位置和类型。在蛋白质序列中，某些氨基酸替换比其他替换更"保守"，这些细节在 LCS 中被完全忽略。
+<PitfallsBox
+  pitfalls={[
+    'LCS 就是最佳比对：',
+    '不一定。LCS 只考虑匹配，不考虑错配的代价。在生物学应用中，我们通常需要更复杂的打分方案来反映真实的进化或功能关系。',
+    '只有一个 LCS：',
+    '可能有多个不同的序列都是最长公共子序列。例如，v = ABCBDAB，w = BDCABA，可能有多个长度为 4 的公共子序列。',
+    'LCS 长度直接反映生物学相似性：',
+    'LCS 忽略了错配的位置和类型。在蛋白质序列中，某些氨基酸替换比其他替换更"保守"，这些细节在 LCS 中被完全忽略。'
+  ]}
+/>
 
 ## 与真实工具或流程的连接
 

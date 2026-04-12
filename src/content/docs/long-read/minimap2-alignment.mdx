@@ -6,6 +6,8 @@ title: "Minimap2 比对算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Minimap2 是当前最广泛使用的长读长比对工具。其核心 seed-chain-align 框架通过粗定位-链式筛选-精细比对的三阶段策略，将长读长比对从 O(m×n) 降低到近线性复杂度。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore', description: '长读长测序技术的特点' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题引入：长序列比对的计算挑战
 
@@ -342,23 +347,16 @@ Minimap2 支持多种模式：
 - `-A`：gap 开启罚分
 - `-B`：gap 延伸罚分
 
-## 常见误区
-
-### Minimap2 只用于长读长
-
-不是。Minimap2 也支持短读长比对，虽然 BWA-MEM2 在短读长上可能更快。
-
-### Seeding 阶段可以省略
-
-不能。Seeding 是降维的关键，没有 seeding 会导致 O(n²) 的复杂度。
-
-### 带宽越大越好
-
-不是。带宽增加会降低速度，应根据数据质量调整。高质量数据可以用小带宽。
-
-### Chaining 只有一条最优链
-
-不一定。可能存在多条得分相近的链，Minimap2 会保留多条候选。
+<PitfallsBox
+  pitfalls={[
+    'Minimap2 只用于长读长：',
+    '不是。Minimap2 也支持短读长比对，虽然 BWA-MEM2 在短读长上可能更快。',
+    'Seeding 阶段可以省略：',
+    '不能。Seeding 是降维的关键，没有 seeding 会导致 O(n²) 的复杂度。',
+    '带宽越大越好：',
+    '不是。带宽增加会降低速度，应根据数据质量调整。高质量数据可以用小带宽。'
+  ]}
+/>
 
 ## 算法优化
 

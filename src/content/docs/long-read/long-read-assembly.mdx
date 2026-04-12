@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="长读长组装的核心优势在于其能够直接跨越复杂的重复序列。不同于短读长的 de Bruijn 图策略，长读长通常采用 OLC (Overlap-Layout-Consensus) 范式，通过构建重叠图来恢复基因组的连续性。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '组装与图算法', href: '/wiki-bioinfo/assembly' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 要解决什么生物信息学问题？
 
@@ -180,19 +185,16 @@ Read 4: A T G C C A T G G A C T T A G C
   ]}
 />
 
-## 10. 常见误区
-
-### "只要 Read 足够长，组装就一定连续"
-
-Read 长度是必要条件但不是充分条件。如果基因组中存在比最长 Read 更长的串联重复（Tandem Repeat），即使 Read 很长也无法区分重复的拷贝边界。此外，数据覆盖度不足也会导致部分区域完全没有 Read 覆盖。
-
-### "N50 高就代表组装质量好"
-
-N50 只衡量连续性，不衡量准确性。一个高 N50 但充满碱基错误的组装在下游分析中可能比低 N50 但准确的组装更有害。评估组装质量必须综合多个指标（N50、QV、BUSCO 等）。
-
-### "所有长读长组装器都使用 OLC 策略"
-
-不完全正确。虽然 OLC 是主流范式，但部分工具（如部分版本的 Flye）采用了基于重复图的方法，还有一些工具（如 Peregrine）探索了基于 de Bruijn 图的改进策略来处理长读长数据。
+<PitfallsBox
+  pitfalls={[
+    '"只要 Read 足够长，组装就一定连续"：',
+    'Read 长度是必要条件但不是充分条件。如果基因组中存在比最长 Read 更长的串联重复（Tandem Repeat），即使 Read 很长也无法区分重复的拷贝边界。此外，数据覆盖度不足也会导致部分区域完全没有 Read 覆盖。',
+    '"N50 高就代表组装质量好"：',
+    'N50 只衡量连续性，不衡量准确性。一个高 N50 但充满碱基错误的组装在下游分析中可能比低 N50 但准确的组装更有害。评估组装质量必须综合多个指标（N50、QV、BUSCO 等）。',
+    '"所有长读长组装器都使用 OLC 策略"：',
+    '不完全正确。虽然 OLC 是主流范式，但部分工具（如部分版本的 Flye）采用了基于重复图的方法，还有一些工具（如 Peregrine）探索了基于 de Bruijn 图的改进策略来处理长读长数据。'
+  ]}
+/>
 
 ## 相关页面
 

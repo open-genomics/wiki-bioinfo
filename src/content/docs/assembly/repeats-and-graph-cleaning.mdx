@@ -6,6 +6,8 @@ description: 基因组组装中重复序列导致的图拓扑问题（tips、bub
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '图遍历算法', href: '/wiki-bioinfo/assembly/graph-traversal-algorithms' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -361,23 +366,16 @@ Bubble 是指从同一点分出、稍后又重新汇合的两条短路径。
 
 **收敛判断**：当连续两轮清理后，图的边数变化小于阈值（如 1%）时认为收敛。
 
-## 常见误区
-
-### 图中所有分叉都代表真实变异
-
-不一定。很多分叉只是错误或低 coverage 造成的噪声。
-
-### 只要把低频边全部删掉就行
-
-也不对。某些真实低丰度结构也可能被误删，尤其在 coverage 不均匀、混样或多倍体条件下。
-
-### 图清理结束后就一定能恢复正确基因组
-
-不对。重复区域常常需要更长距离信息或不同数据类型辅助，单靠局部图清理并不能完全消除歧义。
-
-### de Bruijn graph 的问题都来自错误碱基
-
-不对。很多真正困难的结构来自真实重复、真实变异和样本复杂度，而不是测序错误本身。
+<PitfallsBox
+  pitfalls={[
+    '图中所有分叉都代表真实变异：',
+    '不一定。很多分叉只是错误或低 coverage 造成的噪声。',
+    '只要把低频边全部删掉就行：',
+    '也不对。某些真实低丰度结构也可能被误删，尤其在 coverage 不均匀、混样或多倍体条件下。',
+    '图清理结束后就一定能恢复正确基因组：',
+    '不对。重复区域常常需要更长距离信息或不同数据类型辅助，单靠局部图清理并不能完全消除歧义。'
+  ]}
+/>
 
 ## 参考资料
 

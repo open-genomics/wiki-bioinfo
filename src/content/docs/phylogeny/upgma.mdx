@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="UPGMA（Unweighted Pair Group Method with Arithmetic Mean）是一种层次聚类算法，通过不断合并最近的类群来构建系统发育树，适用于满足分子钟假设的数据。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '层次聚类', href: '/wiki-bioinfo/foundations/clustering', description: 'UPGMA 的算法本质' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -328,23 +333,16 @@ UPGMA的一个关键假设是分子钟假设：所有分支以相同的速率演
 - 只使用距离信息，丢失了位点级别的细节
 - 对距离矩阵的质量和准确性高度依赖
 
-## 常见误区
-
-### UPGMA总是能得到正确的树
-
-不是。UPGMA只有在满足分子钟假设时才能保证正确性。当演化速率不均匀时，结果可能不准确。
-
-### UPGMA的距离矩阵必须是additive
-
-不是。UPGMA可以对任意距离矩阵进行聚类，但只有当距离矩阵满足additive条件时，结果才是最优的。
-
-### UPGMA产生的树一定是无根树
-
-不是。UPGMA产生的是有根树，根节点对应于所有样本的共同祖先。
-
-### UPGMA只适用于DNA序列
-
-不是。UPGMA可以用于任何可以定义距离的数据，包括蛋白质序列、形态学特征、基因表达数据等。
+<PitfallsBox
+  pitfalls={[
+    'UPGMA总是能得到正确的树：',
+    '不是。UPGMA只有在满足分子钟假设时才能保证正确性。当演化速率不均匀时，结果可能不准确。',
+    'UPGMA的距离矩阵必须是additive：',
+    '不是。UPGMA可以对任意距离矩阵进行聚类，但只有当距离矩阵满足additive条件时，结果才是最优的。',
+    'UPGMA产生的树一定是无根树：',
+    '不是。UPGMA产生的是有根树，根节点对应于所有样本的共同祖先。'
+  ]}
+/>
 
 ## 与真实工具的连接
 

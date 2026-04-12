@@ -4,8 +4,11 @@ title: "谱卷积与修饰鉴定"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="谱卷积（Spectral Convolution）通过计算两个质谱间所有质量差的分布，揭示肽段间的修饰差异。与共享峰计数相比，谱卷积能够检测修饰肽段，是翻译后修饰（PTM）鉴定的核心算法工具。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '数据库搜索与FDR', href: '/wiki/proteomics/database-search-and-fdr' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题背景
 
@@ -203,12 +209,16 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 
 ## 谱卷积 vs 谱对齐
 
-| 特性 | 谱卷积 | 谱对齐 |
-|------|--------|--------|
-| **修饰检测** | 全局修饰（所有位点相同偏移） | 局部修饰（位点特异性偏移） |
-| **输出** | 质量偏移量 | 最优对齐路径 |
-| **复杂度** | $O(n^2)$ | $O(n^2 k)$ |
-| **修饰位点** | 不直接提供 | 精确定位 |
+<ComparisonTable
+  leftTitle="谱卷积"
+  rightTitle="谱对齐"
+  rows={[
+    { aspect: '**修饰检测**', left: '全局修饰（所有位点相同偏移）', right: '局部修饰（位点特异性偏移）' },
+    { aspect: '**输出**', left: '质量偏移量', right: '最优对齐路径' },
+    { aspect: '**复杂度**', left: '$O(n^2)$', right: '$O(n^2 k)$' },
+    { aspect: '**修饰位点**', left: '不直接提供', right: '精确定位' }
+  ]}
+/>
 
 **实际应用**：
 1. **谱卷积**：快速识别候选修饰质量
@@ -254,12 +264,18 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 
 ### 常见误区
 
-| 误区 | 正确理解 |
-|------|---------|
-| 谱卷积高重数峰一定是修饰 | 可能是随机巧合，需统计验证 |
-| 谱卷积可直接确定修饰位置 | 谱卷积只给出质量偏移，确定位点需谱对齐 |
-| 谱卷积适用于所有修饰检测 | 对于多个复杂修饰，谱对齐更可靠 |
-| 所有非零峰都是修饰信号 | 可能是噪声或仪器伪峰 |
+<PitfallsBox
+  pitfalls={[
+    '谱卷积高重数峰一定是修饰：',
+    '高重数峰可能是随机巧合产生的。需要通过统计检验（如基于背景噪声的 p-value 计算）来验证峰的显著性，而非仅凭峰高判断。',
+    '谱卷积可直接确定修饰位置：',
+    '谱卷积只能给出质量偏移量（如 +80 Da），无法定位修饰发生在哪个氨基酸残基上。确定修饰位点需要使用谱对齐（Spectral Alignment）算法。',
+    '谱卷积适用于所有修饰检测场景：',
+    '当肽段存在多个复杂修饰时，谱卷积的峰模式会变得难以解读（多个修饰产生多个偏移峰及其组合）。对于这类场景，谱对齐方法更为可靠。',
+    '所有非零峰都是修饰信号：',
+    '非零峰可能来源于仪器噪声、化学背景或随机匹配。需要结合质量精度阈值和统计显著性分析来区分真实修饰信号与噪声。'
+  ]}
+/>
 
 ## 历史注记
 

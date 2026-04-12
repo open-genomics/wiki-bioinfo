@@ -9,6 +9,7 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 
 <SummaryBox
@@ -20,6 +21,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '理解算法原理是合理调参和解释结果的基础',
   ]}
 />
+
+<PageHeaderMeta section="Data References" />
+
 
 ## 9.10 为什么需要专门的数据库搜索算法
 
@@ -52,9 +56,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PrerequisitesBox
   items={[
-    '序列比对的动态规划基础：匹配/错配得分、gap 罚分',
-    '字符串基本概念：子串、前缀、后缀',
-    '算法复杂度记号：O(n) 线性时间 vs O(n²) 平方时间',
+    {name: '全局比对与局部比对', href: '/docs/alignment/global-local'},
+    {name: '序列与字符串', href: '/docs/foundations/sequences-and-strings'},
+    {name: '算法与复杂度', href: '/docs/foundations/algorithms-and-complexity'},
   ]}
 />
 
@@ -608,6 +612,12 @@ QGAMNKALELFRKDIAAKYKELGYQG
       to: '/docs/databases/common-resources',
       label: '数据库概览',
       description: '了解 NCBI、Ensembl、UniProt 等数据库的特点和用途。',
+    },
+    {
+      title: 'BLAST 算法详解',
+      to: '/docs/alignment/blast',
+      label: '算法详解',
+      description: 'BLAST seed-and-extend 策略的完整算法分析。',
     },
   ]}
 />

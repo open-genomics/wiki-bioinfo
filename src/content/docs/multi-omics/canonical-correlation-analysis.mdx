@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="CCA 通过寻找两组变量的线性组合使它们之间的相关性最大化，是分析两组数据关联的经典统计方法，也是多组学整合的重要基础。"
@@ -577,6 +579,9 @@ canonical_vars_X <- result$scores$xscores
 canonical_vars_Y <- result$scores$yscores
 ```
 
+
+<PageHeaderMeta section="Applications" />
+
 ## 统计检验
 
 ### 显著性检验
@@ -599,33 +604,16 @@ $$
 
 非参数方法，通过置换标签计算零分布。
 
-## 常见误区
-
-### 典型相关系数高意味着因果关系
-
-不是。CCA 只能发现关联，不能推断因果方向。
-
-### CCA 可以处理缺失数据
-
-标准 CCA 不能。需要：
-- 删除缺失样本
-- 填充缺失值
-- 使用改进方法（如 probabilistic CCA）
-
-### 典型变量越多越好
-
-不是。后面的典型变量相关性很低，可能只是噪声。应该选择显著的前几对。
-
-### 权重大的特征更重要
-
-不一定。权重受特征尺度影响。需要结合：
-- 标准化后的权重
-- 特征的原始方差
-- 生物学先验知识
-
-### CCA 只能用于两组数据
-
-不是。可以通过 Group CCA 扩展到多组学，或者使用其他整合方法。
+<PitfallsBox
+  pitfalls={[
+    '典型相关系数高意味着因果关系：',
+    '不是。CCA 只能发现关联，不能推断因果方向。',
+    'CCA 可以处理缺失数据：',
+    '标准 CCA 不能。需要：',
+    '删除缺失样本',
+    '使用改进方法（如 probabilistic CCA）'
+  ]}
+/>
 
 ## 与深度学习的联系
 

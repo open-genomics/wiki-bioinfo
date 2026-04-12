@@ -6,6 +6,9 @@ title: "Doublet 检测"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <SummaryBox
   summary='在液滴法单细胞测序中，一个液滴可能意外捕获两个或多个细胞，形成「双联体」（Doublet）。这些虚假信号会制造伪造的中间态细胞群，误导发育轨迹分析，必须在质控阶段予以识别和剔除。'
@@ -24,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '聚类与 UMAP 降维', href: '/wiki-bioinfo/single-cell/clustering-and-umap' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 核心问题：液滴的"超载"
 
@@ -47,6 +53,41 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 3.  **计算分数**：观察每个真实细胞周围的邻居。如果一个细胞的邻居中大部分都是"虚拟 Doublet"，那么它极大概率也是一个真实的 Doublet。
 4.  **阈值设定**：根据分数的直方图寻找拐点，标记高分细胞。
 
+### 算法对比
+
+<ComparisonTable
+  leftTitle="Scrublet"
+  rightTitle="DoubletFinder"
+  rows={[
+    { aspect: '核心方法', left: 'KNN 邻居中的模拟 doublet 比例', right: '人工最近邻 (ANN) 搜索 + pK 参数优化' },
+    { aspect: '参数调优', left: '自动阈值（直方图拐点）', right: '需手动优化 pK 参数（mean-variance approach）' },
+    { aspect: '速度', left: '快（基于 PCA + KNN）', right: '较慢（逐个细胞搜索 ANN）' },
+    { aspect: '语言/平台', left: 'Python (scanpy 生态)', right: 'R (Seurat 生态)' },
+    { aspect: '同质 Doublet', left: '检测能力有限', right: '通过 pN 参数部分缓解' },
+  ]}
+/>
+
+### 其他工具概览
+
+- **scDblFinder**（R/Bioconductor）：基于梯度提升树（Gradient Boosting）的二分类方法，将模拟 doublet 标记为正类、真实细胞为负类，训练分类器后对每个细胞评分。速度快，集成在 scRNA-seq 分析流程中。
+- **scds**（R/Bioconductor）：结合共表达（co-expression）分数和二元分类分数，利用"生物学上不应共表达的基因对同时高表达"这一信号来辅助检测。
+
+## 4. 案例：识别 T-B Doublet
+
+**场景**：一份 PBMC（外周血单核细胞）的 scRNA-seq 数据，包含约 5000 个细胞。
+
+**异常信号**：
+- 一个细胞（Cell_3842）同时高表达 *CD3E*（T 细胞标记，CPM = 850）和 *CD19*（B 细胞标记，CPM = 620）
+- 该细胞的 UMI 总数为 45,000，而同一聚类中其他细胞的 UMI 中位数为 18,000
+- 在 UMAP 图上，该细胞位于 T 细胞簇和 B 细胞簇之间的"桥梁"位置
+
+**算法判定**：
+- **Scrublet score** = 0.82（阈值 0.25）
+- **DoubletFinder** 标记为 Doublet（pANN = 0.71）
+- **综合证据**：互斥标记共表达 + UMI 异常偏高 + UMAP 桥梁位置 → 高置信度异质 Doublet
+
+**处理决策**：从表达矩阵中剔除该细胞，重新运行聚类。如果剔除后 T 细胞和 B 细胞簇之间的"桥梁"细胞消失，进一步验证了判断。
+
 ## 4. 实践中的综合判定
 
 单靠算法评分往往存在假阳性，通常需要结合以下证据：
@@ -68,27 +109,42 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 典型 10x 实验中，Doublet 率约为 2--8%，与上样细胞密度正相关。在实验设计阶段就应充分考虑这些因素，而非仅依赖后续计算去除。
 
-## 6. 常见误区与注意事项
+## 7. 对下游分析的影响
 
-### 高 UMI 细胞就是 Doublet
+未剔除的 Doublet 会在多个分析环节造成系统性偏差：
 
-某些细胞类型天然具有高代谢活性（如增殖期细胞、浆细胞），大细胞类型（如巨噬细胞）也可能携带更多 UMI。应比较同类型细胞内的 UMI 分布，而非使用全局阈值一刀切。
+### 聚类分析
 
-### Doublet 分数高就必须删除
+异质 Doublet 在降维空间中位于两个真实细胞类型之间的位置，会形成**虚假的桥梁簇**。这可能导致：
+- 研究者误以为发现了一种新的"过渡态"细胞
+- 人为增加聚类的分辨率参数来分离这些虚假簇
+- 在细胞类型注释时产生困惑
 
-Doublet score 是概率性预测，存在假阳性。对边缘案例，应结合 UMAP 位置和标记基因表达综合判断，必要时可保留并做敏感性分析，而非盲目剔除。
+### 轨迹推断
 
-### 只关注异质 Doublet
+在拟时序（Pseudotime）分析中，Doublet 被错误地视为发育过程中的"中间态"，导致：
+- 轨迹路径中出现不存在的分支
+- 发育节点的位置估计偏移
+- 转录动态的解读完全错误
 
-同质 Doublet 同样影响下游分析：在定量分析（如差异表达）中会引入系统性偏差，严重时会形成虚假的"亚群"。不可因为检测难度大就忽视其存在。
+### 差异表达
 
-### Doublet 检测后不做验证
+Doublet 的转录组是两种细胞类型的混合物，其基因表达谱不代表任何真实生物学状态：
+- 如果 Doublet 集中在某个簇中，该簇的差异基因列表会包含来自两种细胞类型的混杂信号
+- 标记基因的特异性评估会被稀释
 
-删除标记细胞后应进行验证：
-1. 检查被标记细胞的 UMAP 分布（应集中在 cluster 交界处）
-2. 查看其 top 差异表达基因（应混合两类特征）
-3. 统计各 cluster 的 Doublet 比例（极端不均匀可能提示算法偏差）
-4. 去除后重新聚类，确认 cluster 结构是否更清晰
+因此，Doublet 检测应作为单细胞分析流程中**质控阶段的必要步骤**，在聚类和下游分析之前完成。
+
+<PitfallsBox
+  pitfalls={[
+    '高 UMI 细胞就是 Doublet：',
+    '某些细胞类型天然具有高代谢活性（如增殖期细胞、浆细胞），大细胞类型（如巨噬细胞）也可能携带更多 UMI。应比较同类型细胞内的 UMI 分布，而非使用全局阈值一刀切。',
+    'Doublet 分数高就必须删除：',
+    'Doublet score 是概率性预测，存在假阳性。对边缘案例，应结合 UMAP 位置和标记基因表达综合判断，必要时可保留并做敏感性分析，而非盲目剔除。',
+    '只关注异质 Doublet：',
+    '同质 Doublet 同样影响下游分析：在定量分析（如差异表达）中会引入系统性偏差，严重时会形成虚假的"亚群"。不可因为检测难度大就忽视其存在。'
+  ]}
+/>
 
 ## 7. 参考资料
 

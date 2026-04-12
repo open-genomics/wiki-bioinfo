@@ -5,6 +5,8 @@ title: "单细胞组学"
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -15,6 +17,9 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
     '分析流程从实验设计、数据预处理到聚类、降维、轨迹推断，每一步都有独特的挑战'
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 单细胞组学的定义与范畴
 
@@ -227,27 +232,16 @@ $$
 - **差异表达基因列表**；
 - **可视化图表**：聚类图、热图、轨迹图等。
 
-## 常见误区
-
-### Dropout = 表达量为 0
-
-不对。单细胞数据中大量的 0 值很多是技术性 dropout（未检测到），而不是真正的无表达。需要考虑零膨胀和归一化。
-
-### 细胞聚类结果就是生物学真相
-
-不对。聚类结果高度依赖于参数选择（如分辨率、邻居数），需要结合标记基因和生物学知识验证。
-
-### UMAP/t-SNE 距离有生物学意义
-
-不对。UMAP/t-SNE 是非线性降维方法，主要用于可视化，距离和密度不一定反映真实的生物学关系。
-
-### 细胞数量越多越好
-
-不对。细胞数量增加会带来成本和计算负担，需要根据研究目标平衡。对于异质性低的样本，过多细胞可能不提供额外信息。
-
-### 批次校正后就可以直接合并数据
-
-不对。批次校正可能过度校正，抹消真实的生物学差异。需要谨慎选择校正方法和参数，并在校正后验证生物学信号是否保留。
+<PitfallsBox
+  pitfalls={[
+    'Dropout = 表达量为 0：',
+    '不对。单细胞数据中大量的 0 值很多是技术性 dropout（未检测到），而不是真正的无表达。需要考虑零膨胀和归一化。',
+    '细胞聚类结果就是生物学真相：',
+    '不对。聚类结果高度依赖于参数选择（如分辨率、邻居数），需要结合标记基因和生物学知识验证。',
+    'UMAP/t-SNE 距离有生物学意义：',
+    '不对。UMAP/t-SNE 是非线性降维方法，主要用于可视化，距离和密度不一定反映真实的生物学关系。'
+  ]}
+/>
 
 ## 推荐阅读顺序
 

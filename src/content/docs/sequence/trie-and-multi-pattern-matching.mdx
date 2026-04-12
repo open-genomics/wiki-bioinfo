@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类「多对一」匹配提供了理想的骨架。'
@@ -23,6 +25,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: 'KMP 算法', href: '/wiki-bioinfo/sequence/kmp-algorithm' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 为什么需要多模式匹配？
 
@@ -194,19 +199,16 @@ Trie 与多模式匹配在字符串算法谱系中处于一个关键位置：
 - **与 Suffix Tree 的关系**：Trie 对模式建索引（模式集小、文本大）；Suffix Tree 对文本建索引（文本固定、模式查询多且变长）。两者互为对偶。
 - **与哈希索引的关系**：哈希索引也支持多模式匹配，但不支持在线扫描（需要一次性提取所有 k-mer），且无法利用已匹配的前缀信息。
 
-## 7. 常见误区
-
-### Trie 和 Suffix Tree 是同一个东西
-
-不是。Trie（Keyword Tree）是对**模式集**建树，每个模式是一条从根到叶（或标记节点）的路径。Suffix Tree 是对**文本**的所有后缀建树。两者的建树对象、使用场景和复杂度特征完全不同。
-
-### 失败链接就等于 KMP 的 failure function
-
-在单模式的情况下，AC 的失败链接退化为 KMP 的 failure function。但在多模式情况下，AC 的失败链接可以在不同模式之间跳跃（例如匹配 `ACG` 后失配，可以跳到 `CG` 对应的状态，而 `CG` 可能是另一个模式的前缀），这是 KMP 不具备的能力。
-
-### 多模式匹配总是比单模式匹配快
-
-不一定。如果只需要搜索 1-2 个模式，直接运行 KMP 或 Boyer-Moore 更简单，预处理开销也更小。AC 算法的优势在模式数量达到数十个以上时才显现。
+<PitfallsBox
+  pitfalls={[
+    'Trie 和 Suffix Tree 是同一个东西：',
+    '不是。Trie（Keyword Tree）是对模式集建树，每个模式是一条从根到叶（或标记节点）的路径。Suffix Tree 是对文本的所有后缀建树。两者的建树对象、使用场景和复杂度特征完全不同。',
+    '失败链接就等于 KMP 的 failure function：',
+    '在单模式的情况下，AC 的失败链接退化为 KMP 的 failure function。但在多模式情况下，AC 的失败链接可以在不同模式之间跳跃（例如匹配 ACG 后失配，可以跳到 CG 对应的状态，而 CG 可能是另一个模式的前缀），这是 KMP 不具备的能力。',
+    '多模式匹配总是比单模式匹配快：',
+    '不一定。如果只需要搜索 1-2 个模式，直接运行 KMP 或 Boyer-Moore 更简单，预处理开销也更小。AC 算法的优势在模式数量达到数十个以上时才显现。'
+  ]}
+/>
 
 ## 相关页面
 

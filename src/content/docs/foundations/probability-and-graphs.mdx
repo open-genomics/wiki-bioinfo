@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="如果把生物信息学看作计算问题，那么其核心抽象几乎可以归结为三类模型。它们不是孤立的章节分类，而是贯穿整个学科的通用语言，用于处理高噪音、大规模且具有复杂结构的生物数据。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 1. 概率模型：处理不确定性
 
@@ -163,12 +168,14 @@ $$P(H \mid D) = \frac{P(D \mid H) \cdot P(H)}{P(D)}$$
 
 在生物信息学中，许多看似不同的方法都可以被理解为概率图模型的特例或近似。理解这一统一视角，有助于在面对新问题时选择合适的建模策略。
 
-## 常见误区
-
-- **误区一：认为概率模型只在"有噪音"时才需要**。实际上，即使数据完美，概率模型仍然提供了处理不确定性的统一框架。例如，多序列比对中的保守性评估本质上就是一个概率问题。
-- **误区二：将图模型等同于可视化工具**。图模型是数学抽象，其价值在于将关系结构形式化，从而使得算法可以在其上操作（如寻路、社区检测），而非仅仅用于画图。
-- **误区三：认为动态规划只适用于"路径"问题**。DP 的本质是"通过存储子问题解来避免重复计算"。除了路径问题，DP 还适用于区间划分（如 RNA 结构预测）、背包问题（如选择最优的 SNP 集合）等多种问题类型。
-- **误区四：混淆"贪心"与"动态规划"**。贪心算法每步做局部最优选择且不回溯；动态规划则系统地探索所有可能，通过存储中间结果保证全局最优。参见 [贪心算法](./greedy-algorithms.mdx)。
+<PitfallsBox
+  pitfalls={[
+    '误区一：认为概率模型只在"有噪音"时才需要。实际上，即使数据完美，概率模型仍然提供了处理不确定性的统一框架。例如，多序列比对中的保守性评估本质上就是一个概率问题。',
+    '误区二：将图模型等同于可视化工具。图模型是数学抽象，其价值在于将关系结构形式化，从而使得算法可以在其上操作（如寻路、社区检测），而非仅仅用于画图。',
+    '误区三：认为动态规划只适用于"路径"问题。DP 的本质是"通过存储子问题解来避免重复计算"。除了路径问题，DP 还适用于区间划分（如 RNA 结构预测）、背包问题（如选择最优的 SNP 集合）等多种问题类型。',
+    '误区四：混淆"贪心"与"动态规划"。贪心算法每步做局部最优选择且不回溯；动态规划则系统地探索所有可能，通过存储中间结果保证全局最优。参见 [贪心算法](./greedy-algorithms.mdx)。'
+  ]}
+/>
 
 ## 相关页面
 

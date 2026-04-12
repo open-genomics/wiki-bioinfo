@@ -4,8 +4,11 @@ title: "带状动态规划"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -23,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance', description: '理解 DP 递推关系的基础' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -215,12 +221,16 @@ $$
 
 ## 与完整 DP 的对比
 
-| 特性 | 完整 DP | 带状 DP |
-|------|---------|---------|
-| 时间复杂度 | O(mn) | O(b·min(m,n)) |
-| 空间复杂度 | O(mn) | O(b·min(m,n)) |
-| 最优性保证 | 总是最优 | 只有在带宽足够时才最优 |
-| 适用场景 | 通用 | 高相似度序列 |
+<ComparisonTable
+  leftTitle="完整 DP"
+  rightTitle="带状 DP"
+  rows={[
+    { aspect: '时间复杂度', left: 'O(mn)', right: 'O(b·min(m,n))' },
+    { aspect: '空间复杂度', left: 'O(mn)', right: 'O(b·min(m,n))' },
+    { aspect: '最优性保证', left: '总是最优', right: '只有在带宽足够时才最优' },
+    { aspect: '适用场景', left: '通用', right: '高相似度序列' }
+  ]}
+/>
 
 ## 与真实工具或流程的连接
 
@@ -233,23 +243,16 @@ $$
 
 现代 read mapper 通常结合带状 DP 和其他优化技术（如 SIMD 指令、硬件加速）来进一步提升性能。
 
-## 常见误区
-
-### 带宽越大越好
-
-不是。带宽过大会失去带状 DP 的优势，退化为完整 DP。带宽过小可能错过最优路径。
-
-### 带状 DP 总能得到最优比对
-
-不一定。只有当最优比对路径完全在带状区域内时，才能保证最优性。
-
-### 带状 DP 只能用于全局比对
-
-不是。带状 DP 也可以用于局部比对（Smith-Waterman），只需要调整边界条件和回溯策略。
-
-### 带宽是固定的
-
-不是。带宽可以根据序列特征、seed 信息或运行时反馈动态调整。
+<PitfallsBox
+  pitfalls={[
+    '带宽越大越好：',
+    '不是。带宽过大会失去带状 DP 的优势，退化为完整 DP。带宽过小可能错过最优路径。',
+    '带状 DP 总能得到最优比对：',
+    '不一定。只有当最优比对路径完全在带状区域内时，才能保证最优性。',
+    '带状 DP 只能用于全局比对：',
+    '不是。带状 DP 也可以用于局部比对（Smith-Waterman），只需要调整边界条件和回溯策略。'
+  ]}
+/>
 
 ## 算法变体
 

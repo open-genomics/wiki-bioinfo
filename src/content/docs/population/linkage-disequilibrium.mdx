@@ -9,6 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="Hardy–Weinberg 平衡描述了单个位点的稳定性，而连锁不平衡（Linkage Disequilibrium, LD）则描述了不同位点之间的非随机关联。LD 是理解基因组结构、单倍型块以及 GWAS 信号来源的核心概念。"
@@ -26,6 +27,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     { name: '概率与图基础', href: '/wiki-bioinfo/foundations/probability-and-graphs' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 从独立到关联：什么是 LD？
 

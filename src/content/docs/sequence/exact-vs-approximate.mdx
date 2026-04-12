@@ -7,6 +7,9 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <SummaryBox
   summary="在理想的数学世界中，我们寻找精确匹配。但在充满变异和错误的生物学现实中，近似匹配（Approximate Matching）才是常态。这两者的区别决定了算法的设计是从简单的索引查询走向复杂的动态规划。"
@@ -25,6 +28,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '打分矩阵与罚分', href: '/wiki-bioinfo/alignment/scoring-matrices' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 为什么"精确"还不够？
 
@@ -172,6 +178,18 @@ $$
 
 ## 5. 复杂度与适用前提
 
+<ComparisonTable
+  leftTitle="精确匹配 (Exact Matching)"
+  rightTitle="近似匹配 (Approximate Matching)"
+  rows={[
+    { aspect: '核心问题', left: '模式串 P 是否完整出现在文本 T 中？', right: '文本 T 中是否存在与 P 最多差 k 个编辑的子串？' },
+    { aspect: '典型算法', left: 'KMP、Boyer-Moore、Suffix Array', right: '动态规划、种子-延伸、Myers 位并行' },
+    { aspect: '查询复杂度', left: '$O(m)$（索引化后）', right: '$O(nm)$ 最坏情况，启发式可大幅加速' },
+    { aspect: '生物学适用性', left: '种子查找、去重、完美过滤', right: 'Read Mapping、同源搜索、变异检测' },
+    { aspect: '对错误的容忍', left: '零容忍——一个错配即失败', right: '可容忍 k 个错配/Indel' },
+  ]}
+/>
+
 ### 算法复杂度对比
 
 | 方法 | 查询时间 | 适用条件 |
@@ -187,23 +205,16 @@ $$
 - **近似匹配**适用于：Read Mapping、同源搜索、变异检测。
 - **种子-延伸**是两者的最佳折中，但种子长度和数量需要根据错误率 $e$ 和允许的错误数 $k$ 进行调优。当 $k$ 很大时（如跨物种搜索），可能需要更短的种子或更多的种子来保证敏感性。
 
-## 6. 常见误区
-
-### 编辑距离越小，两个序列越同源
-
-不一定。编辑距离没有考虑不同位置突变的生物学权重。在蛋白质比对中，某些氨基酸替换（如 I→V）比其他替换（如 G→W）更常见，因此需要使用打分矩阵（如 BLOSUM62）而非简单的编辑距离。
-
-### Hamming 距离可以替代编辑距离
-
-当序列中存在 Indel 时，Hamming 距离无法正确衡量差异。例如 `ACGT` 与 `ACT` 的 Hamming 距离为 2（需要对齐后比较），但编辑距离仅为 1（一次删除）。在测序数据分析中，Indel 是常见的错误类型，因此不能仅用 Hamming 距离。
-
-### 种子越长越好
-
-种子越长，精确匹配的概率越低（因为更容易被测序错误破坏），导致漏检率上升。种子越短，精确匹配的概率越高，但会产生更多的候选位置，增加过滤和延伸的计算量。种子的选择是在敏感性和效率之间的权衡。
-
-### 近似匹配总是需要动态规划
-
-现代工具大量使用启发式方法来避免完整的动态规划。例如，BWA-MEM 使用 SIMD 加速的 SIMD-based banded alignment，Minimap2 使用 affine-gap 动态规划的快速近似。完整的 $O(nm)$ 动态规划通常仅用于最终的候选验证阶段。
+<PitfallsBox
+  pitfalls={[
+    '编辑距离越小，两个序列越同源：',
+    '不一定。编辑距离没有考虑不同位置突变的生物学权重。在蛋白质比对中，某些氨基酸替换（如 I→V）比其他替换（如 G→W）更常见，因此需要使用打分矩阵（如 BLOSUM62）而非简单的编辑距离。',
+    'Hamming 距离可以替代编辑距离：',
+    '当序列中存在 Indel 时，Hamming 距离无法正确衡量差异。例如 ACGT 与 ACT 的 Hamming 距离为 2（需要对齐后比较），但编辑距离仅为 1（一次删除）。在测序数据分析中，Indel 是常见的错误类型，因此不能仅用 Hamming 距离。',
+    '种子越长越好：',
+    '种子越长，精确匹配的概率越低（因为更容易被测序错误破坏），导致漏检率上升。种子越短，精确匹配的概率越高，但会产生更多的候选位置，增加过滤和延伸的计算量。种子的选择是在敏感性和效率之间的权衡。'
+  ]}
+/>
 
 ## 相关页面
 

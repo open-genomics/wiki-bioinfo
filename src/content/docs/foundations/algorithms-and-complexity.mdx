@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="算法是解决精确定义问题的指令序列。在生物信息学中，算法不仅是处理数据的工具，更是理解生物过程（如 DNA 复制）的逻辑框架。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 1. 算法的直觉：石头游戏 (The Rock Game)
 
@@ -157,23 +162,16 @@ graph LR
 4.  **分治法 (Divide and Conquer)**：将大问题切分，如快速排序和空间高效的比对。
 5.  **随机化算法 (Randomized Algorithms)**：如 Gibbs Sampling，在巨大的搜索空间中"碰运气"。
 
-## 常见误区
-
-### O(n²) 的算法一定比 O(n log n) 慢
-
-Big-O 记号描述的是增长趋势的渐近行为，对于小规模输入，常数因子可能使 O(n²) 算法比 O(n log n) 算法更快。例如，对于 n < 50 的数组，插入排序（O(n²)）通常比归并排序（O(n log n)）更快，因为前者的常数因子极小。选择算法时要同时考虑数据规模和实际运行环境。
-
-### NP-hard 意味着"完全不可能解决"
-
-NP-hard 说明没有已知的多项式时间精确算法（除非 P=NP），但并不意味着完全无法处理。分支定界、近似算法、随机化算法和启发式方法都能在可接受的时间内给出有用的结果。很多生物信息学工具处理的正是 NP-hard 问题。
-
-### 时间复杂度和空间复杂度总是可以同时优化
-
-时间-空间权衡是算法设计中的基本矛盾。例如，动态规划的 Hirschberg 算法将空间从 O(nm) 降到 O(min(n,m))，但时间复杂度翻倍。在很多生物信息学场景中（如长序列比对），空间才是真正的瓶颈，需要主动牺牲时间效率来换取空间。
-
-### 最优算法就是最好的选择
-
-"最优"算法可能实现复杂、调试困难、难以维护。在实际工程中，可读性、可维护性和开发效率同样重要。BLAST 不是一个"最优"的序列搜索算法，但它简单、快速、可靠，成为了使用最广泛的工具。算法选择需要综合考虑理论保证和工程实践。
+<PitfallsBox
+  pitfalls={[
+    'O(n²) 的算法一定比 O(n log n) 慢：',
+    'Big-O 记号描述的是增长趋势的渐近行为，对于小规模输入，常数因子可能使 O(n²) 算法比 O(n log n) 算法更快。例如，对于 n < 50 的数组，插入排序（O(n²)）通常比归并排序（O(n log n)）更快，因为前者的常数因子极小。选择算法时要同时考虑数据规模和实际运行环境。',
+    'NP-hard 意味着"完全不可能解决"：',
+    'NP-hard 说明没有已知的多项式时间精确算法（除非 P=NP），但并不意味着完全无法处理。分支定界、近似算法、随机化算法和启发式方法都能在可接受的时间内给出有用的结果。很多生物信息学工具处理的正是 NP-hard 问题。',
+    '时间复杂度和空间复杂度总是可以同时优化：',
+    '时间-空间权衡是算法设计中的基本矛盾。例如，动态规划的 Hirschberg 算法将空间从 O(nm) 降到 O(min(n,m))，但时间复杂度翻倍。在很多生物信息学场景中（如长序列比对），空间才是真正的瓶颈，需要主动牺牲时间效率来换取空间。'
+  ]}
+/>
 
 ## 相关页面
 

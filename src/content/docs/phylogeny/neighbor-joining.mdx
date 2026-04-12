@@ -4,9 +4,12 @@ title: "Neighbor-Joining算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Neighbor-Joining（NJ）是一种不依赖分子钟假设的距离矩阵建树算法，通过最小化总树长来选择邻居对，是目前最常用的系统发育树构建方法之一。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '多序列比对（MSA）', href: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '距离矩阵的来源' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题定义
 
@@ -299,14 +305,18 @@ Q矩阵：
 
 ## 与UPGMA的比较
 
-| 特性 | UPGMA | Neighbor-Joining |
-|------|-------|------------------|
-| 分子钟假设 | 要求 | 不要求 |
-| 树的类型 | 有根树 | 无根树 |
-| 优化目标 | 层次聚类 | 最小化总树长 |
-| 适用场景 | 演化速率恒定 | 演化速率不均匀 |
-| 计算复杂度 | O(n³) | O(n³) |
-| 鲁棒性 | 较差 | 较好 |
+<ComparisonTable
+  leftTitle="UPGMA"
+  rightTitle="Neighbor-Joining"
+  rows={[
+    { aspect: '分子钟假设', left: '要求', right: '不要求' },
+    { aspect: '树的类型', left: '有根树', right: '无根树' },
+    { aspect: '优化目标', left: '层次聚类', right: '最小化总树长' },
+    { aspect: '适用场景', left: '演化速率恒定', right: '演化速率不均匀' },
+    { aspect: '计算复杂度', left: 'O(n³)', right: 'O(n³)' },
+    { aspect: '鲁棒性', left: '较差', right: '较好' }
+  ]}
+/>
 
 ## 为什么NJ不依赖分子钟假设
 
@@ -348,23 +358,16 @@ NJ通过分支长度的调整来处理演化速率不均匀的问题：
 - 当距离矩阵质量差时，结果可能不准确
 - 无法直接处理缺失数据
 
-## 常见误区
-
-### NJ总是比UPGMA好
-
-不一定。当分子钟假设满足时，UPGMA可能更简单且效果相当。NJ的优势主要在演化速率不均匀时体现。
-
-### NJ产生的树可以直接解释分化时间
-
-不能。NJ产生的是无根树，分支长度表示演化量而非时间。要解释分化时间，需要外群（outgroup）来定根。
-
-### NJ的距离矩阵必须是additive
-
-不是。NJ可以对任意距离矩阵进行建树，但当距离矩阵偏离additive条件时，结果可能不准确。
-
-### NJ只能用于DNA序列
-
-不是。NJ可以用于任何可以定义距离的数据，包括蛋白质序列、形态学特征等。
+<PitfallsBox
+  pitfalls={[
+    'NJ总是比UPGMA好：',
+    '不一定。当分子钟假设满足时，UPGMA可能更简单且效果相当。NJ的优势主要在演化速率不均匀时体现。',
+    'NJ产生的树可以直接解释分化时间：',
+    '不能。NJ产生的是无根树，分支长度表示演化量而非时间。要解释分化时间，需要外群（outgroup）来定根。',
+    'NJ的距离矩阵必须是additive：',
+    '不是。NJ可以对任意距离矩阵进行建树，但当距离矩阵偏离additive条件时，结果可能不准确。'
+  ]}
+/>
 
 ## 与真实工具的连接
 

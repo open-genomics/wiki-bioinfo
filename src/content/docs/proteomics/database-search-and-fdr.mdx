@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="数据库搜索是目前蛋白质鉴定最常用的方法。本章介绍肽段-谱图匹配（PSM）的概念、常用评分算法、通过 Target-Decoy 策略控制错误发现率（FDR）的统计方法，以及如何处理带有修饰的肽段。"
@@ -25,7 +27,15 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
+<PageHeaderMeta section="Applications" />
+
+
 ## 1. 是什么
+
+<figure>
+  <img src="/img/illustrations/peptide-spectrum-match.svg" alt="肽段-谱图匹配（PSM）示意：实验 MS2 谱图与理论谱图的比对打分" />
+  <figcaption>肽段-谱图匹配（Peptide-Spectrum Match, PSM）：实验谱图与理论谱图的比对打分</figcaption>
+</figure>
 
 数据库搜索（Database Search）是质谱蛋白质组学中最核心的计算方法，用于将实验获得的 MS2 碎片谱图与已知蛋白质序列数据库进行匹配，从而鉴定样本中存在的肽段和蛋白质。
 
@@ -241,32 +251,16 @@ $$\widehat{\text{FDR}}(t) = \frac{\#\{\text{Decoy PSMs with score} \geq t\}}{\#\
 | **Comet** | XCorr 变体 | SEQUEST 的开源替代，可集成到 TPP (Trans-Proteomic Pipeline) 流程中 |
 | **MetaMorpheus** | 非特异性搜索 | G-PTM-D 算法，适合未知修饰的发现 |
 
-## 9. 常见误区
-
-### 9.1 过度信赖单一评分
-
-不同的评分算法对同一组 PSM 可能给出不同的排序。XCorr 和 Mascot Ion Score 的数值不可直接比较。在严格的蛋白质组学研究中，推荐使用至少两种独立的方法交叉验证鉴定结果，或使用如 Percolator 等机器学习方法对多个评分特征进行整合。
-
-### 9.2 忽略蛋白推断问题
-
-数据库搜索鉴定的是**肽段**，而用户通常关心的是**蛋白质**。从肽段到蛋白质的推断存在歧义性：一组肽段可能对应多个蛋白质（如旁系同源基因的产物共享部分肽段）。简单地将所有包含至少 2 个唯一肽段的蛋白报告为"已鉴定"会导致：
-- 假阳性蛋白被过度报告。
-- 蛋白质之间的从属关系（如某个蛋白的所有肽段都是另一个蛋白的子集）被忽略。
-
-工具如 ProteinProphet 和 Fido 使用概率模型来量化蛋白推断的不确定性。
-
-### 9.3 Decoy 数据库构建不当
-
-Decoy 数据库的质量直接影响 FDR 估计的准确性。常见问题包括：
-- **使用 Shuffled 序列**：随机打乱可能产生不符合真实蛋白质特征的序列（如不自然的氨基酸组成），导致 Decoy 的匹配难度偏低，FDR 被低估。
-- **Target-Decoy 混合不充分**：如果 Target 和 Decoy 数据库在序列空间上存在系统差异，搜索算法可能利用这种差异进行"作弊"。
-- **推荐做法**：使用 Reversed 序列作为 Decoy，并确保在搜索时 Target 和 Decoy 是混合在一起的。
-
-### 9.4 搜索参数过宽或过窄
-
-- **过窄**：如前体质量容忍度设为 1 ppm 而实际仪器的质量精度为 5 ppm，会导致大量真实肽段因质量不匹配而被遗漏。
-- **过宽**：如允许 5 种可变修饰且每个肽段最多 3 个修饰位点，搜索空间可能膨胀数百万倍，不仅极大增加计算时间，还会显著降低鉴定的特异性。
-- **建议**：根据仪器的实际性能设置参数，并通过目标搜索（如先用窄参数搜索，再用宽参数补搜未匹配的谱图）来平衡灵敏度和特异性。
+<PitfallsBox
+  pitfalls={[
+    '过度信赖单一评分：',
+    '不同的评分算法对同一组 PSM 可能给出不同的排序。XCorr 和 Mascot Ion Score 的数值不可直接比较。在严格的蛋白质组学研究中，推荐使用至少两种独立的方法交叉验证鉴定结果，或使用如 Percolator 等机器学习方法对多个评分特征进行整合。',
+    '忽略蛋白推断问题：',
+    '数据库搜索鉴定的是肽段，而用户通常关心的是蛋白质。从肽段到蛋白质的推断存在歧义性：一组肽段可能对应多个蛋白质（如旁系同源基因的产物共享部分肽段）。简单地将所有包含至少 2 个唯一肽段的蛋白报告为"已鉴定"会导致：',
+    '假阳性蛋白被过度报告。',
+    '蛋白质之间的从属关系（如某个蛋白的所有肽段都是另一个蛋白的子集）被忽略。'
+  ]}
+/>
 
 ## 相关页面
 

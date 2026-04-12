@@ -9,7 +9,17 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+
+<PrerequisitesBox
+  items={[
+    {name: 'DNA-seq 变异检测总览', href: '/docs/variants/variant-calling-overview'},
+    {name: 'VCF/BCF 格式', href: '/docs/formats/vcf-bcf-format'},
+    {name: '数据库与注释系统一览', href: '/docs/data-references/databases-and-annotations'},
+  ]}
+/>
 
 <SummaryBox
   summary="临床基因检测（WES/WGS）产生数万至数百万候选变异，核心挑战在于如何从中系统性地筛选出最可能与患者表型相关的致病变异。有效的优先级排序需要整合群体频率、功能影响、遗传模式和基因-表型匹配等多维证据，而非依赖单一分数。"
@@ -19,6 +29,9 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
     '优先级排序是连接原始数据与临床解释的桥梁，为 ACMG 分类提供高质量候选集',
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 变异筛选的"漏斗"模型
 
@@ -359,27 +372,16 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 - 为遗传咨询提供排序后的解释重点；
 - 为功能实验设计提供优先级指导。
 
-## 常见误区
-
-### 罕见 = 致病
-
-不对。绝大多数罕见变异仍是良性或意义不明。罕见性只是必要条件，不是充分条件。
-
-### 预测软件说有害就够了
-
-不对。in silico 预测（如 SIFT、PolyPhen、CADD）只是辅助证据，必须结合基因-表型匹配、遗传模式和其他证据综合判断。
-
-### ClinVar 有记录就一定可直接采用
-
-不对。需要关注 review status 和冲突解释。一些变异可能存在不同实验室的冲突解释，需要谨慎评估。
-
-### 只关注编码区变异
-
-不对。非编码区变异（如剪接位点、调控区）也可能致病，特别是在已知非编码致病的疾病中。
-
-### 优先级排序可以完全自动化
-
-不对。虽然可以设计自动化流程，但最终仍需要人工复核，特别是对于边界病例和复杂家系。
+<PitfallsBox
+  pitfalls={[
+    '罕见 = 致病：',
+    '不对。绝大多数罕见变异仍是良性或意义不明。罕见性只是必要条件，不是充分条件。',
+    '预测软件说有害就够了：',
+    '不对。in silico 预测（如 SIFT、PolyPhen、CADD）只是辅助证据，必须结合基因-表型匹配、遗传模式和其他证据综合判断。',
+    'ClinVar 有记录就一定可直接采用：',
+    '不对。需要关注 review status 和冲突解释。一些变异可能存在不同实验室的冲突解释，需要谨慎评估。'
+  ]}
+/>
 
 ## 参考资料
 

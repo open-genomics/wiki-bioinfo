@@ -6,6 +6,8 @@ title: "Basecalling 算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'PacBio 与 Nanopore', href: '/wiki-bioinfo/long-read/pacbio-nanopore', description: 'Nanopore 测序技术的物理原理' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题引入：如何"阅读"电流信号
 
@@ -285,23 +290,16 @@ Oxford Nanopore 的官方 basecaller：
 - **GPU 优化**：高度优化的 GPU 实现
 - **修饰检测**：集成碱基修饰检测
 
-## 常见误区
-
-### Basecalling 只需要一次
-
-不是。通常需要多次迭代，特别是对于低质量数据。
-
-### 信号归一化不重要
-
-重要。归一化显著影响模型性能，必须正确处理。
-
-### HMM 已经过时
-
-不是。HMM 仍用于某些场景，特别是作为神经网络的后处理步骤。
-
-### 所有 basecaller 一样
-
-不是。不同 basecaller 在准确性、速度、资源需求上有显著差异。
+<PitfallsBox
+  pitfalls={[
+    'Basecalling 只需要一次：',
+    '不是。通常需要多次迭代，特别是对于低质量数据。',
+    '信号归一化不重要：',
+    '重要。归一化显著影响模型性能，必须正确处理。',
+    'HMM 已经过时：',
+    '不是。HMM 仍用于某些场景，特别是作为神经网络的后处理步骤。'
+  ]}
+/>
 
 ## 算法优化
 

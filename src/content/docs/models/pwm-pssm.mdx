@@ -6,6 +6,8 @@ title: "PWM 与 PSSM"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '贝叶斯推断基础', href: '/wiki-bioinfo/models/bayesian-inference' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -264,15 +269,14 @@ $$
 - 使用 PSSM 进行 genome-wide 扫描，给出高分候选位点；
 - 再结合进化保守性、表达数据和实验验证进行过滤。
 
-## 常见误区
-
-### motif 一定对应一个固定的 consensus 串
-
-不对。很多 motif 的本质正是"位置相关的偏好"，不是单个固定字符串。
-
-### 高分 motif 就等于真实结合位点
-
-不一定。高分说明片段与模型相似，但是否真实绑定还需要结合背景频率、局部结构和实验数据。
+<PitfallsBox
+  pitfalls={[
+    'motif 一定对应一个固定的 consensus 串：',
+    '不对。很多 motif 的本质正是"位置相关的偏好"，不是单个固定字符串。',
+    '高分 motif 就等于真实结合位点：',
+    '不一定。高分说明片段与模型相似，但是否真实绑定还需要结合背景频率、局部结构和实验数据。'
+  ]}
+/>
 
 <RelatedLinks
   links={[

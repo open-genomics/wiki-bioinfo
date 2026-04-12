@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'PWM 与 PSSM', href: '/wiki-bioinfo/models/pwm-pssm' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -249,23 +254,16 @@ EM算法在生物信息学中的核心应用：
 | Gibbs sampling | MCMC方法，可用于近似E步 | 复杂模型的近似推断 |
 | Variational inference | 确定性近似，可用于加速E步 | 大规模模型的近似推断 |
 
-## 常见误区
-
-### EM总能找到全局最优
-
-不能。EM保证单调改进似然，但可能收敛到局部最优。需要多次随机初始化。
-
-### EM总是收敛
-
-在大多数实际情况下EM会收敛，但在某些病态情况下可能不收敛或收敛很慢。
-
-### EM比梯度下降慢
-
-不一定。EM在某些问题上比梯度下降更快，特别是在E步和M步都有解析解的情况下。
-
-### EM只能用于离散隐变量
-
-不是。EM可以处理连续隐变量，只要能计算E步的期望和M步的优化。
+<PitfallsBox
+  pitfalls={[
+    'EM总能找到全局最优：',
+    '不能。EM保证单调改进似然，但可能收敛到局部最优。需要多次随机初始化。',
+    'EM总是收敛：',
+    '在大多数实际情况下EM会收敛，但在某些病态情况下可能不收敛或收敛很慢。',
+    'EM比梯度下降慢：',
+    '不一定。EM在某些问题上比梯度下降更快，特别是在E步和M步都有解析解的情况下。'
+  ]}
+/>
 
 ## 参考资料
 

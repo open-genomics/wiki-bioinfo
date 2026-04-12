@@ -6,6 +6,8 @@ title: "Transformer 与自注意力机制"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '嵌入与语言模型', href: '/wiki-bioinfo/ml-bioinfo/embeddings-and-language-models', description: 'Transformer 预训练的基础' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么需要全局注意力
 
@@ -423,27 +428,16 @@ Transformer 在生物信息学中的代表性应用：
 | 参数量 | 少 | 中 | 多 |
 | 可解释性 | 强 | 中 | 弱 |
 
-## 常见误区
-
-### Transformer 总是优于 RNN 和 CNN
-
-不是。对于短序列和局部模式检测任务，CNN 可能更高效。对于中等长度序列，RNN 可能足够。Transformer 的优势在长序列和复杂依赖时才明显。
-
-### 注意力权重等于生物学重要性
-
-不一定。注意力权重反映模型对预测的贡献，但不直接等同于生物学因果关系。
-
-### 位置编码可以学习
-
-可以学习，但固定位置编码（正弦/余弦）具有外推能力，能处理比训练时更长的序列。
-
-### Transformer 不需要领域知识
-
-不是。输入设计、预训练策略、任务定义仍高度依赖领域知识。
-
-### 越多注意力头越好
-
-不是。过多的头可能导致冗余和过拟合。通常 4-16 个头足够。
+<PitfallsBox
+  pitfalls={[
+    'Transformer 总是优于 RNN 和 CNN：',
+    '不是。对于短序列和局部模式检测任务，CNN 可能更高效。对于中等长度序列，RNN 可能足够。Transformer 的优势在长序列和复杂依赖时才明显。',
+    '注意力权重等于生物学重要性：',
+    '不一定。注意力权重反映模型对预测的贡献，但不直接等同于生物学因果关系。',
+    '位置编码可以学习：',
+    '可以学习，但固定位置编码（正弦/余弦）具有外推能力，能处理比训练时更长的序列。'
+  ]}
+/>
 
 ## 算法变体与优化
 

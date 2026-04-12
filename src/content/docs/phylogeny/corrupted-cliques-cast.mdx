@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="基因表达数据常含噪声，导致距离图偏离理想的团图（Clique Graph）结构。Corrupted Cliques 问题研究如何用最少的边增删恢复团图结构，CAST 算法是一种实用的启发式解决方案。"
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '图算法基础', href: '/wiki-bioinfo/foundations/graph-algorithms' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 要解决什么生物信息学问题？
 
@@ -198,23 +203,16 @@ $C_1 = \{g_1, g_2, g_3\}$，$S = \{g_4, g_5\}$。
 | **噪声鲁棒性** | 较好 | 差 | 中等 |
 | **时间复杂度** | $O(n^3)$ 最坏 | $O(n \cdot k \cdot d)$ | $O(n^2)$ |
 
-## 10. 常见误区
-
-### "CAST 中的阈值 $\theta$ 有一个通用的最优值"
-
-没有。$\theta$ 的最优值取决于具体的数据集和距离度量。常用的策略是尝试多个 $\theta$ 值，然后使用内部评价指标（如 Silhouette Score）或外部生物学知识来评估聚类质量。
-
-### "CAST 总是能收敛"
-
-如果阈值设置不当（例如 $\theta$ 非常小），可能出现"振荡"现象。实际实现中通常设置最大迭代次数来防止无限循环。
-
-### "CAST 适用于所有类型的组学数据"
-
-CAST 最初是为基因表达数据设计的，它假设数据中存在相对清晰的分组结构。对于连续渐变的数据，CAST 可能会将渐变数据强制分割为离散的簇。
-
-### "Corrupted Cliques 的 NP-完全性意味着所有聚类问题都很难"
-
-Corrupted Cliques 是一个特定的问题定义。其他聚类问题可能有不同的计算复杂度。例如，k-means 在一维数据上可以在多项式时间内精确求解。
+<PitfallsBox
+  pitfalls={[
+    '"CAST 中的阈值 $\theta$ 有一个通用的最优值"：',
+    '没有。$\theta$ 的最优值取决于具体的数据集和距离度量。常用的策略是尝试多个 $\theta$ 值，然后使用内部评价指标（如 Silhouette Score）或外部生物学知识来评估聚类质量。',
+    '"CAST 总是能收敛"：',
+    '如果阈值设置不当（例如 $\theta$ 非常小），可能出现"振荡"现象。实际实现中通常设置最大迭代次数来防止无限循环。',
+    '"CAST 适用于所有类型的组学数据"：',
+    'CAST 最初是为基因表达数据设计的，它假设数据中存在相对清晰的分组结构。对于连续渐变的数据，CAST 可能会将渐变数据强制分割为离散的簇。'
+  ]}
+/>
 
 ## 11. 与真实工具的连接
 

@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 是什么
 
@@ -392,36 +397,16 @@ KD-tree 用于高维空间查询：
 | 最近点对（分治） | $O(n \log n)$ | $O(n)$ | - | 几何计算、结构分析 |
 | 最近点对（朴素） | $O(n^2)$ | $O(1)$ | - | 小规模数据、简单实现 |
 
-## 常见误区
-
-### 分治总是比朴素算法快
-
-不一定。分治算法：
-- 有额外的递归开销
-- 可能需要额外空间
-- 小规模时，朴素算法可能更快
-
-实际中常使用混合策略：小规模用朴素，大规模用分治。
-
-### 快速排序总是比归并排序快
-
-不是。快速排序：
-- 平均更快，但最坏情况 $O(n^2)$
-- 不稳定
-- 对已排序数据性能差
-
-归并排序：
-- 稳定
-- 最坏情况也是 $O(n \log n)$
-- 适合外部排序（磁盘）
-
-### 分治只能用于排序
-
-不是。分治广泛应用于：
-- 树构建（系统发育树、空间索引）
-- 几何计算（最近点对、凸包）
-- 优化问题（矩阵乘法、大整数乘法）
-- 图算法（最小生成树、最短路径）
+<PitfallsBox
+  pitfalls={[
+    '分治总是比朴素算法快：',
+    '不一定。分治算法：',
+    '有额外的递归开销',
+    '可能需要额外空间',
+    '小规模时，朴素算法可能更快',
+    '实际中常使用混合策略：小规模用朴素，大规模用分治。'
+  ]}
+/>
 
 ## 与其他算法的连接
 

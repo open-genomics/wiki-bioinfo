@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='单细胞测序捕捉的是细胞发育过程中的「瞬间快照」。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。'
@@ -25,6 +27,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 从快照到过程：伪时间的诞生
 
@@ -259,25 +264,16 @@ RNA Velocity（scVelo）验证方向
 可视化（沿伪时间的基因表达热图、速度流场图）
 ```
 
-## 8. 常见误区
-
-- **"UMAP 形状就是轨迹"**
-  - 错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。UMAP 的全局拓扑不可靠。
-
-- **"伪时间等于真实时间"**
-  - 错误。细胞在不同阶段的停留时间不同，伪时间反映的是状态变化量而非物理时间。一个细胞在祖细胞阶段停留数天，但在分化末期可能只有数小时。
-
-- **"RNA Velocity 向量指向的终点就是命运"**
-  - 需谨慎解读。Velocity 反映的是当前的瞬时趋势，而非长期命运。在分支点附近，速度向量可能不确定。
-
-- **"所有基因都应纳入 velocity 计算"**
-  - 只有表达量足够高且具有显著剪接动力学变化的基因才应纳入。低表达基因的 velocity 估计不可靠。
-
-- **"轨迹方法可以处理所有类型的动态过程"**
-  - 大多数轨迹方法假设发育是单向的。对于可逆的状态转换（如细胞激活/静息），需要专门的工具（如 Palantir 的扩散伪时间）。
-
-- **"分支点一定是生物学上的命运决定点"**
-  - 算法检测到的分支可能是技术假象（如 batch effect）。应通过分支点附近的差异表达基因和已知生物学知识进行验证。
+<PitfallsBox
+  pitfalls={[
+    '"UMAP 形状就是轨迹"',
+    '错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。UMAP 的全局拓扑不可靠。',
+    '"伪时间等于真实时间"',
+    '错误。细胞在不同阶段的停留时间不同，伪时间反映的是状态变化量而非物理时间。一个细胞在祖细胞阶段停留数天，但在分化末期可能只有数小时。',
+    '"RNA Velocity 向量指向的终点就是命运"',
+    '需谨慎解读。Velocity 反映的是当前的瞬时趋势，而非长期命运。在分支点附近，速度向量可能不确定。'
+  ]}
+/>
 
 ## 参考资料
 

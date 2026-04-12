@@ -6,6 +6,8 @@ title: "卷积神经网络（CNN）在序列中的应用"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '转录因子结合位点', href: '/wiki-bioinfo/epigenomics/tf-binding-sites', description: 'CNN 应用场景的生物学背景' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么 CNN 适合检测生物序列模式
 
@@ -266,23 +271,16 @@ CNN 在生物信息学中的代表性应用：
 - 结合池化实现位置不变性
 - 输出层设计根据具体任务调整
 
-## 常见误区
-
-### CNN 只能检测局部模式
-
-不是。通过多层堆叠，CNN 可以学习到层次化的特征，从局部 motif 到组合模式。
-
-### 卷积核越大越好
-
-不是。过大的卷积核会增加参数数量，可能导致过拟合。通常使用多个小卷积核（如 3-8 个碱基）。
-
-### CNN 不考虑序列顺序
-
-不是。卷积操作保留了局部顺序信息，只是对位置偏移具有不变性。
-
-### CNN 完全不可解释
-
-不是。通过可视化卷积核权重或使用 attribution methods（如 DeepLIFT、saliency maps），可以解释 CNN 学到的 motif。
+<PitfallsBox
+  pitfalls={[
+    'CNN 只能检测局部模式：',
+    '不是。通过多层堆叠，CNN 可以学习到层次化的特征，从局部 motif 到组合模式。',
+    '卷积核越大越好：',
+    '不是。过大的卷积核会增加参数数量，可能导致过拟合。通常使用多个小卷积核（如 3-8 个碱基）。',
+    'CNN 不考虑序列顺序：',
+    '不是。卷积操作保留了局部顺序信息，只是对位置偏移具有不变性。'
+  ]}
+/>
 
 ## 算法变体与优化
 

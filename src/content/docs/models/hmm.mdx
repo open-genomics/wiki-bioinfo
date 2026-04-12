@@ -7,6 +7,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '贝叶斯推断基础', href: '/wiki-bioinfo/models/bayesian-inference' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 直觉模型：公平赌场 (The Fair Bet Casino)
 
@@ -202,19 +207,16 @@ $$
 - 很多"序列分段"问题都能在 HMM 框架下重述；
 - 在更复杂模型出现之前，HMM 往往是理解这类任务最清晰的第一站。
 
-## 常见误区
-
-### HMM 只是理论模型，没有实际用途
-
-不是。它在基因预测、蛋白家族建模等方向都有非常经典的应用。
-
-### HMM 等于 motif finding
-
-不完全等价。motif finding 只是其中一个相关应用场景，HMM 的范围更广。
-
-### 只要有观测序列，就一定能可靠恢复真实状态
-
-不一定。结果强烈依赖模型假设、参数质量和观测噪声。
+<PitfallsBox
+  pitfalls={[
+    'HMM 只是理论模型，没有实际用途：',
+    '不是。它在基因预测、蛋白家族建模等方向都有非常经典的应用。',
+    'HMM 等于 motif finding：',
+    '不完全等价。motif finding 只是其中一个相关应用场景，HMM 的范围更广。',
+    '只要有观测序列，就一定能可靠恢复真实状态：',
+    '不一定。结果强烈依赖模型假设、参数质量和观测噪声。'
+  ]}
+/>
 
 ## 参考资料
 

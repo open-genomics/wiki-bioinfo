@@ -4,9 +4,12 @@ title: "随机化算法"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +28,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' }
   ]}
 />
+
+<PageHeaderMeta section="Foundations" />
+
 
 ## 为什么需要随机化算法
 
@@ -165,12 +171,16 @@ Gibbs Sampling 就像是在一个多维度的"地形"中行走。如果只往高
 
 ### Las Vegas vs Monte Carlo
 
-| 特性 | Las Vegas | Monte Carlo |
-|------|-----------|-------------|
-| 正确性 | 总是正确 | 可能错误 |
-| 运行时间 | 随机 | 确定 |
-| 典型应用 | 随机化快速排序 | 随机投影、近似算法 |
-| 概率保证 | 期望时间复杂度 | 成功概率 |
+<ComparisonTable
+  leftTitle="Las Vegas"
+  rightTitle="Monte Carlo"
+  rows={[
+    { aspect: '正确性', left: '总是正确', right: '可能错误' },
+    { aspect: '运行时间', left: '随机', right: '确定' },
+    { aspect: '典型应用', left: '随机化快速排序', right: '随机投影、近似算法' },
+    { aspect: '概率保证', left: '期望时间复杂度', right: '成功概率' }
+  ]}
+/>
 
 ## 5. 随机化算法的设计原则
 
@@ -243,35 +253,16 @@ Gibbs Sampling 就像是在一个多维度的"地形"中行走。如果只往高
 - **随机游走**：在序列空间中随机游走
 - **随机化测试**：统计显著性检验
 
-## 常见误区
-
-### 随机化算法不可靠
-
-不是。随机化算法：
-- 有严格的理论分析
-- 提供概率保证
-- 实际中往往比确定性算法更稳定
-
-### 随机化总是比确定性慢
-
-不一定。随机化算法：
-- 平均性能通常更好
-- 实现可能更简单
-- 避免了最坏情况的触发
-
-### 随机化只是运气
-
-不是。随机化算法：
-- 有精心的设计
-- 随机性是工具，不是依赖运气
-- 可以通过数学分析证明性能
-
-### 只需要运行一次就够了
-
-通常需要：
-- 多次运行取最好结果
-- 或者运行足够长时间确保收敛
-- 或者使用集合方法（如随机森林）
+<PitfallsBox
+  pitfalls={[
+    '随机化算法不可靠：',
+    '不是。随机化算法：',
+    '有严格的理论分析',
+    '提供概率保证',
+    '实际中往往比确定性算法更稳定',
+    '随机化总是比确定性慢：'
+  ]}
+/>
 
 ## 与其他算法的连接
 

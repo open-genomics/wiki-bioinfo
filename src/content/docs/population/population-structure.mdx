@@ -4,11 +4,13 @@ title: "群体结构"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="群体结构（Population Structure）是指样本并非来自遗传均匀的单一群体，而是由具有不同祖源背景的亚群构成。这种不均匀性是 GWAS 中虚假关联的主要来源，必须通过统计手段进行校正。"
@@ -26,6 +28,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     { name: 'GWAS 分析', href: '/wiki-bioinfo/population/gwas' }
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 1. 群体结构的起源：隔离与漂变
 
@@ -168,12 +173,16 @@ LMM 的优势在于：即使不显式提取 PC，GRM 本身就已经编码了所
 
 ### PCA 与 LMM 的选择
 
-| 特征 | PCA 校正 | LMM |
-| :--- | :--- | :--- |
-| 计算速度 | 快 | 较慢（需估计方差分量） |
-| 模型假设 | 线性协变量 | 正态随机效应 |
-| 适用场景 | 中等程度群体分层 | 近亲、精细分层、样本间亲缘关系复杂 |
-| 代表工具 | PLINK, EIGENSOFT | GEMMA, BOLT-LMM, SAIGE |
+<ComparisonTable
+  leftTitle="PCA 校正"
+  rightTitle="LMM"
+  rows={[
+    { aspect: '计算速度', left: '快', right: '较慢（需估计方差分量）' },
+    { aspect: '模型假设', left: '线性协变量', right: '正态随机效应' },
+    { aspect: '适用场景', left: '中等程度群体分层', right: '近亲、精细分层、样本间亲缘关系复杂' },
+    { aspect: '代表工具', left: 'PLINK, EIGENSOFT', right: 'GEMMA, BOLT-LMM, SAIGE' }
+  ]}
+/>
 
 ## 6. 常见误区
 

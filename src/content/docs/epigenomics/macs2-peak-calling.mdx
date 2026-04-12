@@ -6,6 +6,8 @@ title: "MACS2 峰调用算法"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +26,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: 'ATAC-seq', href: '/wiki-bioinfo/epigenomics/atac-seq', description: 'ATAC-seq 中同样使用 MACS2' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 问题背景
 
@@ -254,32 +259,16 @@ MACS2 是以下工具的基础或参考：
 2. 使用 IDR（Irreproducible Discovery Rate）评估重复性
 3. 结合 motif 分析进行功能解释
 
-## 常见误区
-
-### 有 Input 对照就不需要考虑局部背景
-
-不是。Input 对照只能提供全局背景信息，基因组不同区域的背景强度差异很大，必须使用局部估计。
-
-### p-value 越小，生物学意义越强
-
-不一定。p-value 只反映统计显著性，生物学意义还需要考虑：
-- 峰的强度（fold enrichment）
-- 峰的保守性
-- 峰在功能元件中的位置
-- 与其他数据的整合
-
-### MACS2 适用于所有 ChIP-seq 数据
-
-不是。MACS2 假设：
-- 泊松分布近似成立
-- 有足够的数据深度
-- 背景相对均匀
-
-对于某些特殊情况（如强背景、极低深度），可能需要其他方法。
-
-### 峰的边界就是真实的结合边界
-
-不是。峰的边界受测序深度、算法参数、片段大小估计等多种因素影响，应该视为置信区间而非精确边界。
+<PitfallsBox
+  pitfalls={[
+    '有 Input 对照就不需要考虑局部背景：',
+    '不是。Input 对照只能提供全局背景信息，基因组不同区域的背景强度差异很大，必须使用局部估计。',
+    'p-value 越小，生物学意义越强：',
+    '不一定。p-value 只反映统计显著性，生物学意义还需要考虑：',
+    '峰的强度（fold enrichment）',
+    '峰在功能元件中的位置'
+  ]}
+/>
 
 ## 算法优化与变体
 

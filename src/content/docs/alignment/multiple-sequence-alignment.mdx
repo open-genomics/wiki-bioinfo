@@ -6,6 +6,8 @@ title: "多序列比对 (MSA)"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary='如果说双序列比对关注「两条序列如何对齐」，那么多序列比对（Multiple Sequence Alignment, MSA）则是在同一个框架中同时比较多条同源序列，旨在揭示保守位点和家族变异模式。'
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '加法系统发育', href: '/wiki-bioinfo/phylogeny/additive-phylogeny' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 是什么
 
@@ -216,23 +221,16 @@ H - L A - W G H E -
 - **T-Coffee**（Notredame et al., 2000）采用了不同思路：先计算所有两两比对，然后构建一个**一致性库**（Consistency Library），记录每对残基在不同两两比对中的对齐频率。渐进合并时，使用一致性分数替代简单的替换矩阵。这种方法能有效减少渐进式比对中的错误传播。
 - **M-Coffee** 是 T-Coffee 的元版本，它综合多个 MSA 工具的输出，通过一致性投票产生最终比对。
 
-## 9. 常见误区
-
-### 指导树不等于进化树
-
-Progressive alignment 中生成的指导树仅仅是为了确定合并顺序。它的目的是让最相似的序列先合并，但并不一定代表真实的系统发育关系。实际上，指导树的质量对比对结果的影响远大于比对方法本身的选择。
-
-### "Once a gap, always a gap"
-
-渐进式比对是贪心的。如果在早期步骤中引入了错误的 Gap，后续合并无法修正它。这是目前 MSA 算法持续优化的重点。迭代方法（如 MUSCLE 的 refinement 和 MAFFT 的 iterative refinement）正是为了缓解这一问题。
-
-### 序列越多，比对越可靠
-
-并非如此。加入与目标序列无关的序列，或者加入过多高度冗余的序列，反而会降低比对质量。冗余序列会在 SP 得分中占据过大的权重，使比对偏向于这组序列的特异性模式。
-
-### MSA 必须包含所有序列
-
-在实际工作中，有时需要将新序列加入已有的高质量比对中，而不是从头比对所有序列。这时可以使用 Profile-Sequence 比对（如 PSI-BLAST 中的 PSSM 构建）或专门的"序列加入"工具（如 MAFFT 的 `--add` 选项）。
+<PitfallsBox
+  pitfalls={[
+    '指导树不等于进化树：',
+    'Progressive alignment 中生成的指导树仅仅是为了确定合并顺序。它的目的是让最相似的序列先合并，但并不一定代表真实的系统发育关系。实际上，指导树的质量对比对结果的影响远大于比对方法本身的选择。',
+    '"Once a gap, always a gap"：',
+    '渐进式比对是贪心的。如果在早期步骤中引入了错误的 Gap，后续合并无法修正它。这是目前 MSA 算法持续优化的重点。迭代方法（如 MUSCLE 的 refinement 和 MAFFT 的 iterative refinement）正是为了缓解这一问题。',
+    '序列越多，比对越可靠：',
+    '并非如此。加入与目标序列无关的序列，或者加入过多高度冗余的序列，反而会降低比对质量。冗余序列会在 SP 得分中占据过大的权重，使比对偏向于这组序列的特异性模式。'
+  ]}
+/>
 
 ## 相关页面
 

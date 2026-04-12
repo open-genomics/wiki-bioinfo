@@ -8,6 +8,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <SummaryBox
   summary="分子动力学（Molecular Dynamics, MD）模拟通过数值积分牛顿运动方程，追踪蛋白质等生物大分子在原子级别的运动轨迹。它回答的核心问题是：蛋白质如何在三维空间中运动？构象变化如何影响功能？自由能景观如何决定稳定性？"
@@ -19,6 +20,9 @@ import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
     '局限性：时间尺度限制、力场精度、采样不充分',
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 是什么
 

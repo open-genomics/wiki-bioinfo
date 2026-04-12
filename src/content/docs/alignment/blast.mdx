@@ -6,6 +6,8 @@ title: "BLAST：基于 seed-and-extend 的局部搜索"
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="BLAST (Basic Local Alignment Search Tool) 是生物信息学中使用最广泛的工具之一。它通过牺牲一定的敏感性，利用启发式算法在巨大的数据库中极速寻找局部相似片段。"
@@ -24,6 +26,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '打分矩阵', href: '/wiki-bioinfo/alignment/scoring-matrices' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 1. 是什么
 
@@ -251,27 +256,16 @@ NCBI 的 **BLAST+** 命令行工具套件是本地运行的推荐选择。主要
 
 **BLAT**（BLAST-Like Alignment Tool）由 UCSC 开发，专门针对同一物种内的高相似度序列搜索（如将 cDNA 比对到基因组）。它使用索引策略而非 seed-and-extend，在 > 95% 一致性时比 BLAST 快得多。
 
-## 10. 常见误区
-
-### E-value 越低，同源性越强
-
-E-value 衡量的是**统计显著性**，而非同源性的强度。一个短的完美匹配可能有很低的 E-value，但不一定代表生物学上有意义的同源关系。E-value 受查询序列长度、数据库大小和打分体系的影响，在不同搜索之间需要谨慎比较。
-
-### BLAST 找不到就是不存在同源
-
-不是。BLAST 是启发式方法，它会漏掉一些弱同源关系。如果怀疑存在远缘同源，可以尝试：
-- 降低 Word 大小 $w$ 和阈值 $T$（提高敏感性但降低速度）。
-- 使用 PSI-BLAST 进行迭代搜索。
-- 使用 Smith-Waterman 精确搜索（如 SSEARCH）。
-- 换用更宽松的替换矩阵（如 BLOSUM45）。
-
-### BLAST 结果中的最高分就是最相关的同源
-
-不一定。最高分可能来自一个包含低复杂度区域的假阳性匹配。需要结合 E-value、覆盖度（Query Coverage）、一致性百分比和功能注释等综合判断。
-
-### blastn 和 blastp 可以互换
-
-核酸和蛋白质水平的比对反映了不同的进化信号。蛋白质比对通常比核酸比对更敏感，因为蛋白质有 20 种氨基酸（信息量更大），且许多同义突变在核酸水平会降低信号。在寻找远缘同源时，blastx 或 blastp 通常比 blastn 更有效。
+<PitfallsBox
+  pitfalls={[
+    'E-value 越低，同源性越强：',
+    'E-value 衡量的是统计显著性，而非同源性的强度。一个短的完美匹配可能有很低的 E-value，但不一定代表生物学上有意义的同源关系。E-value 受查询序列长度、数据库大小和打分体系的影响，在不同搜索之间需要谨慎比较。',
+    'BLAST 找不到就是不存在同源：',
+    '不是。BLAST 是启发式方法，它会漏掉一些弱同源关系。如果怀疑存在远缘同源，可以尝试：',
+    '降低 Word 大小 $w$ 和阈值 $T$（提高敏感性但降低速度）。',
+    '使用 PSI-BLAST 进行迭代搜索。'
+  ]}
+/>
 
 ## 相关页面
 

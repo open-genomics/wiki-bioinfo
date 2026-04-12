@@ -8,6 +8,8 @@ import SummaryBox from '@/components/docs/SummaryBox.astro';
 
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="Motif 寻找是在多条序列中发现反复出现且具有生物学意义的统计模式：这些模式不是完全一致的字符串，而是带有位置偏好的概率模型。"
@@ -26,6 +28,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { name: '概率与图基础', href: '/wiki/foundations/probability-and-graphs' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -373,19 +378,16 @@ motif 寻找与以下场景高度相关：
 
 共同解释。
 
-## 常见误区
-
-### motif 一定是完全一致的短串
-
-不是。很多 motif 的本质恰恰是"位置上有统计偏好，但允许变化"。
-
-### 找到高分 motif 就等于找到真实调控位点
-
-不一定。高分只说明它与模型相似，还需要结合背景和实验上下文。
-
-### motif 寻找和 HMM 是同一件事
-
-不是。它们相关，但解决的问题粒度不同。
+<PitfallsBox
+  pitfalls={[
+    'motif 一定是完全一致的短串：',
+    '不是。很多 motif 的本质恰恰是"位置上有统计偏好，但允许变化"。',
+    '找到高分 motif 就等于找到真实调控位点：',
+    '不一定。高分只说明它与模型相似，还需要结合背景和实验上下文。',
+    'motif 寻找和 HMM 是同一件事：',
+    '不是。它们相关，但解决的问题粒度不同。'
+  ]}
+/>
 
 ## 参考资料
 

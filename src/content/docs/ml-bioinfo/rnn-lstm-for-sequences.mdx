@@ -4,8 +4,11 @@ title: "循环神经网络（RNN）与 LSTM"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '序列深度学习', href: '/wiki-bioinfo/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体框架' },
   ]}
 />
+
+<PageHeaderMeta section="Applications" />
+
 
 ## 为什么需要递归建模
 
@@ -341,36 +347,29 @@ RNN/LSTM 在生物信息学中的代表性应用：
 
 ## LSTM 与标准 RNN 的对比
 
-| 特性 | 标准 RNN | LSTM |
-|------|----------|------|
-| 门控机制 | 无 | 遗忘门、输入门、输出门 |
-| 梯度消失 | 严重 | 缓解 |
-| 长程依赖 | 难以学习 | 能够学习 |
-| 参数量 | 少 | 多（约 4 倍） |
-| 计算速度 | 快 | 较慢 |
-| 训练难度 | 较难 | 较容易 |
+<ComparisonTable
+  leftTitle="标准 RNN"
+  rightTitle="LSTM"
+  rows={[
+    { aspect: '门控机制', left: '无', right: '遗忘门、输入门、输出门' },
+    { aspect: '梯度消失', left: '严重', right: '缓解' },
+    { aspect: '长程依赖', left: '难以学习', right: '能够学习' },
+    { aspect: '参数量', left: '少', right: '多（约 4 倍）' },
+    { aspect: '计算速度', left: '快', right: '较慢' },
+    { aspect: '训练难度', left: '较难', right: '较容易' }
+  ]}
+/>
 
-## 常见误区
-
-### RNN 总是优于 CNN
-
-不是。CNN 在检测局部 motif 时更高效，RNN 在建模长程依赖时更有优势。选择取决于任务特点。
-
-### LSTM 能解决所有序列问题
-
-不能。LSTM 仍然有梯度爆炸问题，且计算成本高。对于很多任务，CNN 或 Transformer 可能更合适。
-
-### 隐状态维度越大越好
-
-不是。过大的隐状态会增加参数量和过拟合风险。需要根据数据量和任务复杂度选择。
-
-### RNN 只能处理时序数据
-
-不是。RNN 可以处理任何序列数据，包括 DNA、蛋白质、文本等。
-
-### 单向 RNN 足够
-
-不是。对于某些任务（如剪接位点预测），双向 RNN（Bi-RNN）能同时利用上下文信息，效果更好。
+<PitfallsBox
+  pitfalls={[
+    'RNN 总是优于 CNN：',
+    '不是。CNN 在检测局部 motif 时更高效，RNN 在建模长程依赖时更有优势。选择取决于任务特点。',
+    'LSTM 能解决所有序列问题：',
+    '不能。LSTM 仍然有梯度爆炸问题，且计算成本高。对于很多任务，CNN 或 Transformer 可能更合适。',
+    '隐状态维度越大越好：',
+    '不是。过大的隐状态会增加参数量和过拟合风险。需要根据数据量和任务复杂度选择。'
+  ]}
+/>
 
 ## 算法变体与优化
 

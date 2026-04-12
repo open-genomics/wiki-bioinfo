@@ -6,6 +6,8 @@ description: "基于BWT的压缩全文索引，理解backward search算法和Occ
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -17,6 +19,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     '时间效率：单次查询 O(|P|)，与文本长度无关'
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -93,19 +98,16 @@ FM-index 特别适合：
 
 因此它是"索引结构"和"比对算法"之间最重要的桥梁之一。
 
-## 常见误区
-
-### FM-index 等于完整比对算法
-
-不是。它主要解决快速搜索与候选定位，后续仍常需要局部比对和评分模型。
-
-### 只要用了 FM-index，搜索就没有代价
-
-也不对。它只是把代价从朴素扫描转移到更高效的索引区间更新。
-
-### 有了 FM-index 就不需要 seed-and-extend
-
-不一定。真实工具通常仍会结合 seeding、过滤和局部扩展策略。
+<PitfallsBox
+  pitfalls={[
+    'FM-index 等于完整比对算法：',
+    '不是。它主要解决快速搜索与候选定位，后续仍常需要局部比对和评分模型。',
+    '只要用了 FM-index，搜索就没有代价：',
+    '也不对。它只是把代价从朴素扫描转移到更高效的索引区间更新。',
+    '有了 FM-index 就不需要 seed-and-extend：',
+    '不一定。真实工具通常仍会结合 seeding、过滤和局部扩展策略。'
+  ]}
+/>
 
 ## 历史注记
 

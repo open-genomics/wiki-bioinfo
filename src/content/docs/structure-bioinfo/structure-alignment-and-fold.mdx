@@ -2,11 +2,13 @@
 description: RMSD、TM-score、fold 与结构相似性比较的基础。
 title: "结构比对与 fold"
 ---
-
 import SummaryBox from '@/components/docs/SummaryBox.astro';
-import DefinitionList from '@/components/docs/DefinitionList.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 <SummaryBox
   summary="结构比对回答的核心问题是：两个蛋白质的三维形状有多相似？与序列比对不同，结构比对关注空间几何而非字符匹配。通过 RMSD、TM-score 等指标，我们可以量化结构相似性；而 fold 概念则帮助我们理解结构相似性背后的拓扑组织规律。"
@@ -25,13 +27,17 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 结构比对与序列比对：本质区别
 
-| 特征 | 序列比对 | 结构比对 |
-|-----|---------|---------|
-| **比较对象** | 字符序列（A,C,G,T 或氨基酸） | 三维坐标（x, y, z） |
-| **允许的操作** | 插入、删除、替换 | 刚体变换（旋转、平移）+ 残基匹配 |
-| **优化目标** | 最大化匹配分数 | 最小化坐标偏差 |
-| **计算复杂度** | 多项式时间（动态规划） | 通常是 NP-hard 的近似 |
-| **敏感范围** | 序列相似性 > 20-30% | 序列相似性可低至 10% 甚至更低 |
+<ComparisonTable
+  leftTitle="序列比对"
+  rightTitle="结构比对"
+  rows={[
+    { aspect: '**比较对象**', left: '字符序列（A,C,G,T 或氨基酸）', right: '三维坐标（x, y, z）' },
+    { aspect: '**允许的操作**', left: '插入、删除、替换', right: '刚体变换（旋转、平移）+ 残基匹配' },
+    { aspect: '**优化目标**', left: '最大化匹配分数', right: '最小化坐标偏差' },
+    { aspect: '**计算复杂度**', left: '多项式时间（动态规划）', right: '通常是 NP-hard 的近似' },
+    { aspect: '**敏感范围**', left: '序列相似性 > 20-30%', right: '序列相似性可低至 10% 甚至更低' }
+  ]}
+/>
 
 核心差异在于：结构比对需要同时解决**对应关系（correspondence）**和**空间叠加（superposition）**两个耦合问题。
 

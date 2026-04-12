@@ -4,8 +4,11 @@ title: "哈希表"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
@@ -25,6 +28,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { title: '索引结构概览', href: '/wiki-bioinfo/sequence/indexing' },
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 为什么需要哈希表
 
@@ -260,23 +266,31 @@ h(s) = (s₁ · pⁿ⁻¹ + s₂ · pⁿ⁻² + ... + sₙ · p⁰) mod m
 
 ### vs 数组
 
-| 特性 | 数组 | 哈希表 |
-|------|------|--------|
-| 查找 | O(n) 或 O(log n)（如果有序） | O(1) 平均 |
-| 插入 | O(n) 或 O(log n) | O(1) 平均 |
-| 删除 | O(n) 或 O(log n) | O(1) 平均 |
-| 空间 | O(n) | O(m)，m > n |
-| 顺序遍历 | 高效 | 需要额外结构 |
+<ComparisonTable
+  leftTitle="数组"
+  rightTitle="哈希表"
+  rows={[
+    { aspect: '查找', left: 'O(n) 或 O(log n)（如果有序）', right: 'O(1) 平均' },
+    { aspect: '插入', left: 'O(n) 或 O(log n)', right: 'O(1) 平均' },
+    { aspect: '删除', left: 'O(n) 或 O(log n)', right: 'O(1) 平均' },
+    { aspect: '空间', left: 'O(n)', right: 'O(m)，m > n' },
+    { aspect: '顺序遍历', left: '高效', right: '需要额外结构' }
+  ]}
+/>
 
 ### vs 平衡树
 
-| 特性 | 平衡树 | 哈希表 |
-|------|--------|--------|
-| 查找 | O(log n) | O(1) 平均 |
-| 插入 | O(log n) | O(1) 平均 |
-| 删除 | O(log n) | O(1) 平均 |
-| 有序遍历 | 高效 | 需要额外结构 |
-| 最坏情况 | O(log n) | O(n) |
+<ComparisonTable
+  leftTitle="平衡树"
+  rightTitle="哈希表"
+  rows={[
+    { aspect: '查找', left: 'O(log n)', right: 'O(1) 平均' },
+    { aspect: '插入', left: 'O(log n)', right: 'O(1) 平均' },
+    { aspect: '删除', left: 'O(log n)', right: 'O(1) 平均' },
+    { aspect: '有序遍历', left: '高效', right: '需要额外结构' },
+    { aspect: '最坏情况', left: 'O(log n)', right: 'O(n)' }
+  ]}
+/>
 
 ## 高级主题
 
@@ -342,27 +356,16 @@ class HashTable \{
 
 理解哈希表的原理和实现，对于设计和优化生物信息学算法至关重要。
 
-## 常见误区
-
-### 哈希表查找是 O(1)，所以任何哈希表操作都很快
-
-O(1) 是平均情况下的时间复杂度，前提是哈希函数分布均匀且负载因子适当。在最坏情况下（所有键冲突到同一位置），查找退化为 O(n)。在生物信息学中，基因组序列的高重复性（如 Alu 重复）可能导致某些 k-mer 的哈希冲突率极高，实际性能远低于理论最优。此外，哈希函数本身的计算成本也需要考虑——对长字符串计算哈希并不"免费"。
-
-### 哈希表比平衡树总是更好的选择
-
-哈希表在查找速度上确实有优势，但它不支持有序操作（如范围查询、最大/最小值查找、有序遍历）。在需要按顺序访问元素的场景中（如查找某个区间内的所有 k-mer），平衡树（如红黑树、B 树）更合适。生物信息学中的后缀数组和 BWT 本质上就是有序索引结构，它们提供的功能是哈希表无法替代的。
-
-### 反向互补序列的哈希值会自动相同
-
-标准的字符串哈希函数不会自动将一条 DNA 序列与其反向互补序列映射到相同值。在基因组分析中，DNA 是双链的，需要特别设计"正链规范"（canonical form）策略——例如取正向和反向互补哈希值中的较小者——来确保同一段 DNA 无论从哪条链读取都能被正确识别。忽略这一点会导致 k-mer 计数和基因组索引出现系统性偏差。
-
-### 布隆过滤器可以完全替代哈希表
-
-布隆过滤器是一种空间高效的概率数据结构，可以快速判断元素是否"可能在"集合中，但它存在假阳性（可能错误地报告元素存在）且不支持删除操作。在需要精确计数（如 k-mer 频谱分析）或需要获取关联值（如 k-mer 到位置的映射）的场景中，布隆过滤器不能替代哈希表。两者的适用场景是互补的，而非替代关系。
-
-### 负载因子越高，哈希表效率越低
-
-负载因子高确实会增加冲突概率，但现代哈希表实现（如 Robin Hood hashing、Hopscotch hashing）即使在高负载因子（0.9 以上）下仍能保持较好的缓存局部性和查询性能。对于驻留在内存中的大规模基因组数据，适度的负载因子可以减少内存使用，提高缓存命中率，整体性能反而可能优于低负载因子的大表。
+<PitfallsBox
+  pitfalls={[
+    '哈希表查找是 O(1)，所以任何哈希表操作都很快：',
+    'O(1) 是平均情况下的时间复杂度，前提是哈希函数分布均匀且负载因子适当。在最坏情况下（所有键冲突到同一位置），查找退化为 O(n)。在生物信息学中，基因组序列的高重复性（如 Alu 重复）可能导致某些 k-mer 的哈希冲突率极高，实际性能远低于理论最优。此外，哈希函数本身的计算成本也需要考虑——对长字符串计算哈希并不"免费"。',
+    '哈希表比平衡树总是更好的选择：',
+    '哈希表在查找速度上确实有优势，但它不支持有序操作（如范围查询、最大/最小值查找、有序遍历）。在需要按顺序访问元素的场景中（如查找某个区间内的所有 k-mer），平衡树（如红黑树、B 树）更合适。生物信息学中的后缀数组和 BWT 本质上就是有序索引结构，它们提供的功能是哈希表无法替代的。',
+    '反向互补序列的哈希值会自动相同：',
+    '标准的字符串哈希函数不会自动将一条 DNA 序列与其反向互补序列映射到相同值。在基因组分析中，DNA 是双链的，需要特别设计"正链规范"（canonical form）策略——例如取正向和反向互补哈希值中的较小者——来确保同一段 DNA 无论从哪条链读取都能被正确识别。忽略这一点会导致 k-mer 计数和基因组索引出现系统性偏差。'
+  ]}
+/>
 
 ## 相关页面
 

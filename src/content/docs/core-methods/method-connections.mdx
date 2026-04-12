@@ -6,6 +6,8 @@ description: "序列表示、比对、组装和概率模型之间如何互相依
 import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="核心方法的四个子板块（序列表示与索引、序列比对、组装与图算法、概率模型与模式识别）不是孤立的算法集合，而是围绕同一个计算问题——如何从海量序列中提取生物学信息——形成的有机链条。理解它们之间的内在连接，是选择合适方法和追溯分析依赖的前提。"
@@ -17,6 +19,9 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
     '所有方法最终服务于下游应用：变异检测、表达定量、motif 发现',
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 为什么需要理解方法之间的连接
 
@@ -200,6 +205,19 @@ VCF：变异候选 + 置信度
 - **组装**在没有参考时使用图算法重建序列
 - **概率模型**处理所有步骤中的不确定性和噪声
 - 理解方法连接是**选择合适工具**和**追溯分析依赖**的前提
+
+## 常见误区
+
+<PitfallsBox
+  pitfalls={[
+    '学算法只需要掌握每个算法的细节，不需要理解它们之间的联系：',
+    '生物信息学工具链是环环相扣的——索引为比对加速、比对为组装提供证据、概率模型处理比对中的不确定性。不理解这些连接，就无法在工具失效时追溯问题根源，也无法根据数据特点选择最优方法组合。',
+    '比对和组装是完全独立的问题：',
+    '实际上两者在参考引导组装（reference-guided assembly）和基于比对的一致性序列构建中密切相关。组装也大量使用索引结构（k-mer 计数构建 de Bruijn 图），与比对共享数据结构基础。',
+    '概率模型只在特定场景（如 gene prediction）中有用：',
+    '概率模型贯穿整个分析流程：比对评分矩阵隐含概率假设，GATK 变异检测基于贝叶斯模型，ChIP-seq peak calling 使用 Poisson 模型，甚至 k-mer 计数的偏差校正也依赖统计建模。'
+  ]}
+/>
 
 ## 相关页面
 

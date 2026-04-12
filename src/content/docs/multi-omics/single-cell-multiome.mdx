@@ -2,22 +2,34 @@
 description: 单细胞多模态数据（multiome）的技术原理与分析框架，涵盖 RNA+ATAC、CITE-seq 等联合测量方法。
 title: "单细胞 Multiome"
 ---
-
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
+<SummaryBox
+  summary="单细胞多模态数据（multiome）的技术原理与分析框架，涵盖 RNA+ATAC、CITE-seq 等联合测量方法。"
+/>
+
+<PageHeaderMeta section="Applications" />
 ## 问题定义
 
 ### 什么是单细胞 Multiome
 
 **单细胞 Multiome** 指在同一细胞层面同时测量两种或多种分子模态的技术，它与分别测量后再整合有本质区别：
 
-| 特征 | 单细胞 Multiome | 分别测量后整合 |
-|-----|----------------|---------------|
-| **细胞对应** | 天然共享细胞索引 | 需要计算匹配或对齐 |
-| **数据质量** | 同一细胞的同步测量 | 可能存在批次差异 |
-| **分析粒度** | 真正的单细胞分辨率 | 可能是伪 bulk 或估算 |
-| **技术平台** | 10x Genomics Multiome 等 | 独立实验平台 |
+<ComparisonTable
+  leftTitle="单细胞 Multiome"
+  rightTitle="分别测量后整合"
+  rows={[
+    { aspect: '**细胞对应**', left: '天然共享细胞索引', right: '需要计算匹配或对齐' },
+    { aspect: '**数据质量**', left: '同一细胞的同步测量', right: '可能存在批次差异' },
+    { aspect: '**分析粒度**', left: '真正的单细胞分辨率', right: '可能是伪 bulk 或估算' },
+    { aspect: '**技术平台**', left: '10x Genomics Multiome 等', right: '独立实验平台' }
+  ]}
+/>
 
 <PrerequisitesBox
   items={[
@@ -125,34 +137,16 @@ Seurat 的 WNN 方法：
 | **模态异步** | 转录变化可能滞后于调控变化 | 时间序列分析、lag correlation |
 | **权重设置** | 模态贡献度平衡 | WNN 权重自动学习、人工调参 |
 
-## 常见误区
 
-### 误区 1：同一细胞就没有批次问题
-
-**事实**：Multiome 数据仍然受技术因素影响：
-- 转座酶批次差异
-- 文库制备时间差异
-- 测序平台差异
-
-**建议**：仍需要进行批次校正（如 Harmony、scVI）。
-
-### 误区 2：RNA 和 ATAC 一定一一对应
-
-**事实**：调控变化与表达变化可能存在时间滞后：
-- 染色质先开放，转录后激活
-- 转录已停止，但染色质仍开放
-- 转录后调控的影响
-
-**建议**：分析时考虑 lag time，不要期待完全同步。
-
-### 误区 3：多模态一定优于单模态
-
-**事实**：优势取决于研究问题：
-- 如果关注转录调控，Multiome 有价值
-- 如果仅关注细胞分型，单 RNA 可能足够
-- 数据质量差时，多模态可能引入更多噪声
-
-**建议**：根据科学问题决定是否值得投入 Multiome。
+<PitfallsBox
+  pitfalls={[
+    '转座酶批次差异',
+    '文库制备时间差异',
+    '测序平台差异',
+    '染色质先开放，转录后激活',
+    '转录已停止，但染色质仍开放'
+  ]}
+/>
 
 ## 工具推荐
 

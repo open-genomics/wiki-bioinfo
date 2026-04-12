@@ -4,8 +4,11 @@ title: "剪接比对"
 ---
 
 import SummaryBox from '@/components/docs/SummaryBox.astro';
+import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
   summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
@@ -24,6 +27,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
     { name: '动态规划', href: '/wiki/foundations/dynamic-programming-basics' }
   ]}
 />
+
+<PageHeaderMeta section="Core Methods" />
+
 
 ## 是什么
 
@@ -72,11 +78,15 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ### 与 Exon Chaining 的区别
 
-| 特性 | Exon Chaining | 剪接比对 |
-|------|--------------|----------|
-| 权重 | 预定义固定值 | 与目标蛋白的比对得分 |
-| 路径权重 | 边权重之和 | 与路径相关的复杂函数 |
-| 全局约束 | 无 | 有（蛋白序列连续性） |
+<ComparisonTable
+  leftTitle="Exon Chaining"
+  rightTitle="剪接比对"
+  rows={[
+    { aspect: '权重', left: '预定义固定值', right: '与目标蛋白的比对得分' },
+    { aspect: '路径权重', left: '边权重之和', right: '与路径相关的复杂函数' },
+    { aspect: '全局约束', left: '无', right: '有（蛋白序列连续性）' }
+  ]}
+/>
 
 **关键差异**：剪接比对中路径权重**不能简单分解**为边权重之和，需要同时考虑蛋白序列的连续性。
 
@@ -202,23 +212,16 @@ It was brill + iant thril + ling morning + ...
 
 剪接比对由 **Gelfand, Mironov 和 Pevzner** 于 1996 年提出，首次系统地将相似性信息整合到基因预测算法中。该方法成为 **twinscan**、**N-SCAN** 等流行基因预测工具的基础。
 
-## 常见误区
-
-### 剪接比对只是在 Exon Chaining 基础上加了比对约束
-
-虽然剪接比对确实在 Exon Chaining 上增加了全局比对约束，但这一增加从根本上改变了问题的计算结构。Exon Chaining 的路径权重可以简单分解为边权重之和，而剪接比对的路径权重依赖于蛋白序列的连续性，不能简单分解。这导致剪接比对需要三维动态规划（基因组位置 × 蛋白位置 × 当前外显子），复杂度显著高于 Exon Chaining。
-
-### 候选外显子集合可以直接由 GT-AG 规则生成
-
-GT-AG 规则（供体位点 GT、受体位点 AG）确实能生成大量候选外显子，但其中包含大量假阳性。真实剪接位点附近有更复杂的序列特征（分支点、多嘧啶区等），仅靠 GT-AG 过于宽松。不经过质量过滤的候选外显子集合会导致 Mosaic 效应和计算效率下降。
-
-### 剪接比对能完美预测基因结构
-
-剪接比对的结果依赖于候选外显子的质量和目标蛋白的相似性。如果目标蛋白与真实基因产物的同源性不够高，或者候选外显子集合遗漏了真实外显子，预测结果就会不准确。此外，可变剪接（一个基因产生多种转录本）使得"正确答案"本身可能不是唯一的。
-
-### 剪接比对只适用于跨物种基因预测
-
-虽然剪接比对最初是为跨物种预测设计的（用已知蛋白指导新基因组的注释），但同物种内也可以利用已知的蛋白或转录本作为目标序列。同源信息越近，预测效果越好——这正是比较基因组学在基因注释中的核心价值。
+<PitfallsBox
+  pitfalls={[
+    '剪接比对只是在 Exon Chaining 基础上加了比对约束：',
+    '虽然剪接比对确实在 Exon Chaining 上增加了全局比对约束，但这一增加从根本上改变了问题的计算结构。Exon Chaining 的路径权重可以简单分解为边权重之和，而剪接比对的路径权重依赖于蛋白序列的连续性，不能简单分解。这导致剪接比对需要三维动态规划（基因组位置 × 蛋白位置 × 当前外显子），复杂度显著高于 Exon Chaining。',
+    '候选外显子集合可以直接由 GT-AG 规则生成：',
+    'GT-AG 规则（供体位点 GT、受体位点 AG）确实能生成大量候选外显子，但其中包含大量假阳性。真实剪接位点附近有更复杂的序列特征（分支点、多嘧啶区等），仅靠 GT-AG 过于宽松。不经过质量过滤的候选外显子集合会导致 Mosaic 效应和计算效率下降。',
+    '剪接比对能完美预测基因结构：',
+    '剪接比对的结果依赖于候选外显子的质量和目标蛋白的相似性。如果目标蛋白与真实基因产物的同源性不够高，或者候选外显子集合遗漏了真实外显子，预测结果就会不准确。此外，可变剪接（一个基因产生多种转录本）使得"正确答案"本身可能不是唯一的。'
+  ]}
+/>
 
 ## 总结
 

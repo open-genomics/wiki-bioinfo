@@ -11,7 +11,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 
 <SummaryBox
-  summary="字符串算法与索引结构是生物信息学的基础设施，使得在人类基因组（3Gb）甚至更大参考序列上进行快速搜索成为可能。"
+  summary="字符串算法与索引结构是生物信息学的基础设施，使得在人类基因组（3 Gb）甚至更大参考序列上进行快速搜索成为可能。"
   bullets={[
     '理解索引结构的设计权衡：查询速度、索引大小与构建时间',
     '掌握从朴素搜索到高级索引的演进逻辑',
@@ -33,7 +33,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 生物序列本质上是字符串（A、T、C、G 或 20 种氨基酸），因此面临以下挑战：
 
-- **规模巨大**：人类基因组 3Gb，参考数据库更大
+- **规模巨大**：人类基因组 3 Gb，参考数据库更大
 - **查询频繁**：每次 NGS 分析需映射数十亿 reads
 - **实时性要求**：临床诊断需要快速获得结果
 - **内存限制**：索引必须能装入内存
@@ -52,7 +52,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 ### 1. 朴素字符串匹配（Naive String Matching）
 
 **算法**：
-```
+```text
 NaiveMatch(T, P):
   for i = 0 to |T| - |P|:
     for j = 0 to |P| - 1:
@@ -60,7 +60,7 @@ NaiveMatch(T, P):
         break
     if j == |P|:
       报告匹配位置 i
-```
+```text
 
 **复杂度**：
 - 最坏情况：O(nm)
@@ -73,23 +73,23 @@ NaiveMatch(T, P):
 **核心思想**：利用已匹配的信息，避免不必要的回溯。
 
 **失败函数（Failure Function）**：
-```
+```text
 π[i] = P[0..i] 的最长真前缀同时也是后缀的长度
-```
+```text
 
 **Worked Example**：
 
 模式 P = `ABABAC`
 
 计算失败函数：
-```
+```text
 i = 0: π[0] = 0（空字符串）
 i = 1: π[1] = 0（"A" 无真前缀=后缀）
 i = 2: π[2] = 1（"AB" 中 "A" = "B" 不对，但 "A" 是前缀）
 i = 3: π[3] = 2（"ABA" 中 "AB" = "BA" 不对，但 "A" = "A"）
 i = 4: π[4] = 3（"ABAB" 中 "ABA" = "BAB" 不对，但 "AB" = "AB"）
 i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
-```
+```text
 
 **复杂度**：O(n + m)
 
@@ -102,14 +102,14 @@ i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
 **核心思想**：从右向左匹配，利用坏字符规则和好后缀规则跳过大量字符。
 
 **坏字符规则**：
-```
+```text
 当不匹配字符 c 不在模式中时，可以跳过整个模式长度
-```
+```text
 
 **好后缀规则**：
-```
+```text
 利用已经匹配的后缀信息决定跳过多少字符
-```
+```text
 
 **复杂度**：
 - 最坏情况：O(nm)
@@ -127,7 +127,7 @@ i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
 
 字符串集合：`{"cat", "car", "dog", "deer"}`
 
-```
+```text
         root
        /  \
       c    d
@@ -139,7 +139,7 @@ i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
             e
              \
               r
-```
+```text
 
 **操作复杂度**：
 - 插入：O(m)
@@ -172,7 +172,7 @@ m 为字符串长度。
 - a
 
 Suffix Trie：
-```
+```text
                 root
                / | \
               a  b  n
@@ -184,7 +184,7 @@ Suffix Trie：
         n     a     a
        /
       a
-```
+```text
 
 **优势**：
 - 快速子串查询：O(m)
@@ -220,7 +220,7 @@ Suffix Trie：
 文本 T = `banana$`
 
 后缀及其起始位置：
-```
+```text
 0: banana$
 1: anana$
 2: nana$
@@ -228,10 +228,10 @@ Suffix Trie：
 4: na$
 5: a$
 6: $
-```
+```text
 
 排序后的后缀数组：
-```
+```text
 [6, 5, 3, 1, 0, 4, 2]
 对应：
 $: $ (位置 6)
@@ -241,7 +241,7 @@ anana$: anana$ (位置 1)
 banana$: banana$ (位置 0)
 na$: na$ (位置 4)
 nana$: nana$ (位置 2)
-```
+```text
 
 **构造算法**：
 - 朴素方法：O(n² log n)
@@ -263,7 +263,7 @@ nana$: nana$ (位置 2)
 **Worked Example**：
 
 Suffix Array: [6, 5, 3, 1, 0, 4, 2]
-```
+```text
 位置 6 ($):      LCP[6] = 0（无前驱）
 位置 5 (a$):     LCP[5] = 0（$ 和 a$ 无公共前缀）
 位置 3 (ana$):   LCP[3] = 1（a$ 和 ana$ 公共前缀 "a"）
@@ -271,7 +271,7 @@ Suffix Array: [6, 5, 3, 1, 0, 4, 2]
 位置 0 (banana$): LCP[0] = 0（anana$ 和 banana$ 无公共前缀）
 位置 4 (na$):    LCP[4] = 0（banana$ 和 na$ 无公共前缀）
 位置 2 (nana$):  LCP[2] = 2（na$ 和 nana$ 公共前缀 "na"）
-```
+```text
 
 **应用**：
 - 加速模式匹配
@@ -292,7 +292,7 @@ Suffix Array: [6, 5, 3, 1, 0, 4, 2]
 文本 T = `banana$`
 
 所有旋转：
-```
+```text
 banana$
 anana$
 nana$
@@ -300,10 +300,10 @@ ana$
 na$
 a$
 $
-```
+```text
 
 排序后：
-```
+```text
 $
 a$
 ana$
@@ -311,7 +311,7 @@ anana$
 banana$
 na$
 nana$
-```
+```text
 
 BWT（取最后一列）：`annb$aa`
 
@@ -337,17 +337,17 @@ BWT 是可逆的，可以从 BWT 恢复原文本。
 3. **Occ 数组**：Occ(c, i) = BWT[1..i] 中字符 c 的出现次数
 
 **查询算法（LF-mapping）**：
-```
+```text
 LF(c, i) = C[c] + Occ(c, i)
-```
+```text
 
 **模式搜索**：
-```
+```text
 后向搜索：
   从模式末尾开始
   反向应用 LF-mapping
   得到模式在文本中的所有出现位置
-```
+```text
 
 **Worked Example**：
 
@@ -423,12 +423,12 @@ C 数组：C[$] = 0, C[a] = 1, C[b] = 4, C[n] = 5
 - 长的 LCP 值对应长重复
 
 **算法**：
-```
+```text
 FindRepeats(SA, LCP, min_length):
   for i = 1 to n:
     if LCP[i] >= min_length:
       报告重复序列
-```
+```text
 
 ### 4. 最长公共子串
 

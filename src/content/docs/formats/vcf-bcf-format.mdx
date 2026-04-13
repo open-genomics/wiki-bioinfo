@@ -43,7 +43,7 @@ VCF 文件由三部分组成：
 #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  SAMPLE1
 chr1    12345   rs123   A       G       99.5    PASS    DP=150;AF=0.45  GT:DP   0/1:72
 chr2    67890   .       C       T       45.2    LowQual DP=30;AF=0.15   GT:DP   0/1:12
-```
+```text
 
 | 部分 | 前缀 | 内容 |
 |------|------|------|
@@ -112,11 +112,11 @@ VCF 是变异检测流程的**输出交付格式**，承载：
 
 当同一位置有多个替代等位基因时：
 
-```
+```text
 REF=A  ALT=G,T
 GT=1/2  →  携带 G 和 T 两个变异等位基因
 GT=0/1  →  携带 A 和 G
-```
+```text
 
 ## INFO 字段常见属性
 

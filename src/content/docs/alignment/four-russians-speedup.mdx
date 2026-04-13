@@ -84,7 +84,7 @@ $$u = |u_1...u_t| |u_{t+1}...u_{2t}| ... |u_{n-t+1}...u_n|$$
 
 有了预计算的查找表后，在块级别进行动态规划：
 
-```
+```text
 设 s[i,j] 为前 i 个 u-块和前 j 个 v-块的最优得分
 
 递推关系：
@@ -93,7 +93,7 @@ s[i,j] = max {
     s[i,j-1] - σ_block,        // 插入块 v[j]
     s[i-1,j-1] + Score(u[i], v[j])  // 对齐两个块
 }
-```
+```text
 
 其中 $σ_{block}$ 是块插入/删除的惩罚（通常 $σ_{block} = σ \cdot t$）。
 
@@ -101,7 +101,7 @@ s[i,j] = max {
 
 ### 阶段一：预计算
 
-```
+```text
 PRECOMPUTE(t):
     Score = 空表
     
@@ -116,11 +116,11 @@ ALIGN_BLOCKS(a, b):
     // 使用标准动态规划计算 t×t 块的比对
     // 但只记录入口→出口的得分
     return 最优块对齐得分
-```
+```text
 
 ### 阶段二：块级别动态规划
 
-```
+```text
 FOURRUSSIANS_ALIGN(u, v, t):
     n = length(u), m = length(v)
     Score = PRECOMPUTE(t)
@@ -149,7 +149,7 @@ FOURRUSSIANS_ALIGN(u, v, t):
             )
     
     return s[num_u_blocks, num_v_blocks]
-```
+```text
 
 ## 复杂度分析
 
@@ -190,22 +190,22 @@ FOURRUSSIANS_ALIGN(u, v, t):
 - 块大小 $t = 2$
 
 **步骤 1：分块**
-```
+```text
 u = |AC| |GT| |AC| |GT|
 v = |AG| |CT| |AG| |CT|
-```
+```text
 
 **步骤 2：预计算（部分）**
-```
+```text
 Score 表（部分条目）：
 Score["AC", "AG"] = 1  (A匹配，C≠G)
 Score["AC", "CT"] = 0  (无匹配)
 Score["GT", "CT"] = 1  (T匹配，G≠C)
 ...
-```
+```text
 
 **步骤 3：块级别动态规划**
-```
+```text
 块对齐矩阵（4×4）：
 
      |AG| |CT| |AG| |CT|
@@ -213,9 +213,9 @@ Score["GT", "CT"] = 1  (T匹配，G≠C)
 |GT|  1    2    2    3
 |AC|  2    2    3    3
 |GT|  2    3    3    4  <- 最优得分 = 4
-```
+```text
 
-## 扩展：最长公共子序列 (LCS)
+## 扩展：最长公共子序列（LCS）
 
 Four Russians 技术同样适用于 LCS 问题：
 

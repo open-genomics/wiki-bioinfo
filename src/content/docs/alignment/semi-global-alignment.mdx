@@ -54,7 +54,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 全局比对要求两条序列完全对齐：
 
-```
+```text
 全局比对：
 S1: A T G C T A G
 S2: - T G C - A G
@@ -63,11 +63,11 @@ S2: - T G C - A G
 S1: A T G C T A G
 S2: A T G C T A -
                     ^ 结尾gap要罚分
-```
+```text
 
 半全局比对允许端部gap不罚分：
 
-```
+```text
 半全局比对：
 S1: A T G C T A G
 S2: - T G C - A G
@@ -76,7 +76,7 @@ S2: - T G C - A G
 S1: A T G C T A G
 S2: A T G C T A -
                     ^ 结尾gap不罚分
-```
+```text
 
 ### 三种半全局比对变体
 
@@ -165,7 +165,7 @@ $$
 
 **算法1：半全局比对（允许两端gap）**
 
-```
+```text
 输入：序列 S1 = x_1x_2...x_m，S2 = y_1y_2...y_n，替换得分函数 s，gap罚分 g
 输出：最优比对得分
 
@@ -186,13 +186,13 @@ $$
 7. // 在最后一行和最后一列中寻找最大值
 8. best_score = max(max(dp[m][j] for j in 0..n), max(dp[i][n] for i in 0..m))
 9. return best_score
-```
+```text
 
 **时间复杂度**：$O(mn)$
 
 **空间复杂度**：$O(mn)$（可优化到 $O(\min(m,n))$）
 
-## worked example
+## 示例
 
 考虑序列 `S1 = "ATGCC"` 和 `S2 = "TGCCG"`，使用简单得分：
 - 匹配：+1
@@ -203,7 +203,7 @@ $$
 
 ### 边界条件
 
-```
+```text
       ε  T  G  C  C  G
 ε     0  0  0  0  0  0
 A     0
@@ -211,13 +211,13 @@ T     0
 G     0
 C     0
 C     0
-```
+```text
 
 ### 填充矩阵
 
 逐步计算（以变体3：允许两端gap为例）：
 
-```
+```text
       ε  T  G  C  C  G
 ε     0  0  0  0  0  0
 A     0 -1 -2 -3 -4 -5
@@ -225,7 +225,7 @@ T     0  1  0 -1 -2 -3
 G     0  0  2  0 -1 -2
 C     0 -1  0  3  1  0
 C     0 -2 -1  1  4  2
-```
+```text
 
 > **计算验证示例** `dp[2][2]`（T对G）：
 > - 来自对角线：`dp[1][1] + s(T,G) = 0 + (-1) = -1`
@@ -249,7 +249,7 @@ C     0 -2 -1  1  4  2
 
 实际上，观察递推关系，最优路径可能是：
 
-```
+```text
 S1: A T G C C
     - T G C C  ← 注意：S2末尾还有G
     
@@ -257,7 +257,7 @@ S1: A T G C C
 
 S1: - T G C C
 S2:   T G C C
-```
+```text
 
 S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 

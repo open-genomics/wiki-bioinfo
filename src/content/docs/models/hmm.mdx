@@ -30,13 +30,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <PageHeaderMeta section="Core Methods" />
 
 
-## 1. 直觉模型：公平赌场 (The Fair Bet Casino)
+## 1. 直觉模型：公平赌场（The Fair Bet Casino）
 
 理解 HMM 最直观的方式是"公平赌场"模型。
 
 想象你在一个赌场里玩掷硬币游戏。赌场有两种硬币：
-1.  **公平硬币 (Fair)**：正反面概率各为 0.5。
-2.  **偏置硬币 (Biased/Loaded)**：正面概率为 0.75，反面概率为 0.25。
+1.  **公平硬币（Fair）**：正反面概率各为 0.5。
+2.  **偏置硬币（Biased/Loaded）**：正面概率为 0.75，反面概率为 0.25。
 
 **游戏规则**：
 - 荷官可以随时在两个硬币之间切换，但你看不见荷官手里拿的是哪一个。
@@ -44,12 +44,12 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - 荷官切换硬币的频率遵循一定的概率（例如，有 10% 的概率从公平换成偏置）。
 
 **HMM 的映射**：
-- **隐藏状态 (Hidden States)**：荷官当前使用的是"公平"还是"偏置"硬币。
-- **观测 (Observations)**：你看到的 `H` (正面) 或 `T` (反面)。
-- **转移概率 (Transition)**：荷官切换硬币的概率。
-- **发射概率 (Emission)**：每种硬币掷出正反面的概率。
+- **隐藏状态（Hidden States）**：荷官当前使用的是"公平"还是"偏置"硬币。
+- **观测（Observations）**：你看到的 `H` (正面) 或 `T` (反面)。
+- **转移概率（Transition）**：荷官切换硬币的概率。
+- **发射概率（Emission）**：每种硬币掷出正反面的概率。
 
-这个模型完美类比了 **CG 岛 (CG-islands)** 的识别：DNA 序列中某些区域的 `C` 和 `G` 含量异常高，这些区域（隐藏状态）发射 `C/G` 的概率（发射概率）不同于背景区域。
+这个模型完美类比了 **CG 岛（CG-islands）** 的识别：DNA 序列中某些区域的 `C` 和 `G` 含量异常高，这些区域（隐藏状态）发射 `C/G` 的概率（发射概率）不同于背景区域。
 
 ## 2. 模型组成
 
@@ -155,7 +155,7 @@ $$
 
 这说明 HMM 是一个非常典型的"概率模型 + 动态规划"结合体。
 
-## worked example
+## 示例
 
 假设我们只有两个状态：
 
@@ -166,7 +166,7 @@ $$
 
 ```text
 G C G A
-```
+```text
 
 直觉上：
 

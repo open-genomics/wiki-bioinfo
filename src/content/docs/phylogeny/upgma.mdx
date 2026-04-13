@@ -44,11 +44,11 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 1. UPGMA 的直觉：演化作为聚类
 
-UPGMA (Unweighted Pair Group Method with Arithmetic Mean) 是最直观的建树方法之一。它将系统发育树的构建看作是一个**层次聚类 (Hierarchical Clustering)** 的过程。
+UPGMA (Unweighted Pair Group Method with Arithmetic Mean) 是最直观的建树方法之一。它将系统发育树的构建看作是一个**层次聚类（Hierarchical Clustering）** 的过程。
 
-### 核心假设：分子钟 (Molecular Clock)
+### 核心假设：分子钟（Molecular Clock）
 UPGMA 建立在一个非常强的假设之上：**分子钟假设**。它认为所有的生物谱系都以相同的速率演化。
-- **结果**：由此产生的树是一棵 **超度量树 (Ultrametric Tree)**，即从根节点到任何一个叶子节点的距离（代表时间）都是完全相等的。
+- **结果**：由此产生的树是一棵 **超度量树（Ultrametric Tree）**，即从根节点到任何一个叶子节点的距离（代表时间）都是完全相等的。
 
 ## 2. 算法流程：合并与平均
 
@@ -141,7 +141,7 @@ $$
 
 **算法1：UPGMA**
 
-```
+```text
 输入：距离矩阵 D（n个样本）
 输出：有根系统发育树
 
@@ -159,7 +159,7 @@ $$
       - 添加新类群 C 的行和列
       - 对于每个其他类群 D，计算 d_\{CD\} = (n_A·d_\{AD\} + n_B·d_\{BD\}) / (n_A + n_B)
 3. 返回构建的树
-```
+```text
 
 **时间复杂度**：$O(n^3)$
 - 每次迭代需要 $O(n^2)$ 时间找到最小距离
@@ -168,7 +168,7 @@ $$
 
 **空间复杂度**：$O(n^2)$ 用于存储距离矩阵
 
-## Worked Example
+## 示例
 
 考虑4个样本A、B、C、D，距离矩阵如下：
 
@@ -234,7 +234,7 @@ $$
 
 ### 最终树结构
 
-```
+```text
          u3
         /  \
        4    4
@@ -243,7 +243,7 @@ $$
    /  \     /  \
   1    1   1.5  1.5
  A    B   C    D
-```
+```text
 
 验证分子钟假设：
 - A到根的距离：1 + 4 = 5

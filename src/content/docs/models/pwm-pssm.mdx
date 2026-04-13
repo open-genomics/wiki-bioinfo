@@ -99,7 +99,7 @@ $$
 
 **算法1：从 PFM 构建 PWM**
 
-```
+```text
 输入：PFM（或原始计数），背景频率 b_c，伪计数 α
 输出：PWM
 
@@ -108,7 +108,7 @@ $$
         f_ic = (PFM[i][c] + α) / (N + 4α)
         PWM[i][c] = log₂(f_ic / b_c)
 2. return PWM
-```
+```text
 
 **时间复杂度**：O(L)
 
@@ -116,7 +116,7 @@ $$
 
 **算法2：使用 PSSM 扫描序列**
 
-```
+```text
 输入：PWM，序列 seq，motif 长度 L
 输出：每个起始位置的得分
 
@@ -126,7 +126,7 @@ $$
         c = seq[pos + i - 1]
         score += PWM[i][c]
      output score at position pos
-```
+```text
 
 **时间复杂度**：O(|seq| · L)
 
@@ -139,7 +139,7 @@ $$
 - **FDR 控制**：根据假发现率调整阈值
 - **基于 p-value**：计算每个得分的统计显著性
 
-## Worked Example
+## 示例
 
 ### 示例数据
 
@@ -151,7 +151,7 @@ TATGAA
 TATAAT
 TATCAA
 TATAAA
-```
+```text
 
 ### 步骤 1：构建 PFM
 

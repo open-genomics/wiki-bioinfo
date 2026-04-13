@@ -14,7 +14,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
   summary='在液滴法单细胞测序中，一个液滴可能意外捕获两个或多个细胞，形成「双联体」（Doublet）。这些虚假信号会制造伪造的中间态细胞群，误导发育轨迹分析，必须在质控阶段予以识别和剔除。'
   bullets={[
     '理解 Doublet 的形成：泊松分布下的随机碰撞',
-    '掌握异质 (Heterotypic) 与同质 (Homotypic) Doublet 的检测难度差异',
+    '掌握异质（Heterotypic） 与同质（Homotypic） Doublet 的检测难度差异',
     '掌握基于"人工模拟" (Synthetic Doublets) 的主流检测算法逻辑',
     '理解 UMI 异常高值与标记基因共表达作为筛选证据的直觉'
   ]}
@@ -46,7 +46,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 ## 3. 检测算法：Scrublet 的直觉
 
-目前主流工具（如 Scrublet, DoubletFinder）的核心逻辑是**人工模拟**：
+目前主流工具（如 Scrublet、DoubletFinder）的核心逻辑是**人工模拟**：
 
 1.  **构造模拟数据**：从真实的表达矩阵中随机抽取两个细胞，将其 UMI 计数相加，生成一个"虚拟 Doublet"。
 2.  **混合降维**：将真实细胞与大量虚拟 Doublet 一起投影到 PCA 空间。
@@ -59,7 +59,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
   leftTitle="Scrublet"
   rightTitle="DoubletFinder"
   rows={[
-    { aspect: '核心方法', left: 'KNN 邻居中的模拟 doublet 比例', right: '人工最近邻 (ANN) 搜索 + pK 参数优化' },
+    { aspect: '核心方法', left: 'KNN 邻居中的模拟 doublet 比例', right: '人工最近邻（ANN） 搜索 + pK 参数优化' },
     { aspect: '参数调优', left: '自动阈值（直方图拐点）', right: '需手动优化 pK 参数（mean-variance approach）' },
     { aspect: '速度', left: '快（基于 PCA + KNN）', right: '较慢（逐个细胞搜索 ANN）' },
     { aspect: '语言/平台', left: 'Python (scanpy 生态)', right: 'R (Seurat 生态)' },

@@ -14,7 +14,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   summary='在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类「多对一」匹配提供了理想的骨架。'
   bullets={[
     '理解 Keyword Trees (Trie) 如何通过前缀共享减少重复计算',
-    '掌握 Aho–Corasick 算法中失败链接 (Failure Links) 的核心直觉',
+    '掌握 Aho–Corasick 算法中失败链接（Failure Links） 的核心直觉',
     '对比单模式匹配（KMP）与多模式匹配在处理海量 Motif 时的效率差异'
   ]}
 />
@@ -39,7 +39,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 如果对 $k$ 个模式串各跑一遍 KMP，总时间复杂度为 $O(k \cdot n)$。而多模式匹配算法可以将这一复杂度降至接近 $O(n)$。
 
-## 2. 核心结构：关键词树 (Keyword Trees / Trie)
+## 2. 核心结构：关键词树（Keyword Trees / Trie）
 
 <DefinitionList
   items={[
@@ -48,11 +48,11 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
       definition: '一种将一组字符串（模式集 `P`）存储为树形结构的索引。从根到某个标记节点的路径代表一个模式。',
     },
     {
-      term: '失败链接 (Failure Link)',
+      term: '失败链接（Failure Link）',
       definition: 'Aho-Corasick 算法中，为每个节点定义的回退指针，指向当前路径所代表前缀的最长真后缀在 Trie 中对应的位置。',
     },
     {
-      term: '输出链接 (Output Link)',
+      term: '输出链接（Output Link）',
       definition: '当通过失败链接回退到某个节点后，指向该节点所对应的所有模式输出的链接。',
     },
   ]}
@@ -66,7 +66,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 给定模式集 $P = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
 
-```
+```text
         (root)
        /     \
       A       G
@@ -76,7 +76,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   G       T
   |       |
 (ACG)   (ACT)
-```
+```text
 
 - 根节点不对应任何字符。
 - 每条边对应字母表中的一个字符。
@@ -90,7 +90,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 3. 如果到达标记节点，说明匹配到了一个模式。
 4. 如果失配（无边 $c$），则需要"回退"。
 
-### worked example：朴素 Trie 匹配
+### 示例：朴素 Trie 匹配
 
 在文本 $T = \text{GACGACT}$ 中搜索 $P = \{\text{ACG}, \text{ACT}, \text{GA}\}$：
 
@@ -108,7 +108,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 3. Aho–Corasick：不再从头开始
 
-朴素的 Trie 匹配在失配时会回到根节点，这非常低效。**Aho–Corasick (AC) 算法** 借鉴了 KMP 的思想，为每个节点增加了**失败链接 (Failure Links)**。
+朴素的 Trie 匹配在失配时会回到根节点，这非常低效。**Aho–Corasick (AC) 算法** 借鉴了 KMP 的思想，为每个节点增加了**失败链接（Failure Links）**。
 
 ### 失败链接的逻辑
 
@@ -141,7 +141,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ### AC 算法伪代码
 
-```
+```text
 构建阶段：
 1. 构建模式集 P 的 Trie
 2. BFS 遍历 Trie，为每个节点计算失败链接
@@ -157,7 +157,7 @@ for i = 0 to n-1:
     else:
         state = root
     输出 state 对应的所有匹配模式
-```
+```text
 
 ## 4. 复杂度与适用前提
 

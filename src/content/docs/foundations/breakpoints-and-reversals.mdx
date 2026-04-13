@@ -89,7 +89,7 @@ $$\pi_0 = 0, \quad \pi_{n+1} = n+1$$
   items={[
     {
       term: '单位排列',
-      definition: '单位排列 (0 1 2 ... n n+1) 没有断点，是唯一断点数为 0 的排列。'
+      definition: '单位排列（0 1 2 ... n n+1） 没有断点，是唯一断点数为 0 的排列。'
     },
     {
       term: '最大断点数',
@@ -110,9 +110,9 @@ $$\pi_0 = 0, \quad \pi_{n+1} = n+1$$
 
 对于 $0\ 2\ 1\ 3\ 4\ 5\ 8\ 7\ 6\ 9$：
 
-```
+```text
 0 | 2 1 | 3 4 5 | 8 7 6 | 9
-```
+```text
 
 Strips：
 - `0`（单元素）
@@ -150,19 +150,19 @@ $$d(\pi) \geq \frac{b(\pi)}{2}$$
 
 ### 简单贪心算法
 
-```
+```text
 SIMPLEREVERSALSORT(π):
     while b(π) > 0:
         选择消除最多断点的反转 ρ
         π ← π · ρ
         输出 π
-```
+```text
 
 **问题**：该算法可能陷入局部最优，性能保证较差。
 
 ### 改进算法（BREAKPOINTREVERSALSORT）
 
-```
+```text
 IMPROVEDBREAKPOINTREVERSALSORT(π):
     while b(π) > 0:
         if π 有递减 strip:
@@ -171,7 +171,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π):
             选择反转一个递增 strip（创造递减 strip）
         π ← π · ρ
         输出 π
-```
+```text
 
 ### 性能保证
 
@@ -191,9 +191,9 @@ IMPROVEDBREAKPOINTREVERSALSORT(π):
 输入：$\pi = 0\ 8\ 2\ 7\ 6\ 5\ 1\ 4\ 3\ 9$
 
 **初始状态**：
-```
+```text
 0 → | 8 ← | 2 ← | 7 6 5 ← | 1 ← | 4 ← | 3 ← | 9 →
-```
+```text
 Strips：0(增), 8 2 7 6 5 1 4 3(减), 9(增)
 断点数：$b(\pi) = 6$
 

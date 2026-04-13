@@ -47,20 +47,20 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 核心概念
 
-### 1. 穷举搜索 (Exhaustive Search)
+### 1. 穷举搜索（Exhaustive Search）
 
 **核心直觉**：如果不考虑时间，枚举所有可能的解，逐一验证，总能找到最优解。
 
 穷举搜索保证能找到最优解（全局最优），但代价是搜索空间随问题规模呈指数级增长。在生物信息学中，纯粹的穷举几乎从不适用于真实规模的数据，但理解穷举的搜索空间有助于理解为什么需要更高效的范式。
 
 - **生物学示例**：[限制性图谱构建](../foundations/restriction-mapping)（枚举所有切点组合）、[Motif 寻找](../models/motif-finding)（枚举所有起始位置）。
-- **优化手段**：通常需要通过**分支定界 (Branch and Bound)** 进行剪枝优化，即在某条搜索路径已经不可能优于当前最优解时提前终止。
+- **优化手段**：通常需要通过**分支定界（Branch and Bound）** 进行剪枝优化，即在某条搜索路径已经不可能优于当前最优解时提前终止。
 
 **适用条件**：问题规模极小，或者需要作为基准（baseline）来评估其他近似算法的质量。
 
 **复杂度特征**：通常为 $O(k^n)$ 或 $O(n!)$，其中 $k$ 是每步的选择数，$n$ 是问题规模。
 
-### 2. 贪心算法 (Greedy Algorithms)
+### 2. 贪心算法（Greedy Algorithms）
 
 **核心直觉**：在每一步都采取当前看起来最好的局部选择，希望累积成全局最优。
 
@@ -78,7 +78,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **复杂度特征**：通常为 $O(n \log n)$ 到 $O(n^2)$，取决于具体问题。
 
-### 3. 动态规划 (Dynamic Programming)
+### 3. 动态规划（Dynamic Programming）
 
 **核心直觉**：将问题分解为重叠的子问题，存储中间结果（记忆化），避免重复计算。
 
@@ -99,7 +99,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **复杂度特征**：取决于状态空间的维度。一维 DP 为 $O(n)$，二维 DP（如比对）为 $O(nm)$。
 
-### 4. 分治算法 (Divide and Conquer)
+### 4. 分治算法（Divide and Conquer）
 
 **核心直觉**：将大问题切分成相互独立的子问题，递归求解后再合并。
 
@@ -114,7 +114,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **复杂度特征**：通常为 $O(n \log n)$（如归并排序），但也有线性情况。
 
-### 5. 图算法 (Graph Algorithms)
+### 5. 图算法（Graph Algorithms）
 
 **核心直觉**：将生物对象建模为顶点，将它们的关系建模为边，利用图论路径搜索解决问题。
 
@@ -138,7 +138,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **适用条件**：问题中的对象具有明确的关系结构，可以自然地用图来建模。
 
-### 6. 随机化算法 (Randomized Algorithms)
+### 6. 随机化算法（Randomized Algorithms）
 
 **核心直觉**：当搜索空间大到无法穷举且没有精确多项式算法时，通过"掷骰子"智能地探索空间。
 
@@ -183,9 +183,9 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 真实的生物信息学软件很少只用一种范式。它们通常是"混合体"：
 
 - **BWA/minimap2**：利用索引（字符串索引）进行 Seeding $\to$ 贪心过滤 $\to$ 动态规划延伸。
-- **GATK**：比对 (DP) $\to$ 局部重组装 (图算法) $\to$ 变异判定 (概率模型)。
-- **SPAdes**：de Bruijn 图构建 (图算法) $\to$ 路径搜索 (图遍历) $\to$ 共识计算 (贪心/DP)。
-- **AlphaFold**：注意力机制 (深度学习) $\to$ 模板搜索 (字符串比对) $\to$ 结构优化 (梯度下降)。
+- **GATK**：比对（DP） $\to$ 局部重组装（图算法） $\to$ 变异判定（概率模型）。
+- **SPAdes**：de Bruijn 图构建（图算法） $\to$ 路径搜索（图遍历） $\to$ 共识计算（贪心/DP）。
+- **AlphaFold**：注意力机制（深度学习） $\to$ 模板搜索（字符串比对） $\to$ 结构优化（梯度下降）。
 
 理解范式的协作关系，比记住任何单个工具的参数都更有价值。它是你阅读新论文、评估新工具时的"分析框架"。
 

@@ -11,11 +11,11 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <SummaryBox
-  summary="当参考序列达到 3Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
+  summary="当参考序列达到 3 Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
   bullets={[
     '掌握 Suffix Array (SA) 的定义：所有后缀按字典序排列的起始索引',
     '理解 Burrows-Wheeler Transform (BWT) 如何通过循环位移聚类字符',
-    '掌握后向搜索 (Backward Search) 的逻辑：利用 LF 映射在 BWT 空间中逆向查询',
+    '掌握后向搜索（Backward Search） 的逻辑：利用 LF 映射在 BWT 空间中逆向查询',
     '了解 FM-index 如何将 BWT 与辅助数组（C, Rank）结合形成完整索引'
   ]}
 />
@@ -32,7 +32,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 是什么
 
-Suffix Array（后缀数组）、Burrows-Wheeler Transform（BWT，Burrows-Wheeler 变换）和 FM-index 是现代序列索引技术的三大基石。它们共同解决了一个核心问题：如何在极小的内存开销下，对大规模参考序列（如人类基因组的 3Gb 序列）实现极速的子串查询。
+Suffix Array（后缀数组）、Burrows-Wheeler Transform（BWT，Burrows-Wheeler 变换）和 FM-index 是现代序列索引技术的三大基石。它们共同解决了一个核心问题：如何在极小的内存开销下，对大规模参考序列（如人类基因组的 3 Gb 序列）实现极速的子串查询。
 
 从关系上看，Suffix Array 是后缀树（Suffix Tree）的空间高效替代品，BWT 是 Suffix Array 的线性变换，而 FM-index 则在 BWT 之上添加了查询所需的辅助结构。三者层层递进，构成了 BWA-MEM、Bowtie2 等主流比对工具的索引基础。
 
@@ -119,13 +119,13 @@ BWT 并不是一种简单的压缩算法，而是一种**排列变换**。它将
       definition: '循环位移排序矩阵的最后一列，即 BWT 串本身。L 列中的字符是 F 列中对应字符在原文本中的"前一个字符"。',
     },
     {
-      term: 'LF 映射 (Last-to-First mapping)',
+      term: 'LF 映射（Last-to-First mapping）',
       definition: 'L 列中第 $i$ 行的字符对应 F 列中第 $\text{LF}(i)$ 行的同一字符。LF 映射保持了循环位移的连续性，是后向搜索的核心。',
     },
   ]}
 />
 
-### 3. 后向搜索 (Backward Search)
+### 3. 后向搜索（Backward Search）
 
 后向搜索是 FM-index 的核心算法：**从后往前匹配模式串**，利用 BWT 的排序性质和 LF 映射，在 $O(m)$ 时间内完成查询。
 
@@ -172,7 +172,7 @@ Occ 数组的存储是 FM-index 空间开销的主要来源。实际实现中采
 - 每隔 $\sigma$ 个位置存储一个精确的 Occ 值（checkpoint），中间的值通过扫描 BWT 串重新计算；
 - 采样间隔 $\sigma$ 越大，空间越省但查询越慢，这是一个可调节的时空权衡。
 
-## worked example
+## 示例
 
 以文本 `BANANA$` 为例，完整演示后向搜索查找 `ANA` 的过程。
 

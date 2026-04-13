@@ -36,9 +36,8 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 算法链条的整体视图
 
-```
-序列表示与索引          序列比对              组装与图              概率模型
-(数据结构层)    →      (证据层)      →      (结构层)      →      (推断层)
+```text
+序列表示与索引          序列比对              组装与图              概率模型（数据结构层）    →      (证据层)      →      (结构层)      →      (推断层)
       ↓                    ↓                    ↓                    ↓
   k-mer 索引           快速比对             de Bruijn 图          HMM
   Suffix Array         局部比对             OLC 图                PWM
@@ -48,13 +47,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
                          ↓                                          ↓
                     变异检测 ←─────────────────────────────── gene prediction
                     表达定量                                    motif 发现
-```
+```text
 
 ## 索引 → 比对：如何加速搜索
 
 ### 问题背景
 
-直接在全基因组（~30 亿碱基）上搜索一个 read（~150bp）的比对位置，暴力方法需要 $O(N \times M)$ 时间，不可行。
+直接在全基因组（~30 亿碱基）上搜索一个 read（~150 bp）的比对位置，暴力方法需要 $O(N \times M)$ 时间，不可行。
 
 ### 索引如何帮助比对
 
@@ -71,13 +70,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 1. **Seed**：使用索引快速找到 read 与参考的短精确匹配（seed）
 2. **Extend**：从 seed 出发，使用动态规划扩展到完整比对
 
-```
+```text
 Read:  ATGCATCGATCGATCGATCG
               ↓ (FM-index 找到 seed)
 Ref:  ...NNNATCGNNN...
               ↓ (动态规划扩展)
 Ref:  ...ATGCATCGATCGATCGATCG...
-```
+```text
 
 **这是索引和比对的直接连接**：没有高效索引，就没有快速比对。
 
@@ -108,7 +107,7 @@ Ref:  ...ATGCATCGATCGATCGATCG...
 2. 构建图：每个 k-mer 是节点，重叠 k-mer 之间有边
 3. 寻找 Eulerian path：遍历所有边的路径 = 重建的基因组
 
-```
+```text
 Reads:  ATGCGATCG
         GCGATCGTA
         CGATCGTAA
@@ -117,7 +116,7 @@ k-mers (k=4): ATGC, TGCG, GCGA, CGAT, GATC, ATCG, TCGA, CGTA, GTAA
 
 de Bruijn Graph:
 ATGC → TGCG → GCGA → CGAT → GATC → ATCG → TCGA → CGTA → GTAA
-```
+```text
 
 **这是比对和组装的连接**：两者都处理 reads，但组装在没有参考的情况下使用图算法重建序列。
 
@@ -144,15 +143,15 @@ ATGC → TGCG → GCGA → CGAT → GATC → ATCG → TCGA → CGTA → GTAA
 
 ### 示例：变异检测中的概率模型
 
-```
-比对结果 (BAM)
+```text
+比对结果（BAM）
       ↓
 Read pileup at position X
       ↓
 贝叶斯模型：P(变异 | 数据) ∝ P(数据 | 变异) × P(变异)
       ↓
 VCF：变异候选 + 置信度
-```
+```text
 
 **这是确定性方法（比对）和概率方法（推断）的连接**：比对提供证据，概率模型评估置信度。
 

@@ -16,7 +16,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   summary="群体结构（Population Structure）是指样本并非来自遗传均匀的单一群体，而是由具有不同祖源背景的亚群构成。这种不均匀性是 GWAS 中虚假关联的主要来源，必须通过统计手段进行校正。"
   bullets={[
     '理解群体分化的衡量指标：$F_{ST}$ 系数',
-    '掌握主成分分析 (PCA) 如何在基因型空间中揭示样本的地理/历史背景',
+    '掌握主成分分析（PCA） 如何在基因型空间中揭示样本的地理/历史背景',
     '理解混合人群（Admixture）的比例推断模型',
     '掌握在关联分析中控制群体混杂的算法策略'
   ]}
@@ -35,10 +35,10 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 ## 1. 群体结构的起源：隔离与漂变
 
 人类由于地理、文化或历史原因，在漫长的演化中形成了不同的亚群。
-- **遗传漂变 (Genetic Drift)**：在小规模亚群中，碱基频率会由于随机采样发生剧烈波动。
-- **选择 (Selection)**：不同环境导致特定位点在亚群间出现显著的频率差异。
+- **遗传漂变（Genetic Drift）**：在小规模亚群中，碱基频率会由于随机采样发生剧烈波动。
+- **选择（Selection）**：不同环境导致特定位点在亚群间出现显著的频率差异。
 
-**数学表征 ($F_{ST}$)**：
+**数学表征（$F_{ST}$）**：
 $F_{ST}$ 用于量化亚群间的分化程度。
 - $F_{ST} = 0$：完全均匀混合。
 - $F_{ST} = 1$：完全分化（亚群间固定了不同的等位基因）。
@@ -64,7 +64,7 @@ $$F_{ST} = \frac{\sigma^2_{\text{between}}}{\sigma^2_{\text{total}}} = 1 - \frac
 
 其中 $H_S$ 是亚群内的平均杂合度（Expected Heterozygosity），$H_T$ 是总体的杂合度。这一分解直接告诉我们：$F_{ST}$ 衡量的是**亚群内丢失了多少遗传多样性**。
 
-## 2. 识别工具：主成分分析 (PCA)
+## 2. 识别工具：主成分分析（PCA）
 
 PCA 是识别群体结构最常用的降维工具。
 - **逻辑**：将数百万个 SNP 投影到二维或三维空间中。
@@ -94,21 +94,21 @@ PCA 的计算步骤如下：
 <DefinitionList
   items={[
     {
-      term: '精确谱分解 (Exact Eigendecomposition)',
+      term: '精确谱分解（Exact Eigendecomposition）',
       definition: '直接对协方差矩阵做特征分解。适用于样本量在数万以内的情况。EIGENSOFT 的早期版本采用此方法。',
     },
     {
-      term: '随机投影 (Randomized SVD)',
+      term: '随机投影（Randomized SVD）',
       definition: '先通过随机矩阵将问题投影到低维空间，再进行精确分解。复杂度从 $O(n^3)$ 降至 $O(n^2 r)$，其中 $r$ 为目标维度。FlashPCA2 采用此策略。',
     },
   ]}
 />
 
-## 3. 群体混合 (Admixture) 模型
+## 3. 群体混合（Admixture） 模型
 
 许多现代人是多个祖先群体的混合。
 - **STRUCTURE/ADMIXTURE 算法**：假设存在 $K$ 个祖先群，计算每个个体来自这些祖先群的百分比。
-- **统计原理**：基于隐马尔可夫模型 (HMM) 或期望最大化 (EM) 算法，通过观测到的 SNP 组合反推最可能的祖源构成。
+- **统计原理**：基于隐马尔可夫模型（HMM） 或期望最大化（EM） 算法，通过观测到的 SNP 组合反推最可能的祖源构成。
 
 ### ADMIXTURE 的数学模型
 
@@ -126,7 +126,7 @@ ADMIXTURE 使用**块松弛 EM (Block Relaxation EM)** 算法交替优化 $\math
 
 $K$ 的选择是 Admixture 分析中的关键问题。常用的策略包括：
 
-- **交叉验证 (Cross-validation, CV)**：ADMIXTURE 内置 CV 功能，将数据随机分为训练集和验证集，选择使验证集似然最大的 $K$。CV 误差在 $K$ 增加时通常会先下降后趋于平坦，"拐点"处即为合理的 $K$ 值。
+- **交叉验证（Cross-validation, CV）**：ADMIXTURE 内置 CV 功能，将数据随机分为训练集和验证集，选择使验证集似然最大的 $K$。CV 误差在 $K$ 增加时通常会先下降后趋于平坦，"拐点"处即为合理的 $K$ 值。
 - **进化先验**：结合考古学和语言学知识判断。例如对欧亚大陆人群，$K=3$ 通常能分离出非洲、欧洲和东亚三个主要祖源成分。
 
 ## 4. 为什么它是 GWAS 的"幽灵"？
@@ -157,9 +157,9 @@ $$Y_i = \beta_0 + \beta_g G_i + \sum_{k=1}^{d} \gamma_k \text{PC}_{ik} + \epsilo
 
 其中 $Y_i$ 是表型，$G_i$ 是基因型，$\text{PC}_{ik}$ 是第 $k$ 个主成分。$\beta_g$ 即为校正群体结构后的关联效应。
 
-### 线性混合模型 (Linear Mixed Model, LMM)
+### 线性混合模型（Linear Mixed Model, LMM）
 
-当群体结构非常复杂（如存在隐匿的亲缘关系或精细分层）时，PCA 可能不足以完全捕获混杂。LMM 通过引入**遗传亲缘关系矩阵 (Genetic Relationship Matrix, GRM)** 来建模个体间的全基因组相似度：
+当群体结构非常复杂（如存在隐匿的亲缘关系或精细分层）时，PCA 可能不足以完全捕获混杂。LMM 通过引入**遗传亲缘关系矩阵（Genetic Relationship Matrix, GRM）** 来建模个体间的全基因组相似度：
 
 $$\mathbf{K} = \frac{1}{m}\tilde{\mathbf{X}}\tilde{\mathbf{X}}^T$$
 
@@ -167,7 +167,7 @@ LMM 的模型形式为：
 
 $$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \mathbf{u} + \boldsymbol{\epsilon}$$
 
-其中 $\mathbf{u} \sim \mathcal{N}(\mathbf{0}, \sigma_g^2 \mathbf{K})$ 为随机效应，$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \sigma_e^2 \mathbf{I})$ 为残差。$\sigma_g^2 / (\sigma_g^2 + \sigma_e^2)$ 被称为**遗传力 (Heritability)** 的 SNP 估计值。
+其中 $\mathbf{u} \sim \mathcal{N}(\mathbf{0}, \sigma_g^2 \mathbf{K})$ 为随机效应，$\boldsymbol{\epsilon} \sim \mathcal{N}(\mathbf{0}, \sigma_e^2 \mathbf{I})$ 为残差。$\sigma_g^2 / (\sigma_g^2 + \sigma_e^2)$ 被称为**遗传力（Heritability）** 的 SNP 估计值。
 
 LMM 的优势在于：即使不显式提取 PC，GRM 本身就已经编码了所有成对亲缘关系信息，因此能更灵活地处理复杂的群体结构。
 
@@ -200,7 +200,7 @@ LMM 的优势在于：即使不显式提取 PC，GRM 本身就已经编码了所
 
 群体结构分析不仅服务于 GWAS，还广泛应用于以下领域：
 
-- **祖源推断 (Ancestry Inference)**：在法医学中推断未知样本的地理来源；在临床遗传学中识别患者的祖源背景以选择合适的参考面板。
+- **祖源推断（Ancestry Inference）**：在法医学中推断未知样本的地理来源；在临床遗传学中识别患者的祖源背景以选择合适的参考面板。
 - **自然选择检测**：通过 $F_{ST}$ 扫描寻找在特定人群中受到强烈选择的基因组区域，如乳糖酶基因（LCT）在欧洲人群中的选择性清除。
 - **群体历史重建**：结合 PCA 和 Admixture 分析重建人类走出非洲、跨大陆迁徙的历史。
 - **复制研究设计**：在跨祖源的 GWAS 复制研究中，合理匹配病例组和对照组的祖源构成是保证复制可靠性的前提。

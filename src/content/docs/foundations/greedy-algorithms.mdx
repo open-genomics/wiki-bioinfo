@@ -76,7 +76,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 | Motif 搜索 | 每步选择与当前 Profile 最匹配的位置 | 第一步的错误选择会被放大（"滚雪球"效应） |
 | 基因组重排 | 每步增加已排序前缀长度 | 可能需要暂时破坏已排序部分才能找到更短的反转序列 |
 
-## 3. 应用案例：反转排序 (Reversal Sort)
+## 3. 应用案例：反转排序（Reversal Sort）
 
 在研究物种进化时，我们需要通过最少次数的"反转"操作将一个基因排列转换为另一个。这个问题是贪心算法在生物信息学中的经典案例。
 
@@ -88,26 +88,26 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **贪心步骤**（需要 5 步，依次将 1, 2, 3, 4, 5 翻转到前面）：
 
-```
+```text
 初始：  6 1 2 3 4 5  (prefix = 0)
 步骤1： 1 6 2 3 4 5  (反转 [1,2]，prefix = 1)
 步骤2： 1 2 6 3 4 5  (反转 [2,3]，prefix = 2)
 步骤3： 1 2 3 6 4 5  (反转 [3,4]，prefix = 3)
 步骤4： 1 2 3 4 6 5  (反转 [4,6]，prefix = 4)
 步骤5： 1 2 3 4 5 6  (反转 [5,6]，prefix = 6)
-```
+```text
 
 **实际最优**（只需 2 步）：
 
-```
+```text
 初始：  6 1 2 3 4 5
 步骤1： 5 4 3 2 1 6  (反转 [1,5]，翻转全序列)
 步骤2： 1 2 3 4 5 6  (反转 [1,5]，翻转前 5 位)
-```
+```text
 
 贪心算法用了 5 步，而最优解只需要 2 步。差距的根源在于贪心策略"急功近利"——每步只增加一个已排序元素，而最优解通过暂时"打乱"整个序列来一次性解决问题。
 
-### 改进：基于断点 (Breakpoints) 的贪心
+### 改进：基于断点（Breakpoints） 的贪心
 
 **断点**是指排列中不连续的邻接关系。为了改进贪心算法，我们需要一个更好的"进度度量"（Progress Metric）：
 
@@ -142,7 +142,7 @@ GREEDYMOTIFSEARCH(Dna, k, t)
 8      if Score(Motifs) < Score(BestMotifs)
 9          BestMotifs ← Motifs
 10 return BestMotifs
-```
+```text
 
 ### 问题与对策
 
@@ -154,11 +154,11 @@ GREEDYMOTIFSEARCH(Dna, k, t)
 - **期望最大化（Expectation-Maximization, EM）**：迭代地估计 Profile 参数和 Motif 位置，可以避免贪心算法的"一步定终身"问题。
 - **Gibbs 采样（Gibbs Sampling）**：随机化方法，在每一步随机排除一条序列，根据其余序列的 Profile 重新选择该序列的 Motif 位置，可以跳出局部最优。
 
-## 5. 贪心与近似算法 (Approximation)
+## 5. 贪心与近似算法（Approximation）
 
 虽然贪心算法不一定能找到最优解，但我们常能证明它找到的解"不会太差"。这就是**近似算法（Approximation Algorithm）**的核心思想。
 
-### 近似比 (Approximation Ratio)
+### 近似比（Approximation Ratio）
 
 对于一个最小化问题，设算法返回的解为 $A$，最优解为 $OPT$。如果存在常数 $c \geq 1$ 使得：
 

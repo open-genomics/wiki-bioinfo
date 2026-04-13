@@ -46,9 +46,9 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 3. 核心思想与数学模型
 
-### 什么是可加性 (Additivity)？
+### 什么是可加性（Additivity）？
 
-**定义**：一个 $n \times n$ 的距离矩阵 $D$ 是**可加的 (Additive)**，如果存在一棵带权树 $T$，其叶子节点对应这 $n$ 个物种，且矩阵中任意两点 $i, j$ 的距离 $D_{ij}$ 正好等于树上 $i$ 到 $j$ 的唯一路径权值之和。
+**定义**：一个 $n \times n$ 的距离矩阵 $D$ 是**可加的（Additive）**，如果存在一棵带权树 $T$，其叶子节点对应这 $n$ 个物种，且矩阵中任意两点 $i, j$ 的距离 $D_{ij}$ 正好等于树上 $i$ 到 $j$ 的唯一路径权值之和。
 
 形式化地，给定树 $T$ 和树上两个叶子 $i, j$，定义树距离为：
 
@@ -66,7 +66,7 @@ $$d_T(i, j) = \sum_{e \in \text{path}(i, j)} w(e)$$
 
 ## 4. 判定准则与悬挂边计算
 
-### 四点条件 (Four-Point Condition)
+### 四点条件（Four-Point Condition）
 
 判定一个矩阵是否为可加矩阵的准则是四点条件。对于任意四个物种 $i, j, k, l$，计算：
 1. $S_1 = D_{ij} + D_{kl}$
@@ -79,11 +79,11 @@ $$d_T(i, j) = \sum_{e \in \text{path}(i, j)} w(e)$$
 
 考虑树上的四个叶子节点，它们的拓扑关系只有三种可能。对于每种拓扑，四个叶子会被分成两对，每对共享一个内部节点。四点条件本质上是在说：在所有可能的配对中，真正的"邻居对"对应的距离之和是三个值中最小的，而另外两个较大的值必须相等。
 
-### 超度量条件 (Ultrametric Condition)
+### 超度量条件（Ultrametric Condition）
 
-超度量条件是四点条件的加强版，要求三个和中**最大的两个相等且不小于第三个**。满足超度量条件的矩阵对应于**超度量树 (Ultrametric Tree)**，即所有叶子到根的距离相等的树。这是 UPGMA 算法正确性的基础。
+超度量条件是四点条件的加强版，要求三个和中**最大的两个相等且不小于第三个**。满足超度量条件的矩阵对应于**超度量树（Ultrametric Tree）**，即所有叶子到根的距离相等的树。这是 UPGMA 算法正确性的基础。
 
-### 悬挂边长度 (Limb Length) 的计算
+### 悬挂边长度（Limb Length） 的计算
 
 对于物种 $j$，其**悬挂边长度**可以通过其他任意两个物种 $i$ 和 $k$ 计算得出：
 $$LimbLength(j) = \min_{i, k} \frac{D_{ij} + D_{jk} - D_{ik}}{2}$$
@@ -100,7 +100,7 @@ $$LimbLength(j) = \min_{i, k} \frac{D_{ij} + D_{jk} - D_{ik}}{2}$$
 
 ### 算法伪代码
 
-```
+```text
 算法 ADDITIVEPHYLOGENY(D, n)
 输入：n x n 的距离矩阵 D
 输出：带权树 T
@@ -110,19 +110,19 @@ $$LimbLength(j) = \min_{i, k} \frac{D_{ij} + D_{jk} - D_{ik}}{2}$$
 2. 计算 limbLength = LimbLength(n)
 3. 对于所有 j: D[j][n] -= limbLength, D[n][j] -= limbLength
 4. 找到 i, k 使得 D[i][n] + D[n][k] == D[i][k]  // 退化三元组
-5. 将 n 从矩阵中移除，得到 (n-1) x (n-1) 的矩阵 D'
+5. 将 n 从矩阵中移除，得到（n-1） x (n-1) 的矩阵 D'
 6. T' = ADDITIVEPHYLOGENY(D', n-1)  // 递归
 7. 在 T' 中找到 i 到 k 的路径上距离 i 为 D[i][n] 的位置 v
 8. 在 v 处分裂边，接入叶子 n，悬挂边长度为 limbLength
 9. 返回 T
-```
+```text
 
 ### 核心逻辑详解
 
-1.  **寻找退化三元组 (Degenerate Triplet)**：寻找三个物种 $i, j, k$，使得 $D_{ij} + D_{jk} = D_{ik}$。这表示物种 $j$ 处于连接 $i$ 和 $k$ 的路径上。
-2.  **修剪 (Trimming)**：如果矩阵不是直接退化的，计算一个物种（如 $n$）的 `LimbLength`，然后从所有涉及 $n$ 的距离中减去这个长度，使其变为"悬挂"在路径上的形态。
+1.  **寻找退化三元组（Degenerate Triplet）**：寻找三个物种 $i, j, k$，使得 $D_{ij} + D_{jk} = D_{ik}$。这表示物种 $j$ 处于连接 $i$ 和 $k$ 的路径上。
+2.  **修剪（Trimming）**：如果矩阵不是直接退化的，计算一个物种（如 $n$）的 `LimbLength`，然后从所有涉及 $n$ 的距离中减去这个长度，使其变为"悬挂"在路径上的形态。
 3.  **递归**：临时移除该物种，在规模为 $n-1$ 的矩阵上递归构建树。
-4.  **接回 (Attachment)**：在生成的树中找到 $i$ 到 $k$ 路径上的准确位置，将移除的物种重新接回。
+4.  **接回（Attachment）**：在生成的树中找到 $i$ 到 $k$ 路径上的准确位置，将移除的物种重新接回。
 
 ## 6. Worked Example
 
@@ -213,8 +213,8 @@ $$LimbLength(4) = \min \left\{ \frac{7+7-2}{2}, \frac{7+6-3}{2}, \frac{7+6-3}{2}
 
 <RelatedLinks
   links={[
-    { title: '邻接法 (Neighbor Joining)', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '处理非精确距离的实用方法' },
+    { title: '邻接法（Neighbor Joining）', to: '/wiki-bioinfo/phylogeny/neighbor-joining', description: '处理非精确距离的实用方法' },
     { title: 'UPGMA', to: '/wiki-bioinfo/phylogeny/upgma', description: '基于超度量假设的聚类方法' },
-    { title: '最大简约法 (Parsimony)', to: '/wiki-bioinfo/phylogeny/parsimony', description: '基于序列特征的演化树构建' }
+    { title: '最大简约法（Parsimony）', to: '/wiki-bioinfo/phylogeny/parsimony', description: '基于序列特征的演化树构建' }
   ]}
 />

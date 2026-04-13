@@ -52,15 +52,15 @@ Profile HMM 由三类状态组成：
 <DefinitionList
   items={[
     {
-      term: 'Match 状态 (M_i)',
+      term: 'Match 状态（M_i）',
       definition: '表示家族中的保守位置 i，发射一个字符。',
     },
     {
-      term: 'Insert 状态 (I_i)',
+      term: 'Insert 状态（I_i）',
       definition: '表示在位置 i 之后插入额外字符，可以循环发射多个字符。',
     },
     {
-      term: 'Delete 状态 (D_i)',
+      term: 'Delete 状态（D_i）',
       definition: '表示跳过保守位置 i，不发射字符。',
     },
   ]}
@@ -70,13 +70,13 @@ Profile HMM 由三类状态组成：
 
 对于长度为 L 的 motif，Profile HMM 的状态序列为：
 
-```
+```text
 M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
   ↓     ↓     ↓           ↓     ↓
   I_0   I_1   I_2         I_L   I_\{L+1\}
         ↓     ↓           ↓
         D_2   D_3         D_\{L+1\}
-```
+```text
 
 其中：
 - `M_0` 和 `M_{L+1}` 是开始和结束状态
@@ -91,17 +91,17 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 
 ### Viterbi 算法与特殊状态处理
 
-在 Profile HMM 中，Viterbi 算法需要处理三种状态的转移。特别需要注意的是 **Delete 状态 (D)**，因为它不发射任何字符（称为"静默状态"）。
+在 Profile HMM 中，Viterbi 算法需要处理三种状态的转移。特别需要注意的是 **Delete 状态（D）**，因为它不发射任何字符（称为"静默状态"）。
 
 定义 $v^M_j(i)$ 为观测序列前缀 $x_1 \dots x_i$ 与模型前缀（直到状态 $M_j$）对齐的最优对数似然得分。
 
-1.  **Match 状态 ($M_j$)**：
+1.  **Match 状态（$M_j$）**：
     $$v^M_j(i) = \log \frac{e_{M_j}(x_i)}{p(x_i)} + \max \begin{cases} v^M_{j-1}(i-1) + \log a_{M_{j-1}M_j} \\ v^I_{j-1}(i-1) + \log a_{I_{j-1}M_j} \\ v^D_{j-1}(i-1) + \log a_{D_{j-1}M_j} \end{cases}$$
 
-2.  **Insert 状态 ($I_j$)**：
+2.  **Insert 状态（$I_j$）**：
     $$v^I_j(i) = \log \frac{e_{I_j}(x_i)}{p(x_i)} + \max \begin{cases} v^M_j(i-1) + \log a_{M_jI_j} \\ v^I_j(i-1) + \log a_{I_jI_j} \\ v^D_j(i-1) + \log a_{D_jI_j} \end{cases}$$
 
-3.  **Delete 状态 ($D_j$)**：
+3.  **Delete 状态（$D_j$）**：
     由于不消耗字符，得分直接从上一个位置转移：
     $$v^D_j(i) = \max \begin{cases} v^M_{j-1}(i) + \log a_{M_{j-1}D_j} \\ v^I_{j-1}(i) + \log a_{I_{j-1}D_j} \\ v^D_{j-1}(i) + \log a_{D_{j-1}D_j} \end{cases}$$
 
@@ -126,7 +126,7 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 
 **算法1：从多序列比对构建 Profile HMM**
 
-```
+```text
 输入：多序列比对 MSA，motif 长度 L
 输出：Profile HMM 参数
 
@@ -138,7 +138,7 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 3. 添加伪计数避免零概率
 4. 归一化得到概率
 5. return 转移概率 a_ij 和发射概率 e_i(c)
-```
+```text
 
 **时间复杂度**：O(N · L)，N 是序列数量
 
@@ -146,7 +146,7 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
 
 **算法2：使用 Viterbi 算法寻找最优状态路径**
 
-```
+```text
 输入：序列 s，Profile HMM 参数
 输出：最优状态路径和得分
 
@@ -161,31 +161,31 @@ M_0 → M_1 → M_2 → ... → M_L → M_\{L+1\}
            记录回溯指针
 3. 回溯得到最优状态路径
 4. return 路径和得分
-```
+```text
 
 **时间复杂度**：O(|s| · L · K)，K 是状态数（通常为 3L）
 
-## Worked Example
+## 示例
 
 ### 示例：简单蛋白家族
 
 假设我们有一个简单的蛋白家族，保守骨架为 3 个位置：
 
-```
+```text
 序列 1: A G T
 序列 2: A Q G R T  (在 G 和 T 之间插入了 R)
 序列 3: A T         (跳过了 G)
-```
+```text
 
 ### 步骤 1：构建状态结构
 
-```
+```text
 M_0 → M_1 → M_2 → M_3 → M_4
   ↓     ↓     ↓     ↓     ↓
   I_0   I_1   I_2   I_3   I_4
         ↓     ↓     ↓
         D_2   D_3   D_4
-```
+```text
 
 ### 步骤 2：估计参数
 
@@ -251,7 +251,7 @@ Profile HMM 通常由三类状态构成：
 
 ```text
 A - G - T
-```
+```text
 
 其中第二和第四位置之间可能允许插入一些残基，那么 Profile HMM 可以表示为：
 

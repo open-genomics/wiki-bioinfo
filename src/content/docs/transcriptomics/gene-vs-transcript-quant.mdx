@@ -52,7 +52,7 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
 
 ### 3.1 定量的"解析度"之争
 
-#### 转录本层 (Transcript-level)
+#### 转录本层（Transcript-level）
 
 直接估计每个具体 Isoform 的表达量。
 
@@ -61,7 +61,7 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
   - 估计结果的方差较高，尤其对于低丰度转录本。
   - 定量工具必须依赖 EM 算法或变分推断来在多个候选转录本之间"分配"Reads，而这些推断的可靠性取决于数据量和序列可区分性。
 
-#### 基因层 (Gene-level)
+#### 基因层（Gene-level）
 
 将属于同一个基因的所有转录本信号合并处理。
 
@@ -78,19 +78,19 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
 
 定量工具的任务就是利用唯一映射的 Reads 和整体 Reads 分布的约束，推断出 $T_1$ 和 $T_2$ 的相对丰度。当两个转录本的序列几乎完全相同时（如仅差一个外显子），这种推断的不确定性就会非常大。
 
-### 3.3 聚合算法 (Aggregation)
+### 3.3 聚合算法（Aggregation）
 
 如果已经获得了转录本层的定量值，可以通过以下方式转化为基因层：
 
 <DefinitionList
   items={[
     {
-      term: '简单求和 (Sum Aggregation)',
+      term: '简单求和（Sum Aggregation）',
       definition: '对于 TPM 指标，由于已经校正过长度，可以直接求和：$\text{TPM}_{Gene} = \sum_{i} \text{TPM}_{Isoform_i}$。这是最简单的聚合方式，适用于需要快速获得基因层表达的场景。',
     },
     {
-      term: '长度校正聚合 (Length-corrected Aggregation)',
-      definition: '对于原始计数 (Counts)，不能简单相加（因为 Isoform 长度不同）。常用工具（如 `tximport`）采用加权聚合：$\text{Counts}_{Gene} = \sum_{i} \text{Counts}_{Isoform_i} \cdot \frac{\bar{L}_{Gene}}{L_{Isoform_i}}$，其中 $\bar{L}_{Gene}$ 是该基因所有转录本有效长度的加权平均值。这保证了聚合后的基因计数仍能反映出原本的丰度比例。',
+      term: '长度校正聚合（Length-corrected Aggregation）',
+      definition: '对于原始计数（Counts），不能简单相加（因为 Isoform 长度不同）。常用工具（如 `tximport`）采用加权聚合：$\text{Counts}_{Gene} = \sum_{i} \text{Counts}_{Isoform_i} \cdot \frac{\bar{L}_{Gene}}{L_{Isoform_i}}$，其中 $\bar{L}_{Gene}$ 是该基因所有转录本有效长度的加权平均值。这保证了聚合后的基因计数仍能反映出原本的丰度比例。',
     },
     {
       term: 'tximport 包',
@@ -99,7 +99,7 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
   ]}
 />
 
-### 3.4 转录本切换 (Isoform Switching)
+### 3.4 转录本切换（Isoform Switching）
 
 转录本切换是指同一个基因在不同条件下，其主要表达的转录本发生了变化。例如：
 
@@ -124,10 +124,10 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
 | :--- | :--- | :--- |
 | **标准差异表达分析** | **基因层** | 统计模型（DESeq2/edgeR）更稳健，假阳性率低。 |
 | **寻找新生物标志物** | **转录本层** | 有些癌症特异性标志物仅在特定 Isoform 上体现，基因层分析会漏掉。 |
-| **功能通路分析 (GO/KEGG)** | **基因层** | 绝大多数数据库以 Gene ID 为核心构建。 |
+| **功能通路分析（GO/KEGG）** | **基因层** | 绝大多数数据库以 Gene ID 为核心构建。 |
 | **剪接调控研究** | **转录本层** | 必须区分不同的剪接变体才能检测可变剪接事件。 |
 | **转录本切换检测** | **转录本层** | 基因层总表达量可能不变，只有转录本级才能揭示比例变化。 |
-| **共表达网络分析 (WGCNA)** | **基因层** | 网络节点通常定义为基因，且需要较高的数据稳健性。 |
+| **共表达网络分析（WGCNA）** | **基因层** | 网络节点通常定义为基因，且需要较高的数据稳健性。 |
 | **蛋白质丰度预测** | **转录本层** | 不同的剪接变体可能编码不同的蛋白质产物，需要转录本级信息来预测。 |
 
 <PitfallsBox

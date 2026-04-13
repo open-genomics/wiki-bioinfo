@@ -69,7 +69,7 @@ $$dp[m] = \min_{i} \{ dp[m - c_i] + 1 \}$$
 
 其中 $c_i$ 是所有满足 $c_i \leq m$ 的硬币面值。
 
-### 算法步骤 (Pseudocode)
+### 算法步骤（Pseudocode）
 
 ```text
 CHANGE(M, c)
@@ -81,9 +81,9 @@ CHANGE(M, c)
 6              if dp[m - c[i]] + 1 < dp[m]
 7                  dp[m] ← dp[m - c[i]] + 1
 8  return dp[M]
-```
+```text
 
-## Worked Example
+## 示例
 
 给定：
 

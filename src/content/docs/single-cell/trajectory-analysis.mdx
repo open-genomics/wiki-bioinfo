@@ -13,7 +13,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <SummaryBox
   summary='单细胞测序捕捉的是细胞发育过程中的「瞬间快照」。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。'
   bullets={[
-    '理解伪时间 (Pseudotime) 的概念：基于转录组距离而非物理时间',
+    '理解伪时间（Pseudotime） 的概念：基于转录组距离而非物理时间',
     '掌握轨迹建模的拓扑结构：线性、分支（Bifurcation）、循环与树状',
     '理解 RNA Velocity 及其在推断细胞"演化方向"中的前瞻性作用',
     '掌握主流工具（Monocle, PAGA, scVelo）的底层算法直觉'
@@ -36,7 +36,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 在发育生物学中，细胞的分化是一个连续过程。但在实验中，我们一次性杀死了所有细胞进行测序。
 - **挑战**：我们无法追踪同一个细胞随时间的变化。
 - **假设**：如果群体中存在处于不同发育阶段的细胞，那么通过计算它们之间的转录组相似性，我们可以将它们排序。
-- **伪时间 (Pseudotime)**：定义为细胞沿发育路径相对于起始点的距离。
+- **伪时间（Pseudotime）**：定义为细胞沿发育路径相对于起始点的距离。
 
 ### 为什么需要伪时间？
 
@@ -77,7 +77,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
       definition: '最简单的发育过程，如红细胞的成熟。算法寻找一条穿过数据中心的主曲线。',
     },
     {
-      term: '分支轨迹 (Bifurcation)',
+      term: '分支轨迹（Bifurcation）',
       definition: '细胞面临命运选择（如干细胞分化为髓系或淋巴系）。算法需要识别图中的分叉点。',
     },
     {
@@ -87,7 +87,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-### 主曲线 (Principal Curves) 方法
+### 主曲线（Principal Curves） 方法
 
 主曲线是线性 PCA 在非线性场景下的推广。给定数据点 $\{x_1, \ldots, x_N\}$，主曲线 $f(\lambda)$ 是一条通过数据"中间"的光滑曲线，满足自一致性条件：
 
@@ -100,7 +100,7 @@ $$
 Monocle 2 使用的 DDRTree 算法通过以下步骤近似主曲线：
 
 1. 在降维空间中学习一个低维流形嵌入。
-2. 在流形上构建最小生成树 (Minimum Spanning Tree)。
+2. 在流形上构建最小生成树（Minimum Spanning Tree）。
 3. 将每个细胞投影到树上，获得伪时间值。
 
 ### PAGA：基于图的拓扑推断
@@ -172,7 +172,7 @@ $$
 
 其中 $\hat{\alpha}_g(c)$ 是基因 $g$ 在细胞 $c$ 中的估计转录速率，$e_g$ 是对应的嵌入空间方向。
 
-### 隐时间 (Latent Time)
+### 隐时间（Latent Time）
 
 scVelo 还引入了**隐时间**的概念，基于每个细胞的基因表达偏离稳态的程度来推断"发育时钟"：
 
@@ -242,7 +242,7 @@ $$
 
 ### 标准分析流程中的位置
 
-```
+```text
 表达矩阵 + 质控
     |
     v
@@ -262,7 +262,7 @@ RNA Velocity（scVelo）验证方向
     |
     v
 可视化（沿伪时间的基因表达热图、速度流场图）
-```
+```text
 
 <PitfallsBox
   pitfalls={[

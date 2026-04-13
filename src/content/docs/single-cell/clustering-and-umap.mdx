@@ -14,7 +14,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   summary='单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的「维度灾难」。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。'
   bullets={[
     '掌握 PCA 的线性投影逻辑：寻找解释最大方差的变异轴',
-    '理解聚类的核心标准：同质性 (Homogeneity) 与分离性 (Separation)',
+    '理解聚类的核心标准：同质性（Homogeneity） 与分离性（Separation）',
     '掌握 Leiden/Louvain 算法：基于模块度优化的图社区检测',
     '辨析 UMAP 可视化与图聚类的关系：可视化不等于分类依据'
   ]}
@@ -82,7 +82,7 @@ $$
 
 在单细胞数据中，我们通常选择前 30-50 个主成分用于后续分析。选择依据包括：
 
-- **肘部图 (Elbow Plot)**：绘制特征值的下降曲线，在拐点处截断。
+- **肘部图（Elbow Plot）**：绘制特征值的下降曲线，在拐点处截断。
 - **解释方差比例**：选择累计解释方差达到 80-90% 的主成分数量。
 - **生物学信号富集**：通过 JackStraw 或置换检验，验证哪些主成分包含的基因富集了生物学功能。
 
@@ -90,7 +90,7 @@ PCA 的核心假设是**生物学变异在主成分方向上**，而技术噪音
 
 ## 4. k-NN 图构建
 
-在 PCA 降维后的空间中，我们为每个细胞找到其最近的 $k$ 个邻居，构建一个 **k-NN 图 (k-Nearest Neighbor Graph)**。
+在 PCA 降维后的空间中，我们为每个细胞找到其最近的 $k$ 个邻居，构建一个 **k-NN 图（k-Nearest Neighbor Graph）**。
 
 ### 构建过程
 
@@ -116,12 +116,12 @@ $$
 ## 5. 聚类的数学直觉：同质性与分离性
 
 正如在 [Corrupted Cliques](../phylogeny/corrupted-cliques-cast.mdx) 中讨论的，一个理想的聚类（如团图）应满足：
-1.  **同质性 (Homogeneity)**：同一簇内的细胞在转录组上高度相似。
-2.  **分离性 (Separation)**：不同簇的细胞之间界限清晰。
+1.  **同质性（Homogeneity）**：同一簇内的细胞在转录组上高度相似。
+2.  **分离性（Separation）**：不同簇的细胞之间界限清晰。
 
 ### 图聚类：Leiden 与 Louvain 算法
 
-现代单细胞分析（如 Scanpy, Seurat）首选 **Leiden** 或 **Louvain** 算法。这两种算法都基于**模块度 (Modularity)** 优化。
+现代单细胞分析（如 Scanpy、Seurat）首选 **Leiden** 或 **Louvain** 算法。这两种算法都基于**模块度（Modularity）** 优化。
 
 **模块度**定义为：
 
@@ -152,7 +152,7 @@ $$
   ]}
 />
 
-### 分辨率参数 (Resolution)
+### 分辨率参数（Resolution）
 
 分辨率参数 $\gamma$ 控制聚类的粒度。修改后的模块度公式为：
 
@@ -175,7 +175,7 @@ $$
 
 ### 算法步骤
 
-1. **构建模糊单纯复形 (Fuzzy Simplicial Set)**：在高维空间中，对每个点 $x_i$，定义其到第 $k$ 个最近邻的距离 $\rho_i$。然后使用高斯核函数计算局部连接强度：
+1. **构建模糊单纯复形（Fuzzy Simplicial Set）**：在高维空间中，对每个点 $x_i$，定义其到第 $k$ 个最近邻的距离 $\rho_i$。然后使用高斯核函数计算局部连接强度：
 
 $$
 p_{ij} = \exp\left(-\frac{\max(0, d(x_i, x_j) - \rho_i)}{\sigma_i}\right)
@@ -261,7 +261,7 @@ $$
 - 在二维平面上，{1, 2, 3} 形成一个紧凑的簇，{4, 5, 6} 形成另一个簇。
 - 两个簇之间的距离反映了它们在 PCA 空间中的分离程度。
 
-## 8. 细胞类型注释 (Annotation)
+## 8. 细胞类型注释（Annotation）
 
 聚类只是将细胞分成了"0, 1, 2..."号盒子。
 - **算法任务**：差异表达分析（Differential Expression）。寻找每个 cluster 特有的 **Marker Genes**。
@@ -327,7 +327,7 @@ sc.tl.pca(adata, n_comps=50)
 sc.pp.neighbors(adata, n_neighbors=15, n_pcs=30)
 sc.tl.leiden(adata, resolution=0.8)
 sc.tl.umap(adata)
-```
+```text
 
 
 <PageHeaderMeta section="Applications" />

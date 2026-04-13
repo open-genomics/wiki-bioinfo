@@ -29,12 +29,12 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 每条测序 read 在 FASTQ 中由四行组成：
 
-```
+```text
 @SEQ_ID
 GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTC
 +
 !''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF>>>
-```
+```text
 
 | 行号 | 内容 | 说明 |
 |------|------|------|
@@ -106,9 +106,9 @@ $$P = 10^{-Q/10}$$
 
 现代 FASTQ 标识符行包含丰富的元数据。以 Illumina 为例：
 
-```
+```text
 @M00123:45:000000000-A1B2C:1:1101:12345:6789 1:N:0:ATCACG
-```
+```text
 
 | 字段 | 说明 |
 |------|------|
@@ -133,10 +133,10 @@ $$P = 10^{-Q/10}$$
 
 每个 DNA 片段从两端分别测序，产生 read1 和 read2：
 
-```
+```text
 sample_R1.fastq.gz  ← read 1 序列
 sample_R2.fastq.gz  ← read 2 序列
-```
+```text
 
 两个文件中的 reads **按顺序一一对应**（第 n 行的 read1 与第 n 行的 read2 来自同一个 DNA 片段）。
 

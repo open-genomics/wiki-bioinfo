@@ -71,7 +71,7 @@ $$\rho(1, i): \pi_1 \pi_2 ... \pi_i \pi_{i+1} ... \pi_n \rightarrow \pi_i \pi_{i
 排列：$3\ 1\ 4\ 2$
 
 排序过程：
-```
+```text
 3 1 4 2   (原始)
 ↓ ρ(1,3)  反转前3个
 4 1 3 2
@@ -83,7 +83,7 @@ $$\rho(1, i): \pi_1 \pi_2 ... \pi_i \pi_{i+1} ... \pi_n \rightarrow \pi_i \pi_{i
 3 2 1 4
 ↓ ρ(1,3)  反转前3个
 1 2 3 4   (排序完成)
-```
+```text
 
 共 **5 次**前缀反转。
 
@@ -93,7 +93,7 @@ $$\rho(1, i): \pi_1 \pi_2 ... \pi_i \pi_{i+1} ... \pi_n \rightarrow \pi_i \pi_{i
 
 **策略**：每次将最大未排序元素翻转到正确位置。
 
-```
+```text
 SIMPLEREVERSALSORT(π):
     for i = n down to 2:
         // 找到元素 i 的位置
@@ -106,7 +106,7 @@ SIMPLEREVERSALSORT(π):
             // 将 i 翻到位置 i
             π = π · ρ(1, i)
     return π
-```
+```text
 
 ### 性能分析
 
@@ -132,7 +132,7 @@ SIMPLEREVERSALSORT(π):
 
 ### Gates-Papadimitriou 定理
 
-**定理 (1979)**：任何 $n$ 个元素的排列都可以用最多 $\frac{5(n+1)}{3}$ 次前缀反转排序。
+**定理（1979）**：任何 $n$ 个元素的排列都可以用最多 $\frac{5(n+1)}{3}$ 次前缀反转排序。
 
 **意义**：
 - 建立了问题困难度的上界
@@ -160,14 +160,14 @@ SIMPLEREVERSALSORT(π):
 
 ### 基于断点的算法
 
-```
+```text
 BREAKPOINTPANCAKESORT(π):
     while π 有前缀断点:
         // 选择能消除前缀断点的翻转
-        i = argmin { 前缀断点数(π · ρ(1, i)) }
+        i = argmin { 前缀断点数（π · ρ(1, i）) }
         π = π · ρ(1, i)
     return π
-```
+```text
 
 **性能**：优于简单贪心，但仍非最优。
 
@@ -194,7 +194,7 @@ BREAKPOINTPANCAKESORT(π):
   leftTitle="任意区间反转"
   rightTitle="仅前缀反转"
   rows={[
-    { aspect: '最优解计算', left: '多项式时间 (Hannenhalli-Pevzner)', right: 'NP-难' },
+    { aspect: '最优解计算', left: '多项式时间（Hannenhalli-Pevzner）', right: 'NP-难' },
     { aspect: '实际应用', left: '基因组重排分析', right: '理论模型' },
     { aspect: '算法复杂度', left: '$O(n^4)$ 最初，现已优化', right: '近似算法' }
   ]}

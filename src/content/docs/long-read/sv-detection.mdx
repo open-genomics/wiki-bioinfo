@@ -43,7 +43,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ### SV 的生物学重要性
 
-结构变异虽然在数量上少于单核苷酸变异 (SNV)，但其影响的碱基数远大于 SNV。研究表明：
+结构变异虽然在数量上少于单核苷酸变异（SNV），但其影响的碱基数远大于 SNV。研究表明：
 - 普通人的基因组中约含有 $4\text{--}5 \text{ Mb}$ 的 SV，影响的碱基数是 SNV 和 Indel 的 3--4 倍。
 - SV 是许多遗传疾病（如杜氏肌营养不良、血友病 A）的直接致病变异。
 - SV 在进化过程中扮演着关键角色——人类与黑猩猩基因组之间的差异中，有超过一半是由 SV 贡献的。
@@ -60,7 +60,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 3. 核心思想与数学模型
 
-长读长 SV 检测的数学核心是**区间分解问题 (Interval Decomposition)**：给定一组 Read 比对记录，如何将基因组坐标轴分解为一组连续的"一致区间"和"变异区间"。
+长读长 SV 检测的数学核心是**区间分解问题（Interval Decomposition）**：给定一组 Read 比对记录，如何将基因组坐标轴分解为一组连续的"一致区间"和"变异区间"。
 
 形式化地，给定参考基因组 $R$ 和一组比对记录 $\mathcal{A} = \{a_1, a_2, \ldots, a_m\}$，我们需要找到一个分区：
 $$R = I_1 \cdot V_1 \cdot I_2 \cdot V_2 \cdots I_k \cdot V_k \cdot I_{k+1}$$
@@ -74,13 +74,13 @@ $$R = I_1 \cdot V_1 \cdot I_2 \cdot V_2 \cdots I_k \cdot V_k \cdot I_{k+1}$$
   <figcaption>长读长检测 SV 的核心信号：Split-read、覆盖度波动与不正常比对方向</figcaption>
 </figure>
 
-长读长 SV Caller（如 Sniffles, cuteSV）通过分析 BAM 文件中的非正常比对信号来工作：
+长读长 SV Caller（如 Sniffles、cuteSV）通过分析 BAM 文件中的非正常比对信号来工作：
 
 <DefinitionList
   items={[
     {
       term: 'Split-read (分割比对)',
-      definition: '单条 Read 的不同部分被比对到了基因组的不连续位置。这是精确定位断点 (Breakpoint) 的最强证据。Split-read 可以精确到碱基级别的断点定位。',
+      definition: '单条 Read 的不同部分被比对到了基因组的不连续位置。这是精确定位断点（Breakpoint） 的最强证据。Split-read 可以精确到碱基级别的断点定位。',
     },
     {
       term: 'Large Indels in CIGAR',
@@ -88,30 +88,30 @@ $$R = I_1 \cdot V_1 \cdot I_2 \cdot V_2 \cdots I_k \cdot V_k \cdot I_{k+1}$$
     },
     {
       term: 'Discordant Orientations',
-      definition: 'Read 内部序列的方向与参考基因组相反，通常暗示了倒位 (Inversion)。具体表现为 CIGAR 字符串中 \'S\' (soft-clip) 后序列被反向互补比对。',
+      definition: 'Read 内部序列的方向与参考基因组相反，通常暗示了倒位（Inversion）。具体表现为 CIGAR 字符串中 \'S\' (soft-clip) 后序列被反向互补比对。',
     },
   ]}
 />
 
 ### 其他辅助信号
 
-- **覆盖度波动 (Read Depth)**：如果某区域的 Read 覆盖度显著高于或低于基因组平均水平，可能暗示了拷贝数变异 (Copy Number Variation, CNV)。缺失区域覆盖度约为正常值的一半（杂合缺失）或为零（纯合缺失），重复区域覆盖度则高于正常值。
+- **覆盖度波动（Read Depth）**：如果某区域的 Read 覆盖度显著高于或低于基因组平均水平，可能暗示了拷贝数变异（Copy Number Variation, CNV）。缺失区域覆盖度约为正常值的一半（杂合缺失）或为零（纯合缺失），重复区域覆盖度则高于正常值。
 
 ## 5. SV 的主要类型
 
 | 类型 | 缩写 | 定义 | 比对信号特征 |
 | :--- | :--- | :--- | :--- |
-| 缺失 (Deletion) | DEL | 参考序列中的一段丢失 | CIGAR 中出现大 D；Split-read 断点两侧距离远 |
-| 插入 (Insertion) | INS | 参考序列中多出一段新序列 | CIGAR 中出现大 I；Split-read 中有无法比对的序列段 |
-| 重复 (Duplication) | DUP | 一段序列被复制了一份或多份 | 覆盖度升高；Split-read 比对到多个位置 |
-| 倒位 (Inversion) | INV | 一段序列的方向被翻转 | 反向比对；Discordant orientations |
-| 易位 (Translocation) | TRA | 序列从一个染色体移动到另一个染色体 | Split-read 比对到不同染色体 |
+| 缺失（Deletion） | DEL | 参考序列中的一段丢失 | CIGAR 中出现大 D；Split-read 断点两侧距离远 |
+| 插入（Insertion） | INS | 参考序列中多出一段新序列 | CIGAR 中出现大 I；Split-read 中有无法比对的序列段 |
+| 重复（Duplication） | DUP | 一段序列被复制了一份或多份 | 覆盖度升高；Split-read 比对到多个位置 |
+| 倒位（Inversion） | INV | 一段序列的方向被翻转 | 反向比对；Discordant orientations |
+| 易位（Translocation） | TRA | 序列从一个染色体移动到另一个染色体 | Split-read 比对到不同染色体 |
 
 ### 复杂 SV
 
 除了上述基本类型外，还存在更复杂的 SV 形式：
-- **复杂重排 (Complex Rearrangement)**：多个断点同时发生，形成非简单的插入-缺失模式。例如，染色体碎裂 (Chromothripsis) 事件会导致一个染色体区域被"打碎"后以随机顺序重新拼接。
-- **嵌合变异 (Nested SV)**：一个 SV 内部嵌套着另一个 SV。例如，一个大型重复区域内包含多个小缺失。
+- **复杂重排（Complex Rearrangement）**：多个断点同时发生，形成非简单的插入-缺失模式。例如，染色体碎裂（Chromothripsis） 事件会导致一个染色体区域被"打碎"后以随机顺序重新拼接。
+- **嵌合变异（Nested SV）**：一个 SV 内部嵌套着另一个 SV。例如，一个大型重复区域内包含多个小缺失。
 
 ## 6. 算法流程：从比对信号到变异判定
 
@@ -120,17 +120,17 @@ $$R = I_1 \cdot V_1 \cdot I_2 \cdot V_2 \cdots I_k \cdot V_k \cdot I_{k+1}$$
 1.  **Read 比对**：将原始 Reads 比对到参考基因组。通常使用 **Minimap2** 的 `--cs` 和 `--MD` 选项，以保留详细的 CIGAR 和标记信息。
 2.  **信号提取**：扫描 BAM 文件，提取 CIGAR 字符串中的大 Indel 操作符、Soft-clipped 序列的位置和长度，以及覆盖度在滑动窗口中的分布。
 3.  **候选 SV 聚类**：将来自不同 Reads 的相似信号聚类到同一个候选 SV。例如，多条 Read 在相同位置报告了大 D 操作符，这些信号被聚类为一个候选缺失事件。
-4.  **基因型判定 (Genotyping)**：对于每个候选 SV，判定样本在该位点的基因型（0/0 纯合参考、0/1 杂合、1/1 纯合变异）。基因型判定通常基于覆盖度比例和支持 Read 的数量。
+4.  **基因型判定（Genotyping）**：对于每个候选 SV，判定样本在该位点的基因型（0/0 纯合参考、0/1 杂合、1/1 纯合变异）。基因型判定通常基于覆盖度比例和支持 Read 的数量。
 5.  **过滤与质量评分**：对候选 SV 进行质量评分和过滤，移除低质量的假阳性调用。
 
 ## 7. Worked Example：一个简单缺失的检测
 
 假设参考基因组在 chr1 的 1000--1500 位置有一段序列 "ABCDEFGH"（500 bp），而样本中这段序列缺失。
 
-```
+```text
 参考: ...XXXABCEFGHYYY...
                 ^1000    ^1500
-```
+```text
 
 一条长 Read 比对结果：
 - Read 的前半部分比对到 chr1:950--999（即 "XXX" 部分）
@@ -145,7 +145,7 @@ SV Caller 的处理：
 ## 8. SV 与重排：进化的视角
 
 正如在[基因组重排](../foundations/genome-rearrangements)中所述，大规模的结构变异本质上是基因组的**排列变换**。
-- **临床意义**：在癌症中，易位 (Translocation) 产生的融合基因（如 *BCR-ABL1*）是导致细胞失控生长的关键。
+- **临床意义**：在癌症中，易位（Translocation） 产生的融合基因（如 *BCR-ABL1*）是导致细胞失控生长的关键。
 - **演化直觉**：SV 是物种分化的重要驱动力，通过计算不同物种间的 SV 距离，可以推断其进化历史。
 
 ### SV 与基因组重排的数学联系
@@ -155,20 +155,20 @@ SV Caller 的处理：
 ## 9. 挑战：重复序列与噪音
 
 尽管长读长很强大，但在**低复杂度区域**（如简单的微卫星重复）检测 SV 仍有困难：
-- **算法对策**：需要结合单倍型 (Haplotype) 信息，利用两个亲本序列的差异来辅助判断变异的真伪。
+- **算法对策**：需要结合单倍型（Haplotype） 信息，利用两个亲本序列的差异来辅助判断变异的真伪。
 - **过滤**：利用群体频率数据库（如 gnomAD SV）排除常见的良性多态性。
 
 ### 串联重复的检测难题
 
-串联重复 (Tandem Repeat) 区域是 SV 检测的"重灾区"。当重复单元的拷贝数发生增减时，由于断点两侧的序列完全相同，算法难以精确定位变异的边界。针对这一问题，专门的串联重复检测工具（如 **TRiCICLE**、**ExpansionHunter Denovo**）采用了与通用 SV Caller 不同的策略：它们不依赖于精确的断点定位，而是通过分析 Read 中重复单元的串联模式来推断拷贝数变化。
+串联重复（Tandem Repeat） 区域是 SV 检测的"重灾区"。当重复单元的拷贝数发生增减时，由于断点两侧的序列完全相同，算法难以精确定位变异的边界。针对这一问题，专门的串联重复检测工具（如 **TRiCICLE**、**ExpansionHunter Denovo**）采用了与通用 SV Caller 不同的策略：它们不依赖于精确的断点定位，而是通过分析 Read 中重复单元的串联模式来推断拷贝数变化。
 
 ### 测序假象与真实变异的区分
 
 长读长数据中存在一些系统性的假信号，可能被误判为 SV：
 - **嵌合 Read (Chimera)**：两条不相关的 DNA 分子在文库制备过程中被人为连接，产生假性的易位信号。
-- **比对假象**：在高相似度的旁系同源区域 (Paralogous Region)，Read 可能被错误比对，产生假性 SV。
+- **比对假象**：在高相似度的旁系同源区域（Paralogous Region），Read 可能被错误比对，产生假性 SV。
 
-区分真实变异和假信号通常需要结合多个维度的证据：Read 两端的唯一性、覆盖度的一致性、以及（如果有的话）短读长数据或光学图谱 (Optical Mapping) 的交叉验证。
+区分真实变异和假信号通常需要结合多个维度的证据：Read 两端的唯一性、覆盖度的一致性、以及（如果有的话）短读长数据或光学图谱（Optical Mapping） 的交叉验证。
 
 ## 10. 复杂度与适用前提
 

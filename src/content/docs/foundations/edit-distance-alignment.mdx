@@ -41,12 +41,12 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 例如，字符串 "TGCATAT" 和 "ATCCGAT" 的编辑距离为 4：
 
-```
+```text
 TGCATAT → ATGCATAT (插入 A)
 ATGCATAT → ATGCAAT (删除 T)
 ATGCAAT → ATGCGAT (替换 C→G)
 ATGCGAT → ATCCGAT (替换 G→C)
-```
+```text
 
 ### 为什么编辑距离重要
 
@@ -66,13 +66,13 @@ ATGCGAT → ATCCGAT (替换 G→C)
 
 定义 `d[i,j]` 为字符串 v[1..i] 和 w[1..j] 之间的编辑距离：
 
-```
+```text
 d[i,j] = min {
   d[i-1,j] + 1,        // 删除 v[i]
   d[i,j-1] + 1,        // 插入 w[j] 
   d[i-1,j-1] + cost    // 替换 v[i] 为 w[j]，cost = 0 如果 v[i]==w[j]，否则 1
 }
-```
+```text
 
 初始条件：
 - `d[0,0] = 0`
@@ -126,13 +126,13 @@ d[i,j] = min {
 
 定义 `s[i,j]` 为 v[1..i] 和 w[1..j] 的最优全局比对得分：
 
-```
+```text
 s[i,j] = max {
   s[i-1,j-1] + score(v[i], w[j]),  // 对角线：匹配或不匹配
   s[i-1,j] + gap_penalty,          // 上方：v 有空格
   s[i,j-1] + gap_penalty           // 左侧：w 有空格
 }
-```
+```text
 
 初始条件：
 - `s[0,0] = 0`
@@ -147,27 +147,27 @@ s[i,j] = max {
 
 局部比对允许空对齐（得分 0），所以递推关系变为：
 
-```
+```text
 s[i,j] = max {
   0,                               // 空对齐
   s[i-1,j-1] + score(v[i], w[j]),  // 对角线
   s[i-1,j] + gap_penalty,          // 上方
   s[i,j-1] + gap_penalty           // 左侧
 }
-```
+```text
 
 这确保了只有正得分区域被报告。
 
 ### 示例：局部比对
 
-```
+```text
 v: ATATATAT
 w: TATATATA
 
 局部比对：
 ATATA
 TATA-
-```
+```text
 
 得分：4×1 + 1×(-2) = 2
 
@@ -210,23 +210,23 @@ TATA-
 <DefinitionList
   items={[
     {
-      term: "编辑距离 (Edit Distance)",
+      term: "编辑距离（Edit Distance）",
       definition: "将一个字符串转换为另一个字符串的最少编辑操作数。允许插入、删除、替换。"
     },
     {
-      term: "全局比对 (Global Alignment)",
+      term: "全局比对（Global Alignment）",
       definition: "对齐整个字符串，适用于高度相似的序列，如同源蛋白。"
     },
     {
-      term: "局部比对 (Local Alignment)",
+      term: "局部比对（Local Alignment）",
       definition: "只对齐相似片段，适用于数据库搜索，找出序列中的保守域。"
     },
     {
-      term: "动态规划 (Dynamic Programming)",
+      term: "动态规划（Dynamic Programming）",
       definition: "通过填充表格解决最优化问题，避免重复计算子问题。"
     },
     {
-      term: "得分矩阵 (Scoring Matrix)",
+      term: "得分矩阵（Scoring Matrix）",
       definition: "定义字符匹配、不匹配和空位的得分，如 PAM 或 BLOSUM 矩阵。"
     }
   ]}

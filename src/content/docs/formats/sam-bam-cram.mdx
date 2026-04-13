@@ -49,7 +49,7 @@ graph LR
     Map --> Ref
     Map --> Pos
     Map --> CIGAR
-```
+```text
 
 ### 核心数据结构
 
@@ -111,10 +111,10 @@ FLAG 是一个整数，其二进制表示编码多个比对属性：
 
 ### FLAG 解读示例
 
-```
+```text
 FLAG = 99 (二进制: 01100011)
 = 0x1 (PAIRED) + 0x2 (PROPER_PAIR) + 0x20 (MREVERSE) + 0x40 (READ1)
-```
+```text
 
 这意味着：这是一个正常配对的 read 1，其配对 read 比对到负链。
 
@@ -136,24 +136,24 @@ CIGAR（Concise Idiosyncratic Gapped Alignment Report）编码 read 与参考之
 
 ### CIGAR 解读示例
 
-```
+```text
 CIGAR: 76M
-```
+```text
 → 76 个碱基全部比对到参考上（可能包含匹配和错配）
 
-```
+```text
 CIGAR: 50M2I24M
-```
+```text
 → 50 个匹配，2 个插入，24 个匹配
 
-```
+```text
 CIGAR: 30M1D45M
-```
+```text
 → 30 个匹配，1 个缺失（参考上有但 read 上没有），45 个匹配
 
-```
+```text
 CIGAR: 10S60M6S
-```
+```text
 → 两端各有 soft clipping（通常表示低质量或比对不确定区域）
 
 ## MAPQ 比对质量

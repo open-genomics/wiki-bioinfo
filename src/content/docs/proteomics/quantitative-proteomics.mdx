@@ -58,20 +58,20 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 - **无扩增机制**：蛋白质不能像 DNA 那样通过 PCR 扩增，低丰度蛋白极难检测。
 - **巨大的动态范围**：血液中白蛋白与细胞因子之间的浓度差异可达 $10^{10}$ 倍。
-- **缺失值 (Missing Values)**：由于质谱采样的随机性，同一个蛋白在样本 A 中被测到，在样本 B 中可能完全没有信号。这是蛋白质组学数据分析中最棘手的问题之一。
+- **缺失值（Missing Values）**：由于质谱采样的随机性，同一个蛋白在样本 A 中被测到，在样本 B 中可能完全没有信号。这是蛋白质组学数据分析中最棘手的问题之一。
 
 ### 3.2 定量策略分类
 
-#### 无标记定量 (Label-free Quantification, LFQ)
+#### 无标记定量（Label-free Quantification, LFQ）
 
 直接比较不同批次运行产生的质谱信号，不需要任何化学标记。
 
-- **提取离子色谱图 (Extracted Ion Chromatogram, XIC) 定量**：在 MS1 层面追踪特定肽段的离子信号，通过积分色谱峰面积来估计丰度。这是目前最常用的 LFQ 方法，由 MaxQuant 等工具实现。
-- **谱图计数 (Spectral Counting)**：统计一个蛋白被鉴定到的二级谱图（MS2）总数。简单但精度较低。
+- **提取离子色谱图（Extracted Ion Chromatogram, XIC） 定量**：在 MS1 层面追踪特定肽段的离子信号，通过积分色谱峰面积来估计丰度。这是目前最常用的 LFQ 方法，由 MaxQuant 等工具实现。
+- **谱图计数（Spectral Counting）**：统计一个蛋白被鉴定到的二级谱图（MS2）总数。简单但精度较低。
 - **优点**：操作简单，样本数量不受标记通道限制，适合大规模队列研究。
 - **挑战**：不同批次运行之间需要复杂的色谱对齐（Retention Time Alignment）和强度归一化，否则系统偏差会掩盖真实的生物学差异。
 
-#### 同位素标记定量 (Isotopic Labeling)
+#### 同位素标记定量（Isotopic Labeling）
 
 利用稳定同位素（如 $^{13}\text{C}$、$^{15}\text{N}$、$^2\text{H}$）产生的可区分的质量偏移，将多个样本混合在同一次质谱运行中。
 
@@ -88,27 +88,27 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-#### 绝对定量 (Absolute Quantification)
+#### 绝对定量（Absolute Quantification）
 
 在相对定量的基础上，进一步确定蛋白质的绝对浓度（如 copies/cell 或 ng/mL）。
 
-- **AQUA 肽段 (Absolute QUAntification)**：合成已知浓度的重同位素标记肽段作为内标，通过内标与内源性肽段的信号比计算绝对浓度。
+- **AQUA 肽段（Absolute QUAntification）**：合成已知浓度的重同位素标记肽段作为内标，通过内标与内源性肽段的信号比计算绝对浓度。
 - **iBAQ (intensity-Based Absolute Quantification)**：MaxQuant 提出的无标记绝对定量方法，利用所有可检测肽段的强度之和除以该蛋白理论可产生的肽段总数来推断蛋白摩尔数。
 
 ### 3.3 从肽段到蛋白质：数据汇总
 
 由于质谱实际测量的是肽段（Peptide），最终需要将多个肽段的定量值汇总为蛋白丰度：
 
-- **独特肽段 (Unique Peptides)**：只属于一个蛋白（Protein Group）的肽段，是最可靠的定量证据。
-- **共享肽段 (Shared Peptides)**：属于同源蛋白家族（Protein Family）或不同剪接变体（Isoform）的肽段。通常采用"剃刀原则"（Razor Peptides）进行分配——即把共享肽段分配给已有最多独特肽段支持的蛋白。
+- **独特肽段（Unique Peptides）**：只属于一个蛋白（Protein Group）的肽段，是最可靠的定量证据。
+- **共享肽段（Shared Peptides）**：属于同源蛋白家族（Protein Family）或不同剪接变体（Isoform）的肽段。通常采用"剃刀原则"（Razor Peptides）进行分配——即把共享肽段分配给已有最多独特肽段支持的蛋白。
 - **Top-N 策略**：在 MaxQuant 等工具中，默认只使用强度最高的 2--3 个肽段（Top-N）来代表蛋白质丰度，以减少异常值的影响。
 
 ### 3.4 归一化与批次校正
 
 定量数据在进入统计检验前，需要经过归一化处理以消除系统偏差：
 
-- **总量归一化 (Total Intensity Normalization)**：将每个样本的所有蛋白强度之和缩放到同一水平。
-- **中位数归一化 (Median Normalization)**：假设大多数蛋白不发生变化，将每个样本的中位数蛋白强度对齐。
+- **总量归一化（Total Intensity Normalization）**：将每个样本的所有蛋白强度之和缩放到同一水平。
+- **中位数归一化（Median Normalization）**：假设大多数蛋白不发生变化，将每个样本的中位数蛋白强度对齐。
 - **内标归一化**：利用已知浓度的外源蛋白（如 yeast enolase）作为参考标准。
 - **批次效应校正**：对于跨越多天或多个实验批次的大规模研究，可使用 ComBat 等方法消除批次间系统偏差。
 
@@ -118,9 +118,9 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 最常见的应用场景。通过比较处理组与对照组，找出丰度发生显著变化的蛋白质。核心统计流程：
 
-1. **倍数变化 (Fold Change)**：计算处理组相对于对照组的丰度比值，通常取 $\log_2$ 变换使分布对称。
-2. **统计检验 (Statistical Test)**：使用 $t$ 检验、Wilcoxon 秩和检验等方法计算 P-value。
-3. **多重检验校正 (Multiple Testing Correction)**：利用 Benjamini-Hochberg (BH) 方法控制错误发现率（False Discovery Rate, FDR）。在蛋白质组学中，常用的显著性阈值为 **FDR < 0.05** 且 **$|\log_2 \text{FC}| > 1$**。
+1. **倍数变化（Fold Change）**：计算处理组相对于对照组的丰度比值，通常取 $\log_2$ 变换使分布对称。
+2. **统计检验（Statistical Test）**：使用 $t$ 检验、Wilcoxon 秩和检验等方法计算 P-value。
+3. **多重检验校正（Multiple Testing Correction）**：利用 Benjamini-Hochberg (BH) 方法控制错误发现率（False Discovery Rate, FDR）。在蛋白质组学中，常用的显著性阈值为 **FDR < 0.05** 且 **$|\log_2 \text{FC}| > 1$**。
 
 ### 4.2 时间序列与剂量响应
 

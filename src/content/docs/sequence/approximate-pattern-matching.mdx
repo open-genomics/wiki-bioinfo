@@ -138,9 +138,9 @@ $$d_H(P, T[i..i+m-1]) = \sum_{j=1}^{m} \mathbb{1}[p_j \neq t_{i+j-1}]$$
 
 扩展标准的编辑距离 DP 表，记录每个文本位置与模式的距离。
 
-```
+```text
 APPROXIMATE_MATCH_DP(T, P, n, m, k):
-    // DP 表：(n+1) × (m+1)
+    // DP 表：（n+1） × (m+1)
     // D[i,j] = T[1..i] 与 P[1..j] 的编辑距离
     
     // 初始化
@@ -167,7 +167,7 @@ APPROXIMATE_MATCH_DP(T, P, n, m, k):
             matches.append(i - m + 1)  // 计算起始位置
     
     return matches
-```
+```text
 
 **时间复杂度**：$O(n \cdot m)$
 
@@ -212,7 +212,7 @@ APPROXIMATE_MATCH_DP(T, P, n, m, k):
 - 至少有一个片段必须完全匹配（鸽巢原理）
 
 **算法**：
-```
+```text
 QGRAM_APPROXIMATE_MATCH(T, P, m, k):
     // 将模式分割为 k+1 个片段
     // 每个片段长度 ≈ m/(k+1)
@@ -235,7 +235,7 @@ QGRAM_APPROXIMATE_MATCH(T, P, m, k):
                 matches.add(start)
     
     return matches
-```
+```text
 
 **复杂度**：
 - 预处理：$O(n)$
@@ -261,7 +261,7 @@ BLAST（Basic Local Alignment Search Tool）是生物信息学中最广泛使用
 
 ### BLAST 算法流程
 
-```
+```text
 BLAST(query, database):
     // 1. 预处理查询序列
     seeds = EXTRACT_SHORT_WORDS(query, word_size)
@@ -278,7 +278,7 @@ BLAST(query, database):
             if alignment.score > threshold:
                 e_value = CALCULATE_E_VALUE(alignment)
                 REPORT(alignment, e_value)
-```
+```text
 
 ### BLAST vs 精确算法的权衡
 
@@ -297,7 +297,7 @@ BLAST(query, database):
 
 ### 案例 1：测序 reads 比对
 
-**问题**：将 100bp 的 Illumina reads 比对到人类基因组（3Gb），允许最多 2 个错配。
+**问题**：将 100 bp 的 Illumina reads 比对到人类基因组（3 Gb），允许最多 2 个错配。
 
 **方法**：
 1. 使用 BWA、Bowtie 等基于 BWT/FM-index 的工具

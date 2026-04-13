@@ -32,8 +32,8 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 | 场景 | 数据规模 | 穷举搜索复杂度 | 实际耗时（使用索引算法） |
 |------|----------|---------------|------------------------|
 | 蛋白质序列 vs NCBI nr | ~$10^8$ 条序列，数百 GB | $O(10^{10})$ 操作，数周 | 秒级（BLAST） |
-| 短读长比对 vs 人类基因组 | 3Gb 参考 | 每 read $O(3 \times 10^9)$，不可行 | 分钟级（BWA） |
-| 长读长比对 vs 人类基因组 | 3Gb 参考 | 不可行 | 小时级（minimap2） |
+| 短读长比对 vs 人类基因组 | 3 Gb 参考 | 每 read $O(3 \times 10^9)$，不可行 | 分钟级（BWA） |
+| 长读长比对 vs 人类基因组 | 3 Gb 参考 | 不可行 | 小时级（minimap2） |
 
 ### 9.10.2 与理解算法的实际价值
 
@@ -49,7 +49,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 | 约束类型 | 具体表现 | 算法影响 |
 |---------|---------|---------|
-| **数据规模** | 人类基因组 3Gb，NCBI nr 数百 GB | 必须建立索引，避免线性扫描 |
+| **数据规模** | 人类基因组 3 Gb，NCBI nr 数百 GB | 必须建立索引，避免线性扫描 |
 | **序列变异** | SNP、Indel、保守区段 | 需支持近似匹配 |
 | **生物学信号** | 功能域、保守序列 | 评分矩阵（BLOSUM/PAM）而非简单匹配 |
 | **计算资源** | 内存、I/O、并行环境 | 索引压缩、分块处理 |
@@ -73,7 +73,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 *输出*：与 $Q$ 相似度最高的数据库记录
 
 **伪代码**：
-```
+```text
 EXHAUSTIVE-SEARCH(Q, D, M)
 1  best-score ← -∞
 2  best-match ← NULL
@@ -83,7 +83,7 @@ EXHAUSTIVE-SEARCH(Q, D, M)
 6          best-score ← score
 7          best-match ← S
 8  return best-match, best-score
-```
+```text
 
 **复杂度分析**：
 - 时间：$O(N \cdot m \cdot L_{avg})$，其中 $N$ 为序列数
@@ -99,7 +99,7 @@ EXHAUSTIVE-SEARCH(Q, D, M)
 
 #### 索引构建算法
 
-```
+```text
 BUILD-KMER-INDEX(D, k)
 1  index ← empty hash table
 2  for each sequence S in D
@@ -109,13 +109,13 @@ BUILD-KMER-INDEX(D, k)
 6              index[kmer] ← empty list
 7          index[kmer].append((seq-id, i))
 8  return index
-```
+```text
 
 **空间复杂度**：$O(N)$，需存储所有 k-mer 及其位置
 
 #### 搜索算法
 
-```
+```text
 KMER-SEARCH(Q, index, k, threshold)
 1  candidates ← empty set
 2  for i ← 1 to |Q| - k + 1
@@ -127,7 +127,7 @@ KMER-SEARCH(Q, index, k, threshold)
 8      score ← VERIFY(Q, D[seq-id])  // 详细比对
 9      if score ≥ threshold
 10         output (seq-id, score)
-```
+```text
 
 **时间复杂度**：$O(m + C \cdot L)$，其中 $C$ 为候选数，通常 $C \ll N$
 
@@ -151,7 +151,7 @@ KMER-SEARCH(Q, index, k, threshold)
 
 #### 算法框架
 
-```
+```text
 SEED-AND-EXTEND(Q, D, k, X, T)
 // Q: query, D: database, k: seed length
 // X: extension threshold, T: final score threshold
@@ -165,7 +165,7 @@ SEED-AND-EXTEND(Q, D, k, X, T)
 7          high-scoring-pairs.append((d-seq, score, alignment))
 8          
 9  return SORT-BY-SCORE(high-scoring-pairs)
-```
+```text
 
 #### Seed 查找阶段
 
@@ -190,7 +190,7 @@ SEED-AND-EXTEND(Q, D, k, X, T)
 |---------|--------|------|----------|
 | 短 seed (k=3), 低阈值 | 高 | 慢 | 远缘蛋白搜索 |
 | 长 seed (k=11), 高阈值 | 低 | 快 | 近缘核酸搜索 |
-| 默认参数 (BLASTN k=11, BLASTP k=3) | 中 | 中 | 一般搜索 |
+| 默认参数（BLASTN k=11, BLASTP k=3） | 中 | 中 | 一般搜索 |
 
 ### 9.11.4 Burrows-Wheeler Transform 与 FM-index
 
@@ -202,7 +202,7 @@ SEED-AND-EXTEND(Q, D, k, X, T)
 
 *约束*：索引大小应远小于 $T$（压缩存储），查询时间应与 $|T|$ 无关
 
-**背景**：人类基因组 3Gb，构建 k-mer 索引需存储数十亿个 k-mer，内存开销巨大。BWT/FM-index 提供压缩存储同时支持快速搜索的解决方案。
+**背景**：人类基因组 3 Gb，构建 k-mer 索引需存储数十亿个 k-mer，内存开销巨大。BWT/FM-index 提供压缩存储同时支持快速搜索的解决方案。
 
 #### BWT 变换
 
@@ -234,7 +234,7 @@ FM-index = BWT + 两个辅助数组：
 
 **精确匹配算法**：
 
-```
+```text
 EXACT-MATCH(P, T)  // P: pattern, T: text
 1  (top, bottom) ← (1, |T|)
 2  for i ← |P| down to 1
@@ -244,7 +244,7 @@ EXACT-MATCH(P, T)  // P: pattern, T: text
 6      if top > bottom
 7          return "not found"
 8  return (top, bottom)  // 匹配区间
-```
+```text
 
 **时间复杂度**：$O(|P|)$ —— 与文本长度无关！
 
@@ -352,7 +352,7 @@ $$E = Kmn e^{-\lambda S}$$
 
 #### 完整算法流程
 
-```
+```text
 BLAST(Q, D, M, w, T, X)
 1  // ===== 阶段 1：索引构建（离线） =====
 2  index ← BUILD-KMER-INDEX(D, w)
@@ -390,7 +390,7 @@ BLAST(Q, D, M, w, T, X)
 34     results.append((seq-id, alignment, bit-score, e-value))
 35 
 36 return SORT-BY-E-VALUE(results)
-```
+```text
 
 #### 算法优化要点
 
@@ -411,7 +411,7 @@ BLAST(Q, D, M, w, T, X)
 
 #### 核心算法步骤
 
-```
+```text
 BWA-MEM(R, G)
 1  // ===== 离线：构建索引 =====
 2  bwt ← BWT-TRANSFORM(G + '$')
@@ -434,11 +434,11 @@ BWA-MEM(R, G)
 19     
 20     // ===== 步骤 4：输出 =====
 21     output BEST-ALIGNMENT(candidates)
-```
+```text
 
 #### MEM 查找算法
 
-```
+```text
 FIND-MEMS(R, G, fm-index)
 1  mems ← empty list
 2  i ← 1
@@ -451,11 +451,11 @@ FIND-MEMS(R, G, fm-index)
 9      else
 10         i ← i + 1
 11 return mems
-```
+```text
 
 #### 关键优势
 
-- **内存效率**：人类基因组 FM-index 仅需 ~4GB
+- **内存效率**：人类基因组 FM-index 仅需 ~4 GB
 - **全基因组搜索**：无需限制性染色体范围
 - **嵌合比对**：通过链式匹配处理剪接位点（RNA-seq）
 
@@ -464,11 +464,11 @@ FIND-MEMS(R, G, fm-index)
 ### 9.14.1 问题场景
 
 假设你有一条蛋白质序列：
-```
+```text
 MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKTEAEMKASEDLKKH
 GVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGDFGADA
 QGAMNKALELFRKDIAAKYKELGYQG
-```
+```text
 
 **目标**：在 UniProt 数据库（数亿条序列）中找到同源蛋白。
 
@@ -550,7 +550,7 @@ QGAMNKALELFRKDIAAKYKELGYQG
 
 ### 9.17.2 选择决策树
 
-```
+```text
 问题类型 → 数据规模 → 推荐算法
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 蛋白质搜索 → 大型数据库 → BLAST / DIAMOND
@@ -559,7 +559,7 @@ QGAMNKALELFRKDIAAKYKELGYQG
          → 拼接基因组 → BWA
 长读长比对 → PacBio/Nanopore → minimap2
 重复检测 → 基因组 → k-mer 索引
-```
+```text
 
 ## 9.18 扩展阅读
 

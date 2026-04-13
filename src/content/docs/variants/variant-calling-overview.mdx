@@ -97,13 +97,13 @@ DNA-seq 变异检测要解决的核心问题是：
 - **INFO 字段的解读**：DP（深度）、AF（等位基因频率）、SB（链偏好）等统计量帮助人工审核；
 - **注释一致性**：功能注释（如 VEP、SnpEff）依赖于转录本数据库版本，需与参考基因组版本匹配。
 
-## worked example
+## 示例
 
 一个简化 DNA-seq variant workflow 可以写成：
 
 ```text
 FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annotation -> interpretation
-```
+```text
 
 如果某个候选 SNP 只被极少数 reads 支持，而且这些 reads 的位置质量较差，那么它更可能是：
 

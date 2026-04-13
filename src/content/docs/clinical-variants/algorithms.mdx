@@ -78,13 +78,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 经典框架通常包含以下步骤：
 
-```
+```text
 1. 频率过滤：排除常见变异（如 gnomAD AF > 1%）
 2. 功能影响筛选：优先考虑 loss-of-function、splice site 等
 3. 遗传模式匹配：de novo、纯合、复合杂合等
 4. 基因-表型匹配：计算基因已知疾病与患者表型的相似度
 5. 综合评分：多维度证据整合为单一排序分数
-```
+```text
 
 <figure>
   <img src="/img/illustrations/variant-prioritization.svg" alt="临床变异优先级排序流水线：从 VCF 列表经频率过滤、功能影响、表型匹配到候选收敛" />
@@ -240,10 +240,10 @@ Read-depth 方法的核心是 segmentation 算法：
 
 De novo 变异检测的核心是**亲本-子代基因型一致性检验**：
 
-```
+```text
 H0: 子代变异由遗传或测序错误导致
 H1: 子代变异为真实的 de novo 事件
-```
+```text
 
 算法会计算在给定亲本基因型和测序错误率下，观察到子代变异的概率。
 

@@ -92,7 +92,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **生物学场景**：
 - 将数十亿 reads 映射到参考基因组
-- 处理人类基因组（3Gb）级别的数据
+- 处理人类基因组（3 Gb）级别的数据
 - 在有限内存和时间内完成分析
 
 **算法范式**：
@@ -164,7 +164,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 **核心数据结构**：
 - **Trie/前缀树**：高效前缀搜索
 - **Suffix Array**：后缀排序，支持快速范围查询
-- **Burrows-Wheeler Transform (BWT)**：数据压缩与逆变换
+- **Burrows-Wheeler Transform（BWT）**：数据压缩与逆变换
 - **FM-index**：基于 BWT 的压缩索引
 
 **何时使用**：
@@ -247,7 +247,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 面对具体问题时，如何选择合适的算法？
 
-```
+```text
 问题规模
     ↓
 小规模（＜1000） → 精确算法（动态规划）
@@ -263,7 +263,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 高确定性 → 确定性算法
     ↓
 有噪声 → 概率模型
-```
+```text
 
 **具体示例**：
 
@@ -292,7 +292,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 ### 空间复杂度考量
 
 - **人类基因组索引**：需要数 GB 内存
-- **动态规划矩阵**：两条 10kb 序列需要 100MB
+- **动态规划矩阵**：两条 10 kb 序列需要 100 MB
 - **组装图**：可能需要数十 GB
 
 **实践建议**：

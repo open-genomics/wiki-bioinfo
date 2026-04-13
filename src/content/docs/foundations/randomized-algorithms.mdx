@@ -77,7 +77,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 随机选择 pivot：
 
-```
+```text
 RANDOMIZEDQUICKSORT(array, low, high)
 1 if low < high
 2   pivot_index ← RANDOM(low, high)
@@ -85,7 +85,7 @@ RANDOMIZEDQUICKSORT(array, low, high)
 4   pivot ← partition(array, low, high)
 5   RANDOMIZEDQUICKSORT(array, low, pivot - 1)
 6   RANDOMIZEDQUICKSORT(array, pivot + 1, high)
-```
+```text
 
 ### 复杂度分析
 
@@ -118,7 +118,7 @@ Gibbs Sampling 通过一种更"谨慎"的随机化方式来缓解这个问题：
 2.  **选择与移除**：随机选择一条序列 $i$（$1 \leq i \leq t$），暂时将其排除。
 3.  **构建模型**：利用剩余的 $t-1$ 条序列中的 Motif 片段构建 Profile 矩阵 $P$。
 4.  **概率估算**：在被移除的序列 $i$ 中，计算每一个可能的 $l$-mer 在模型 $P$ 下出现的概率。
-5.  **按比例采样 (Roulette Wheel Selection)**：
+5.  **按比例采样（Roulette Wheel Selection）**：
     - 与贪心算法不同，我们不一定选概率最高的位置。
     - 我们按照计算出的概率分布随机采样一个新的位置 $s_i$。这意味着概率高的位置更可能被选中，但概率较低的位置也有机会，从而帮助算法跳出局部陷阱。
 6.  **迭代**：重复上述过程 $N$ 次，记录并返回得分最高的 Motif。
@@ -134,7 +134,7 @@ Gibbs Sampling 就像是在一个多维度的"地形"中行走。如果只往高
 - **序列比对**：某些比对算法使用采样策略
 - **参数估计**：在复杂概率模型中估计参数
 
-## 3. 随机投影 (Random Projections)
+## 3. 随机投影（Random Projections）
 
 ### 问题的背景
 在 Motif Finding 问题中，如果我们想找一个长度为 $l$ 的模式，且允许最多 $d$ 个错配（称为 $(l, d)$-motif 问题），传统的枚举法或贪心法在 $l$ 较大时会变得极其缓慢。

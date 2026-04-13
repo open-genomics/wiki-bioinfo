@@ -47,9 +47,9 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 九列制表符分隔：
 
-```
+```text
 chr1  HAVANA  gene  11869  14409  .  +  .  gene_id "ENSG00000223972"; gene_type "transcribed_unprocessed_pseudogene";
-```
+```text
 
 | 列号 | 字段 | 说明 |
 |------|------|------|
@@ -70,15 +70,15 @@ chr1  HAVANA  gene  11869  14409  .  +  .  gene_id "ENSG00000223972"; gene_type 
 - 属性使用 `=` 分隔（GTF 使用空格）
 - 支持任意特征类型
 
-```
+```text
 chr1  HAVANA  gene  11869  14409  .  +  .  ID=ENSG00000223972;Name=DDX11L1
 chr1  HAVANA  mRNA  11869  14409  .  +  .  ID=transcript:ENST00000;Parent=ENSG00000223972
 chr1  HAVANA  exon  11869  12227  .  +  .  Parent=transcript:ENST00000
-```
+```text
 
 ### 层级结构示例
 
-```
+```text
 gene: ENSG00000223972 (chr1:11869-14409)
   ├── transcript: ENST000001
   │     ├── exon: 11869-12227
@@ -87,22 +87,22 @@ gene: ENSG00000223972 (chr1:11869-14409)
   └── transcript: ENST000002
         ├── exon: 11869-12227
         └── exon: 12900-14409
-```
+```text
 
 ## BED：扁平区间集合
 
 ### 基本格式（3 列必需）
 
-```
+```text
 chr1  1000  5000
 chr2  300   800
-```
+```text
 
 ### 扩展格式（最多 12 列）
 
-```
+```text
 chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
-```
+```text
 
 | 列号 | 字段 | 必需？ | 说明 |
 |------|------|--------|------|
@@ -144,8 +144,8 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
     },
     {
       aspect: '示例',
-      left: '1-100 表示第 1 到第 100 个碱基（共 100bp）',
-      right: '0-100 表示第 1 到第 100 个碱基（共 100bp）',
+      left: '1-100 表示第 1 到第 100 个碱基（共 100 bp）',
+      right: '0-100 表示第 1 到第 100 个碱基（共 100 bp）',
     },
     {
       aspect: '转换',
@@ -155,7 +155,7 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
   ]}
 />
 
-**这是最常见的错误来源之一**。混淆坐标系统会导致区间偏移 1bp，可能使 peak 注释错误或变异功能判断失误。
+**这是最常见的错误来源之一**。混淆坐标系统会导致区间偏移 1 bp，可能使 peak 注释错误或变异功能判断失误。
 
 ## GTF vs GFF vs BED：何时使用哪个
 
@@ -202,7 +202,7 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
 
 <PitfallsBox
   items={[
-    '**坐标系统混淆**：直接将 GTF 的 start 当作 BED 的 start 使用，导致区间偏移 1bp。',
+    '**坐标系统混淆**：直接将 GTF 的 start 当作 BED 的 start 使用，导致区间偏移 1 bp。',
     '**GTF 与 BED 功能等价**：两者虽然都表示"区间"，但 GTF 是层级注释结构，BED 是扁平区间列表，语义不等价。',
     '**GTF = GFF**：GTF 是 GFF2 的严格子集，但 GFF3 有更灵活的属性定义，工具兼容性不同。',
     '**注释版本不匹配**：使用 GRCh37 的 BAM 配合 GRCh38 的 GTF，导致坐标无法映射。',

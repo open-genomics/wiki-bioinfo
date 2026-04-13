@@ -45,15 +45,15 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <DefinitionList
   items={[
     {
-      term: '读长 (Read Length)',
+      term: '读长（Read Length）',
       definition: '单条 Read 包含的碱基数量。短读长（Short Reads）通常 100-300 bp；长读长（Long Reads）可达数万 bp。',
     },
     {
-      term: '测序方向 (Strand Orientation)',
+      term: '测序方向（Strand Orientation）',
       definition: 'Read 来自正义链（Forward）还是反义链（Reverse）。在双端测序（Paired-End Sequencing）中，两个 Read 分别来自同一 DNA 片段的两端。',
     },
     {
-      term: '插入片段 (Insert Size)',
+      term: '插入片段（Insert Size）',
       definition: '双端测序中，两个 Read 之间的 DNA 片段长度（含 Read 本身）。插入片段的分布对于结构变异检测和基因组组装至关重要。',
     },
     {
@@ -66,8 +66,8 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 ### 短读长与长读长的权衡
 
 <ComparisonTable
-  leftTitle="短读长 (Short Reads)"
-  rightTitle="长读长 (Long Reads)"
+  leftTitle="短读长（Short Reads）"
+  rightTitle="长读长（Long Reads）"
   rows={[
     { aspect: '**典型平台**', left: 'Illumina (NovaSeq, HiSeq)', right: 'PacBio HiFi, Oxford Nanopore' },
     { aspect: '**读长**', left: '100-300 bp', right: '10-100+ kb' },
@@ -78,7 +78,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-## 2. 覆盖度 (Coverage) 与深度 (Depth)
+## 2. 覆盖度（Coverage） 与深度（Depth）
 
 这两个词在实践中常混用，但有细微差别。
 

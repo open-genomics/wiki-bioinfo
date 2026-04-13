@@ -66,7 +66,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 一个实用的判断准则是：**如果两条序列的长度和功能预期相似，使用全局比对；如果它们长度差异大或功能预期不同，使用局部比对。** 当不确定时，局部比对通常是更安全的选择——它不会强制将无关区域对齐。
 
-## 3. 全局比对 (Global Alignment)
+## 3. 全局比对（Global Alignment）
 
 **Needleman-Wunsch 算法**是全局比对的基石。它假设两条序列在进化上是整体相关的，因此试图将它们从第一个碱基对齐到最后一个。
 
@@ -106,7 +106,7 @@ $$
 2.  **上方** $F(i-1,j) + g$：$x_i$ 与 Gap 对齐（即 $x_i$ 被删除）。
 3.  **左方** $F(i,j-1) + g$：Gap 与 $y_j$ 对齐（即在 $x$ 中插入 $y_j$）。
 
-## 4. 局部比对 (Local Alignment)
+## 4. 局部比对（Local Alignment）
 
 **Smith-Waterman 算法**针对的是"局部同源"场景。例如，两个功能完全不同的蛋白质可能共享同一个保守的催化结构域。
 
@@ -172,10 +172,10 @@ $$H_{\max} = \max_{0 \leq i \leq m, \, 0 \leq j \leq n} H(i,j)$$
 
 从 $(8,9)$ 回溯到 $(0,0)$，一条可能的比对为：
 
-```
+```text
 T A C G T A C G -
 - A - C G T T T G
-```
+```text
 
 注意两端产生了大量 Gap，整体得分被拉低。
 
@@ -201,19 +201,19 @@ T A C G T A C G -
 
 从 $(5,5)$ 回溯到第一个 0：
 
-```
+```text
 T A C G T
 | | | | |
 T A C G T
-```
+```text
 
 局部比对精准地找到了序列中间的高分片段 **TACGT**，得分 8（5 个匹配，每个 +2），而不被两端的不相关区域干扰。
 
 ### 对比总结
 
 <ComparisonTable
-  leftTitle="全局比对 (NW)"
-  rightTitle="局部比对 (SW)"
+  leftTitle="全局比对（NW）"
+  rightTitle="局部比对（SW）"
   rows={[
     { aspect: '**应用场景**', left: '比较近缘物种的同源基因。', right: '寻找结构域、Motif、Read 定位。' },
     { aspect: '**矩阵初始化**', left: '惩罚首行首列（$i \cdot g$）。', right: '首行首列全为 0。' },
@@ -225,7 +225,7 @@ T A C G T
 
 ## 6. 复杂度分析
 
-### 全局比对 (Needleman-Wunsch)
+### 全局比对（Needleman-Wunsch）
 
 | 指标 | 复杂度 |
 | :--- | :--- |
@@ -233,7 +233,7 @@ T A C G T
 | 空间 | $O(mn)$（完整矩阵存储） |
 | 空间优化 | $O(\min(m,n))$（仅需得分时） |
 
-### 局部比对 (Smith-Waterman)
+### 局部比对（Smith-Waterman）
 
 | 指标 | 复杂度 |
 | :--- | :--- |
@@ -281,6 +281,6 @@ T A C G T
   links={[
     { title: '打分矩阵', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '定义匹配与错配的权重' },
     { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: '局部比对的极速启发式版本' },
-    { title: '多序列比对 (MSA)', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '将比对扩展到多条序列' }
+    { title: '多序列比对（MSA）', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '将比对扩展到多条序列' }
   ]}
 />

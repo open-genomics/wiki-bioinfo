@@ -85,7 +85,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ```text
 clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> scaffold 构建
-```
+```text
 
 宏基因组组装面临比单物种组装更大的挑战：
 
@@ -155,7 +155,7 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 - **数据库映射与功能注释**：序列比对、HMM 搜索（HMMER）、功能域匹配；
 - **统计丰度估计**：标准化方法、置信区间估计。
 
-## worked example
+## 示例
 
 一个肠道宏基因组分析的简化流程：
 
@@ -167,7 +167,7 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 
 2. clean reads
    -> Kraken2 + Bracken (物种分类与丰度估计)
-   -> Alpha/Beta diversity 分析 (群落结构)
+   -> Alpha/Beta diversity 分析（群落结构）
 
 3. (可选) 组装与 binning
    -> MEGAHIT (宏基因组组装)
@@ -177,8 +177,8 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 4. 功能注释
    -> Prodigal (基因预测)
    -> eggNOG-mapper (功能注释)
-   -> 抗性基因筛查 (CARD + ABRicate)
-```
+   -> 抗性基因筛查（CARD + ABRicate）
+```text
 
 如果分类结果和组装结果严重不一致，就需要回头检查：
 

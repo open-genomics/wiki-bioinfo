@@ -99,14 +99,14 @@ $$(S_2 \ominus S_1)(x) = |\{(s_1, s_2) : s_2 - s_1 = x, s_1 \in S_1, s_2 \in S_2
 
 ### 1. 计算谱卷积
 
-```
+```text
 SPECTRAL-CONVOLUTION(S₁, S₂):
     convolution = 空的多重集合
     for s₁ in S₁:
         for s₂ in S₂:
             convolution.add(s₂ - s₁)
     return convolution
-```
+```text
 
 **时间复杂度**：$O(|S_1| \cdot |S_2|)$
 
@@ -114,14 +114,14 @@ SPECTRAL-CONVOLUTION(S₁, S₂):
 
 ### 2. 识别显著峰
 
-```
+```text
 IDENTIFY-MODIFICATIONS(convolution, threshold):
     modifications = []
     for x in convolution.keys():
         if convolution[x] > threshold:
             modifications.append(x)
     return modifications
-```
+```text
 
 阈值选择：
 - 基于背景噪声水平
@@ -227,7 +227,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 
 ## 修饰蛋白鉴定流程
 
-```
+```text
 实验谱 S
     ↓
 数据库搜索（SEQUEST/Mascot）
@@ -239,7 +239,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 谱对齐精确定位修饰位点
     ↓
 修饰肽段鉴定报告
-```
+```text
 
 ## 局限性与注意事项
 

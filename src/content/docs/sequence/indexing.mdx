@@ -33,7 +33,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 在生物信息学中，我们通常面临"一个大文本 $T$（参考基因组）对大量小模式 $P$（测序 Reads）"的场景。
 - **挑战**：人类基因组有 30 亿个位置。如果没有索引，比对一个 Read 就需要扫描 30 亿次。
-- **解决方案**：将文本 $T$ 转化为一种可以快速检索的数据结构。这种"空间换时间"的策略是现代生物信息学软件（如 BWA, Bowtie）的生命线。
+- **解决方案**：将文本 $T$ 转化为一种可以快速检索的数据结构。这种"空间换时间"的策略是现代生物信息学软件（如 BWA、Bowtie）的生命线。
 
 ### 索引的形式化目标
 
@@ -46,7 +46,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 2. 索引的两大家族
 
-### A. 基于哈希 (Hashing)
+### A. 基于哈希（Hashing）
 
 将基因组切分为所有的 $k$-mers，并存储它们出现的位置。
 
@@ -63,7 +63,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - **局限**：内存消耗巨大（存储所有 $k$-mer 及其位置列表）；对重复序列敏感；通常仅支持精确匹配。
 - **典型代表**：BLAST (Seeds 查找), Kraken (物种分类), Minimap2 (Minimizers)。
 
-### B. 基于后缀 (Suffix-based)
+### B. 基于后缀（Suffix-based）
 
 将文本的所有后缀进行系统性的组织。
 
@@ -73,13 +73,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - **Suffix Array**：将后缀按字典序排列并存储起始索引。通过二分查找实现 $O(m \log n)$。
 - **FM-index (BWT)**：现代工业标准。利用 Burrows-Wheeler 变换实现极致压缩，同时支持高效的后向搜索（Backward Search）。
 
-### worked example：哈希索引的构建与查询
+### 示例：哈希索引的构建与查询
 
 文本 $T = \text{ACGACGAC}$，取 $k=3$：
 
 构建哈希表：
 
-| k-mer (键) | 位置列表 (值) |
+| k-mer (键) | 位置列表（值） |
 |:---:|:---:|
 | ACG | [0, 3] |
 | CGA | [1, 4] |
@@ -100,14 +100,14 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 | **k-mer 哈希表** | $O(m)$ | 很高 | 数据库初步筛选、分类 |
 | **Suffix Tree** | $O(m)$ | 高 | 复杂模式分析（如寻找最大重复） |
 | **Suffix Array** | $O(m \log n)$ | 中 | 理论研究、中等规模搜索 |
-| **FM-index** | $O(m)$ | **极低 (压缩)** | 全基因组 Read Mapping (BWA/Bowtie) |
+| **FM-index** | $O(m)$ | **极低（压缩）** | 全基因组 Read Mapping (BWA/Bowtie) |
 
 ### 空间消耗的直观比较
 
 以人类基因组（$n \approx 3 \times 10^9$）为例：
 
 - **原始文本**：$\sim 0.75$ GB（每碱基 2 bits）
-- **k-mer 哈希表 ($k=31$)**：$\sim 30\text{--}50$ GB（取决于实现）
+- **k-mer 哈希表（$k=31$）**：$\sim 30\text{--}50$ GB（取决于实现）
 - **Suffix Tree**：$\sim 50\text{--}100$ GB（每个节点需要多个指针）
 - **Suffix Array**：$\sim 12$ GB（$n$ 个 32 位整数 + 辅助数组）
 - **FM-index**：$\sim 2\text{--}4$ GB（压缩表示，接近原始文本大小）
@@ -129,7 +129,7 @@ FM-index 的空间优势使其成为全基因组索引的实际工业标准。
 - 这将需要存储的 k-mer 数量减少了约 $w$ 倍。
 - Minimap2 和许多现代工具都使用 Minimizers 作为索引的基本单元。
 
-### worked example：Minimizers
+### 示例：Minimizers
 
 文本 $T = \text{GACTACGT}$，取 $k=3$, $w=4$：
 
@@ -147,7 +147,7 @@ FM-index 的空间优势使其成为全基因组索引的实际工业标准。
 
 ### 后缀索引的核心：后向搜索
 
-FM-index 的查询能力来自**后向搜索 (Backward Search)**。其核心思想是：从查询串 $P$ 的最后一个字符开始，逐步向前扫描，同时在 Suffix Array 的区间 $[lo, hi]$ 上进行收缩。
+FM-index 的查询能力来自**后向搜索（Backward Search）**。其核心思想是：从查询串 $P$ 的最后一个字符开始，逐步向前扫描，同时在 Suffix Array 的区间 $[lo, hi]$ 上进行收缩。
 
 每一步收缩利用 BWT 的两个性质：
 1. **First-Last Property**：BWT 中第 $i$ 行的字符对应 Suffix Array 中某个位置的后缀，其前驱字符在 BWT 中的分布可以通过 Occ (occurrence) 数组快速计算。

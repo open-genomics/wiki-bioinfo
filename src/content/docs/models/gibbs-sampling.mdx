@@ -48,7 +48,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 ### Motif Finding 的挑战
 
 **穷举搜索的问题**：
-- 10 条序列，每条 500bp，motif 长度 10
+- 10 条序列，每条 500 bp，motif 长度 10
 - 搜索空间：$(491)^{10} \approx 10^{27}$ —— 不可行
 
 **贪心算法的局限**：
@@ -77,7 +77,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ### 核心迭代步骤
 
-```
+```text
 GIBBS_SAMPLING(DNA, t, n, l, max_iter):
     // 随机初始化
     s = 随机选择 t 个起始位置
@@ -96,13 +96,13 @@ GIBBS_SAMPLING(DNA, t, n, l, max_iter):
         s[i] = SAMPLE_POSITION(probabilities)
     
     return s, BUILD_PROFILE(DNA, s, -1)
-```
+```text
 
 ### 详细步骤解析
 
 #### 步骤 1 & 2：构建 Profile（不包含序列 i）
 
-```
+```text
 BUILD_PROFILE(DNA, s, exclude_i):
     profile = 4 × l 的零矩阵（A,C,G,T × motif 位置）
     
@@ -118,13 +118,13 @@ BUILD_PROFILE(DNA, s, exclude_i):
             profile[nucleotide][pos] = (count + 1) / (t-1 + 4)
     
     return profile
-```
+```text
 
 **伪计数（pseudocount）**：通常加 1 或更小的值，避免零概率问题。
 
 #### 步骤 3：计算位置概率
 
-```
+```text
 CALC_PROBABILITIES(DNA_i, profile, l):
     probabilities = 长度为 n-l+1 的数组
     
@@ -145,13 +145,13 @@ CALC_PROBABILITIES(DNA_i, profile, l):
         probabilities[pos] /= total
     
     return probabilities
-```
+```text
 
 **概率解释**：$P(pos) \propto \prod_{k=1}^{l} p_{DNA_i[pos+k-1], k}$
 
 #### 步骤 4：概率采样
 
-```
+```text
 SAMPLE_POSITION(probabilities):
     // 轮盘赌采样
     r = random(0, 1)
@@ -163,7 +163,7 @@ SAMPLE_POSITION(probabilities):
             return pos
     
     return last_position
-```
+```text
 
 采样概率与 profile 匹配程度成正比：
 - 高匹配位置 → 高概率被选中
@@ -171,7 +171,7 @@ SAMPLE_POSITION(probabilities):
 
 ## 完整算法
 
-```
+```text
 GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
     // 随机初始化
     s = random_positions(t, n, l)
@@ -207,7 +207,7 @@ GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
             best_s = s
     
     return best_s, best_score
-```
+```text
 
 ## 收敛性与参数选择
 
@@ -234,7 +234,7 @@ Gibbs Sampling 形成一条**马尔可夫链**：
 
 ### 预热期（Burn-in）
 
-```
+```text
 带预热的 Gibbs Sampling:
     for iter = 1 to max_iter:
         // 执行一次 Gibbs 迭代
@@ -246,18 +246,18 @@ Gibbs Sampling 形成一条**马尔可夫链**：
     
     // 返回出现频率最高的 motif
     return MOST_FREQUENT(samples)
-```
+```text
 
 ## 实例说明
 
 ### 简化示例
 
-**输入序列**（3条，每条20bp）：
-```
+**输入序列**（3条，每条20 bp）：
+```text
 Seq1: A T G C G T A C G T A G C T A G C T G
 Seq2: C T A G C T G A C G T C G A T C G A T
 Seq3: G A T C G A T C G A T C G T A C G A
-```
+```text
 
 **迭代过程示例**：
 
@@ -289,7 +289,7 @@ Seq3: G A T C G A T C G A T C G T A C G A
 
 标准 Gibbs Sampling 是完全随机的，贪婪变体选择概率最高的位置：
 
-```
+```text
 GREEDY_GIBBS(DNA, t, n, l, max_iter):
     s = random_positions()
     
@@ -302,7 +302,7 @@ GREEDY_GIBBS(DNA, t, n, l, max_iter):
         s[i] = best_pos
     
     return s
-```
+```text
 
 **权衡**：
 - 标准版：更好的全局探索，可能找到更优解
@@ -312,7 +312,7 @@ GREEDY_GIBBS(DNA, t, n, l, max_iter):
 
 模拟退火风格的温度参数：
 
-```
+```text
 TEMPERED_GIBBS(DNA, t, n, l, max_iter):
     s = random_positions()
     temperature = 1.0
@@ -329,7 +329,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
         temperature *= 0.99  // 降温
     
     return s
-```
+```text
 
 ## 与其他 Motif Finding 方法的比较
 
@@ -345,34 +345,34 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 ### 1. 转录因子结合位点预测
 
-```
+```text
 输入：
 - 共表达基因的启动子序列
 - 假设这些基因被同一转录因子调控
 
 输出：
 - 转录因子的保守结合 motif
-```
+```text
 
 ### 2. 蛋白质家族保守区域
 
-```
+```text
 输入：
 - 同源蛋白质序列
 
 输出：
 - 功能重要的保守氨基酸模式
-```
+```text
 
 ### 3. RNA 结构 motif
 
-```
+```text
 输入：
 - 非编码 RNA 序列
 
 输出：
 - 保守的结构或序列 motif
-```
+```text
 
 <PitfallsBox
   pitfalls={[

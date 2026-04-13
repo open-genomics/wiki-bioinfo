@@ -14,7 +14,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   summary='真实序列比对不能假设「所有错误代价相同」。打分矩阵通过量化氨基酸替换的可能性，Gap 罚分通过区分开启与延长代价，共同构建了模拟进化过程的评价体系。'
   bullets={[
     '理解 PAM (点突变) 与 BLOSUM (保守块) 矩阵的构建逻辑差异',
-    '掌握仿射 Gap 罚分 (Affine Gap Penalty) 对连续 Indel 事件的偏好',
+    '掌握仿射 Gap 罚分（Affine Gap Penalty） 对连续 Indel 事件的偏好',
     '学习如何根据任务目标（如远缘同源检测 vs. 精确定位）选择得分系统',
     '建立从概率模型（Log-odds Ratio）到打分矩阵的数学联系'
   ]}
@@ -114,7 +114,7 @@ PAM 矩阵的构建分为以下几个步骤：
   rightTitle="BLOSUM"
   rows={[
     { aspect: '**构建方式**', left: '进化模型外推', right: '直接统计观测' },
-    { aspect: '**数据来源**', left: '全长蛋白质序列对', right: '保守区块 (Blocks)' },
+    { aspect: '**数据来源**', left: '全长蛋白质序列对', right: '保守区块（Blocks）' },
     { aspect: '**数值含义**', left: '进化时间步数（越大越远）', right: '聚类阈值（越大越近）' },
     { aspect: '**优点**', left: '理论基础清晰，可外推', right: '直接反映真实数据，更实用' }
   ]}
@@ -124,7 +124,7 @@ PAM 矩阵的构建分为以下几个步骤：
 
 ## 5. Gap 罚分模型
 
-### 线性 Gap 罚分 (Linear Gap Penalty)
+### 线性 Gap 罚分（Linear Gap Penalty）
 
 最简单的 Gap 模型：每个 Gap 字符的代价相同。
 
@@ -132,7 +132,7 @@ $$\text{Cost}(k) = k \cdot g$$
 
 其中 $g$ 是常数罚分值，$k$ 是 Gap 长度。这种模型简单但不符合生物学直觉——它假设每个 Gap 字符是独立事件。
 
-### 仿射 Gap 罚分 (Affine Gap Penalty)
+### 仿射 Gap 罚分（Affine Gap Penalty）
 
 为了反映"连续 Indel 更易发生"的直觉，我们使用：
 
@@ -238,7 +238,7 @@ $$s(a, b) = \lambda \cdot \log \frac{P_{observed}(a, b)}{P_{expected}(a, b)}$$
 <RelatedLinks
   links={[
     { title: '全局比对算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '应用得分矩阵的标准 DP 实现' },
-    { title: '多序列比对 (MSA)', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '基于 SP 得分的群体比较' },
+    { title: '多序列比对（MSA）', to: '/wiki-bioinfo/alignment/multiple-sequence-alignment', description: '基于 SP 得分的群体比较' },
     { title: 'BLAST', to: '/wiki-bioinfo/alignment/blast', description: '启发式搜索中的得分阈值应用' }
   ]}
 />

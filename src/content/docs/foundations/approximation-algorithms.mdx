@@ -151,15 +151,15 @@ $$
    - 删除所有与 $u$ 或 $v$ 关联的边
 3. 返回 $C$
 
-### worked example
+### 示例
 
 考虑图：
 
-```
+```text
 A -- B -- D
 |    |
 C -- E
-```
+```text
 
 算法执行：
 
@@ -194,7 +194,7 @@ C -- E
    - 从 $R$ 中删除 $S_i$ 的元素
 3. 返回 $C$
 
-### worked example
+### 示例
 
 全集 $U = \{1,2,3,4,5,6,7,8\}$
 
@@ -277,16 +277,16 @@ Gibbs Sampling 是一种随机化近似算法：
 4. 根据概率采样新的 motif 位置
 5. 重复直到收敛
 
-### worked example
+### 示例
 
 假设有 4 条序列，motif 长度为 6：
 
-```
+```text
 Seq1: ATGCGATGCGA...
 Seq2: CGATCGATCGA...
 Seq3: GATCGATCGAT...
 Seq4: TCGATCGATCG...
-```
+```text
 
 1. 随机选择位置：[3, 5, 2, 4]
 2. 移除 Seq1，用 [5, 2, 4] 构建 PWM

@@ -91,7 +91,7 @@ BioInfo Wiki 希望成为：
 
 ## 相关页面
 
-- [开始这里](./index.md) — 全站入口与导航
+- [导论](./index.md) — 全站入口与导航
 - [学习路线](./roadmap.md) — 推荐的学习路径
 - [如何贡献](./contributing.md) — 参与项目的方式
 - [写作规范](./style-guide.md) — 文档风格与模板

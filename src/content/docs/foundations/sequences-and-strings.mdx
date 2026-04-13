@@ -58,14 +58,14 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 生物序列并非均匀的同质字符串，而是具有内部层次结构的：
 
-```
-基因组 (Genome, ~3 Gb)
-  └── 染色体 (Chromosome, ~50-250 Mb)
-        └── 基因 (Gene, ~1-100 kb)
-              └── 外显子 (Exon, ~50 bp - 几 kb)
-                    └── 密码子 (Codon, 3 bp)
-                          └── 碱基 (Nucleotide, 1 bp)
-```
+```text
+基因组（Genome, ~3 Gb）
+  └── 染色体（Chromosome, ~50-250 Mb）
+        └── 基因（Gene, ~1-100 kb）
+              └── 外显子（Exon, ~50 bp - 几 kb）
+                    └── 密码子（Codon, 3 bp）
+                          └── 碱基（Nucleotide, 1 bp）
+```text
 
 理解这种层次结构对于设计高效的索引和搜索算法至关重要。例如，在进行全基因组比对时，通常先在染色体级别定位，再在基因级别精细比对，而非直接在碱基级别进行暴力搜索。
 
@@ -82,14 +82,14 @@ DNA 和 RNA 链具有极性（Polarity）。核苷酸通过磷酸二酯键连接
 
 DNA 聚合酶只能沿 5' 到 3' 方向合成新链，这一生物学事实深刻影响了测序技术的设计和数据处理的方式。
 
-### 反向互补 (Reverse Complement)
+### 反向互补（Reverse Complement）
 
 由于 DNA 是双链且反向平行的，理解反向互补操作是处理测序数据的基本功。
 
 对于序列 $S = \text{5'-ATGC-3'}$：
 
-1. **互补 (Complement)**：按 A-T, G-C 配对规则得到 `3'-TACG-5'`。
-2. **反向 (Reverse)**：将字符串前后颠倒，得到 `5'-GCAT-3'`。
+1. **互补（Complement）**：按 A-T, G-C 配对规则得到 `3'-TACG-5'`。
+2. **反向（Reverse）**：将字符串前后颠倒，得到 `5'-GCAT-3'`。
 
 用数学符号表示：给定序列 $S = s_1 s_2 \cdots s_n$，其反向互补序列 $S^{rc}$ 为：
 
@@ -199,7 +199,7 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 | :--- | :--- | :--- |
 | **子串匹配** | 在基因组中寻找 Motif 或引物位置 | KMP, Boyer-Moore, Rabin-Karp |
 | **编辑距离** | 衡量两条序列之间的变异（替换、插入、缺失） | Levenshtein DP, Needleman-Wunsch |
-| **最长公共子序列 (LCS)** | 寻找两条序列的最长相似区域 | DP, Hirschberg |
+| **最长公共子序列（LCS）** | 寻找两条序列的最长相似区域 | DP, Hirschberg |
 | **后缀数组 / 后缀树** | 构建全基因组索引，实现快速搜索 | Ukkonen 算法, SA-IS |
 | **哈希与索引** | 在 30 亿碱基的基因组中实现秒级搜索 | 最小完美哈希, Bloom Filter |
 | **正则表达式** | 在序列中搜索模式（如 PROSITE 蛋白质模式） | NFA/DFA 匹配 |
@@ -224,7 +224,7 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 
 ## 5. 字符串操作与序列比较
 
-### 编辑距离 (Edit Distance)
+### 编辑距离（Edit Distance）
 
 编辑距离（Levenshtein Distance）衡量将一个字符串转换为另一个字符串所需的最少编辑操作次数。在生物信息学中，这对应于两条序列之间的最小变异量。
 
@@ -232,9 +232,9 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 
 | 操作 | 符号 | 生物学含义 | 典型代价 |
 | :--- | :--- | :--- | :--- |
-| **替换 (Substitution)** | $s_i \to s_j$ | 单核苷酸变异 (SNV) | 取决于评分矩阵 |
-| **插入 (Insertion)** | 插入一个字符 | 相对于参考序列的插入变异 | 空位罚分 |
-| **删除 (Deletion)** | 删除一个字符 | 相对于参考序列的缺失变异 | 空位罚分 |
+| **替换（Substitution）** | $s_i \to s_j$ | 单核苷酸变异（SNV） | 取决于评分矩阵 |
+| **插入（Insertion）** | 插入一个字符 | 相对于参考序列的插入变异 | 空位罚分 |
+| **删除（Deletion）** | 删除一个字符 | 相对于参考序列的缺失变异 | 空位罚分 |
 
 编辑距离可以通过动态规划在 $O(nm)$ 时间内计算，其中 $n$ 和 $m$ 是两条序列的长度。这是 Needleman-Wunsch 和 Smith-Waterman 比对算法的数学基础。
 

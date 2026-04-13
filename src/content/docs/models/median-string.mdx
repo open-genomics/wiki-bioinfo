@@ -37,19 +37,19 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 两个等长字符串的**Hamming距离**是它们在对应位置上不同字符的个数。
 
 **示例**：
-```
+```text
 dH(ATGCC, ATGTC) = 1  (只有第4个位置不同)
 dH(AAAT, AAGC) = 2  (第3、4个位置不同)
-```
+```text
 
 ### TotalDistance
 
 给定一个字符串 v 和一组DNA序列 DNA，定义：
 
-```
+```text
 TotalDistance(v, DNA) = min Σ dH(v, DNAᵢ[sᵢ : sᵢ+l-1])
                         s₁,...,sₜ
-```
+```text
 
 即：在每条序列中选择一个起始位置 sᵢ，计算 v 与所选 l-mer 的Hamming距离之和，然后最小化这个和。
 
@@ -64,11 +64,11 @@ TotalDistance(v, DNA) = min Σ dH(v, DNAᵢ[sᵢ : sᵢ+l-1])
 
 **示例**：
 假设有3条序列：
-```
+```text
 序列1: AACT
 序列2: AACT  
 序列3: AACT
-```
+```text
 
 对于 l=4，median string 就是 "AACT"，TotalDistance = 0。
 
@@ -85,19 +85,19 @@ Motif Finding问题要找到一组起始位置 s = (s₁, ..., sₜ)，使consen
 设 s 是一组起始位置，w 是对应的consensus string。
 
 则有：
-```
+```text
 dH(w, s) = l·t - Score(s, DNA)
-```
+```text
 
 因为：
 - 每个位置最多贡献 l 分（所有序列在该位置字符相同）
 - Hamming距离 = 最大可能分数 - 实际分数
 
 因此：
-```
+```text
 min TotalDistance(v, DNA) = l·t - max Score(s, DNA)
 v                       s
-```
+```text
 
 左边是Median String问题，右边是Motif Finding问题。
 
@@ -114,7 +114,7 @@ v                       s
 
 最直接的方法是枚举所有可能的 4^l 个长度为 l 的字符串。
 
-```
+```text
 BRUTEFORCEMEDIANSTRING(DNA, t, n, l)
 1 bestDistance ← ∞
 2 bestString ← null
@@ -124,7 +124,7 @@ BRUTEFORCEMEDIANSTRING(DNA, t, n, l)
 6     bestDistance ← currentDistance
 7     bestString ← v
 8 return bestString
-```
+```text
 
 **问题**：4^l 增长极快，对于 l=15，需要检查超过 10^9 个字符串。
 
@@ -155,9 +155,9 @@ BRUTEFORCEMEDIANSTRING(DNA, t, n, l)
 ### 基于分割的下界
 
 将 l-mer w 分成两部分 u 和 v，利用：
-```
+```text
 TotalDistance(w, DNA) ≥ TotalDistance(u, DNA) + TotalDistance(v, DNA)
-```
+```text
 
 这提供了更紧的下界，可以更有效地剪枝。
 

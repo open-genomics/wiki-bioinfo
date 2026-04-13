@@ -35,11 +35,11 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <DefinitionList
   items={[
     {
-      term: '精确字符串匹配 (Exact Pattern Matching)',
+      term: '精确字符串匹配（Exact Pattern Matching）',
       definition: '给定文本 $T$（长度 $n$）和模式串 $P$（长度 $m$），找出所有起始位置 $i$，使得 $T[i \dots i+m-1] = P$。',
     },
     {
-      term: '出现 (Occurrence)',
+      term: '出现（Occurrence）',
       definition: '模式串 $P$ 在文本 $T$ 中的某次匹配，由起始位置 $i$ 唯一确定。',
     },
   ]}
@@ -62,7 +62,7 @@ $$
 - **引物验证**：确认 PCR 引物在基因组中的唯一性。
 - **Read 定位**：在参考基因组中寻找 Read 的完美匹配（通常是比对的第一步）。
 
-## 2. 朴素匹配算法 (Naive Algorithm)
+## 2. 朴素匹配算法（Naive Algorithm）
 
 朴素算法像一个滑动窗口，逐位比较模式串。
 - **逻辑**：从 $T$ 的第 0 位到第 $n-m$ 位，每次尝试与 $P$ 的 $m$ 个字符对齐。
@@ -71,7 +71,7 @@ $$
 
 ### 伪代码
 
-```
+```text
 输入：文本 T[0..n-1]，模式串 P[0..m-1]
 输出：所有匹配位置
 
@@ -81,9 +81,9 @@ for i = 0 to n - m:
         j = j + 1
     if j == m:
         输出匹配位置 i
-```
+```text
 
-### worked example
+### 示例
 
 在文本 $T = \text{ACGACGAC}$ 中查找 $P = \text{ACG}$：
 
@@ -151,7 +151,7 @@ for i = 0 to n - m:
 | 单次查询，模式短 | Boyer-Moore | 平均 $O(n/m)$，实际最快 |
 | 单次查询，需要最坏保证 | KMP | $O(n+m)$ 最坏保证 |
 | 多个模式同时查询 | Rabin-Karp / Aho-Corasick | 共享扫描过程 |
-| 文本固定，海量查询 | 索引 (FM-index / Suffix Array) | 查询 $O(m)$，与 $n$ 无关 |
+| 文本固定，海量查询 | 索引（FM-index / Suffix Array） | 查询 $O(m)$，与 $n$ 无关 |
 
 ## 5. 复杂度与适用前提
 
@@ -166,7 +166,7 @@ for i = 0 to n - m:
 
 ### 适用前提
 
-- 精确匹配要求查询序列与目标序列之间不存在变异或测序错误。在真实的 Read Mapping 中，精确匹配仅适用于**种子阶段 (Seeding)**。
+- 精确匹配要求查询序列与目标序列之间不存在变异或测序错误。在真实的 Read Mapping 中，精确匹配仅适用于**种子阶段（Seeding）**。
 - 生物学序列的字母表很小（DNA: $|\Sigma|=4$，蛋白质: $|\Sigma|=20$），这意味着 Bad Character Rule 等启发式的跳转距离受限，Boyer-Moore 在 DNA 上的优势不如在英文文本上明显。
 
 ### 与真实工具的连接

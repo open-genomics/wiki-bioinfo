@@ -70,32 +70,32 @@ $$\text{蛋白质样本} \xrightarrow{\text{酶解}} \text{肽段混合物} \xri
 <DefinitionList
   items={[
     {
-      term: '胰蛋白酶酶切 (Trypsin Digestion)',
+      term: '胰蛋白酶酶切（Trypsin Digestion）',
       definition: 'Trypsin 在 Arg 和 Lys 的 C 端切割，产生带有 C 端 Arg/Lys 的肽段。平均肽段长度约 7--25 个氨基酸残基，分子量在 800--3000 Da 之间，非常适合质谱分析。',
     },
     {
-      term: '质荷比 (Mass-to-Charge Ratio, $m/z$)',
+      term: '质荷比（Mass-to-Charge Ratio, $m/z$）',
       definition: '离子的质量与所带电荷数之比。质谱仪测量的是 $m/z$，而非纯质量。一个质量为 $M$ 的肽段携带 $z$ 个质子时，其 $m/z = (M + z \cdot 1.0073) / z$。因此，同一个肽段会产生一系列 $z = 1, 2, 3, ...$ 的不同电荷态峰。',
     },
     {
-      term: '分辨率 (Resolution)',
+      term: '分辨率（Resolution）',
       definition: '质谱仪区分相邻 $m/z$ 峰的能力，定义为 $R = m / \Delta m$（FWHM）。高分辨率（如 60,000 或更高）能够精确区分质量非常接近的肽段，减少鉴定歧义。',
     },
   ]}
 />
 
-### 3.2 串联质谱 (Tandem MS/MS) 流程
+### 3.2 串联质谱（Tandem MS/MS） 流程
 
 现代质谱仪的数据依赖采集（Data-Dependent Acquisition, DDA）模式按照以下循环工作：
 
-#### MS1：前体扫描 (Precursor Scan / Survey Scan)
+#### MS1：前体扫描（Precursor Scan / Survey Scan）
 
 对进入质谱仪的所有肽段离子进行全扫描，记录每个离子的 $m/z$ 和强度。
 
 - **作用**：确定样本中所有可检测肽段离子的分子量分布。
 - **离子选择**：从 MS1 谱图中选择强度最高的 $N$ 个离子（前体离子, Precursor Ion）作为后续 MS2 分析的候选。$N$ 通常为 10--20，受仪器扫描速度限制。
 
-#### MS2：碎片扫描 (Fragment Scan)
+#### MS2：碎片扫描（Fragment Scan）
 
 将选定的前体离子通过碰撞诱导解离（Collision-Induced Dissociation, CID）、高能碰撞解离（Higher-energy Collisional Dissociation, HCD）或电子转移解离（Electron Transfer Dissociation, ETD）等方式碎裂。
 
@@ -103,7 +103,7 @@ $$\text{蛋白质样本} \xrightarrow{\text{酶解}} \text{肽段混合物} \xri
 - **CID/HCD**：沿肽段骨架的酰胺键断裂，产生 b-ion 和 y-ion 系列碎片。是最常用的碎裂方式。
 - **ETD**：通过电子转移引发断裂，保留 PTM 标签，特别适合翻译后修饰分析。
 
-#### 数据独立采集 (Data-Independent Acquisition, DIA)
+#### 数据独立采集（Data-Independent Acquisition, DIA）
 
 与 DDA 的"选择最强离子逐一碎裂"不同，DIA 模式（如 SWATH-MS）将整个 $m/z$ 范围划分为若干窗口，依次对所有窗口内的离子进行碎裂。优势在于不遗漏低丰度离子，数据可回溯；挑战在于 MS2 谱图中混合了多个前体离子的碎片，需要更复杂的解卷积算法。
 
@@ -122,7 +122,7 @@ $$b_i + y_{n-i} = M_{\text{peptide}} + M_{\text{H}_2\text{O}} + M_{\text{H}^+}$$
 
 此外，碎裂过程中还可能产生 a-ion（b-ion 丢失 CO）、中性丢失峰（如丢失磷酸基团或水分子的峰）以及亚氨离子（Immonium Ion，单个氨基酸的特征碎片）。
 
-### 3.4 肽段测序问题 (Peptide Sequencing Problem)
+### 3.4 肽段测序问题（Peptide Sequencing Problem）
 
 **形式化定义**：
 
@@ -138,7 +138,7 @@ $$P^* = \arg\max_{P} \text{Score}(T(P), S)$$
 
 **图论转化**：如果将碎片质量看作图的顶点，氨基酸残基质量看作有向边，那么肽段测序就转化为在**谱图（Spectrum Graph）** 这个有向无环图（DAG）中寻找一条从 $0$ 到 $M$ 的最优路径问题。每条路径对应一个候选肽段序列，路径的"权重"取决于该路径对应的碎片与实验谱的匹配程度。
 
-这一转化使得我们可以用动态规划（Dynamic Programming）来高效求解。详见 [谱图 (Spectrum Graphs)](./spectrum-graphs.mdx)。
+这一转化使得我们可以用动态规划（Dynamic Programming）来高效求解。详见 [谱图（Spectrum Graphs）](./spectrum-graphs.mdx)。
 
 ### 3.5 质谱仪类型概览
 
@@ -146,10 +146,10 @@ $$P^* = \arg\max_{P} \text{Score}(T(P), S)$$
 
 | 质谱仪类型 | 分辨率 | 质量精度 | 扫描速度 | 典型应用 |
 |:---|:---|:---|:---|:---|
-| **Ion Trap** | 低 (~1,000--5,000) | 中 (0.1--0.5 Da) | 快 | 高通量筛查、PTM 分析 (ETD) |
-| **TOF (Time-of-Flight)** | 中 (~10,000--40,000) | 中 (5--20 ppm) | 快 | MALDI 成像、定量蛋白质组学 |
-| **Orbitrap** | 高 (60,000--500,000+) | 高 (< 3 ppm) | 中 | 精确定量、深度蛋白质组学 |
-| **FT-ICR** | 极高 (> 500,000) | 极高 (< 1 ppm) | 慢 | Top-down 蛋白质组学、复杂修饰分析 |
+| **Ion Trap** | 低（~1,000--5,000） | 中（0.1--0.5 Da） | 快 | 高通量筛查、PTM 分析（ETD） |
+| **TOF (Time-of-Flight)** | 中（~10,000--40,000） | 中（5--20 ppm） | 快 | MALDI 成像、定量蛋白质组学 |
+| **Orbitrap** | 高（60,000--500,000+） | 高（< 3 ppm） | 中 | 精确定量、深度蛋白质组学 |
+| **FT-ICR** | 极高（> 500,000） | 极高（< 1 ppm） | 慢 | Top-down 蛋白质组学、复杂修饰分析 |
 
 ### 3.6 从 De Novo 测序到数据库搜索
 
@@ -182,7 +182,7 @@ $$P^* = \arg\max_{P} \text{Score}(T(P), S)$$
 
 <RelatedLinks
   links={[
-    { title: '谱图 (Spectrum Graphs)', to: '/wiki-bioinfo/proteomics/spectrum-graphs', description: '基于图论的肽段测序算法' },
+    { title: '谱图（Spectrum Graphs）', to: '/wiki-bioinfo/proteomics/spectrum-graphs', description: '基于图论的肽段测序算法' },
     { title: '数据库搜索与 FDR', to: '/wiki-bioinfo/proteomics/database-search-and-fdr', description: '主流的蛋白鉴定方法' },
     { title: '谱卷积', to: '/wiki-bioinfo/proteomics/spectral-convolution', description: '检测肽段修饰的数学工具' }
   ]}

@@ -16,7 +16,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
   bullets={[
     '掌握 counts 到 CPM/FPKM/TPM 的公式转换与数学本质',
     '理解为什么 TPM 在跨样本比较中具有更好的统计性质',
-    '掌握有效长度 (Effective Length) 的定义及其对定量的修正作用',
+    '掌握有效长度（Effective Length） 的定义及其对定量的修正作用',
     '辨析归一化数据与原始计数在差异表达分析中的不同角色'
   ]}
 />
@@ -138,7 +138,7 @@ $$\text{TPM}_i = \frac{\text{FPKM}_i}{\sum_{j=1}^{N} \text{FPKM}_j} \times 10^6$
 
 这个公式揭示了 TPM 的本质：对 FPKM 做了一次"再归一化"，使得所有基因的值加起来等于 $10^6$。因此，TPM 和 FPKM 之间的**相对关系在同一样本内是相同的**——基因 X 的 TPM 是基因 Y 的 3 倍，那么基因 X 的 FPKM 也是基因 Y 的 3 倍。差异仅体现在跨样本比较时。
 
-### 4.6 有效长度 (Effective Length)
+### 4.6 有效长度（Effective Length）
 
 在上述公式中，长度 $L_i$ 并非转录本的名义长度（Nominal Length），而是**有效长度（Effective Length）** $\tilde{L}_i$。
 

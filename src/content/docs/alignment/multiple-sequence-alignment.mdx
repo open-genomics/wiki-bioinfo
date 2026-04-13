@@ -83,14 +83,14 @@ $$\text{SP}(A) = \sum_{1 \leq i < j \leq k} \text{Score}(A_i, A_j)$$
 - **一致性函数（Consistency-based Scoring）**：如 T-Coffee 采用的方法，通过评估多序列比对与底层两两比对的一致性来评分。
 - **概率模型得分**：使用 Profile HMM 等概率模型直接计算多序列比对的似然。
 
-## 5. 渐进式比对 (Progressive Alignment)
+## 5. 渐进式比对（Progressive Alignment）
 
 为了规避 $O(n^k)$ 的计算量，几乎所有主流 MSA 工具都采用**渐进式**策略。这一思想由 Hogeweg 和 Hesper（1984）首次提出，后经 Feng 和 Doolittle（1987）系统化。
 
 ### 基本流程
 
 1.  **两两比对**：计算所有 $\binom{k}{2}$ 个序列对之间的距离或相似性。
-2.  **构建指导树 (Guide Tree)**：基于距离矩阵构建一棵二叉树（通常使用 Neighbor-Joining 或 UPGMA）。
+2.  **构建指导树（Guide Tree）**：基于距离矩阵构建一棵二叉树（通常使用 Neighbor-Joining 或 UPGMA）。
 3.  **按序合并**：沿着指导树的后序遍历顺序，从叶子节点（最相似的序列）开始，逐步合并子比对。
 4.  **Profile 对齐**：当两个分支合并时，将已对齐的序列组视为一个 **Profile**，进行 Profile-Profile 比对。
 
@@ -141,22 +141,22 @@ $$s(P_i, Q_j) = \sum_{a \in \Sigma} \sum_{b \in \Sigma} f_{P,i}(a) \cdot f_{Q,j}
 
 基于距离（距离 = 最大可能得分 - 比对得分），$S_1$ 和 $S_3$ 最相似，应先合并：
 
-```
+```text
        ┌── S₂
     ───┤
        │  ┌── S₁
        └──┤
           └── S₃
-```
+```text
 
 ### 第三步：先合并 $S_1$ 和 $S_3$
 
 $S_1 = \text{HEAGAWGHEE}$ 与 $S_3 = \text{HLAWGHE}$ 的双序列比对结果为：
 
-```
+```text
 H E A G A W G H E E
 H - L A - W G H E -
-```
+```text
 
 这构成了第一个 Profile $P_{13}$。
 
@@ -164,11 +164,11 @@ H - L A - W G H E -
 
 现在将 Profile $P_{13}$（包含 $S_1$ 和 $S_3$）与 $S_2 = \text{PAWHEAE}$ 进行 Profile-Sequence 比对。最终结果大致为：
 
-```
+```text
 H E A G A W G H E E
 H - L A - W G H E -
 - P A W H E A E - -
-```
+```text
 
 在这个结果中，我们可以观察到：
 - 第 6 列的 **W** 是高度保守的，出现在所有三条序列中。
@@ -209,7 +209,7 @@ H - L A - W G H E -
 
 ### MUSCLE
 
-- **MUSCLE**（Edgar, 2004）通过两种关键改进加速渐进式比对：(1) 使用 $k$-mer 计数快速估计两两距离，避免完整的动态规划；(2) 在渐进比对完成后进行迭代优化（Iterative Refinement），尝试修正早期步骤中的错误。
+- **MUSCLE**（Edgar, 2004）通过两种关键改进加速渐进式比对：（1） 使用 $k$-mer 计数快速估计两两距离，避免完整的动态规划；（2） 在渐进比对完成后进行迭代优化（Iterative Refinement），尝试修正早期步骤中的错误。
 - MUSCLE 在速度和准确性之间取得了很好的平衡，是广泛使用的 MSA 工具之一。
 
 ### MAFFT

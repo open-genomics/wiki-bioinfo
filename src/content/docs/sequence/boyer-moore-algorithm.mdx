@@ -75,11 +75,11 @@ Boyer-Moore解决与KMP相同的精确字符串匹配问题：
 
 考虑在文本 `T` 中匹配模式串 `P = "EXAMPLE"`：
 
-```
+```text
 T: ... H E R E I S A N E X A M P L E ...
 P:             E X A M P L E
                          ^ 从右向左比较
-```
+```text
 
 Boyer-Moore先比较模式串的最后一个字符 `E`，如果失配，就根据规则决定跳跃距离。
 
@@ -121,26 +121,26 @@ Boyer-Moore使用两个独立的跳跃规则，取较大的跳跃距离：
 2. 如果找到，将模式串向右移动，使得 `T[i]` 与模式串中最右边的该字符对齐
 3. 如果没找到，将模式串向右移动 `j+1` 位（跳过整个模式串）
 
-### worked example
+### 示例
 
-```
+```text
 T: ... A B C D E F G ...
 P:     X Y Z D E F
                ^ 失配，T[i] = 'G'
-```
+```text
 
 字符 `'G'` 不在模式串 `P` 中，因此将模式串向右移动整个长度：
 
-```
+```text
 T: ... A B C D E F G ...
 P:             X Y Z D E F
-```
+```text
 
 ### 预处理：bad character table
 
 **算法1：构建bad character table**
 
-```
+```text
 输入：模式串 P = p_0p_1...p_\{m-1\}，字母表 Σ
 输出：bad character table BC[|Σ| × m]
 
@@ -148,7 +148,7 @@ P:             X Y Z D E F
 2. for j = 0 to m-1:
    a. BC[P[j]][j] = j  // 记录每个字符在模式串中的最右位置
 3. return BC
-```
+```text
 
 **时间复杂度**：$O(m + |\Sigma|)$
 
@@ -182,14 +182,14 @@ P:             X Y Z D E F
 3. 如果没找到，查找模式串的前缀是否等于 `P[j+1:m]` 的后缀
 4. 根据匹配情况决定跳跃距离
 
-### worked example
+### 示例
 
-```
+```text
 T: ... A B C D E F G H ...
 P:     X Y Z D E F
              ^^^^^ 匹配
            ^ 失配
-```
+```text
 
 已匹配后缀为 `"DEF"`，在模式串中查找是否有其他 `"DEF"`：
 - 如果没有，查找前缀是否与 `"DEF"` 的后缀匹配
@@ -199,7 +199,7 @@ P:     X Y Z D E F
 
 **算法2：构建good suffix table**
 
-```
+```text
 输入：模式串 P = p_0p_1...p_\{m-1\}
 输出：good suffix table GS[0:m]
 
@@ -213,7 +213,7 @@ P:     X Y Z D E F
    a. 寻找最大的 k，使得 P[0:k] = P[m-k:m]
    b. 对于所有 j >= m - k - 1，GS[j] = m - k - 1
 6. return GS
-```
+```text
 
 **时间复杂度**：$O(m)$
 
@@ -223,7 +223,7 @@ P:     X Y Z D E F
 
 **算法3：Boyer-Moore字符串匹配**
 
-```
+```text
 输入：文本 T = t_0t_1...t_\{n-1\}，模式串 P = p_0p_1...p_\{m-1\}
 输出：所有匹配位置
 
@@ -242,7 +242,7 @@ P:     X Y Z D E F
       bad_char_shift = j - BC[T[i + j]][j]
       good_suffix_shift = GS[j]
       i = i + max(bad_char_shift, good_suffix_shift)
-```
+```text
 
 **时间复杂度**：最坏情况 $O(nm)$，平均情况 $O(n/m)$ 到 $O(n)$
 
@@ -274,11 +274,11 @@ Boyer-Moore 在实践中通常是最快的字符串匹配算法：
 - DNA序列（4字符）：性能不如英文，但仍优于KMP
 - 蛋白质序列（20字符）：性能介于两者之间
 
-## worked example
+## 示例
 
 在文本 `T = "HERE_IS_A_SIMPLE_EXAMPLE"` 中匹配 `P = "EXAMPLE"`：
 
-```
+```text
 T: H E R E _ I S _ A _ S I M P L E _ E X A M P L E
 P: E X A M P L E
                ^ 从右向左比较，'E' == 'E'
@@ -288,15 +288,15 @@ P: E X A M P L E
        ^ 'A' == 'A'
      ^ 'X' == 'X'
    ^ 'E' != 'S'，失配
-```
+```text
 
 失配字符为 `'S'`，在模式串中查找 `'S'`：
 - 不存在，使用bad character rule跳过整个模式串长度
 
-```
+```text
 T: H E R E _ I S _ A _ S I M P L E _ E X A M P L E
 P:                       E X A M P L E
-```
+```text
 
 继续匹配...
 

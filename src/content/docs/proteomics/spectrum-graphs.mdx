@@ -32,9 +32,9 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <PageHeaderMeta section="Applications" />
 
 
-## 1. 从质谱到谱图 (From Spectrum to Graph)
+## 1. 从质谱到谱图（From Spectrum to Graph）
 
-在串联质谱 (MS/MS) 中，我们的目标是根据实验测得的离子质量峰（Spectrum $S$）重建肽段序列。
+在串联质谱（MS/MS） 中，我们的目标是根据实验测得的离子质量峰（Spectrum $S$）重建肽段序列。
 
 ### 建模直觉
 - **顶点**：代表可能的肽段前缀质量。
@@ -48,11 +48,11 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 2. 肽段测序：寻路问题
 
-### 完整谱图 (Complete Spectrum)
+### 完整谱图（Complete Spectrum）
 如果一个谱图包含了肽段所有前缀对应的离子峰，那么正确序列一定对应图中一条从起点到终点的路径。
 - **算法**：在 DAG 中寻找最长路径（即包含最多匹配峰的路径）。
 
-### 概率评分 (Probabilistic Scoring)
+### 概率评分（Probabilistic Scoring）
 现实中的谱图通常是不完整的，且充满噪声。
 - 我们需要为每个顶点分配一个分数，反映观测到的峰与理论预期之间的匹配概率。
 - 目标转化为：在 DAG 中寻找**总分最高**的路径。
@@ -67,7 +67,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ### 伪代码实现
 
-```
+```text
 LONGEST-PATH-DAG(G, source, sink):
     // 拓扑排序
     topo_order = TOPOLOGICAL-SORT(G)
@@ -94,7 +94,7 @@ LONGEST-PATH-DAG(G, source, sink):
     path.prepend(source)
     
     return path, dist[sink]
-```
+```text
 
 ### 关键实现细节
 
@@ -221,7 +221,7 @@ $$E = \{(u, v) \mid \text{mass}(v) - \text{mass}(u) = m(a) \text{ for some amino
 
 DAG 中的最长路径问题可通过动态规划在 $O(V + E)$ 时间内求解：
 
-```
+```text
 LONGEST-PATH-DAG(G, source, sink):
     // 拓扑排序
     topo_order = TOPOLOGICAL-SORT(G)
@@ -241,7 +241,7 @@ LONGEST-PATH-DAG(G, source, sink):
     // 回溯路径
     path = BACKTRACK(sink, prev)
     return path
-```
+```text
 
 ### 不完备谱图的挑战
 
@@ -335,13 +335,13 @@ $$\text{score}(P_i) = \sum_{i=1}^{l} \log\frac{p(\delta_i)}{p_R} + \sum_{i=l+1}^
 
 ### 现代工作流程
 
-```
+```text
 高质量谱图 ─→ De novo 测序（谱图图方法）
                 ↓
 低质量谱图 ─→ 数据库搜索（SEQUEST/Mascot）
                 ↓
             结果整合 → 蛋白质鉴定
-```
+```text
 
 <PitfallsBox
   pitfalls={[

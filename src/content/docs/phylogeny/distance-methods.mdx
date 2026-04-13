@@ -73,10 +73,10 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
     },
     {
       term: 'Kimura 2-Parameter (K2P) 距离',
-      definition: '区分转换 (Transition, Ti) 和颠换 (Transversion, Tv) 两种替换类型。由于 Ti 的发生频率通常高于 Tv，K2P 比 JC 更准确地估计距离。',
+      definition: '区分转换（Transition, Ti） 和颠换（Transversion, Tv） 两种替换类型。由于 Ti 的发生频率通常高于 Tv，K2P 比 JC 更准确地估计距离。',
     },
     {
-      term: '超度量 (Ultrametric)',
+      term: '超度量（Ultrametric）',
       definition: '一种特殊的距离性质，要求所有物种到根的路径长度相等。这是 UPGMA 算法的核心假设。',
     },
   ]}
@@ -105,12 +105,12 @@ $$d = \lambda t = -\frac{3}{4}\ln\left(1 - \frac{4}{3}p\right)$$
 
 假设有以下 4 条序列的比对结果：
 
-```
+```text
 序列 A: A T G C C A
 序列 B: A T G C T A
 序列 C: A T G C C G
 序列 D: A T A C C A
-```
+```text
 
 比对长度 $L = 6$。
 
@@ -128,7 +128,7 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 ## 6. 距离法的优缺点
 
 ### 优势
-- **计算极快**：相比最大似然法 (ML) 或贝叶斯法，距离法能处理包含数万条序列的超大数据集。
+- **计算极快**：相比最大似然法（ML） 或贝叶斯法，距离法能处理包含数万条序列的超大数据集。
 - **直观性**：将进化关系量化为空间距离，易于通过聚类方法理解。
 - **灵活性**：可以自由选择距离度量，适应不同类型的序列和不同的进化模型。
 
@@ -139,11 +139,11 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 
 ## 7. 距离矩阵的性质与树的对应关系
 
-### 可加矩阵 (Additive Matrix)
+### 可加矩阵（Additive Matrix）
 
 如果距离矩阵 $D$ 可以被一棵带权树完美解释（即任意两点的距离等于树上路径长度之和），则称 $D$ 是可加的。这是距离法的理想情况。
 
-### 超度量矩阵 (Ultrametric Matrix)
+### 超度量矩阵（Ultrametric Matrix）
 
 如果距离矩阵 $D$ 满足超度量条件（对于任意三点 $i, j, k$，三个距离中的最大值至少出现两次），则称 $D$ 是超度量的。超度量矩阵对应于一棵所有叶子到根等距的树。
 
@@ -164,9 +164,9 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 
 | 场景 | 推荐算法 | 原因 |
 | :--- | :--- | :--- |
-| 序列数量少 (< 50)，教学演示 | UPGMA | 直观易懂，有根树 |
+| 序列数量少（< 50），教学演示 | UPGMA | 直观易懂，有根树 |
 | 序列数量中等，分子钟不满足 | NJ / BioNJ | 不要求分子钟，结果更可靠 |
-| 序列数量大 (> 1000) | FastNJ / FastME | 计算效率高 |
+| 序列数量大（> 1000） | FastNJ / FastME | 计算效率高 |
 | 需要高精度拓扑 | ML 方法 | 利用位点级信息 |
 
 ## 9. 复杂度与适用前提
@@ -208,7 +208,7 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
     },
     {
       term: 'FastME',
-      definition: '专门优化的距离法建树工具，使用平衡最小进化 (Balanced Minimum Evolution) 准则。比标准 NJ 更快且通常更准确。',
+      definition: '专门优化的距离法建树工具，使用平衡最小进化（Balanced Minimum Evolution） 准则。比标准 NJ 更快且通常更准确。',
     },
     {
       term: 'IQ-TREE (快速模式)',

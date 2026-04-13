@@ -127,22 +127,22 @@ $$
 现代 basecaller 采用深度神经网络，架构经历了三代演进：
 
 **第一代：CNN（如 DeepNano）**
-```
+```text
 Signal → 1D Conv → ReLU → Pool → ... → FC → Softmax
-```
+```text
 - 局部特征提取强，但长程依赖建模弱
 
 **第二代：RNN/LSTM（如 Guppy 早期版本）**
-```
+```text
 Signal → LSTM → LSTM → ... → FC → Softmax
-```
+```text
 - 自然处理变长序列，建模时间依赖
 - 训练较慢，并行化困难
 
 **第三代：Transformer（如 Dorado）**
-```
+```text
 Signal → Embedding → Multi-Head Attention → ... → Softmax
-```
+```text
 - 全局上下文建模，高度并行化
 - 计算资源需求高，但准确性最佳
 
@@ -180,7 +180,7 @@ DNA 穿过纳米孔的速度不均匀，导致信号时间扭曲。
 甲基化等修饰改变电流信号，需要专门训练模型或将其作为额外输出维度。
 
 
-## Worked Example
+## 示例
 
 ### 简化 HMM 示例
 

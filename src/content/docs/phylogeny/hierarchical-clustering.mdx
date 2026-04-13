@@ -19,7 +19,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 <SummaryBox
   summary="层次聚类（Hierarchical Clustering）是基因表达数据分析的核心方法，通过迭代合并最相似的簇构建树状结构（Dendrogram）。"
   bullets={[
-    '理解凝聚式 (Agglomerative) 层次聚类的核心算法流程',
+    '理解凝聚式（Agglomerative） 层次聚类的核心算法流程',
     '掌握三种距离更新策略：Single、Complete、Average Linkage',
     '了解层次聚类与 UPGMA 算法的深层联系',
     '辨析层次聚类树与系统发育树的本质区别'
@@ -40,7 +40,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 ### 应用场景
 - **基因聚类**：寻找具有相似表达谱的共表达基因。
 - **样本聚类**：识别临床样本中的亚型或批次效应。
-- **树状可视化**：通过系统树图 (Dendrogram) 直观展示对象间的亲疏关系。
+- **树状可视化**：通过系统树图（Dendrogram） 直观展示对象间的亲疏关系。
 
 ## 2. 核心算法：凝聚式聚类
 
@@ -55,9 +55,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
    c. 计算 C 与其他所有簇之间的距离（Linkage）
    d. 更新距离矩阵，移除 C1 和 C2，加入 C
 3. 输出：记录所有合并过程的树状图
-```
+```text
 
-## 3. 距离更新策略 (Linkage)
+## 3. 距离更新策略（Linkage）
 
 如何定义"两个簇之间的距离"是算法的核心，不同的策略会产生完全不同的树形：
 
@@ -70,8 +70,8 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 ## 4. 评价标准：同质性与分离性
 
 一个好的聚类应该满足：
-- **同质性 (Homogeneity)**：同一个簇内的基因表达模式高度相似（内部距离小）。
-- **分离性 (Separation)**：不同簇之间的基因表达模式显著不同（外部距离大）。
+- **同质性（Homogeneity）**：同一个簇内的基因表达模式高度相似（内部距离小）。
+- **分离性（Separation）**：不同簇之间的基因表达模式显著不同（外部距离大）。
 
 ## 5. 层次聚类 vs 系统发育树
 

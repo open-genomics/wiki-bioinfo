@@ -79,7 +79,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **算法1：深度优先搜索**
 
-```
+```text
 输入：图 G = (V, E)，起始顶点 s
 输出：访问顺序
 
@@ -93,7 +93,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
          if u ∉ visited:
            stack.push(u)
 4. return visited
-```
+```text
 
 **时间复杂度**：$O(|V| + |E|)$
 
@@ -128,7 +128,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **算法2：广度优先搜索**
 
-```
+```text
 输入：图 G = (V, E)，起始顶点 s
 输出：访问顺序
 
@@ -142,7 +142,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
          if u ∉ visited:
            queue.enqueue(u)
 4. return visited
-```
+```text
 
 **时间复杂度**：$O(|V| + |E|)$
 
@@ -199,7 +199,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 **算法3：回溯法寻找Hamiltonian path**
 
-```
+```text
 输入：图 G = (V, E)
 输出：Hamiltonian path（如果存在）
 
@@ -222,21 +222,21 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
    if result ≠ null:
      return result
 5. return null  // 不存在Hamiltonian path
-```
+```text
 
 **时间复杂度**：最坏情况 $O(|V|!)$
 
 **空间复杂度**：$O(|V|)$
 
-### worked example
+### 示例
 
 考虑图：
 
-```
+```text
 A -- B -- C
 |         |
 D -------- E
-```
+```text
 
 寻找Hamiltonian path：
 
@@ -251,28 +251,28 @@ D -------- E
 
 **算法4：贪心路径延伸**
 
-```
+```text
 输入：图 G = (V, E)，边权重 w（coverage）
 输出：路径集合
 
 1. paths = []
 2. visited_edges = ∅
 3. while 存在未访问边:
-   a. 选择权重最大的未访问边 (u, v) 作为起点
+   a. 选择权重最大的未访问边（u, v） 作为起点
    b. path = [u, v]
-   c. 标记 (u, v) 为已访问
+   c. 标记（u, v） 为已访问
    d. current = v
    e. while current 有未访问出边:
-      - 选择权重最大的未访问出边 (current, next)
+      - 选择权重最大的未访问出边（current, next）
       - if next ∈ path:
          * 停止当前路径延伸（避免环）
       - else:
          * 将 next 加入 path
-         * 标记 (current, next) 为已访问
+         * 标记（current, next） 为已访问
          * current = next
    f. 将 path 加入 paths
 4. return paths
-```
+```text
 
 **时间复杂度**：$O(|E| \log |E|)$，如果使用优先队列
 
@@ -286,7 +286,7 @@ Tips是图中的短分支，通常由测序错误引起：
 
 **算法5：Tip检测**
 
-```
+```text
 输入：图 G = (V, E)，最小路径长度 L，最大路径长度 U
 输出：所有tips
 
@@ -305,7 +305,7 @@ Tips是图中的短分支，通常由测序错误引起：
       if L ≤ len(path) ≤ U:
          tips.append(path)
 3. return tips
-```
+```text
 
 ### Bubble检测与清理
 
@@ -313,7 +313,7 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 
 **算法6：Bubble检测**
 
-```
+```text
 输入：图 G = (V, E)，起点 s，终点 t
 输出：s和t之间的所有路径
 
@@ -330,7 +330,7 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 
 3. dfs(s, [])
 4. return paths
-```
+```text
 
 ## 复杂度分析
 

@@ -43,8 +43,8 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - 输出：去除所有重复项后的列表
 
 **示例**：
-- 输入：(8, 1, 5, 1, 0, 4, 5, 10, 1)
-- 输出：(8, 1, 5, 0, 4, 10) 或 (0, 1, 4, 5, 8, 10)
+- 输入：（8, 1, 5, 1, 0, 4, 5, 10, 1）
+- 输出：（8, 1, 5, 0, 4, 10） 或（0, 1, 4, 5, 8, 10）
 
 ### 传统方法
 
@@ -75,9 +75,9 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - 理想情况下，不同的键映射到不同的位置
 
 **简单哈希函数示例**：
-```
+```text
 h(x) = x mod |b|
-```
+```text
 其中 |b| 是哈希表的大小。
 
 **示例**：
@@ -166,25 +166,25 @@ h(x) = x mod |b|
 ### 常见哈希函数
 
 #### 1. 除法哈希
-```
+```text
 h(k) = k mod m
-```
+```text
 - m 通常是质数
 - 简单但可能不够均匀
 
 #### 2. 乘法哈希
-```
+```text
 h(k) = ⌊m(kA mod 1)⌋
-```
+```text
 - A 是常数（如 0.618...）
 - 更好的分布特性
 
 #### 3. 字符串哈希
 
 对于字符串 s = s₁s₂...sₙ：
-```
+```text
 h(s) = (s₁ · pⁿ⁻¹ + s₂ · pⁿ⁻² + ... + sₙ · p⁰) mod m
-```
+```text
 - p 是一个质数（如 31, 137）
 - 适用于字符串键
 
@@ -317,7 +317,7 @@ h(s) = (s₁ · pⁿ⁻¹ + s₂ · pⁿ⁻² + ... + sₙ · p⁰) mod m
 
 ### 简单的哈希表实现（链地址法）
 
-```
+```text
 class HashTable \{
   constructor(size = 1000) \{
     this.size = size;
@@ -343,7 +343,7 @@ class HashTable \{
     return null;
   \}
 \}
-```
+```text
 
 ## 总结
 

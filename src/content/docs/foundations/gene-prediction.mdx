@@ -44,36 +44,36 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ## 基因预测的两大路线
 
-基因预测通常分为**统计方法 (Ab Initio)** 和**相似性方法 (Similarity-based)**。
+基因预测通常分为**统计方法（Ab Initio）** 和**相似性方法（Similarity-based）**。
 
-### 1. 统计方法 (Ab Initio Gene Prediction)
+### 1. 统计方法（Ab Initio Gene Prediction）
 这类方法仅依靠基因组序列本身的统计特征，不依赖外部蛋白质或 cDNA 序列。
 
 - **核心假设**：编码区（外显子）和非编码区（内含子、基因间区）在统计学上存在显著差异（如密码子使用频率、GC 含量、六元组频率）。
-- **主要技术**：隐马尔可夫模型 (HMM)。HMM 可以将基因结构（外显子、内含子、剪接位点）建模为"隐藏状态"，而观察到的 DNA 序列为"观测发射"。
+- **主要技术**：隐马尔可夫模型（HMM）。HMM 可以将基因结构（外显子、内含子、剪接位点）建模为"隐藏状态"，而观察到的 DNA 序列为"观测发射"。
 - **优势**：可以发现全新的、在数据库中没有同源物的基因。
 - **局限**：对剪接信号弱的基因预测准确率较低，且容易受到基因组噪声干扰。
 
-### 2. 相似性方法 (Similarity-based Gene Prediction)
+### 2. 相似性方法（Similarity-based Gene Prediction）
 利用已知的蛋白质序列或表达序列（EST/mRNA）作为模板。
 
 - **核心假设**：进化上相关的物种往往保留了相似的基因功能和序列。
-- **主要技术**：序列比对（如 BLAST）和**剪接比对 (Spliced Alignment)**。
+- **主要技术**：序列比对（如 BLAST）和**剪接比对（Spliced Alignment）**。
 - **优势**：准确率极高，特别是对于外显子/内含子边界的识别。
 - **局限**：只能预测与已知序列相似的基因；对于物种特异的新基因无能为力。
 
 ## 统计特征详解
 
-### 密码子偏好 (Codon Usage Bias)
+### 密码子偏好（Codon Usage Bias）
 虽然多种密码子可以编码同一种氨基酸，但不同物种对这些"同义密码子"的使用并不均衡。
-- **六元组频率 (Hexamer frequency)**：连续两个密码子的出现频率在编码区有很强的统计偏好。
+- **六元组频率（Hexamer frequency）**：连续两个密码子的出现频率在编码区有很强的统计偏好。
 - **逻辑**：如果一个长 ORF 的密码子组成与该物种已知的编码区特征高度一致，那么它极大概率是一个真实的外显子。
 
 ### 剪接信号识别
 识别外显子与内含子的边界是真核生物基因预测的关键：
-- **供体位点 (Donor site)**：外显子结束处，通常包含保守的 `GT`。
-- **受体位点 (Acceptor site)**：内含子结束处，通常包含保守的 `AG`。
-- **算法处理**：通常使用位置权重矩阵 (PWM) 或复杂的神经网络来评分这些微弱的信号。
+- **供体位点（Donor site）**：外显子结束处，通常包含保守的 `GT`。
+- **受体位点（Acceptor site）**：内含子结束处，通常包含保守的 `AG`。
+- **算法处理**：通常使用位置权重矩阵（PWM） 或复杂的神经网络来评分这些微弱的信号。
 
 ## 相似性预测与"剪接比对"
 
@@ -132,23 +132,23 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 <DefinitionList
   items={[
     {
-      term: "外显子 (Exon)",
+      term: "外显子（Exon）",
       definition: "基因中编码蛋白质的序列片段，最终在 mRNA 中连接在一起。"
     },
     {
-      term: "内含子 (Intron)",
+      term: "内含子（Intron）",
       definition: "基因中的非编码序列，在 mRNA 加工过程中被剪接掉。"
     },
     {
-      term: "开放阅读框 (ORF)",
+      term: "开放阅读框（ORF）",
       definition: "从起始密码子到终止密码子的连续编码序列。"
     },
     {
-      term: "剪接位点 (Splice Site)",
+      term: "剪接位点（Splice Site）",
       definition: "内含子与外显子的交界处，通常有保守的序列模式。"
     },
     {
-      term: "隐马尔可夫模型 (HMM)",
+      term: "隐马尔可夫模型（HMM）",
       definition: "用于基因预测的概率模型，将基因结构建模为状态序列。"
     }
   ]}

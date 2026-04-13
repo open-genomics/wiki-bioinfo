@@ -16,7 +16,7 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
   bullets={[
     '掌握 Tn5 转座酶的"切割即连接"原理',
     '理解插入片段长度分布（Insert Size Distribution）如何反映核小体排布',
-    '掌握 Tn5 插入位点的偏移校正逻辑（+4bp / -5bp）',
+    '掌握 Tn5 插入位点的偏移校正逻辑（+4 bp / -5 bp）',
     '了解转录因子足迹（Footprinting）分析的算法挑战'
   ]}
 />
@@ -35,7 +35,7 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 
 ATAC-seq 的精妙之处在于利用了 **Tn5 转座酶** 的生化特性：
 - **开放性偏好**：Tn5 无法进入紧密包裹在核小体里的 DNA，它只能"降落"在没有蛋白遮挡的开放染色质区域。
-- **切割即连接 (Tagmentation)**：Tn5 在切割 DNA 的瞬间，会自动将测序接头连接到切口末端。
+- **切割即连接（Tagmentation）**：Tn5 在切割 DNA 的瞬间，会自动将测序接头连接到切口末端。
 - **意义**：这一步同时完成了片段化和建库，极大地简化了实验流程。
 
 ## 2. 数据的统计特征
@@ -60,9 +60,9 @@ ATAC-seq 的片段长度分布呈现明显的周期性：
 
 ATAC-seq 数据的质量评估依赖几个关键指标：
 
-### TSS 富集分数 (TSS Enrichment Score)
+### TSS 富集分数（TSS Enrichment Score）
 
-**原理**：转录起始位点 (TSS) 附近通常是开放染色质，Tn5 插入应在此处富集。计算方法是在所有已知 TSS 周围构建插入位点的分布 profile，以背景区域（TSS 两侧远端）的信号水平作为基线，TSS 中心区域的信号高度除以背景即为 TSS 富集分数。
+**原理**：转录起始位点（TSS） 附近通常是开放染色质，Tn5 插入应在此处富集。计算方法是在所有已知 TSS 周围构建插入位点的分布 profile，以背景区域（TSS 两侧远端）的信号水平作为基线，TSS 中心区域的信号高度除以背景即为 TSS 富集分数。
 
 - **高质量数据**：TSS Enrichment > 6
 - **可接受**：4--6
@@ -70,7 +70,7 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
 
 ### FRiP (Fraction of Reads in Peaks)
 
-**定义**：落在调用峰 (Peaks) 内的 reads 占总 mapped reads 的比例。
+**定义**：落在调用峰（Peaks） 内的 reads 占总 mapped reads 的比例。
 
 - **典型范围**：0.2--0.5
 - **过低（{'<'} 0.1）**：提示信噪比差，可能是细胞量不足或 Tn5 活性偏低
@@ -79,7 +79,7 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
 ### 片段长度分布
 
 高质量的 ATAC-seq 数据应在片段长度分布图中呈现清晰的核小体周期性：
-- **{'<'} 100 bp 峰**：无核小体区域 (NFR)
+- **{'<'} 100 bp 峰**：无核小体区域（NFR）
 - **~200 bp 峰**：单核小体保护片段
 - **~400 bp 峰**：双核小体保护片段
 
@@ -87,7 +87,7 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
 
 ### 重复率
 
-高重复率 (> 50%) 表明文库复杂度低，可能原因是起始细胞量不足或 PCR 扩增过度。
+高重复率（> 50%） 表明文库复杂度低，可能原因是起始细胞量不足或 PCR 扩增过度。
 
 ## 5. 数据预处理流程
 
@@ -97,7 +97,7 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
     { title: '接头去除', description: '使用 cutadapt/Trim Galore 去除 Nextera 接头序列（ATAC-seq 使用 Tn5 自带接头）' },
     { title: '序列比对', description: '使用 Bowtie2 或 BWA 将 reads 比对到参考基因组，保留 properly paired 且唯一比对的片段' },
     { title: '去除重复', description: '使用 Picard MarkDuplicates 去除 PCR 重复，保留唯一片段' },
-    { title: 'Tn5 偏移校正', description: '正链 +4bp，负链 -5bp，校正 Tn5 二聚体结合偏移' },
+    { title: 'Tn5 偏移校正', description: '正链 +4 bp，负链 -5 bp，校正 Tn5 二聚体结合偏移' },
     { title: '线粒体去除', description: '去除比对到线粒体基因组的 reads（通常占比很高，但不包含核基因组调控信息）' },
     { title: '峰调用', description: '使用 MACS2 (--nomodel --shift -100 --extsize 200) 调用开放染色质区域' },
   ]}
@@ -118,14 +118,14 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
   ]}
 />
 
-## 7. 峰调用 (Peak Calling) 与注释
+## 7. 峰调用（Peak Calling） 与注释
 
 与 ChIP-seq 类似，ATAC-seq 使用 **MACS2** 识别信号富集区。
 - **关键差异**：ATAC-seq 强调的是"开放性"，因此峰通常对应启动子、增强子和绝缘子。
 - **参数考量**：由于 ATAC-seq 的片段分布复杂（混合了无核小体片段和核小体保护片段），MACS2 通常使用 `--nomodel --shift -100 --extsize 200` 而非自动建模 fragment size。
 - **功能关联**：通过将峰与最近的基因或已知的调控网络关联，推断该区域的生物学功能。
 
-## 8. 转录因子足迹分析 (Footprinting)
+## 8. 转录因子足迹分析（Footprinting）
 
 ATAC-seq 可以识别开放染色质区域，但开放区域不一定意味着转录因子正在结合。Footprinting 旨在解决：**在开放的区域中，哪些位置实际上被转录因子占据？**
 
@@ -141,7 +141,7 @@ Bulk ATAC-seq 测量的是细胞群体的平均信号，但生物样本通常是
 - **数据特性**：单细胞数据极为稀疏——每个细胞仅检测到数千个开放位点（vs. bulk 的数百万），许多位点的状态是"未观测到"而非"未开放"。
 - **核心分析策略**：
     - **降维与聚类**：构建 peak × cell 矩阵，使用 LSI (Latent Semantic Indexing) 降维后聚类。
-    - **Motif 偏差分析 (chromVAR)**：由于数据太稀疏无法直接检测 footprint，改为计算每个细胞中 motif 的插入偏差以推断转录因子活性差异。
+    - **Motif 偏差分析（chromVAR）**：由于数据太稀疏无法直接检测 footprint，改为计算每个细胞中 motif 的插入偏差以推断转录因子活性差异。
     - **多组学整合**：与 scRNA-seq 联合分析，关联染色质开放性与基因表达，构建基因调控网络。
 
 <PitfallsBox

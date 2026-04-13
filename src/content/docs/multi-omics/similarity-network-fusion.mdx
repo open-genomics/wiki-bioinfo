@@ -152,7 +152,7 @@ $$
 
 **算法1：构建相似性网络**
 
-```
+```text
 输入：组学矩阵 X ∈ R^\{n×p\}，近邻数 K
 输出：相似性网络 P
 
@@ -176,7 +176,7 @@ $$
      P_\{ij\} = W_\{ij\} / sum_l W_\{il\}
 
 5. return P
-```
+```text
 
 **时间复杂度**：$O(n^2 p + n^2 \log n)$
 
@@ -184,20 +184,20 @@ $$
 
 **算法2：对称化相似性网络**
 
-```
+```text
 输入：相似性网络 P
 输出：对称网络 S
 
 1. S = (P^T + P) / 2
 
 2. return S
-```
+```text
 
 ### 步骤 3：迭代融合网络
 
 **算法3：SNF 网络融合**
 
-```
+```text
 输入：K个相似性网络 P^\{(1)\}, ..., P^\{(K)\}，最大迭代次数 T
 输出：融合网络 P
 
@@ -214,13 +214,13 @@ $$
       P^\{(k)\}_\{iteration\} = S^\{(k)\} × P_avg × (S^\{(k)\})^T
    
    c. 归一化：
-      P^\{(k)\}_\{iteration\} = 归一化(P^\{(k)\}_\{iteration\})
+      P^\{(k)\}_\{iteration\} = 归一化（P^\{(k）\}_\{iteration\})
 
 3. 计算融合网络：
    P = (∑_\{k=1\}^\{K\} P^\{(k)\}_T) / K
 
 4. return P
-```
+```text
 
 **时间复杂度**：每次迭代 $O(K n^3)$，总复杂度 $O(T K n^3)$
 
@@ -228,7 +228,7 @@ $$
 
 **算法4：谱聚类**
 
-```
+```text
 输入：融合网络 P，聚类数 K_cluster
 输出：聚类标签
 
@@ -243,9 +243,9 @@ $$
 4. 对特征向量进行 k-means 聚类
 
 5. return 聚类标签
-```
+```text
 
-## Worked Example
+## 示例
 
 考虑两个组学数据：
 - 基因表达：3 个样本，4 个基因
@@ -459,7 +459,7 @@ def construct_similarity_network(X, K=10, mu=0.5):
     构建相似性网络
     
     参数:
-        X: 数据矩阵 (n_samples, n_features)
+        X: 数据矩阵（n_samples, n_features）
         K: 近邻数
         mu: 超参数
     
@@ -543,7 +543,7 @@ clustering = SpectralClustering(n_clusters=3, affinity='precomputed')
 labels = clustering.fit_predict(P_fused)
 
 print(f"聚类标签: \{labels\}")
-```
+```text
 
 ### R 实现
 
@@ -564,7 +564,7 @@ W <- SNF(list(W1, W2), K = 20, t = 20)
 
 # 谱聚类
 labels <- spectralClustering(W, K = 3)
-```
+```text
 
 
 <PageHeaderMeta section="Applications" />

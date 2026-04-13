@@ -59,9 +59,9 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <PrerequisitesBox
   items={[
-    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
+    {name: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
     '理解同一个流程中不同任务的"结果文件"并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
-    {name: '常见文件格式概览', href: '/docs/formats/common-file-formats'},
+    {name: '常见文件格式概览', href: '/wiki-bioinfo/formats/common-file-formats'},
   ]}
 />
 
@@ -217,25 +217,25 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
   links={[
     {
       title: '常见文件格式概览',
-      to: '/docs/formats/common-file-formats',
+      to: '/wiki-bioinfo/formats/common-file-formats',
       label: '具体语义',
       description: '如果你想看每种格式具体保存什么、没保存什么，去看这页。',
     },
     {
       title: '参考基因组、坐标系统与注释',
-      to: '/docs/foundations/reference-and-annotation',
+      to: '/wiki-bioinfo/foundations/reference-and-annotation',
       label: '背景约束',
       description: '理解为什么很多格式层问题本质上仍受参考与坐标体系约束。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/docs/variants/variant-calling-overview',
+      to: '/wiki-bioinfo/variants/variant-calling-overview',
       label: '实战流程',
       description: '查看 FASTQ、BAM、VCF 在真实变异检测工作流中的连接关系。',
     },
     {
       title: '数据、注释与资源',
-      to: '/docs/data-references/',
+      to: '/wiki-bioinfo/data-references/',
       label: '板块入口',
       description: '回到上层入口，把参考、数据库和格式一起看。',
     },

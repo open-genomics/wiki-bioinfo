@@ -42,69 +42,69 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   items={[
     {
       title: '编辑距离',
-      to: '/docs/alignment/edit-distance',
+      to: '/wiki-bioinfo/alignment/edit-distance',
       description: '从最基础的动态规划问题出发，建立比对的最短路径直觉。',
     },
     {
       title: '全局比对与局部比对',
-      to: '/docs/alignment/global-local',
+      to: '/wiki-bioinfo/alignment/global-local',
       description: '理解不同任务为什么需要不同的目标函数与路径边界。',
     },
     {
       title: '打分矩阵与 gap 罚分',
-      to: '/docs/alignment/scoring-matrices',
+      to: '/wiki-bioinfo/alignment/scoring-matrices',
       description: '把字符替换和 gap 代价引入更真实的模型。',
     },
     {
       title: '半全局比对',
-      to: '/docs/alignment/semi-global-alignment',
+      to: '/wiki-bioinfo/alignment/semi-global-alignment',
       badge: '比对变体',
       description: '理解如何处理序列端部的gap，适用于read mapping和重叠检测等场景。',
     },
     {
       title: 'Affine gap penalty',
-      to: '/docs/alignment/affine-gap-penalty',
+      to: '/wiki-bioinfo/alignment/affine-gap-penalty',
       description: '理解为什么连续 gap 和碎片 gap 不该被同样对待。',
     },
     {
       title: 'Needleman-Wunsch 算法',
-      to: '/docs/alignment/needleman-wunsch',
+      to: '/wiki-bioinfo/alignment/needleman-wunsch',
       badge: '经典算法',
       description: '全局比对的标准动态规划算法，包括完整递推公式与回溯过程。',
     },
     {
       title: 'Smith-Waterman 算法',
-      to: '/docs/alignment/smith-waterman',
+      to: '/wiki-bioinfo/alignment/smith-waterman',
       badge: '经典算法',
       description: '局部比对的标准动态规划算法，理解如何寻找最优局部相似片段。',
     },
     {
       title: 'Gotoh 算法',
-      to: '/docs/alignment/gotoh',
+      to: '/wiki-bioinfo/alignment/gotoh',
       badge: '算法优化',
       description: '处理 affine gap penalty 的三状态动态规划算法。',
     },
     {
       title: 'Hirschberg 算法',
-      to: '/docs/alignment/hirschberg',
+      to: '/wiki-bioinfo/alignment/hirschberg',
       badge: '算法优化',
       description: '线性空间全局比对算法，通过分治策略优化空间复杂度。',
     },
     {
       title: '带状动态规划',
-      to: '/docs/alignment/banded-dp',
+      to: '/wiki-bioinfo/alignment/banded-dp',
       badge: '算法优化',
       description: '限制搜索范围的加速技术，适用于高相似度序列比对。',
     },
     {
       title: 'BLAST：基于 seed-and-extend 的局部搜索',
-      to: '/docs/alignment/blast',
+      to: '/wiki-bioinfo/alignment/blast',
       badge: '数据库搜索',
       description: '理解经典 BLAST 如何在大型数据库中结合 seed-and-extend 做局部相似性搜索。',
     },
     {
       title: '多序列比对（MSA）',
-      to: '/docs/alignment/multiple-sequence-alignment',
+      to: '/wiki-bioinfo/alignment/multiple-sequence-alignment',
       badge: '进阶对齐',
       description: '理解为什么多条序列不能简单重复 pairwise DP，以及 progressive alignment 的核心思路。',
     },
@@ -124,17 +124,17 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   links={[
     {
       title: '序列表示与索引',
-      to: '/docs/sequence/',
+      to: '/wiki-bioinfo/sequence/',
       description: '很多现代比对策略都建立在索引层的候选搜索之上。',
     },
     {
       title: '分析方向与案例',
-      to: '/docs/applications/',
+      to: '/wiki-bioinfo/applications/',
       description: '变异检测、RNA-seq 和系统发育都把比对作为前置任务。',
     },
     {
       title: '数据、注释与资源',
-      to: '/docs/data-references/',
+      to: '/wiki-bioinfo/data-references/',
       description: '比对的坐标、参考版本和输出格式都要依赖资源层约束。',
     },
   ]}

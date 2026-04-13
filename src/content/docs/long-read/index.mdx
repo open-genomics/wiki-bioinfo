@@ -43,7 +43,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 <PrerequisitesBox
   items={[
     { to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', label: '测序技术基础' },
-    { to: '/docs/assembly/index', label: '基因组组装基础' },
+    { to: '/wiki-bioinfo/assembly/index', label: '基因组组装基础' },
   ]}
 />
 
@@ -83,37 +83,37 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   items={[
     {
       title: 'PacBio 与 Nanopore',
-      to: '/docs/long-read/pacbio-nanopore',
+      to: '/wiki-bioinfo/long-read/pacbio-nanopore',
       description: '理解两类平台的测序原理、误差模式与适用场景。',
     },
     {
       title: '长读长组装',
-      to: '/docs/long-read/long-read-assembly',
+      to: '/wiki-bioinfo/long-read/long-read-assembly',
       description: '从 overlap 到 contig，再到 polishing 和评估。',
     },
     {
       title: '重叠检测算法',
-      to: '/docs/long-read/overlap-detection',
+      to: '/wiki-bioinfo/long-read/overlap-detection',
       description: 'Minimap 的 minimizer 采样和 MHAP 的 MinHash 算法。',
     },
     {
       title: 'Consensus 算法',
-      to: '/docs/long-read/consensus-algorithm',
+      to: '/wiki-bioinfo/long-read/consensus-algorithm',
       description: 'Racon 的 POA 动态规划和 Medaka 的神经网络模型。',
     },
     {
       title: 'Minimap2 比对算法',
-      to: '/docs/long-read/minimap2-alignment',
+      to: '/wiki-bioinfo/long-read/minimap2-alignment',
       description: 'Seed-chain-align 流程与带状动态规划实现。',
     },
     {
       title: 'Basecalling 算法',
-      to: '/docs/long-read/basecalling-algorithm',
+      to: '/wiki-bioinfo/long-read/basecalling-algorithm',
       description: 'Nanopore 信号处理的 HMM 模型与神经网络架构。',
     },
     {
       title: '结构变异检测',
-      to: '/docs/long-read/sv-detection',
+      to: '/wiki-bioinfo/long-read/sv-detection',
       description: '利用 split-read、coverage 和断点证据检测大型插入、缺失和重排。',
     },
   ]}

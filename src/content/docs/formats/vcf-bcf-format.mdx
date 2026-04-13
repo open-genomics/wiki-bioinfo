@@ -35,7 +35,7 @@ VCF 文件由三部分组成：
 
 ```text
 ##fileformat=VCFv4.3
-##reference=file:///reference/GRCh38.fa
+##reference=file//reference/GRCh38.fa
 ##INFO=<ID=DP,Number=1,Type=Integer,Description="总深度">
 ##INFO=<ID=AF,Number=A,Type=Float,Description="等位基因频率">
 ##FORMAT=<ID=GT,Number=1,Type=String,Description="基因型">
@@ -82,9 +82,9 @@ VCF 是变异检测流程的**输出交付格式**，承载：
 
 <PrerequisitesBox
   items={[
-    {name: 'SAM/BAM/CRAM 格式', href: '/docs/formats/sam-bam-cram'},
-    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
-    {name: 'Small Variants 与结构变异', href: '/docs/variants/small-variants-vs-sv'},
+    {name: 'SAM/BAM/CRAM 格式', href: '/wiki-bioinfo/formats/sam-bam-cram'},
+    {name: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
+    {name: 'Small Variants 与结构变异', href: '/wiki-bioinfo/variants/small-variants-vs-sv'},
   ]}
 />
 
@@ -204,25 +204,25 @@ GT=0/1  →  携带 A 和 G
   links={[
     {
       title: 'SAM/BAM/CRAM 格式',
-      to: '/docs/formats/sam-bam-cram',
+      to: '/wiki-bioinfo/formats/sam-bam-cram',
       label: '上游格式',
       description: '变异检测的证据来源——比对结果。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/docs/variants/variant-calling-overview',
+      to: '/wiki-bioinfo/variants/variant-calling-overview',
       label: '应用层',
       description: '查看 BAM → VCF 的完整变异检测流程。',
     },
     {
       title: '变异过滤策略',
-      to: '/docs/variants/variant-filtering',
+      to: '/wiki-bioinfo/variants/variant-filtering',
       label: '下游流程',
       description: '如何使用 VCF 中的 QUAL/INFO 字段进行质量控制。',
     },
     {
       title: '临床变异解释',
-      to: '/docs/clinical-variants/',
+      to: '/wiki-bioinfo/clinical-variants/',
       description: 'VCF 中的候选变异进入 ACMG 致病性分类流程。',
     },
   ]}

@@ -13,9 +13,9 @@ BioInfo Wiki 采用开源协作模式，通过 GitHub 的 Issue 和 Pull Request
 ### 1.1 准备工作
 
 1. **阅读相关文档**：
-   - [项目简介](./about.md) — 了解知识库的定位和理念
-   - [学习路线](./roadmap.md) — 了解当前知识结构的空白
-   - [写作规范](./style-guide.md) — 掌握页面模板和术语规范
+   - [项目简介](about.mdx) — 了解知识库的定位和理念
+   - [学习路线](roadmap.mdx) — 了解当前知识结构的空白
+   - [写作规范](style-guide.mdx) — 掌握页面模板和术语规范
 
 2. **确认贡献方向**：
    - 查看已有 Issue，寻找感兴趣的任务
@@ -24,7 +24,7 @@ BioInfo Wiki 采用开源协作模式，通过 GitHub 的 Issue 和 Pull Request
 ### 1.2 提交修改
 
 1. Fork 本仓库并创建特性分支
-2. 按[写作规范](./style-guide.md)修改文档、插画或代码
+2. 按[写作规范](style-guide.mdx)修改文档、插画或代码
 3. 本地验证：
 
 ```bash
@@ -105,6 +105,6 @@ npm run check  # 检查链接和格式
 
 ## 6. 相关页面
 
-- [项目简介](./about.md) — 知识库的定位与理念
-- [学习路线](./roadmap.md) — 知识结构规划
-- [写作规范](./style-guide.md) — 详细的模板与格式规范
+- [项目简介](about.mdx) — 知识库的定位与理念
+- [学习路线](roadmap.mdx) — 知识结构规划
+- [写作规范](style-guide.mdx) — 详细的模板与格式规范

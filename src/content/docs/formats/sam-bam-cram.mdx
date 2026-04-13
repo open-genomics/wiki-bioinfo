@@ -84,9 +84,9 @@ SAM/BAM 是分析流程中的**核心证据层**：
 
 <PrerequisitesBox
   items={[
-    {name: 'FASTQ 格式', href: '/docs/formats/fastq-format'},
-    {name: '参考基因组、坐标系统与注释', href: '/docs/foundations/reference-and-annotation'},
-    {name: '全局比对与局部比对', href: '/docs/alignment/global-local'},
+    {name: 'FASTQ 格式', href: '/wiki-bioinfo/formats/fastq-format'},
+    {name: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
+    {name: '全局比对与局部比对', href: '/wiki-bioinfo/alignment/global-local'},
   ]}
 />
 
@@ -280,25 +280,25 @@ $$MAPQ = -10 \log_{10}(P_{mapping\ error})$$
   links={[
     {
       title: 'FASTQ 格式',
-      to: '/docs/formats/fastq-format',
+      to: '/wiki-bioinfo/formats/fastq-format',
       label: '上游格式',
       description: '比对前的原始 reads 容器，不含坐标信息。',
     },
     {
       title: 'VCF/BCF 格式',
-      to: '/docs/formats/vcf-bcf-format',
+      to: '/wiki-bioinfo/formats/vcf-bcf-format',
       label: '下游格式',
       description: '基于 BAM 比对证据的变异调用结果。',
     },
     {
       title: '序列比对总论',
-      to: '/docs/alignment/',
+      to: '/wiki-bioinfo/alignment/',
       label: '算法层',
       description: '理解比对算法（BWA、Bowtie2）如何生成 SAM/BAM。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/docs/variants/variant-calling-overview',
+      to: '/wiki-bioinfo/variants/variant-calling-overview',
       description: 'BAM 是变异检测的直接输入，read pileup 是变异证据的来源。',
     },
   ]}

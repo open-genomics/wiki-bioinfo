@@ -54,7 +54,7 @@ description: BioInfo Wiki 项目缘起、知识组织理念与长期愿景
 
 ### 如果你是初学者
 
-建议从[学习路线](./roadmap.md)开始，先建立整体知识地图，再按需深入具体主题。重点不是记住所有算法细节，而是理解**为什么需要这些方法**、**它们解决什么类型的问题**。
+建议从[学习路线](roadmap.mdx)开始，先建立整体知识地图，再按需深入具体主题。重点不是记住所有算法细节，而是理解**为什么需要这些方法**、**它们解决什么类型的问题**。
 
 ### 如果你有特定问题
 
@@ -66,7 +66,7 @@ description: BioInfo Wiki 项目缘起、知识组织理念与长期愿景
 
 ### 如果你想贡献内容
 
-参考[写作规范](./style-guide.md)和[贡献指南](./contributing.md)。我们欢迎：
+参考[写作规范](style-guide.mdx)和[贡献指南](contributing.mdx)。我们欢迎：
 - 对现有页面的补充和完善
 - 新的知识点页面（特别是填补知识网络中的空白）
 - 图示、示例和交叉链接的改进
@@ -87,11 +87,11 @@ BioInfo Wiki 希望成为：
 - Durbin, R., Eddy, S., Krogh, A., & Mitchison, G. (1998). *Biological Sequence Analysis*. Cambridge University Press.
 - Cormen, T. H., et al. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
 
-组织方式借鉴 [OI Wiki](https://oi-wiki.org/) 的模式：用清晰的层级结构串起知识点，用社区协作机制持续积累内容。
+组织方式借鉴 [OI Wiki](https/oi-wiki.org/) 的模式：用清晰的层级结构串起知识点，用社区协作机制持续积累内容。
 
 ## 相关页面
 
-- [导论](./index.md) — 全站入口与导航
-- [学习路线](./roadmap.md) — 推荐的学习路径
-- [如何贡献](./contributing.md) — 参与项目的方式
-- [写作规范](./style-guide.md) — 文档风格与模板
+- [导论](index.mdx) — 全站入口与导航
+- [学习路线](roadmap.mdx) — 推荐的学习路径
+- [如何贡献](contributing.mdx) — 参与项目的方式
+- [写作规范](style-guide.mdx) — 文档风格与模板

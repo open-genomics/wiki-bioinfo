@@ -59,35 +59,35 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
   items={[
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/docs/variants/variant-calling-overview',
+      to: '/wiki-bioinfo/variants/variant-calling-overview',
       badge: '起点',
       meta: 'workflow overview',
       description: '从 FASTQ、BAM、VCF 和过滤逻辑出发，理解 variant calling 的主流程。',
     },
     {
       title: 'DNA-seq 变异过滤与质量控制',
-      to: '/docs/variants/variant-filtering',
+      to: '/wiki-bioinfo/variants/variant-filtering',
       badge: '过滤逻辑',
       meta: 'filtering',
       description: '理解 QUAL、DP、AF、FILTER 等字段如何帮助你筛选更可信的候选变异。',
     },
     {
       title: '重复与低复杂度区域',
-      to: '/docs/variants/repeats-and-low-complexity',
+      to: '/wiki-bioinfo/variants/repeats-and-low-complexity',
       badge: '困难区域',
       meta: 'repeats',
       description: '理解在重复与低复杂度区域中，multi-mapping 和复杂 CIGAR 给变异解释带来的挑战。',
     },
     {
       title: 'Small variants 与结构变异（SV）',
-      to: '/docs/variants/small-variants-vs-sv',
+      to: '/wiki-bioinfo/variants/small-variants-vs-sv',
       badge: '变异类型',
       meta: 'small vs SV',
       description: '区分 SNP/短 indel 与大尺度结构变异，并理解它们对应的 caller 与证据。',
     },
     {
       title: 'Germline 与 somatic 变异',
-      to: '/docs/variants/germline-vs-somatic',
+      to: '/wiki-bioinfo/variants/germline-vs-somatic',
       badge: '生物学背景',
       meta: 'germline vs somatic',
       description: '从研究设计、caller 选择和解释角度区分 germline 与 somatic 分析思路。',
@@ -101,19 +101,19 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
   links={[
     {
       title: '测序 reads、coverage 与错误模型',
-      to: '/docs/foundations/sequencing-reads-coverage',
+      to: '/wiki-bioinfo/foundations/sequencing-reads-coverage',
       label: '前置',
       description: '理解变异检测中的观察证据为什么会受到测序误差与覆盖度影响。',
     },
     {
       title: '序列比对',
-      to: '/docs/alignment/',
+      to: '/wiki-bioinfo/alignment/',
       label: '方法依赖',
       description: '变异检测的可信度很大程度取决于 read 被定位得是否稳定。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/docs/variants/variant-calling-overview',
+      to: '/wiki-bioinfo/variants/variant-calling-overview',
       label: '流程总览',
       description: '从 BAM、VCF 和过滤逻辑出发理解真实流程。',
     },

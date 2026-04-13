@@ -219,22 +219,22 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   links={[
     {
       title: '算法设计范式',
-      to: '/docs/core-methods/algorithm-design-paradigms',
+      to: '/wiki-bioinfo/core-methods/algorithm-design-paradigms',
       description: '六大算法设计范式的核心思想与应用。',
     },
     {
       title: '算法与复杂度',
-      to: '/docs/foundations/algorithms-and-complexity',
+      to: '/wiki-bioinfo/foundations/algorithms-and-complexity',
       description: '复杂度分析和算法效率的基础。',
     },
     {
       title: '动态规划基础',
-      to: '/docs/foundations/dynamic-programming-basics',
+      to: '/wiki-bioinfo/foundations/dynamic-programming-basics',
       description: 'DP 问题的统一视角。',
     },
     {
       title: '图算法基础',
-      to: '/docs/foundations/graph-algorithms',
+      to: '/wiki-bioinfo/foundations/graph-algorithms',
       description: '图论问题与算法。',
     },
   ]}

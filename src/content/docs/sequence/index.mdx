@@ -69,57 +69,57 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   items={[
     {
       title: 'k-mer 与序列表示',
-      to: '/docs/sequence/kmers',
+      to: '/wiki-bioinfo/sequence/kmers',
       description: '理解为什么局部片段可以成为索引、组装和分类任务的共同基础。',
     },
     {
       title: '索引结构概览',
-      to: '/docs/sequence/indexing',
+      to: '/wiki-bioinfo/sequence/indexing',
       description: '建立 suffix array、BWT、FM-index 等结构在方法图谱中的位置。',
     },
     {
       title: '精确字符串匹配',
-      to: '/docs/sequence/exact-string-matching',
+      to: '/wiki-bioinfo/sequence/exact-string-matching',
       badge: '算法起点',
       description: '从最基础的模式串查找问题出发，理解为什么需要更聪明的字符串算法。',
     },
     {
       title: 'KMP算法',
-      to: '/docs/sequence/kmp-algorithm',
+      to: '/wiki-bioinfo/sequence/kmp-algorithm',
       badge: '经典算法',
       description: '通过failure function实现线性时间字符串匹配，理解避免重复计算的核心思想。',
     },
     {
       title: 'Boyer-Moore算法',
-      to: '/docs/sequence/boyer-moore-algorithm',
+      to: '/wiki-bioinfo/sequence/boyer-moore-algorithm',
       badge: '经典算法',
       description: '通过bad character和good suffix规则实现高效跳跃，理解实际应用中最快的字符串匹配算法。',
     },
     {
       title: 'Trie 与多模式匹配',
-      to: '/docs/sequence/trie-and-multi-pattern-matching',
+      to: '/wiki-bioinfo/sequence/trie-and-multi-pattern-matching',
       badge: '多模式匹配',
       description: '用 trie 组织一组模式，并理解 Aho–Corasick 这类算法的基本直觉。',
     },
     {
       title: '精确匹配与近似匹配',
-      to: '/docs/sequence/exact-vs-approximate',
+      to: '/wiki-bioinfo/sequence/exact-vs-approximate',
       description: '理解为什么现代 read mapping 通常是搜索和扩展的组合。',
     },
     {
       title: 'Suffix Tree',
-      to: '/docs/sequence/suffix-tree',
+      to: '/wiki-bioinfo/sequence/suffix-tree',
       badge: '后缀结构',
       description: '从 suffix trie 压缩到 suffix tree，建立子串索引的经典直觉。',
     },
     {
       title: 'Suffix Array、BWT 与索引压缩',
-      to: '/docs/sequence/suffix-array-bwt',
+      to: '/wiki-bioinfo/sequence/suffix-array-bwt',
       description: '从后缀排序和 BWT 出发，理解压缩索引的动机。',
     },
     {
       title: 'FM-index',
-      to: '/docs/sequence/fm-index',
+      to: '/wiki-bioinfo/sequence/fm-index',
       description: '把 BWT 与 backward search 连接起来，理解高效 exact matching。',
     },
   ]}
@@ -131,17 +131,17 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   links={[
     {
       title: '基础与数学',
-      to: '/docs/foundations/',
+      to: '/wiki-bioinfo/foundations/',
       description: '复杂度分析、图论基础和动态规划是理解本章节内容的数学基础。',
     },
     {
       title: '序列比对',
-      to: '/docs/alignment/',
+      to: '/wiki-bioinfo/alignment/',
       description: '索引结构为比对算法提供候选定位，seed-and-extend策略结合两者优势。',
     },
     {
       title: '组装与图算法',
-      to: '/docs/assembly/',
+      to: '/wiki-bioinfo/assembly/',
       description: 'k-mer表示是de Bruijn图组装的基石，索引结构也常用于组装质量评估。',
     },
   ]}

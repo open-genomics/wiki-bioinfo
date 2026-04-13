@@ -113,31 +113,31 @@ $$
 
 $$
 M[i][j] = \max
-\begin\{cases\}
+\begin{cases}
 M[i-1][j-1] + s(x_i, y_j) \\
 Ix[i-1][j-1] + s(x_i, y_j) \\
 Iy[i-1][j-1] + s(x_i, y_j)
-\end\{cases\}
+\end{cases}
 $$
 
 **X 方向 gap 状态 Ix：**
 
 $$
 Ix[i][j] = \max
-\begin\{cases\}
-M[i-1][j] + g_o + g_e & \text\{开启新 gap\} \\
-Ix[i-1][j] + g_e & \text\{延长已有 gap\}
-\end\{cases\}
+\begin{cases}
+M[i-1][j] + g_o + g_e & \text{开启新 gap} \\
+Ix[i-1][j] + g_e & \text{延长已有 gap}
+\end{cases}
 $$
 
 **Y 方向 gap 状态 Iy：**
 
 $$
 Iy[i][j] = \max
-\begin\{cases\}
-M[i][j-1] + g_o + g_e & \text\{开启新 gap\} \\
-Iy[i][j-1] + g_e & \text\{延长已有 gap\}
-\end\{cases\}
+\begin{cases}
+M[i][j-1] + g_o + g_e & \text{开启新 gap} \\
+Iy[i][j-1] + g_e & \text{延长已有 gap}
+\end{cases}
 $$
 
 ### 最终得分

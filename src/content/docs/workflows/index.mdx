@@ -21,11 +21,11 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 推荐阅读顺序
 
-1. [NGS 流程总览](./ngs-overview.md)
-2. [质量控制（QC）总览](./qc-overview.md)
+1. [NGS 流程总览](./ngs-overview.mdx)
+2. [质量控制（QC）总览](./qc-overview.mdx)
 3. [RNA-seq 工作流概览](./rna-seq.mdx)
-4. [Metagenomics 流程总览](./metagenomics-overview.md)
-5. [如何选择 alignment、assembly 或 pseudo-alignment](./choosing-alignment-assembly.md)
+4. [Metagenomics 流程总览](./metagenomics-overview.mdx)
+5. [如何选择 alignment、assembly 或 pseudo-alignment](./choosing-alignment-assembly.mdx)
 
 ## 子主题导航
 
@@ -33,27 +33,27 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   items={[
     {
       title: 'NGS 流程总览',
-      to: '/docs/workflows/ngs-overview',
+      to: '/wiki-bioinfo/workflows/ngs-overview',
       description: '先建立二代测序分析的总体地图，再向 DNA-seq、RNA-seq 和宏基因组分支展开。',
     },
     {
       title: '质量控制（QC）总览',
-      to: '/docs/workflows/qc-overview',
+      to: '/wiki-bioinfo/workflows/qc-overview',
       description: '理解 raw reads 进入下游分析前，哪些质量问题需要先识别、解释和处理。',
     },
     {
       title: 'RNA-seq 工作流概览',
-      to: '/docs/workflows/rna-seq',
+      to: '/wiki-bioinfo/workflows/rna-seq',
       description: '把索引、比对、定量、归一化和差异分析串成完整链路。',
     },
     {
       title: 'Metagenomics 流程总览',
-      to: '/docs/workflows/metagenomics-overview',
+      to: '/wiki-bioinfo/workflows/metagenomics-overview',
       description: '围绕混合样本，理解分类、组装、注释和丰度解释。',
     },
     {
       title: '如何选择 alignment、assembly 或 pseudo-alignment',
-      to: '/docs/workflows/choosing-alignment-assembly',
+      to: '/wiki-bioinfo/workflows/choosing-alignment-assembly',
       description: '根据研究问题决定应该先走哪条方法路线。',
     },
   ]}
@@ -65,17 +65,17 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   links={[
     {
       title: '分析方向与案例',
-      to: '/docs/applications/',
+      to: '/wiki-bioinfo/applications/',
       description: '先从上层应用板块理解 workflows 在整站中的角色。',
     },
     {
       title: '核心方法',
-      to: '/docs/core-methods/',
+      to: '/wiki-bioinfo/core-methods/',
       description: '工作流里每一步都依赖前面的索引、比对、图算法和概率模型。',
     },
     {
       title: '数据、注释与资源',
-      to: '/docs/data-references/',
+      to: '/wiki-bioinfo/data-references/',
       description: '流程的输入输出、版本选择与结果解释都依赖这一层。',
     },
   ]}

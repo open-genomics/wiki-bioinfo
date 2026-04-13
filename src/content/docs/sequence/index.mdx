@@ -12,56 +12,9 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   description="学习如何将生物序列组织成可高效计算的结构，理解从朴素扫描到现代压缩索引的算法演进脉络。"
 />
 
-## 引言：为什么要学习序列索引
+生物信息学的核心任务之一是**在海量序列数据中快速找到目标片段**。给定一条长达 30 亿碱基的人类参考基因组，如何在毫秒级时间内定位一条 100 bp 的测序 read？这是现代测序数据分析每天都要面对的问题。
 
-生物信息学的核心任务之一是**在海量序列数据中快速找到目标片段**。给定一条长达30亿碱基的人类参考基因组，如何在毫秒级时间内定位一条100 bp的测序read？这是现代测序数据分析每天都要面对的问题。
-
-本章节系统地介绍解决这一问题的算法工具链：
-
-- **基础层面**：k-mer表示法将连续序列离散化，成为所有后续算法的基石
-- **经典算法**：KMP、Boyer-Moore等线性时间匹配算法，展示了如何利用模式串结构避免重复计算
-- **高级索引**：Suffix Tree、Suffix Array、BWT和FM-index，支持对大规模参考序列的快速查询
-- **实际应用**：近似匹配和seed-and-extend策略，连接理论算法与真实比对工具
-
-## 学习目标
-
-完成本章节后，你将能够：
-
-1. **理解** k-mer在序列表示、索引和组装中的核心作用
-2. **掌握** 经典字符串匹配算法的核心思想（failure function、跳跃规则）
-3. **建立** 从suffix tree到FM-index的技术演化脉络
-4. **分析** 不同索引结构在速度、空间和敏感性之间的权衡
-5. **应用** 这些知识理解现代read mapper的设计决策
-
-## 内容组织
-
-本章节按照"表示 → 算法 → 索引 → 应用"的逻辑递进组织：
-
-**第一部分：序列表示基础**
-- [k-mer 与序列表示](./kmers.mdx)：理解局部片段化表示的核心思想
-- [索引结构概览](./indexing.mdx)：建立索引算法的整体框架
-
-**第二部分：经典字符串匹配算法**
-- [精确字符串匹配](./exact-string-matching.mdx)：问题定义与朴素算法分析
-- [KMP算法](./kmp-algorithm.mdx)：利用failure function实现线性时间匹配
-- [Boyer-Moore算法](./boyer-moore-algorithm.mdx)：从右向左匹配与跳跃策略
-- [Trie 与多模式匹配](./trie-and-multi-pattern-matching.mdx)：Aho-Corasick算法基础
-
-**第三部分：后缀索引结构**
-- [Suffix Tree](./suffix-tree.mdx)：从suffix trie到压缩树的演变
-- [Suffix Array、BWT 与索引压缩](./suffix-array-bwt.mdx)：排序与变换的视角
-- [FM-index](./fm-index.mdx)：压缩全文索引的工程实现
-
-**第四部分：近似匹配与应用**
-- [精确匹配与近似匹配](./exact-vs-approximate.mdx)：问题的层次与算法策略
-- [近似模式匹配](./approximate-pattern-matching.mdx)：编辑距离与动态规划方法
-
-## 前置知识
-
-在学习本章节之前，建议先掌握：
-- 基础字符串操作和复杂度分析（Big-O表示法）
-- 基本图论概念（节点、边、路径）
-- 动态规划的基本思想
+本章节按照"表示 → 算法 → 索引 → 应用"的逻辑递进组织：从 k-mer 表示法这一基础工具出发，经过经典字符串匹配算法，到后缀索引结构，再到近似匹配与实际应用。
 
 ## 子主题导航
 
@@ -125,7 +78,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-## 知识图谱：与其他板块的联系
+## 与其他板块的连接
 
 <RelatedLinks
   links={[
@@ -146,10 +99,3 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
     },
   ]}
 />
-
-## 参考文献
-
-1. Gusfield, D. (1997). *Algorithms on Strings, Trees, and Sequences*. Cambridge University Press.
-2. Jones, N. C., & Pevzner, P. A. (2004). *An Introduction to Bioinformatics Algorithms*. MIT Press.
-3. Cormen, T. H., et al. (2009). *Introduction to Algorithms* (3rd ed.), Chapter 32. MIT Press.
-4. Ferragina, P., & Manzini, G. (2000). Opportunistic data structures with applications. *FOCS 2000*.

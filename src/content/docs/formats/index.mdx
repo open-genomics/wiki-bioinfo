@@ -8,6 +8,8 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
+<PageHeaderMeta section="Data References" />
+
 数据格式是生物信息学中连接生物学问题与计算方法的**核心抽象层**。它们不仅仅是文件存储的容器，更是**特定层次生物学概念的标准化编码**：
 
 - 参考序列（FASTA）建立了分析的坐标骨架
@@ -18,12 +20,9 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 理解这些格式的设计原理和语义边界，是正确设计分析流程、有效排查错误、以及准确解释结果的基础能力。
 
+## 本板块的定位与学习目标
 
-<PageHeaderMeta section="Data References" />
-
-## 本节的定位与学习目标
-
-本节属于"数据、注释与资源"大板块，核心任务是建立对生物信息学数据格式的**系统性理解**——不仅仅是知道文件后缀的含义，而是理解：
+本板块属于"数据、注释与资源"大板块，核心任务是建立对生物信息学数据格式的**系统性理解**——不仅仅是知道文件后缀的含义，而是理解：
 
 - 每种格式在分析流程中的**语义角色**
 - 格式之间的**依赖关系**和**转换逻辑**
@@ -31,7 +30,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ### 学习目标
 
-完成本节学习后，你应该能够：
+完成本板块学习后，你应该能够：
 
 1. **准确分类**：判断任意给定文件属于哪一个语义层（参考层、观测层、比对层、注释层、推断层）
 2. **理解依赖**：分析分析交付包中各文件的依赖关系（如 VCF 依赖 BAM，BAM 依赖参考序列）

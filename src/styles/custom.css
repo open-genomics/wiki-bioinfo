@@ -229,8 +229,8 @@ nav.sidebar a[aria-current='page'] {
 }
 
 .header-meta-card {
-  display: grid;
-  grid-template-rows: auto auto 1fr;
+  display: flex;
+  flex-direction: column;
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-card-radius);
   background: var(--bioinfo-card-bg);
@@ -271,6 +271,7 @@ nav.sidebar a[aria-current='page'] {
   color: var(--sl-color-gray-3);
   font-size: 0.95rem;
   line-height: 1.6;
+  flex: 1;
 }
 
 /* --- Component: SummaryBox --- */

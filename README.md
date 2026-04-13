@@ -1,55 +1,79 @@
 # BioInfo Wiki
 
-**面向中文社区的生物信息学知识库** — 连接经典算法与现代分析流程的开放式 Wiki，像教材一样可连续阅读。
+<p align="center">
+  <a href="https://lessup.github.io/wiki-bioinfo/">
+    <img src="./public/img/bioinfo-logo.svg" width="120" alt="BioInfo Wiki">
+  </a>
+</p>
 
-[在线访问](https://lessup.github.io/wiki-bioinfo/) · [贡献指南](src/content/docs/intro/contributing.md) · [写作规范](src/content/docs/intro/style-guide.md)
+<p align="center">
+  <b>面向中文社区的生物信息学体系化知识库</b><br>
+  <span>像教材一样可连续阅读，从基础概念到分析流程层层递进</span>
+</p>
 
-[![Build](https://github.com/LessUp/wiki-bioinfo/workflows/CI/badge.svg)](https://github.com/LessUp/wiki-bioinfo/actions) [![Deploy](https://github.com/LessUp/wiki-bioinfo/workflows/Deploy%20GitHub%20Pages/badge.svg)](https://github.com/LessUp/wiki-bioinfo/actions) [![Astro](https://img.shields.io/badge/Astro-6-BC52EE?logo=astro)](https://astro.build) [![Starlight](https://img.shields.io/badge/Starlight-0.38-5440D1)](https://starlight.astro.build) [![License](https://img.shields.io/github/license/LessUp/wiki-bioinfo)](./LICENSE)
+<p align="center">
+  <a href="https://lessup.github.io/wiki-bioinfo/">🌐 在线访问</a> •
+  <a href="./src/content/docs/intro/contributing.md">🤝 贡献指南</a> •
+  <a href="./src/content/docs/intro/style-guide.md">📝 写作规范</a>
+</p>
 
-## 这是什么
+<p align="center">
+  <img src="https://github.com/LessUp/wiki-bioinfo/workflows/CI/badge.svg" alt="Build">
+  <img src="https://github.com/LessUp/wiki-bioinfo/workflows/Deploy%20GitHub%20Pages/badge.svg" alt="Deploy">
+  <img src="https://img.shields.io/badge/Astro-6-BC52EE?logo=astro" alt="Astro">
+  <img src="https://img.shields.io/badge/Starlight-0.38-5440D1" alt="Starlight">
+  <img src="https://img.shields.io/github/license/LessUp/wiki-bioinfo" alt="License">
+</p>
 
-大多数生物信息学资料要么是工具教程（教你怎么跑命令），要么是论文综述（假设你已经懂了）。BioInfo Wiki 试图填补中间层：
+---
 
-> **从生物对象出发，用数学和算法语言重新描述整个领域，再回到真实分析流程。**
+## 🎯 这个项目有什么不同
 
-它的知识结构不是术语堆砌，而是沿 **对象层 → 模型层 → 算法层 → 流程层 → 资源层** 五层递进，帮助读者建立可回溯、可交叉引用的知识地图。
+生物信息学资料通常只有两种：
+- **工具教程** —— 告诉你怎么跑命令，但不讲原理
+- **论文综述** —— 默认你已经懂了背景知识
 
-## 内容覆盖
+BioInfo Wiki 填补这个断层：
 
-目前涵盖 **200+ 页面**，围绕六大板块组织：
+> **从 DNA、reads、参考基因组这些生物对象出发，用数学和算法语言重新描述问题，再连接到真实的分析流程。**
 
-| 板块 | 核心内容 |
-|------|----------|
-| **基础与数学** | 序列与坐标系统、reads/coverage、概率图模型、算法与复杂度、图算法、字符串匹配、动态规划、分治与随机化 |
-| **核心方法** | 序列索引（k-mer / suffix array / BWT / FM-index）、比对（DP / seed-and-extend / BLAST）、组装（OLC / de Bruijn graph）、概率模型（HMM / Viterbi / Gibbs Sampling） |
-| **分析方向与案例** | DNA-seq、RNA-seq、单细胞转录组、空间组学、蛋白质组学、表观组学、群体遗传学、长读长测序 |
-| **数据、注释与资源** | 参考基因组版本、坐标转换、注释系统（Ensembl / RefSeq / GENCODE）、数据库、文件格式（FASTA / FASTQ / BAM / VCF / GTF） |
-| **开始这里** | 项目介绍、学习路线图、贡献说明、写作规范 |
+不是术语堆砌，而是围绕 **对象 → 模型 → 算法 → 流程 → 资源** 五层递进，帮你建立可回溯的知识地图。
 
-技术栈基于 **Astro + Starlight**，使用 MDX 编写内容，支持 KaTeX 数学公式渲染和 11 个可复用文档组件。
+## 📚 内容概览
 
-## 快速开始
+**200+ 页面** · **6 大板块** · **从入门到实战**
+
+| 板块 | 适合谁 | 内容聚焦 |
+|:---|:---|:---|
+| 🚀 **开始这里** | 所有人 | 项目介绍、学习路线、如何贡献 |
+| 🧮 **基础与数学** | 零基础 | 序列、坐标系统、概率图模型、算法基础 |
+| ⚙️ **核心方法** | 想深入原理 | 索引、比对、组装、概率模型四大支柱 |
+| 🔬 **分析方向** | 做项目的人 | DNA/RNA/单细胞/长读长/空间组学等 |
+| 📊 **数据与资源** | 需要查资料 | 参考基因组、注释系统、文件格式、数据库 |
+| 📝 **附录** | 快速查阅 | 术语表、算法索引、参考资料 |
+
+## 🚀 快速开始
 
 ```bash
-# 环境要求：Node.js >= 20
+# 环境：Node.js >= 20
 npm install
-npm run dev          # http://localhost:4321/wiki-bioinfo/
-npm run check        # 类型检查 + 构建验证
+npm run dev      # 本地预览：http://localhost:4321/wiki-bioinfo/
+npm run check    # 构建验证
 ```
 
-## 参与贡献
+## 🤝 参与贡献
 
-欢迎通过 Issue 和 Pull Request 参与。
+欢迎 Issue 和 PR！
 
 ```bash
 git clone https://github.com/<your-username>/wiki-bioinfo.git
-# 修改内容后
-npm run check        # 确保构建通过
+# 修改后
+npm run check
 git commit -m "feat: 添加 XX 内容"
 ```
 
-详细规范请参阅站内文档：[贡献指南](src/content/docs/intro/contributing.md)、[写作规范](src/content/docs/intro/style-guide.md)。
+详细规范见：[贡献指南](./src/content/docs/intro/contributing.md) · [写作规范](./src/content/docs/intro/style-guide.md)
 
-## 许可证
+## 📄 许可证
 
-[MIT](./LICENSE)
+[MIT License](./LICENSE)

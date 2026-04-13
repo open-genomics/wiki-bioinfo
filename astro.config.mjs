@@ -15,7 +15,7 @@ export default defineConfig({
   integrations: [
     starlight({
       title: 'BioInfo Wiki',
-      description: '面向中文社区的开源生物信息学知识库',
+      description: '面向中文社区的生物信息学体系化知识库',
       defaultLocale: 'root',
       locales: {
         root: {
@@ -44,7 +44,8 @@ export default defineConfig({
       expressiveCode: {
         themes: ['github-dark', 'github-light'],
         styleOverrides: {
-          borderRadius: '0.5rem',
+          borderRadius: '0.75rem',
+          borderColor: 'var(--sl-color-gray-5)',
         },
       },
       customCss: [
@@ -62,7 +63,7 @@ export default defineConfig({
       ],
       sidebar: [
         {
-          label: '开始这里',
+          label: '导论',
           items: [
             { slug: 'intro' },
             { slug: 'intro/about' },

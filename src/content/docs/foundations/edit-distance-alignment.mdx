@@ -46,7 +46,7 @@ TGCATAT → ATGCATAT (插入 A)
 ATGCATAT → ATGCAAT (删除 T)
 ATGCAAT → ATGCGAT (替换 C→G)
 ATGCGAT → ATCCGAT (替换 G→C)
-```text
+```
 
 ### 为什么编辑距离重要
 
@@ -72,7 +72,7 @@ d[i,j] = min {
   d[i,j-1] + 1,        // 插入 w[j] 
   d[i-1,j-1] + cost    // 替换 v[i] 为 w[j]，cost = 0 如果 v[i]==w[j]，否则 1
 }
-```text
+```
 
 初始条件：
 - `d[0,0] = 0`
@@ -132,7 +132,7 @@ s[i,j] = max {
   s[i-1,j] + gap_penalty,          // 上方：v 有空格
   s[i,j-1] + gap_penalty           // 左侧：w 有空格
 }
-```text
+```
 
 初始条件：
 - `s[0,0] = 0`
@@ -154,7 +154,7 @@ s[i,j] = max {
   s[i-1,j] + gap_penalty,          // 上方
   s[i,j-1] + gap_penalty           // 左侧
 }
-```text
+```
 
 这确保了只有正得分区域被报告。
 
@@ -167,7 +167,7 @@ w: TATATATA
 局部比对：
 ATATA
 TATA-
-```text
+```
 
 得分：4×1 + 1×(-2) = 2
 

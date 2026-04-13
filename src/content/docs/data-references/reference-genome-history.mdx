@@ -90,7 +90,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 变异: chr1:12345 A>G (GRCh37)
       ↓ liftover
       chr1:12400 A>G (GRCh38)  # 坐标偏移 55 bp
-```text
+```
 
 **这为什么重要**：如果使用 GRCh37 的坐标查询 GRCh38 的数据库，会得到错误结果或查询失败。
 
@@ -111,7 +111,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 GRCh38.p14
       ↑
       patch 版本号（14）
-```text
+```
 
 **关键注意**：
 - 补丁更新通常**不影响主要坐标**，只修复局部错误
@@ -168,7 +168,7 @@ liftOver input.bed hg19ToHg38.over.chain output.bed unlifted.bed
 
 # 使用 CrossMap（支持 BAM/VCF/BED）
 CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
-```text
+```
 
 ### Liftover 的局限
 

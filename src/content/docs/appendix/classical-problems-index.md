@@ -193,7 +193,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 推断问题 → 概率模型 / EM / 贝叶斯
 分类/聚类问题 → 机器学习 / 统计方法
 进化问题 → 图论（树） / 简约法 / 距离方法
-```text
+```
 
 ## 常见误区
 

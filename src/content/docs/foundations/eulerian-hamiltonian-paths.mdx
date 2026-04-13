@@ -112,7 +112,7 @@ EULERIANPATH(G):
             path.append(stack.pop())
     
     return reverse(path)
-```text
+```
 
 **时间复杂度**：$O(|V| + |E|)$
 
@@ -203,7 +203,7 @@ EULERIANPATH(G):
   顶点 = (l-1)-mer: AT, TG, GC, CA, AG, GG, GT, TC, CC
   边 = l-mer
   路径 = 经过所有边
-```text
+```
 
 **关键观察**：
 - 每个 l-mer 在欧拉图中是**一条边**
@@ -243,7 +243,7 @@ def eulerian_path(graph):
             path.append(stack.pop())
     
     return path[::-1]  # 反转得到正确顺序
-```text
+```
 
 ### 复杂度分析
 

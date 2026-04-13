@@ -200,7 +200,7 @@ $$
    - 不需要填充
 
 3. return 预处理后的数据
-```text
+```
 
 ### 步骤 2：模型初始化
 
@@ -225,7 +225,7 @@ $$
    α_\{kr\} = 1 for all k, r
 
 4. return 初始化参数
-```text
+```
 
 ### 步骤 3：变分推断
 
@@ -258,7 +258,7 @@ for iteration = 1 to T:
        break
 
 return 优化后的参数
-```text
+```
 
 **时间复杂度**：每次迭代 $O(n r \sum_k p_k)$，总复杂度 $O(T \cdot n r \sum_k p_k)$
 
@@ -290,7 +290,7 @@ return 优化后的参数
    - 与生物学通路的富集分析
 
 return 分析结果
-```text
+```
 
 ## 示例
 
@@ -512,7 +512,7 @@ ent.run()
 # 获取结果
 factors = ent.model.get_factors()
 loadings = ent.model.get_loadings()
-```text
+```
 
 ### R 实现
 
@@ -534,7 +534,7 @@ MOFAobject <- run_mofa(MOFAobject, factors = 10)
 # 提取结果
 factors <- get_factors(MOFAobject)
 loadings <- get_loadings(MOFAobject)
-```text
+```
 
 ## 后续分析
 
@@ -548,7 +548,7 @@ import scipy.stats as stats
 for factor_idx in range(n_factors):
     corr, pval = stats.pearsonr(factors[:, factor_idx], clinical_variable)
     print(f"Factor \{factor_idx\}: r=\{corr:.3f\}, p=\{pval:.3f\}")
-```text
+```
 
 **通路富集分析**：
 - 根据载荷矩阵识别每个因子的重要特征

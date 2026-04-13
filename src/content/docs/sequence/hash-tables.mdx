@@ -77,7 +77,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 **简单哈希函数示例**：
 ```text
 h(x) = x mod |b|
-```text
+```
 其中 |b| 是哈希表的大小。
 
 **示例**：
@@ -168,14 +168,14 @@ h(x) = x mod |b|
 #### 1. 除法哈希
 ```text
 h(k) = k mod m
-```text
+```
 - m 通常是质数
 - 简单但可能不够均匀
 
 #### 2. 乘法哈希
 ```text
 h(k) = ⌊m(kA mod 1)⌋
-```text
+```
 - A 是常数（如 0.618...）
 - 更好的分布特性
 
@@ -184,7 +184,7 @@ h(k) = ⌊m(kA mod 1)⌋
 对于字符串 s = s₁s₂...sₙ：
 ```text
 h(s) = (s₁ · pⁿ⁻¹ + s₂ · pⁿ⁻² + ... + sₙ · p⁰) mod m
-```text
+```
 - p 是一个质数（如 31, 137）
 - 适用于字符串键
 
@@ -343,7 +343,7 @@ class HashTable \{
     return null;
   \}
 \}
-```text
+```
 
 ## 总结
 

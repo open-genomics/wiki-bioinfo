@@ -103,7 +103,7 @@ motif discovery 很难，原因在于：
            best_score = current_score
            best_PWM = PWM
 3. return best_PWM
-```text
+```
 
 **时间复杂度**：O(N · |s| · N · L · L) = O(N² · |s| · L²)，对于实际问题不可行
 
@@ -144,7 +144,7 @@ motif discovery 很难，原因在于：
      best_pos = argmax_p PWM.score(s_i[p:p+L-1])
      positions.append(best_pos)
 4. return build_PWM(S, positions, L)
-```text
+```
 
 **时间复杂度**：O(N · |s| · L)
 
@@ -195,7 +195,7 @@ motif discovery 很难，原因在于：
         best_score = current_score
         best_PWM = PWM
 3. return best_PWM
-```text
+```
 
 **时间复杂度**：O(R · N · I · |s| · L)，I 是每次迭代的平均改进轮数
 
@@ -242,7 +242,7 @@ Gibbs sampling 是 motif discovery 中很经典的一类随机化方法。
      new_pos = sample from distribution prob
      positions[i] = new_pos
 4. return build_PWM(S, positions, L)
-```text
+```
 
 **时间复杂度**：O(I · |s| · L)
 
@@ -256,7 +256,7 @@ Gibbs sampling 是 motif discovery 中很经典的一类随机化方法。
 序列 1: A T G C A T G C
 序列 2: G T A C G T A C
 序列 3: T A G C T A G C
-```text
+```
 
 ### 贪心算法演示
 

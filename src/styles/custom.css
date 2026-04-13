@@ -338,6 +338,7 @@ nav.sidebar a[aria-current='page'] {
 .header-meta-card {
   display: flex;
   flex-direction: column;
+  height: 100%;
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-card-radius);
   background: var(--bioinfo-card-bg);
@@ -372,6 +373,7 @@ nav.sidebar a[aria-current='page'] {
   font-size: 1.1rem;
   line-height: 1.4;
   text-wrap: pretty;
+  min-height: 2.8em;
 }
 
 .header-meta-card .meta-detail {
@@ -721,11 +723,15 @@ nav.sidebar a[aria-current='page'] {
 .definition-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
   gap: 1.25rem;
   margin: 2.5rem 0;
 }
 
 .definition-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-card-radius);
   background: var(--bioinfo-card-bg);
@@ -747,6 +753,7 @@ nav.sidebar a[aria-current='page'] {
   margin: 0;
   color: var(--sl-color-gray-3);
   line-height: 1.6;
+  flex: 1;
 }
 
 /* --- Shared badges / labels --- */

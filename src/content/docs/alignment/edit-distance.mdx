@@ -76,10 +76,10 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 边界条件为：
 
 $$
-\begin\{aligned\}
+\begin{aligned}
   dp[0][j] &= j \\
   dp[i][0] &= i
-\end\{aligned\}
+\end{aligned}
 $$
 
 含义很直观：
@@ -104,10 +104,10 @@ $$
 
 $$
 \delta(x_i, y_j) =
-\begin\{cases\}
+\begin{cases}
 0, & x_i = y_j \\
 1, & x_i \ne y_j
-\end\{cases\}
+\end{cases}
 $$
 
 这个递推体现了动态规划的核心思想：当前最优解来自三个更小子问题中的最优选择。
@@ -118,20 +118,8 @@ $$
 
 <figure>
   <img src="/wiki-bioinfo/img/illustrations/edit-distance-matrix.svg" alt="编辑距离动态规划矩阵示意图" />
-  <figcaption>编辑距离可以看作在矩阵中逐步选择删除、插入或匹配/替换的最优路径。</figcaption>
+  <figcaption>构造一个包含空串行列的动态规划矩阵，蓝色高亮为匹配（代价 0），黄色高亮为替换（代价 1），箭头标出一条最优路径。最终 dp[4][4] = 2，表示最小编辑距离为 2。</figcaption>
 </figure>
-
-我们构造一个 `5 \times 5` 的动态规划矩阵（包含空串行列）：
-
-|   | ε | G | C | A | T |
-|---|---|---|---|---|---|
-| ε | 0 | 1 | 2 | 3 | 4 |
-| G | 1 | 0 | 1 | 2 | 3 |
-| A | 2 | 1 | 1 | 1 | 2 |
-| T | 3 | 2 | 2 | 2 | 1 |
-| T | 4 | 3 | 3 | 3 | 2 |
-
-最终 `dp[4][4] = 2`，表示最小编辑距离是 2。
 
 一个可能的变换路径是：
 

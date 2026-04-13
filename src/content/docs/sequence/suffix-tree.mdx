@@ -112,7 +112,7 @@ Suffix Tree的概念由 Weiner 于1973年首次提出，其构建算法可以在
                 ANA$  NA$
                 /   \
              ANANA$  A$
-```text
+```
 
 - 根节点有 3 条出边，分别以 `$`、`A`、`B` 开头。
 - `A` 后面分叉为 `NA$` 和 `NANA$` 两条路径，以及 `ANA$` 的共享前缀路径。
@@ -200,7 +200,7 @@ Suffix Tree (功能最强，空间最大)
 Suffix Array (中等空间，查询稍慢)
     ↓ 添加 BWT 变换 + 波浪树
 FM-index (空间最小，查询 $O(m)$)
-```text
+```
 
 Suffix Tree 是理论分析的首选工具（直观、功能完整），Suffix Array 是实现折中（平衡空间与速度），FM-index 是工业标准（极致压缩）。
 

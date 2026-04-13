@@ -47,7 +47,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
                          ↓                                          ↓
                     变异检测 ←─────────────────────────────── gene prediction
                     表达定量                                    motif 发现
-```text
+```
 
 ## 索引 → 比对：如何加速搜索
 
@@ -76,7 +76,7 @@ Read:  ATGCATCGATCGATCGATCG
 Ref:  ...NNNATCGNNN...
               ↓ (动态规划扩展)
 Ref:  ...ATGCATCGATCGATCGATCG...
-```text
+```
 
 **这是索引和比对的直接连接**：没有高效索引，就没有快速比对。
 
@@ -116,7 +116,7 @@ k-mers (k=4): ATGC, TGCG, GCGA, CGAT, GATC, ATCG, TCGA, CGTA, GTAA
 
 de Bruijn Graph:
 ATGC → TGCG → GCGA → CGAT → GATC → ATCG → TCGA → CGTA → GTAA
-```text
+```
 
 **这是比对和组装的连接**：两者都处理 reads，但组装在没有参考的情况下使用图算法重建序列。
 
@@ -151,7 +151,7 @@ Read pileup at position X
 贝叶斯模型：P(变异 | 数据) ∝ P(数据 | 变异) × P(变异)
       ↓
 VCF：变异候选 + 置信度
-```text
+```
 
 **这是确定性方法（比对）和概率方法（推断）的连接**：比对提供证据，概率模型评估置信度。
 

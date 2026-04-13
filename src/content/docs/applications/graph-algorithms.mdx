@@ -55,14 +55,14 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 A [ 0   1   0 ]
 B [ 1   0   1 ]
 C [ 0   1   0 ]
-```text
+```
 
 **邻接表**：
 ```text
 A: [B]
 B: [A, C]
 C: [B]
-```text
+```
 
 **选择准则**：
 - 稠密图：使用邻接矩阵
@@ -92,7 +92,7 @@ DFS(v):
   对于 v 的每个邻居 u:
     如果 u 未访问:
       DFS(u)
-```text
+```
 
 **应用**：
 - 连通分量检测
@@ -114,7 +114,7 @@ BFS(v):
       如果 w 未访问:
         标记 w 为已访问
         Q.enqueue(w)
-```text
+```
 
 **应用**：
 - 最短路径（无权图）
@@ -140,7 +140,7 @@ Dijkstra(G, s):
       如果 d[u] + w(u,v) < d[v]:
         d[v] = d[u] + w(u,v)
         PQ.insert((d[v], v))
-```text
+```
 
 **复杂度**：O((V + E) log V) 使用优先队列
 
@@ -178,7 +178,7 @@ Prim(G):
   当 MST 顶点数 < V:
     找到连接 MST 和外部顶点的最小权重边（u, v）
     将 v 加入 MST
-```text
+```
 
 **复杂度**：O(E log V)
 
@@ -198,7 +198,7 @@ Kruskal(G):
     如果 u 和 v 不连通:
       将（u, v） 加入 MST
       合并 u 和 v 的连通分量
-```text
+```
 
 **复杂度**：O(E log E)
 
@@ -218,7 +218,7 @@ TopologicalSort(G):
       入度[v]--
       如果入度[v] == 0:
         queue.enqueue(v)
-```text
+```
 
 **复杂度**：O(V + E)
 
@@ -238,7 +238,7 @@ Kosaraju(G):
   2. 反转图 G 得到 G^T
   3. 按完成时间递减顺序对 G^T 进行 DFS
   4. 每次 DFS 的顶点集合为一个 SCC
-```text
+```
 
 **复杂度**：O(V + E)
 
@@ -275,7 +275,7 @@ k-mer 列表：
 AAG → AGA → GAT → ATT → TTC → TCT → CTC
                                     ↑
                                     └──── TCTA
-```text
+```
 
 **算法问题**：
 - 欧拉路径：遍历所有边恰好一次
@@ -307,7 +307,7 @@ UPGMA(D):
     合并 C_i 和 C_j 为新簇 C_new
     更新距离矩阵
     记录合并操作（构建树）
-```text
+```
 
 **Worked Example**：
 
@@ -318,7 +318,7 @@ A [ 0   5   9   9 ]
 B [ 5   0  10  10 ]
 C [ 9  10   0   8 ]
 D [ 9  10   8   0 ]
-```text
+```
 
 步骤 1：合并 A 和 B（距离 5）
 - 新簇 AB 的高度 = 5/2 = 2.5
@@ -343,7 +343,7 @@ D [ 9  10   8   0 ]
     │   ┌── C
     └───┤
         └── D
-```text
+```
 
 #### 邻接法（Neighbor-Joining）
 

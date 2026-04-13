@@ -139,7 +139,7 @@ TOPOLOGICAL_SORT(G):
                 queue.enqueue(u)
     
     return order
-```text
+```
 
 ### 完整算法
 
@@ -171,7 +171,7 @@ DAG_LONGEST_PATH(G, w, source, sink):
         v = predecessor[v]
     
     return s[sink], path
-```text
+```
 
 ## 复杂度分析
 
@@ -191,7 +191,7 @@ DAG_LONGEST_PATH(G, w, source, sink):
 源点 → A → C → 汇点
   ↘   ↗  ↗
     B → D
-```text
+```
 
 **边权重**：
 ```text
@@ -199,7 +199,7 @@ DAG_LONGEST_PATH(G, w, source, sink):
 A→C: 4, B→C: 2
 B→D: 5, C→汇点: 2
 D→汇点: 3, C→D: -1
-```text
+```
 
 **执行过程**：
 
@@ -241,7 +241,7 @@ C   0   1   2   2
 最长路径：（0,0）→(1,1)→(3,3)  [对角线匹配 A，然后对角线匹配 C？不对...]
 
 实际最长路径对应 LCS "AC" 或 "AB"，长度 2
-```text
+```
 
 ## 与其他问题的联系
 
@@ -251,7 +251,7 @@ DAG 最长路径可以通过边权重取反转化为最短路径问题：
 
 ```text
 最长路径（G, w） = 最短路径（G, -w）
-```text
+```
 
 **注意**：这只适用于 DAG，一般图的最长路径问题是 NP-hard。
 
@@ -291,7 +291,7 @@ DAG 构建:
           权重 = 8 + 7 = 15
 
 注意: E1和E2重叠，E2和E3重叠，不能同时选
-```text
+```
 
 ## 局限性与注意事项
 

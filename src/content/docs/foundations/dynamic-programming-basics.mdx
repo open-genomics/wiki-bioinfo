@@ -84,7 +84,7 @@ s[i,j] = max(
     s[i-1,j] + ↓w[i,j],    // 从上方到达
     s[i,j-1] + →w[i,j]     // 从左侧到达
 )
-```text
+```
 
 ### 边界条件
 
@@ -92,7 +92,7 @@ s[i,j] = max(
 s[0,0] = 0
 s[i,0] = s[i-1,0] + ↓w[i,0]  // 只能向南移动
 s[0,j] = s[0,j-1] + →w[0,j]  // 只能向东移动
-```text
+```
 
 ### 算法实现
 
@@ -107,7 +107,7 @@ MANHATTANTOURIST(↓w, →w, n, m)
 7   for j ← 1 to m
 8     s[i,j] ← max(s[i-1,j] + ↓w[i,j], s[i,j-1] + →w[i,j])
 9 return s[n,m]
-```text
+```
 
 ### 示例计算
 
@@ -125,7 +125,7 @@ s[0,1] = 0 + 3 = 3
 s[0,2] = 3 + 2 = 5
 s[0,3] = 5 + 4 = 9
 s[0,4] = 9 + 0 = 9
-```text
+```
 
 **填充内部**：
 ```text
@@ -135,7 +135,7 @@ s[1,3] = max(s[0,3] + 5, s[1,2] + 4) = max(9+5, 9+4) = 14
 s[1,4] = max(s[0,4] + 0, s[1,3] + 2) = max(9+0, 14+2) = 16
 
 ... 继续填充整个表 ...
-```text
+```
 
 完整的 DP 表：
 ```text
@@ -145,7 +145,7 @@ i=1  1    7    9   14   16
 i=2  7   11   14   20   22
 i=3 12   15   18   22   24
 i=4 17   20   24   25   34
-```text
+```
 
 **答案**：s[4,4] = 34，这是从（0,0） 到（4,4） 的最长路径权重。
 
@@ -193,7 +193,7 @@ BACKTRACK(s, n, m)
 8     path ← append("east", path)
 9     j ← j - 1
 10 return path
-```text
+```
 
 ## 另一个经典例子：找零问题
 
@@ -216,7 +216,7 @@ RECURSIVECHANGE(M, c, d)
 7          if numCoins + 1 < bestNumCoins
 8              bestNumCoins ← numCoins + 1
 9  return bestNumCoins
-```text
+```
 
 **问题**：大量重复计算。例如，计算 77 美分时，70 美分的最优解会被重复计算 9 次。
 
@@ -233,7 +233,7 @@ bestNumCoins[m] = min(
     ...,
     bestNumCoins[m - cₐ] + 1
 )  对于所有 m ≥ cᵢ
-```text
+```
 
 **自底向上算法**：
 
@@ -247,7 +247,7 @@ DPCHANGE(M, c, d)
 6              if bestNumCoins[m - cᵢ] + 1 < bestNumCoins[m]
 7                  bestNumCoins[m] ← bestNumCoins[m - cᵢ] + 1
 8  return bestNumCoins[M]
-```text
+```
 
 **复杂度**：
 - 时间：O(M × d)

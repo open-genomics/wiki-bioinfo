@@ -83,7 +83,7 @@ $$\rho(1, i): \pi_1 \pi_2 ... \pi_i \pi_{i+1} ... \pi_n \rightarrow \pi_i \pi_{i
 3 2 1 4
 ↓ ρ(1,3)  反转前3个
 1 2 3 4   (排序完成)
-```text
+```
 
 共 **5 次**前缀反转。
 
@@ -106,7 +106,7 @@ SIMPLEREVERSALSORT(π):
             // 将 i 翻到位置 i
             π = π · ρ(1, i)
     return π
-```text
+```
 
 ### 性能分析
 
@@ -167,7 +167,7 @@ BREAKPOINTPANCAKESORT(π):
         i = argmin { 前缀断点数（π · ρ(1, i）) }
         π = π · ρ(1, i)
     return π
-```text
+```
 
 **性能**：优于简单贪心，但仍非最优。
 

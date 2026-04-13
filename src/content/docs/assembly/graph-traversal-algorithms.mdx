@@ -93,7 +93,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
          if u ∉ visited:
            stack.push(u)
 4. return visited
-```text
+```
 
 **时间复杂度**：$O(|V| + |E|)$
 
@@ -142,7 +142,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
          if u ∉ visited:
            queue.enqueue(u)
 4. return visited
-```text
+```
 
 **时间复杂度**：$O(|V| + |E|)$
 
@@ -222,7 +222,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
    if result ≠ null:
      return result
 5. return null  // 不存在Hamiltonian path
-```text
+```
 
 **时间复杂度**：最坏情况 $O(|V|!)$
 
@@ -236,7 +236,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 A -- B -- C
 |         |
 D -------- E
-```text
+```
 
 寻找Hamiltonian path：
 
@@ -272,7 +272,7 @@ D -------- E
          * current = next
    f. 将 path 加入 paths
 4. return paths
-```text
+```
 
 **时间复杂度**：$O(|E| \log |E|)$，如果使用优先队列
 
@@ -305,7 +305,7 @@ Tips是图中的短分支，通常由测序错误引起：
       if L ≤ len(path) ≤ U:
          tips.append(path)
 3. return tips
-```text
+```
 
 ### Bubble检测与清理
 
@@ -330,7 +330,7 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 
 3. dfs(s, [])
 4. return paths
-```text
+```
 
 ## 复杂度分析
 

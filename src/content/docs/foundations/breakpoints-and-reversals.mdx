@@ -112,7 +112,7 @@ $$\pi_0 = 0, \quad \pi_{n+1} = n+1$$
 
 ```text
 0 | 2 1 | 3 4 5 | 8 7 6 | 9
-```text
+```
 
 Strips：
 - `0`（单元素）
@@ -156,7 +156,7 @@ SIMPLEREVERSALSORT(π):
         选择消除最多断点的反转 ρ
         π ← π · ρ
         输出 π
-```text
+```
 
 **问题**：该算法可能陷入局部最优，性能保证较差。
 
@@ -171,7 +171,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π):
             选择反转一个递增 strip（创造递减 strip）
         π ← π · ρ
         输出 π
-```text
+```
 
 ### 性能保证
 
@@ -193,7 +193,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π):
 **初始状态**：
 ```text
 0 → | 8 ← | 2 ← | 7 6 5 ← | 1 ← | 4 ← | 3 ← | 9 →
-```text
+```
 Strips：0(增), 8 2 7 6 5 1 4 3(减), 9(增)
 断点数：$b(\pi) = 6$
 

@@ -148,7 +148,7 @@ RNA-seq FASTQ
   -> STAR alignment (精确比对，用于融合基因检测)
   -> Salmon quant (利用 alignment 结果做定量，或直接用 quasi-mapping)
   -> DESeq2 (差异表达分析)
-```text
+```
 
 STAR 能提供剪接感知的精确比对，是融合基因检测的常用工具；而 Salmon 可以基于 STAR 的比对结果做快速定量，也可以独立运行 quasi-mapping。两者互补，覆盖了不同层面的分析需求。
 

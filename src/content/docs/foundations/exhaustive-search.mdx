@@ -117,7 +117,7 @@ SEARCH(subproblem)
 7   return  // 剪枝
 8 for each child of subproblem
 9   SEARCH(child)
-```text
+```
 
 ### 下界估计
 
@@ -196,7 +196,7 @@ NEXTLEAF(a, L, k)
 4     return a
 5   a[i] ← 1
 6 return a
-```text
+```
 
 #### 2. NEXTVERTEX (全树遍历)
 不仅访问叶子，还访问内部节点，用于深度优先搜索（DFS）。
@@ -211,7 +211,7 @@ NEXTVERTEX(a, i, L, k)
 7       a[j] ← a[j] + 1
 8       return (a, j)
 9   return (a, 0)
-```text
+```
 
 #### 3. BYPASS (剪枝跳转)
 当确定某个节点及其子树不可能包含最优解时，跳过该子树。这是分支定界的核心。
@@ -222,7 +222,7 @@ BYPASS(a, i, L, k)
 3     a[j] ← a[j] + 1
 4     return (a, j)
 5 return (a, 0)
-```text
+```
 
 
 #### 部分共识分数
@@ -256,7 +256,7 @@ BRANCHANDBOUNDMOTIFSEARCH(DNA, t, n, l)
 14      bestMotif ← (s₁, s₂, ..., sₜ)
 15    (s, i) ← NEXTVERTEX(s, i, t, n - l + 1)
 16 return bestMotif
-```text
+```
 
 这个分支定界策略在某些问题实例上改进了算法，但没有改进最坏情况效率：可以设计一个带有植入模式的样本，需要指数时间才能找到。
 

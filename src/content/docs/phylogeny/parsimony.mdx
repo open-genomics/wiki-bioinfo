@@ -172,7 +172,7 @@ Fitch算法使用动态规划，自底向上计算每个节点可能的状态集
          S(v) = S(left) ∪ S(right)
          cost(v) = cost(left) + cost(right) + 1
 3. 返回 cost(root) 作为该位点的简约得分
-```text
+```
 
 **时间复杂度**：$O(n \cdot |\Sigma|)$，其中n是节点数，$|\Sigma|$是字母表大小
 **空间复杂度**：$O(n \cdot |\Sigma|)$
@@ -188,7 +188,7 @@ Fitch算法使用动态规划，自底向上计算每个节点可能的状态集
       state(c) = state(v)
    else:
       state(c) = S(c) 中的任意状态
-```text
+```
 
 ## 示例（Fitch算法）
 
@@ -201,7 +201,7 @@ Fitch算法使用动态规划，自底向上计算每个节点可能的状态集
   n1     n2
  / \    / \
 A   A  G   G
-```text
+```
 
 ### 后序遍历计算
 
@@ -304,7 +304,7 @@ Sankoff算法为每个节点和每个字符状态计算最小代价。
          dp[v][a] = min_\{b\} [dp[left][b] + C(a, b)] +
                     min_\{b\} [dp[right][b] + C(a, b)]
 4. 返回 min_a dp[root][a]
-```text
+```
 
 **时间复杂度**：$O(n \cdot |\Sigma|^2)$
 **空间复杂度**：$O(n \cdot |\Sigma|)$

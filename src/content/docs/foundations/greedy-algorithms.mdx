@@ -95,7 +95,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 步骤3： 1 2 3 6 4 5  (反转 [3,4]，prefix = 3)
 步骤4： 1 2 3 4 6 5  (反转 [4,6]，prefix = 4)
 步骤5： 1 2 3 4 5 6  (反转 [5,6]，prefix = 6)
-```text
+```
 
 **实际最优**（只需 2 步）：
 
@@ -103,7 +103,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 初始：  6 1 2 3 4 5
 步骤1： 5 4 3 2 1 6  (反转 [1,5]，翻转全序列)
 步骤2： 1 2 3 4 5 6  (反转 [1,5]，翻转前 5 位)
-```text
+```
 
 贪心算法用了 5 步，而最优解只需要 2 步。差距的根源在于贪心策略"急功近利"——每步只增加一个已排序元素，而最优解通过暂时"打乱"整个序列来一次性解决问题。
 
@@ -142,7 +142,7 @@ GREEDYMOTIFSEARCH(Dna, k, t)
 8      if Score(Motifs) < Score(BestMotifs)
 9          BestMotifs ← Motifs
 10 return BestMotifs
-```text
+```
 
 ### 问题与对策
 

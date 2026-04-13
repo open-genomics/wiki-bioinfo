@@ -93,7 +93,7 @@ s[i,j] = max {
     s[i,j-1] - σ_block,        // 插入块 v[j]
     s[i-1,j-1] + Score(u[i], v[j])  // 对齐两个块
 }
-```text
+```
 
 其中 $σ_{block}$ 是块插入/删除的惩罚（通常 $σ_{block} = σ \cdot t$）。
 
@@ -116,7 +116,7 @@ ALIGN_BLOCKS(a, b):
     // 使用标准动态规划计算 t×t 块的比对
     // 但只记录入口→出口的得分
     return 最优块对齐得分
-```text
+```
 
 ### 阶段二：块级别动态规划
 
@@ -149,7 +149,7 @@ FOURRUSSIANS_ALIGN(u, v, t):
             )
     
     return s[num_u_blocks, num_v_blocks]
-```text
+```
 
 ## 复杂度分析
 
@@ -193,7 +193,7 @@ FOURRUSSIANS_ALIGN(u, v, t):
 ```text
 u = |AC| |GT| |AC| |GT|
 v = |AG| |CT| |AG| |CT|
-```text
+```
 
 **步骤 2：预计算（部分）**
 ```text
@@ -202,7 +202,7 @@ Score["AC", "AG"] = 1  (A匹配，C≠G)
 Score["AC", "CT"] = 0  (无匹配)
 Score["GT", "CT"] = 1  (T匹配，G≠C)
 ...
-```text
+```
 
 **步骤 3：块级别动态规划**
 ```text
@@ -213,7 +213,7 @@ Score["GT", "CT"] = 1  (T匹配，G≠C)
 |GT|  1    2    2    3
 |AC|  2    2    3    3
 |GT|  2    3    3    4  <- 最优得分 = 4
-```text
+```
 
 ## 扩展：最长公共子序列（LCS）
 

@@ -31,7 +31,7 @@ BioInfo Wiki 采用开源协作模式，通过 GitHub 的 Issue 和 Pull Request
 npm install
 npm run dev    # 本地预览
 npm run check  # 检查链接和格式
-```text
+```
 
 4. 提交 Pull Request，说明：
    - 修改目标和解决的问题

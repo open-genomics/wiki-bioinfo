@@ -204,7 +204,7 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 title: "Needleman-Wunsch 算法"
 description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完整实例。
 ---
-```text
+```
 
 ---
 

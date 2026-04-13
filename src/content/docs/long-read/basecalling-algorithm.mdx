@@ -129,20 +129,20 @@ $$
 **第一代：CNN（如 DeepNano）**
 ```text
 Signal → 1D Conv → ReLU → Pool → ... → FC → Softmax
-```text
+```
 - 局部特征提取强，但长程依赖建模弱
 
 **第二代：RNN/LSTM（如 Guppy 早期版本）**
 ```text
 Signal → LSTM → LSTM → ... → FC → Softmax
-```text
+```
 - 自然处理变长序列，建模时间依赖
 - 训练较慢，并行化困难
 
 **第三代：Transformer（如 Dorado）**
 ```text
 Signal → Embedding → Multi-Head Attention → ... → Softmax
-```text
+```
 - 全局上下文建模，高度并行化
 - 计算资源需求高，但准确性最佳
 

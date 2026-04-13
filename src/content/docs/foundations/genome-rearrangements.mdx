@@ -74,13 +74,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 π = π₁...πᵢ₋₁ | πᵢπᵢ₊₁...πⱼ₋₁πⱼ | πⱼ₊₁...πₙ
         ↓ 反转 ρ(i, j)
 π·ρ(i, j) = π₁...πᵢ₋₁ | πⱼπⱼ₋₁...πᵢ₊₁πᵢ | πⱼ₊₁...πₙ
-```text
+```
 
 **示例**：
 ```text
 π = 1 2 4 3 7 5 6
 π·ρ(3, 6) = 1 2 5 7 3 4 6
-```text
+```
 
 ### 反转距离问题
 
@@ -115,7 +115,7 @@ SIMPLEREVERSALSORT(π)
 5     output π
 6   if π is the identity permutation
 7     return
-```text
+```
 
 ### 示例
 
@@ -125,7 +125,7 @@ SIMPLEREVERSALSORT(π)
 初始：  1 2 3 6 4 5  (prefix = 3)
 步骤1： 1 2 3 4 6 5  (反转位置 4-6，prefix = 4)
 步骤2： 1 2 3 4 5 6  (反转位置 5-6，prefix = 6，完成)
-```text
+```
 
 对排列 π = 6 1 2 3 4 5：
 
@@ -136,7 +136,7 @@ SIMPLEREVERSALSORT(π)
 步骤3： 1 2 3 6 4 5  (反转位置 3-4，prefix = 3)
 步骤4： 1 2 3 4 6 5  (反转位置 4-6，prefix = 4)
 步骤5： 1 2 3 4 5 6  (反转位置 5-6，prefix = 6，完成)
-```text
+```
 
 ### 算法局限与 Pancake Flipping 问题
 
@@ -171,7 +171,7 @@ SIMPLEREVERSALSORT(π)
 
 ```text
 d(π) ≥ b(π) / 2
-```text
+```
 
 其中 b(π) 是排列 π 中的断点数量。
 
@@ -194,7 +194,7 @@ BREAKPOINTREVERSALSORT(π)
 3   π ← π·ρ
 4   output π
 5 return
-```text
+```
 
 ### 理论保证
 
@@ -216,7 +216,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 6   π ← π·ρ
 7   output π
 8 return
-```text
+```
 
 ## 更高级的方法
 

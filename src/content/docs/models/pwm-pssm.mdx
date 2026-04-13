@@ -108,7 +108,7 @@ $$
         f_ic = (PFM[i][c] + α) / (N + 4α)
         PWM[i][c] = log₂(f_ic / b_c)
 2. return PWM
-```text
+```
 
 **时间复杂度**：O(L)
 
@@ -126,7 +126,7 @@ $$
         c = seq[pos + i - 1]
         score += PWM[i][c]
      output score at position pos
-```text
+```
 
 **时间复杂度**：O(|seq| · L)
 
@@ -151,7 +151,7 @@ TATGAA
 TATAAT
 TATCAA
 TATAAA
-```text
+```
 
 ### 步骤 1：构建 PFM
 

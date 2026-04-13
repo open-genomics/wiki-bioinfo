@@ -94,7 +94,7 @@ LONGEST-PATH-DAG(G, source, sink):
     path.prepend(source)
     
     return path, dist[sink]
-```text
+```
 
 ### 关键实现细节
 
@@ -241,7 +241,7 @@ LONGEST-PATH-DAG(G, source, sink):
     // 回溯路径
     path = BACKTRACK(sink, prev)
     return path
-```text
+```
 
 ### 不完备谱图的挑战
 
@@ -341,7 +341,7 @@ $$\text{score}(P_i) = \sum_{i=1}^{l} \log\frac{p(\delta_i)}{p_R} + \sum_{i=l+1}^
 低质量谱图 ─→ 数据库搜索（SEQUEST/Mascot）
                 ↓
             结果整合 → 蛋白质鉴定
-```text
+```
 
 <PitfallsBox
   pitfalls={[

@@ -1,35 +1,113 @@
-<svg width="760" height="480" viewBox="0 0 760 480" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="760" height="480" rx="28" fill="#F5FEFE"/>
-  <text x="72" y="78" fill="#0A6162" font-size="28" font-family="Arial" font-weight="700">编辑距离 DP 矩阵示意</text>
-  <text x="72" y="112" fill="#3A5E5F" font-size="18" font-family="Arial">行表示 GATT 的前缀，列表示 GCAT 的前缀。</text>
-  <g transform="translate(110 150)">
-    <rect x="0" y="0" width="420" height="252" rx="14" fill="white" stroke="#D6F2F3" stroke-width="4"/>
-    <path d="M84 0V252M168 0V252M252 0V252M336 0V252" stroke="#C9ECED" stroke-width="2"/>
-    <path d="M0 42H420M0 84H420M0 126H420M0 168H420M0 210H420" stroke="#C9ECED" stroke-width="2"/>
-    <rect x="84" y="42" width="84" height="42" fill="#DFF8F8"/>
-    <rect x="252" y="84" width="84" height="42" fill="#DFF8F8"/>
-    <rect x="336" y="126" width="84" height="42" fill="#DFF8F8"/>
-    <text x="18" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">ε</text>
-    <text x="108" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">G</text>
-    <text x="192" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">C</text>
-    <text x="276" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">A</text>
-    <text x="360" y="28" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
-    <text x="18" y="68" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">ε</text>
-    <text x="18" y="110" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">G</text>
-    <text x="18" y="152" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">A</text>
-    <text x="18" y="194" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
-    <text x="18" y="236" fill="#0A6162" font-size="18" font-family="Arial" font-weight="700">T</text>
-    <g fill="#163536" font-size="18" font-family="Arial" font-weight="700">
-      <text x="114" y="68">0</text><text x="198" y="68">1</text><text x="282" y="68">2</text><text x="366" y="68">3</text>
-      <text x="30" y="68">0</text><text x="30" y="110">1</text><text x="30" y="152">2</text><text x="30" y="194">3</text><text x="30" y="236">4</text>
-      <text x="114" y="110">0</text><text x="198" y="110">1</text><text x="282" y="110">2</text><text x="366" y="110">3</text>
-      <text x="114" y="152">1</text><text x="198" y="152">1</text><text x="282" y="152">1</text><text x="366" y="152">2</text>
-      <text x="114" y="194">2</text><text x="198" y="194">2</text><text x="282" y="194">2</text><text x="366" y="194">1</text>
-      <text x="114" y="236">3</text><text x="198" y="236">3</text><text x="282" y="236">3</text><text x="366" y="236">2</text>
+<svg width="580" height="460" viewBox="0 0 580 460" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#4f46e5"/>
+    </marker>
+  </defs>
+
+  <rect width="580" height="460" rx="24" fill="#f5f3ff"/>
+  <text x="290" y="42" fill="#3730a3" font-size="22" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">编辑距离 DP 矩阵</text>
+  <text x="290" y="68" fill="#64748b" font-size="14" font-family="Arial, sans-serif" text-anchor="middle">GATT → GCAT · 行 = 源串前缀，列 = 目标串前缀</text>
+
+  <!--
+    网格布局: 6 列 × 6 行
+    列宽 col=76, 行高 row=48
+    左上角 (ox, oy) = (52, 90)
+    col 0: 标题列 (行标题), col 1-5: ε G C A T
+    row 0: 标题行 (列标题), row 1-5: ε G A T T
+    单元格中心 cx = ox + col*76 + 38, cy = oy + row*48 + 30
+  -->
+  <g transform="translate(52 90)">
+    <!-- 表格背景（不含标题行/列的白色区域） -->
+    <rect x="76" y="48" width="380" height="240" rx="10" fill="white" stroke="#ddd6fe" stroke-width="2.5"/>
+
+    <!-- 内部网格线 -->
+    <line x1="152" y1="48" x2="152" y2="288" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="228" y1="48" x2="228" y2="288" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="304" y1="48" x2="304" y2="288" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="380" y1="48" x2="380" y2="288" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="76" y1="96" x2="456" y2="96" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="76" y1="144" x2="456" y2="144" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="76" y1="192" x2="456" y2="192" stroke="#ede9fe" stroke-width="1.2"/>
+    <line x1="76" y1="240" x2="456" y2="240" stroke="#ede9fe" stroke-width="1.2"/>
+
+    <!-- 最优路径高亮: (0,0)→diag(1,1)→sub(2,2)→sub(3,3)→diag(4,4) -->
+    <!-- 匹配单元格（对角线代价0）: (1,1) G=G, (4,4) T=T -->
+    <rect x="77"  y="49"  width="74" height="46" fill="#e0e7ff" rx="4" opacity="0.7"/>
+    <rect x="381" y="193" width="74" height="46" fill="#e0e7ff" rx="4" opacity="0.7"/>
+    <!-- 替换单元格（对角线代价1）: (2,2) A≠C, (3,3) T≠A -->
+    <rect x="153" y="97"  width="74" height="46" fill="#fef3c7" rx="4" opacity="0.5"/>
+    <rect x="229" y="145" width="74" height="46" fill="#fef3c7" rx="4" opacity="0.5"/>
+
+    <!-- 路径箭头 -->
+    <g stroke="#4f46e5" stroke-width="2" stroke-linecap="round" fill="none" marker-end="url(#arrow)">
+      <!-- (0,0) → (1,1) 对角线匹配 -->
+      <line x1="118" y1="78" x2="182" y2="108"/>
+      <!-- (1,1) → (2,2) 对角线替换 -->
+      <line x1="196" y1="126" x2="258" y2="156"/>
+      <!-- (2,2) → (3,3) 对角线替换 -->
+      <line x1="272" y1="174" x2="334" y2="204"/>
+      <!-- (3,3) → (4,4) 对角线匹配 -->
+      <line x1="348" y1="222" x2="410" y2="252"/>
+    </g>
+
+    <!-- 列标题 (row 0): 空, ε, G, C, A, T -->
+    <text x="114" y="34" fill="#64748b" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">ε</text>
+    <text x="190" y="34" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">G</text>
+    <text x="266" y="34" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">C</text>
+    <text x="342" y="34" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">A</text>
+    <text x="418" y="34" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">T</text>
+
+    <!-- 行标题 (col 0): ε, G, A, T, T -->
+    <text x="38" y="78"  fill="#64748b" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">ε</text>
+    <text x="38" y="126" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">G</text>
+    <text x="38" y="174" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">A</text>
+    <text x="38" y="222" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">T</text>
+    <text x="38" y="270" fill="#3730a3" font-size="15" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">T</text>
+
+    <!-- DP 数值  5×5 矩阵 -->
+    <g fill="#1e1b4b" font-size="16" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">
+      <!-- row ε (i=0) -->
+      <text x="114" y="78">0</text>
+      <text x="190" y="78">1</text>
+      <text x="266" y="78">2</text>
+      <text x="342" y="78">3</text>
+      <text x="418" y="78">4</text>
+      <!-- row G (i=1) -->
+      <text x="114" y="126">1</text>
+      <text x="190" y="126">0</text>
+      <text x="266" y="126">1</text>
+      <text x="342" y="126">2</text>
+      <text x="418" y="126">3</text>
+      <!-- row A (i=2) -->
+      <text x="114" y="174">2</text>
+      <text x="190" y="174">1</text>
+      <text x="266" y="174">1</text>
+      <text x="342" y="174">1</text>
+      <text x="418" y="174">2</text>
+      <!-- row T (i=3) -->
+      <text x="114" y="222">3</text>
+      <text x="190" y="222">2</text>
+      <text x="266" y="222">2</text>
+      <text x="342" y="222">2</text>
+      <text x="418" y="222">1</text>
+      <!-- row T (i=4) -->
+      <text x="114" y="270">4</text>
+      <text x="190" y="270">3</text>
+      <text x="266" y="270">3</text>
+      <text x="342" y="270">3</text>
+      <text x="418" y="270">2</text>
     </g>
   </g>
-  <path d="M642 196C628 178 608 170 588 170C554 170 528 194 528 232C528 270 554 294 588 294C608 294 627 286 641 270" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round"/>
-  <path d="M604 202L642 196L634 232" stroke="#0F8B8D" stroke-width="10" stroke-linecap="round" stroke-linejoin="round"/>
-  <text x="558" y="334" fill="#3A5E5F" font-size="18" font-family="Arial">沿矩阵递推选择</text>
-  <text x="552" y="360" fill="#3A5E5F" font-size="18" font-family="Arial">删除 / 插入 / 匹配或替换</text>
+
+  <!-- 图例 -->
+  <g transform="translate(52 410)">
+    <rect x="0" y="0" width="14" height="14" rx="3" fill="#e0e7ff" stroke="#c7d2fe" stroke-width="1"/>
+    <text x="20" y="12" fill="#64748b" font-size="12" font-family="Arial, sans-serif">匹配（代价 0）</text>
+    <rect x="130" y="0" width="14" height="14" rx="3" fill="#fef3c7" stroke="#fde68a" stroke-width="1"/>
+    <text x="150" y="12" fill="#64748b" font-size="12" font-family="Arial, sans-serif">替换（代价 1）</text>
+    <line x1="260" y1="7" x2="286" y2="7" stroke="#4f46e5" stroke-width="2" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <text x="294" y="12" fill="#64748b" font-size="12" font-family="Arial, sans-serif">最优路径</text>
+    <text x="380" y="12" fill="#94a3b8" font-size="12" font-family="Arial, sans-serif">dp[4][4] = 2</text>
+  </g>
 </svg>

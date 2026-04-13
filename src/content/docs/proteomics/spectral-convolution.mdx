@@ -106,7 +106,7 @@ SPECTRAL-CONVOLUTION(S₁, S₂):
         for s₂ in S₂:
             convolution.add(s₂ - s₁)
     return convolution
-```text
+```
 
 **时间复杂度**：$O(|S_1| \cdot |S_2|)$
 
@@ -121,7 +121,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
         if convolution[x] > threshold:
             modifications.append(x)
     return modifications
-```text
+```
 
 阈值选择：
 - 基于背景噪声水平
@@ -239,7 +239,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 谱对齐精确定位修饰位点
     ↓
 修饰肽段鉴定报告
-```text
+```
 
 ## 局限性与注意事项
 

@@ -63,7 +63,7 @@ S2: - T G C - A G
 S1: A T G C T A G
 S2: A T G C T A -
                     ^ 结尾gap要罚分
-```text
+```
 
 半全局比对允许端部gap不罚分：
 
@@ -76,7 +76,7 @@ S2: - T G C - A G
 S1: A T G C T A G
 S2: A T G C T A -
                     ^ 结尾gap不罚分
-```text
+```
 
 ### 三种半全局比对变体
 
@@ -186,7 +186,7 @@ $$
 7. // 在最后一行和最后一列中寻找最大值
 8. best_score = max(max(dp[m][j] for j in 0..n), max(dp[i][n] for i in 0..m))
 9. return best_score
-```text
+```
 
 **时间复杂度**：$O(mn)$
 
@@ -211,7 +211,7 @@ T     0
 G     0
 C     0
 C     0
-```text
+```
 
 ### 填充矩阵
 
@@ -225,7 +225,7 @@ T     0  1  0 -1 -2 -3
 G     0  0  2  0 -1 -2
 C     0 -1  0  3  1  0
 C     0 -2 -1  1  4  2
-```text
+```
 
 > **计算验证示例** `dp[2][2]`（T对G）：
 > - 来自对角线：`dp[1][1] + s(T,G) = 0 + (-1) = -1`
@@ -257,7 +257,7 @@ S1: A T G C C
 
 S1: - T G C C
 S2:   T G C C
-```text
+```
 
 S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 

@@ -1,7 +1,7 @@
 {
   "name": "wiki-bioinfo",
   "version": "0.2.0",
-  "description": "面向中文社区的开源生物信息学知识库",
+  "description": "面向中文社区的生物信息学体系化知识库",
   "private": true,
   "type": "module",
   "author": "LessUp",

@@ -96,7 +96,7 @@ GIBBS_SAMPLING(DNA, t, n, l, max_iter):
         s[i] = SAMPLE_POSITION(probabilities)
     
     return s, BUILD_PROFILE(DNA, s, -1)
-```text
+```
 
 ### 详细步骤解析
 
@@ -118,7 +118,7 @@ BUILD_PROFILE(DNA, s, exclude_i):
             profile[nucleotide][pos] = (count + 1) / (t-1 + 4)
     
     return profile
-```text
+```
 
 **伪计数（pseudocount）**：通常加 1 或更小的值，避免零概率问题。
 
@@ -145,7 +145,7 @@ CALC_PROBABILITIES(DNA_i, profile, l):
         probabilities[pos] /= total
     
     return probabilities
-```text
+```
 
 **概率解释**：$P(pos) \propto \prod_{k=1}^{l} p_{DNA_i[pos+k-1], k}$
 
@@ -163,7 +163,7 @@ SAMPLE_POSITION(probabilities):
             return pos
     
     return last_position
-```text
+```
 
 采样概率与 profile 匹配程度成正比：
 - 高匹配位置 → 高概率被选中
@@ -207,7 +207,7 @@ GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
             best_s = s
     
     return best_s, best_score
-```text
+```
 
 ## 收敛性与参数选择
 
@@ -246,7 +246,7 @@ Gibbs Sampling 形成一条**马尔可夫链**：
     
     // 返回出现频率最高的 motif
     return MOST_FREQUENT(samples)
-```text
+```
 
 ## 实例说明
 
@@ -257,7 +257,7 @@ Gibbs Sampling 形成一条**马尔可夫链**：
 Seq1: A T G C G T A C G T A G C T A G C T G
 Seq2: C T A G C T G A C G T C G A T C G A T
 Seq3: G A T C G A T C G A T C G T A C G A
-```text
+```
 
 **迭代过程示例**：
 
@@ -302,7 +302,7 @@ GREEDY_GIBBS(DNA, t, n, l, max_iter):
         s[i] = best_pos
     
     return s
-```text
+```
 
 **权衡**：
 - 标准版：更好的全局探索，可能找到更优解
@@ -329,7 +329,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
         temperature *= 0.99  // 降温
     
     return s
-```text
+```
 
 ## 与其他 Motif Finding 方法的比较
 
@@ -352,7 +352,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 输出：
 - 转录因子的保守结合 motif
-```text
+```
 
 ### 2. 蛋白质家族保守区域
 
@@ -362,7 +362,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 输出：
 - 功能重要的保守氨基酸模式
-```text
+```
 
 ### 3. RNA 结构 motif
 
@@ -372,7 +372,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 输出：
 - 保守的结构或序列 motif
-```text
+```
 
 <PitfallsBox
   pitfalls={[

@@ -176,7 +176,7 @@ $$
      P_\{ij\} = W_\{ij\} / sum_l W_\{il\}
 
 5. return P
-```text
+```
 
 **时间复杂度**：$O(n^2 p + n^2 \log n)$
 
@@ -191,7 +191,7 @@ $$
 1. S = (P^T + P) / 2
 
 2. return S
-```text
+```
 
 ### 步骤 3：迭代融合网络
 
@@ -220,7 +220,7 @@ $$
    P = (∑_\{k=1\}^\{K\} P^\{(k)\}_T) / K
 
 4. return P
-```text
+```
 
 **时间复杂度**：每次迭代 $O(K n^3)$，总复杂度 $O(T K n^3)$
 
@@ -243,7 +243,7 @@ $$
 4. 对特征向量进行 k-means 聚类
 
 5. return 聚类标签
-```text
+```
 
 ## 示例
 
@@ -543,7 +543,7 @@ clustering = SpectralClustering(n_clusters=3, affinity='precomputed')
 labels = clustering.fit_predict(P_fused)
 
 print(f"聚类标签: \{labels\}")
-```text
+```
 
 ### R 实现
 
@@ -564,7 +564,7 @@ W <- SNF(list(W1, W2), K = 20, t = 20)
 
 # 谱聚类
 labels <- spectralClustering(W, K = 3)
-```text
+```
 
 
 <PageHeaderMeta section="Applications" />

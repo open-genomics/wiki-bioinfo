@@ -60,7 +60,7 @@ NaiveMatch(T, P):
         break
     if j == |P|:
       报告匹配位置 i
-```text
+```
 
 **复杂度**：
 - 最坏情况：O(nm)
@@ -75,7 +75,7 @@ NaiveMatch(T, P):
 **失败函数（Failure Function）**：
 ```text
 π[i] = P[0..i] 的最长真前缀同时也是后缀的长度
-```text
+```
 
 **Worked Example**：
 
@@ -89,7 +89,7 @@ i = 2: π[2] = 1（"AB" 中 "A" = "B" 不对，但 "A" 是前缀）
 i = 3: π[3] = 2（"ABA" 中 "AB" = "BA" 不对，但 "A" = "A"）
 i = 4: π[4] = 3（"ABAB" 中 "ABA" = "BAB" 不对，但 "AB" = "AB"）
 i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
-```text
+```
 
 **复杂度**：O(n + m)
 
@@ -104,12 +104,12 @@ i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
 **坏字符规则**：
 ```text
 当不匹配字符 c 不在模式中时，可以跳过整个模式长度
-```text
+```
 
 **好后缀规则**：
 ```text
 利用已经匹配的后缀信息决定跳过多少字符
-```text
+```
 
 **复杂度**：
 - 最坏情况：O(nm)
@@ -139,7 +139,7 @@ i = 5: π[5] = 0（"ABABA" 中无真前缀=后缀）
             e
              \
               r
-```text
+```
 
 **操作复杂度**：
 - 插入：O(m)
@@ -184,7 +184,7 @@ Suffix Trie：
         n     a     a
        /
       a
-```text
+```
 
 **优势**：
 - 快速子串查询：O(m)
@@ -228,7 +228,7 @@ Suffix Trie：
 4: na$
 5: a$
 6: $
-```text
+```
 
 排序后的后缀数组：
 ```text
@@ -241,7 +241,7 @@ anana$: anana$ (位置 1)
 banana$: banana$ (位置 0)
 na$: na$ (位置 4)
 nana$: nana$ (位置 2)
-```text
+```
 
 **构造算法**：
 - 朴素方法：O(n² log n)
@@ -271,7 +271,7 @@ Suffix Array: [6, 5, 3, 1, 0, 4, 2]
 位置 0 (banana$): LCP[0] = 0（anana$ 和 banana$ 无公共前缀）
 位置 4 (na$):    LCP[4] = 0（banana$ 和 na$ 无公共前缀）
 位置 2 (nana$):  LCP[2] = 2（na$ 和 nana$ 公共前缀 "na"）
-```text
+```
 
 **应用**：
 - 加速模式匹配
@@ -300,7 +300,7 @@ ana$
 na$
 a$
 $
-```text
+```
 
 排序后：
 ```text
@@ -311,7 +311,7 @@ anana$
 banana$
 na$
 nana$
-```text
+```
 
 BWT（取最后一列）：`annb$aa`
 
@@ -339,7 +339,7 @@ BWT 是可逆的，可以从 BWT 恢复原文本。
 **查询算法（LF-mapping）**：
 ```text
 LF(c, i) = C[c] + Occ(c, i)
-```text
+```
 
 **模式搜索**：
 ```text
@@ -347,7 +347,7 @@ LF(c, i) = C[c] + Occ(c, i)
   从模式末尾开始
   反向应用 LF-mapping
   得到模式在文本中的所有出现位置
-```text
+```
 
 **Worked Example**：
 
@@ -428,7 +428,7 @@ FindRepeats(SA, LCP, min_length):
   for i = 1 to n:
     if LCP[i] >= min_length:
       报告重复序列
-```text
+```
 
 ### 4. 最长公共子串
 

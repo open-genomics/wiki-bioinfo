@@ -141,7 +141,7 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
 5              // 更新最佳起始位置...
 6  for i ← 3 to t
 7      // 贪心选择第 i 条序列的最佳位置
-```text
+```
 
 **注意**：贪心算法虽然快，但可能陷入局部最优，错过全局最强的模式。
 
@@ -159,7 +159,7 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
         c = s_j[i]  // 第 j 个序列的第 i 位字符
         PFM[i][c] += 1
 3. return PFM
-```text
+```
 
 **时间复杂度**：O(N·L)
 
@@ -176,7 +176,7 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
         f_ic = PFM[i][c] / N
         PWM[i][c] = log₂((f_ic + α) / b_c)
 2. return PWM
-```text
+```
 
 **时间复杂度**：O(L·4) = O(L)
 
@@ -194,7 +194,7 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
         c = seq[pos + i - 1]
         score += PWM[i][c]
      output score at position pos
-```text
+```
 
 **时间复杂度**：O((|seq| - L + 1) · L) ≈ O(|seq| · L)
 
@@ -207,7 +207,7 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
 序列 2: T A T G A A
 序列 3: T A T A A T
 序列 4: T A T C A A
-```text
+```
 
 ### 步骤 1：构建 PFM
 

@@ -167,7 +167,7 @@ APPROXIMATE_MATCH_DP(T, P, n, m, k):
             matches.append(i - m + 1)  // 计算起始位置
     
     return matches
-```text
+```
 
 **时间复杂度**：$O(n \cdot m)$
 
@@ -235,7 +235,7 @@ QGRAM_APPROXIMATE_MATCH(T, P, m, k):
                 matches.add(start)
     
     return matches
-```text
+```
 
 **复杂度**：
 - 预处理：$O(n)$
@@ -278,7 +278,7 @@ BLAST(query, database):
             if alignment.score > threshold:
                 e_value = CALCULATE_E_VALUE(alignment)
                 REPORT(alignment, e_value)
-```text
+```
 
 ### BLAST vs 精确算法的权衡
 

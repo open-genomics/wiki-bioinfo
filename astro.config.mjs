@@ -23,7 +23,7 @@ export default defineConfig({
       rollupOptions: {
         output: {
           manualChunks: {
-            katex: ['katex'],
+            // 数学库已作为外部资源加载，无需打包
           },
         },
       },
@@ -83,31 +83,32 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        {
-          label: 'Introduction',
-          translations: {
-            'zh-CN': '导论',
-          },
-          items: [
-            { slug: 'en' },
-            { slug: 'en/intro' },
-            { slug: 'en/intro/about' },
-            { slug: 'en/intro/contributing' },
-          ]
-        },
-        {
-          label: 'Core Methods',
-          translations: {
-            'zh-CN': '核心方法',
-          },
-          items: [
-            { slug: 'en/core-methods' },
-            { slug: 'en/sequence' },
-            { slug: 'en/alignment' },
-            { slug: 'en/assembly' },
-            { slug: 'en/models' },
-          ]
-        },
+        // 英文内容暂不启用（内容尚未完善）
+        // {
+        //   label: 'Introduction',
+        //   translations: {
+        //     'zh-CN': '导论',
+        //   },
+        //   items: [
+        //     { slug: 'en' },
+        //     { slug: 'en/intro' },
+        //     { slug: 'en/intro/about' },
+        //     { slug: 'en/intro/contributing' },
+        //   ]
+        // },
+        // {
+        //   label: 'Core Methods',
+        //   translations: {
+        //     'zh-CN': '核心方法',
+        //   },
+        //   items: [
+        //     { slug: 'en/core-methods' },
+        //     { slug: 'en/sequence' },
+        //     { slug: 'en/alignment' },
+        //     { slug: 'en/assembly' },
+        //     { slug: 'en/models' },
+        //   ]
+        // },
         {
           label: '导论',
           items: [

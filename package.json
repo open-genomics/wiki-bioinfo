@@ -27,9 +27,13 @@
     "dev": "astro dev",
     "start": "astro dev",
     "build": "astro build",
+    "build:optimize": "SKIP_FONT_OPTIMIZATION=1 astro build",
     "preview": "astro preview",
     "check": "astro check && astro build",
     "check:links": "bash scripts/checks/check-links.sh",
+    "analyze": "astro build && npm run analyze:size",
+    "analyze:size": "du -sh dist/ && find dist -type f -exec ls -lh {} \\; | sort -k5 -rh | head -20",
+    "clean": "rm -rf dist .astro",
     "astro": "astro"
   },
   "dependencies": {

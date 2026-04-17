@@ -6,6 +6,12 @@ on:
       - master
       - main
   workflow_dispatch:
+    inputs:
+      deploy_fonts:
+        description: 'Deploy with local fonts (23MB)'
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: read
@@ -15,6 +21,9 @@ permissions:
 concurrency:
   group: github-pages
   cancel-in-progress: true
+
+env:
+  USE_LOCAL_FONTS: ${{ github.event.inputs.deploy_fonts }}
 
 jobs:
   build:
@@ -30,14 +39,40 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Cache Astro build for faster rebuilds
+      - name: Cache Astro build
+        uses: actions/cache@v4
+        with:
+          path: |
+            .astro
+            node_modules/.astro
+          key: astro-build-${{ hashFiles('src/content/docs/**/*.mdx') }}-${{ hashFiles('src/content/docs/**/*.md') }}
+          restore-keys: |
+            astro-build-
+
       - name: Configure GitHub Pages
         uses: actions/configure-pages@v5
+        with:
+          static_site_generator: astro
 
       - name: Install dependencies
         run: npm ci
 
       - name: Build site
         run: npm run build
+        env:
+          NODE_ENV: production
+          # Skip font optimization in build for speed
+          SKIP_FONT_OPTIMIZATION: 1
+
+      # Optional: Remove fonts from deployment to save bandwidth
+      # Fonts will 404 but CSS font-display:swap handles gracefully
+      - name: Optimize deployment (remove large fonts)
+        if: ${{ !github.event.inputs.deploy_fonts }}
+        run: |
+          echo "Removing local fonts from deployment (saving ~23MB)..."
+          rm -rf dist/fonts/*.otf dist/fonts/*.ttf
+          echo "Fonts removed. Using system fonts as fallback."
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

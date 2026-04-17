@@ -29,6 +29,18 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Restore Astro cache
+      - name: Restore Astro cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .astro
+            node_modules/.astro
+          key: astro-ci-${{ hashFiles('src/content/docs/**/*.mdx') }}-${{ hashFiles('src/content/docs/**/*.md') }}
+          restore-keys: |
+            astro-ci-
+            astro-build-
+
       - name: Install dependencies
         run: npm ci
 
@@ -91,6 +103,18 @@ jobs:
           node-version: 22
           cache: npm
 
+      # Restore Astro cache for faster builds
+      - name: Restore Astro cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            .astro
+            node_modules/.astro
+          key: astro-ci-build-${{ hashFiles('src/content/docs/**/*.mdx') }}-${{ hashFiles('src/content/docs/**/*.md') }}
+          restore-keys: |
+            astro-ci-build-
+            astro-build-
+
       - name: Install dependencies
         run: npm ci
 
@@ -98,6 +122,20 @@ jobs:
         run: npm run build
         env:
           CI: true
+          # Optimize build for CI (faster, smaller)
+          SKIP_FONT_OPTIMIZATION: 1
+
+      # Show build stats
+      - name: Build stats
+        run: |
+          echo "=== Build Output Stats ==="
+          du -sh dist/
+          echo ""
+          echo "=== Largest files ==="
+          find dist -type f -exec ls -lh {} \; | sort -k5 -rh | head -10
+          echo ""
+          echo "=== File count ==="
+          find dist -type f | wc -l
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4

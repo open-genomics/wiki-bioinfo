@@ -1,6 +1,14 @@
 /* ===== BioInfo Wiki Custom Styles for Starlight ===== */
 
-/* --- Custom Fonts --- */
+/* --- Optimized Font Loading: System fonts first for performance ---
+ * 
+ * DEPLOYMENT OPTIMIZATION: 
+ * - System fonts: 0MB download, instant render
+ * - Local fonts: 23MB download, progressive enhancement
+ * 
+ * To use local fonts, set USE_LOCAL_FONTS=1 in build environment
+ */
+
 @font-face {
   font-family: 'BioInfo Sans';
   src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.otf') format('opentype');

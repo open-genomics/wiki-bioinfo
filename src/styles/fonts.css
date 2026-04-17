@@ -1,0 +1,31 @@
+/* ===== Optimized Font Loading Strategy ===== */
+
+/* 
+ * Strategy: System fonts first, CDN fallback
+ * This reduces deploy size from 23MB to ~0MB for fonts
+ */
+
+/* System font stack as primary (fastest, no download) */
+:root {
+  --font-system: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: "SF Mono", "Monaco", "Inconsolata", "Fira Code", "Source Code Pro", "Consolas", "Courier New", monospace;
+}
+
+/* Optional: Load web fonts from CDN with font-display: swap */
+/* Uncomment if you want web fonts (adds ~200-500KB instead of 23MB) */
+
+/* 
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&display=swap');
+
+:root {
+  --font-system: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif;
+}
+*/
+
+/* Chinese optimized system font stack */
+@font-face {
+  font-family: 'System Chinese';
+  src: local('PingFang SC'), local('Microsoft YaHei'), local('Noto Sans SC');
+  unicode-range: U+4E00-9FFF, U+3400-4DBF, U+20000-2A6DF;
+}

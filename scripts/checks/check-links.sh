@@ -1,10 +1,12 @@
 #!/bin/bash
 # Check all internal markdown links in docs for broken references.
-# Usage: bash scripts/check-links.sh
+# Usage: bash scripts/checks/check-links.sh
 # Exit code 0 = no broken links, 1 = broken links found
 
-cd "$(dirname "$0")/.."
-DOCS_BASE="$(pwd)/src/content/docs"
+# Get the project root directory (parent of scripts/)
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
+DOCS_BASE="$PROJECT_ROOT/src/content/docs"
 broken=0
 
 # Use process substitution instead of pipe to avoid subshell issues

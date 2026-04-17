@@ -59,7 +59,7 @@ export default defineConfig({
       },
       lastUpdated: true,
       components: {
-        Head: './src/components/starlight/Head.astro',
+        Head: './src/components/overrides/Head.astro',
       },
       tableOfContents: { minHeadingLevel: 2, maxHeadingLevel: 4 },
       expressiveCode: {

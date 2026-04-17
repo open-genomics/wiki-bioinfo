@@ -56,10 +56,10 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 graph LR
     DNA["DNA (Genome)"] -- "Transcription (转录)" --> RNA["RNA (Transcriptome)"]
     RNA -- "Translation (翻译)" --> Protein["Protein (Proteome)"]
-    
+
     DNA -.->|"Replication (复制)"| DNA
     RNA -.->|"Reverse Transcription"| DNA
-    
+
     style DNA fill:#f9f,stroke:#333
     style RNA fill:#bbf,stroke:#333
     style Protein fill:#bfb,stroke:#333

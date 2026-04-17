@@ -36,7 +36,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 编辑距离（edit distance）也称 Levenshtein 距离，是将一个字符串转换为另一个字符串所需的最少单字符编辑操作数。每种操作的成本通常为 1：
 
 - **插入**：在字符串中插入一个字符
-- **删除**：删除字符串中的一个字符  
+- **删除**：删除字符串中的一个字符
 - **替换**：将一个字符替换为另一个字符
 
 例如，字符串 "TGCATAT" 和 "ATCCGAT" 的编辑距离为 4：
@@ -69,7 +69,7 @@ ATGCGAT → ATCCGAT (替换 G→C)
 ```text
 d[i,j] = min {
   d[i-1,j] + 1,        // 删除 v[i]
-  d[i,j-1] + 1,        // 插入 w[j] 
+  d[i,j-1] + 1,        // 插入 w[j]
   d[i-1,j-1] + cost    // 替换 v[i] 为 w[j]，cost = 0 如果 v[i]==w[j]，否则 1
 }
 ```
@@ -119,7 +119,7 @@ d[i,j] = min {
 定义比对得分为匹配字符的奖励减去不匹配和 indel 的惩罚：
 
 - 匹配：+1
-- 不匹配：-1  
+- 不匹配：-1
 - 空格：-2
 
 ### 动态规划

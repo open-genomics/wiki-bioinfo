@@ -115,18 +115,18 @@ $$r_{i_j} < l_{i_{j+1}} \quad \text{对所有 } j$$
 EXONCHAINING(G, m):
     // 初始化
     s[initial] = 0
-    
+
     // 按位置顺序处理所有 2m+2 个顶点
     for i = 1 to 2m+1:
         s[i] = 0
-        
+
         if v_i 是某区间 B 的右端点:
             j = B 的左端点索引
             w = B 的权重
             s[i] = max(s[i-1], s[j] + w)
         else:
             s[i] = s[i-1]  // 只继承前一个值
-    
+
     return s[final]
 ```
 

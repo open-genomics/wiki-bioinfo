@@ -104,12 +104,12 @@ s[i,j] = max {
 ```text
 PRECOMPUTE(t):
     Score = 空表
-    
+
     // 枚举所有可能的 t-长度序列
     for each sequence a in {A,C,G,T}^t:
         for each sequence b in {A,C,G,T}^t:
             Score[a,b] = ALIGN_BLOCKS(a, b)
-    
+
     return Score
 
 ALIGN_BLOCKS(a, b):
@@ -124,30 +124,30 @@ ALIGN_BLOCKS(a, b):
 FOURRUSSIANS_ALIGN(u, v, t):
     n = length(u), m = length(v)
     Score = PRECOMPUTE(t)
-    
+
     // 将序列分割为块
     num_u_blocks = n / t
     num_v_blocks = m / t
-    
+
     // 初始化
     s[0,0] = 0
     for i = 1 to num_u_blocks:
         s[i,0] = s[i-1,0] - σ_block
     for j = 1 to num_v_blocks:
         s[0,j] = s[0,j-1] - σ_block
-    
+
     // 块级别动态规划
     for i = 1 to num_u_blocks:
         for j = 1 to num_v_blocks:
             block_u = u[(i-1)*t + 1 : i*t]
             block_v = v[(j-1)*t + 1 : j*t]
-            
+
             s[i,j] = max(
                 s[i-1,j] - σ_block,
                 s[i,j-1] - σ_block,
                 s[i-1,j-1] + Score[block_u, block_v]
             )
-    
+
     return s[num_u_blocks, num_v_blocks]
 ```
 

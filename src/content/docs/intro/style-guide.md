@@ -5,7 +5,7 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 本规范分为两大部分：**排版格式**（如何写）和**内容策略**（写什么）。前者确保视觉一致，后者确保知识质量。
 
-> 本规范参考了 [OI Wiki 格式手册](https/oi-wiki.org/intro/format/)、[中文技术文档写作风格指南](https/zh-style-guide.readthedocs.io/)以及[中文文案排版指北](https/github.com/sparanoid/chinese-copywriting-guidelines)。
+> 本规范参考了 [OI Wiki 格式手册](https://oi-wiki.org/intro/format/)、[中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/)以及[中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)。
 
 ---
 

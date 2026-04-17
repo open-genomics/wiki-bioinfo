@@ -323,16 +323,16 @@ class HashTable \{
     this.size = size;
     this.table = new Array(size).fill(null).map(() => []);
   \}
-  
+
   hash(key) \{
     return key % this.size;
   \}
-  
+
   insert(key, value) \{
     const index = this.hash(key);
     this.table[index].push(\{ key, value \});
   \}
-  
+
   find(key) \{
     const index = this.hash(key);
     for (const item of this.table[index]) \{

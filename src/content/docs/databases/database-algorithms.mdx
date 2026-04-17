@@ -158,12 +158,12 @@ SEED-AND-EXTEND(Q, D, k, X, T)
 
 1  seeds ← FIND-SEEDS(Q, D, k)     // 用 k-mer 索引找精确匹配
 2  high-scoring-pairs ← empty list
-3  
+3
 4  for each (q-pos, d-seq, d-pos) in seeds
 5      score ← EXTEND(q-pos, d-pos, Q, D[d-seq], X)
 6      if score ≥ T
 7          high-scoring-pairs.append((d-seq, score, alignment))
-8          
+8
 9  return SORT-BY-SCORE(high-scoring-pairs)
 ```
 
@@ -356,7 +356,7 @@ $$E = Kmn e^{-\lambda S}$$
 BLAST(Q, D, M, w, T, X)
 1  // ===== 阶段 1：索引构建（离线） =====
 2  index ← BUILD-KMER-INDEX(D, w)
-3  
+3
 4  // ===== 阶段 2：Query 预处理 =====
 5  neighborhood ← empty set
 6  for i ← 1 to |Q| - w + 1
@@ -365,14 +365,14 @@ BLAST(Q, D, M, w, T, X)
 9      // 生成得分 ≥ T 的邻居（蛋白质）
 10     neighbors ← GENERATE-NEIGHBORS(word, M, T)
 11     neighborhood ← neighborhood ∪ neighbors
-12 
+12
 13 // ===== 阶段 3：Seed 查找 =====
 14 seeds ← empty list
 15 for each word in neighborhood
 16     hits ← QUERY-INDEX(index, word)
 17     for each (seq-id, pos) in hits
 18         seeds.append((seq-id, pos, word-score))
-19 
+19
 20 // ===== 阶段 4：无 gap 扩展 =====
 21 hsps ← empty list  // High-Scoring Segment Pairs
 22 for each (seq-id, pos, score) in seeds
@@ -380,7 +380,7 @@ BLAST(Q, D, M, w, T, X)
 24     total-score ← score + left-score + right-score
 25     if total-score ≥ cutoff
 26         hsps.append((seq-id, total-score, alignment-info))
-27 
+27
 28 // ===== 阶段 5：带 gap 验证 =====
 29 results ← empty list
 30 for each hsp in TOP-SCORED(hsps, K)  // 保留前 K 个
@@ -388,7 +388,7 @@ BLAST(Q, D, M, w, T, X)
 32     bit-score ← CALCULATE-BIT-SCORE(alignment)
 33     e-value ← CALCULATE-E-VALUE(bit-score, |Q|, |D|)
 34     results.append((seq-id, alignment, bit-score, e-value))
-35 
+35
 36 return SORT-BY-E-VALUE(results)
 ```
 
@@ -416,22 +416,22 @@ BWA-MEM(R, G)
 1  // ===== 离线：构建索引 =====
 2  bwt ← BWT-TRANSFORM(G + '$')
 3  fm-index ← BUILD-FM-INDEX(bwt)
-4  
+4
 5  for each read R in R
 6      // ===== 步骤 1：找 MEM =====
 7      mems ← FIND-MEMS(R, G, fm-index)
 8      // MEM = 不能在两端延伸的精确匹配
-9      
+9
 10     // ===== 步骤 2：链式匹配 =====
 11     chains ← CHAIN-MEMS(mems)
 12     // 选择共线且距离合理的 MEM 组合
-13     
+13
 14     // ===== 步骤 3：种子扩展 =====
 15     for each chain in chains
 16         alignment ← SEED-AND-EXTEND(R, chain.region, G)
 17         score ← SCORE-ALIGNMENT(alignment)
 18         candidates.append((alignment, score))
-19     
+19
 20     // ===== 步骤 4：输出 =====
 21     output BEST-ALIGNMENT(candidates)
 ```

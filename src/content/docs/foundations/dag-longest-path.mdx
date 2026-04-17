@@ -128,16 +128,16 @@ TOPOLOGICAL_SORT(G):
     in_degree = 计算所有顶点的入度
     queue = 所有入度为 0 的顶点
     order = 空列表
-    
+
     while queue 非空:
         v = queue.dequeue()
         order.append(v)
-        
+
         for each (v, u) in E:  // v 的所有出边
             in_degree[u] -= 1
             if in_degree[u] == 0:
                 queue.enqueue(u)
-    
+
     return order
 ```
 
@@ -147,14 +147,14 @@ TOPOLOGICAL_SORT(G):
 DAG_LONGEST_PATH(G, w, source, sink):
     // 步骤 1：拓扑排序
     topo_order = TOPOLOGICAL_SORT(G)
-    
+
     // 步骤 2：初始化
     for each v in V:
         s[v] = -∞
         predecessor[v] = null
-    
+
     s[source] = 0
-    
+
     // 步骤 3：按拓扑顺序进行动态规划
     for v in topo_order:
         if s[v] > -∞:  // 可达的顶点
@@ -162,14 +162,14 @@ DAG_LONGEST_PATH(G, w, source, sink):
                 if s[v] + w(v,u) > s[u]:
                     s[u] = s[v] + w(v,u)
                     predecessor[u] = v
-    
+
     // 步骤 4：回溯重构路径
     path = []
     v = sink
     while v != null:
         path.prepend(v)
         v = predecessor[v]
-    
+
     return s[sink], path
 ```
 
@@ -208,15 +208,15 @@ D→汇点: 3, C→D: -1
 2. **动态规划**：
    ```
    s[源点] = 0
-   
+
    s[A] = s[源点] + 3 = 3
-   
+
    s[B] = max(s[源点] + 1) = 1
-   
+
    s[C] = max(s[A] + 4, s[B] + 2) = max(7, 3) = 7
-   
+
    s[D] = max(s[B] + 5, s[C] + (-1)) = max(6, 6) = 6
-   
+
    s[汇点] = max(s[C] + 2, s[D] + 3) = max(9, 9) = 9
    ```
 
@@ -276,13 +276,13 @@ DAG 最长路径可以通过边权重取反转化为最短路径问题：
 
 DAG 构建:
   顶点: 0, 1, 2, 3, 4, 5, 6, 7, 8
-  
+
   区间边:
     (1,3) 权重=5  [E1]
     (2,5) 权重=8  [E2]
     (4,6) 权重=6  [E3]
     (6,8) 权重=7  [E4]
-  
+
   连接边（权重=0）:
     (0,1), (0,2), (3,4), (3,6), (5,6), (5,8), (6,8), ...
 

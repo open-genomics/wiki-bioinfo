@@ -142,4 +142,4 @@ wiki 页面适合建立主线理解，但当你需要进一步确认定义、算
 - [写作规范](../intro/style-guide.md)
 - [常用数据库与资源](../databases/common-resources.mdx)
 - [数据库与注释系统一览](../data-references/databases-and-annotations.mdx)
-- [术语表](PLACEHOLDERglossary.mdx)
+- [术语表](./glossary.md)

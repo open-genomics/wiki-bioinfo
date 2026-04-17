@@ -510,12 +510,12 @@ from scipy.linalg import eigh
 def canonical_correlation_analysis(X, Y, n_components=None):
     """
     CCA 实现
-    
+
     参数:
         X: 第一组数据（n_samples, n_features_x）
         Y: 第二组数据（n_samples, n_features_y）
         n_components: 典型变量对数，默认为 min(p, q)
-    
+
     返回:
         W_x: X 的权重矩阵
         W_y: Y 的权重矩阵
@@ -525,31 +525,31 @@ def canonical_correlation_analysis(X, Y, n_components=None):
     """
     n, p = X.shape
     _, q = Y.shape
-    
+
     if n_components is None:
         n_components = min(p, q)
-    
+
     # 标准化
     X = (X - X.mean(axis=0)) / X.std(axis=0)
     Y = (Y - Y.mean(axis=0)) / Y.std(axis=0)
-    
+
     # 计算协方差矩阵
     Sigma_xx = X.T @ X / (n - 1)
     Sigma_yy = Y.T @ Y / (n - 1)
     Sigma_xy = X.T @ Y / (n - 1)
-    
+
     # 使用 sklearn 的实现
     cca = CCA(n_components=n_components)
     cca.fit(X, Y)
-    
+
     U, V = cca.transform(X, Y)
     W_x = cca.x_weights_
     W_y = cca.y_weights_
-    
+
     # 计算典型相关系数
-    correlations = [np.corrcoef(U[:, i], V[:, i])[0, 1] 
+    correlations = [np.corrcoef(U[:, i], V[:, i])[0, 1]
                     for i in range(n_components)]
-    
+
     return W_x, W_y, correlations, U, V
 
 

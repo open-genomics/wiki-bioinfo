@@ -168,7 +168,7 @@ $$
 1. 固定 H^\{(1)\}, ..., H^\{(K)\}，更新 W：
    a. 计算梯度：∇_W = -2 ∑_k X^\{(k)\} (H^\{(k)\})^T + 2 W ∑_k H^\{(k)\} (H^\{(k)\})^T
    b. 使用乘法更新规则：
-      W_\{ij\} ← W_\{ij\} × 
+      W_\{ij\} ← W_\{ij\} ×
       [∑_k (X^\{(k)\} (H^\{(k)\})^T)_\{ij\}] / [∑_k (W H^\{(k)\} (H^\{(k)\})^T)_\{ij\}]
    c. 归一化 W 的列
 
@@ -176,7 +176,7 @@ $$
    对每个组学 k：
    a. 计算梯度：∇_\{H^\{(k)\}\} = -2 W^T X^\{(k)\} + 2 W^T W H^\{(k)\}
    b. 使用乘法更新规则：
-      H^\{(k)\}_\{ij\} ← H^\{(k)\}_\{ij\} × 
+      H^\{(k)\}_\{ij\} ← H^\{(k)\}_\{ij\} ×
       [(W^T X^\{(k)\})_\{ij\}] / [(W^T W H^\{(k)\})_\{ij\}]
 
 3. 检查收敛：
@@ -376,20 +376,20 @@ from sklearn.decomposition import NMF
 def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
     """
     Joint NMF 实现
-    
+
     参数:
         X_list: 组学矩阵列表 [X1, X2, ..., XK]
         r: 潜在维度
         max_iter: 最大迭代次数
         tol: 收敛阈值
-    
+
     返回:
         W: 共享基矩阵
         H_list: 系数矩阵列表
     """
     K = len(X_list)
     n = X_list[0].shape[0]
-    
+
     # 初始化：平均各组学的 NMF 结果
     W_list = []
     H_list = []
@@ -399,20 +399,20 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
         H_k = model.components_
         W_list.append(W_k)
         H_list.append(H_k)
-    
+
     # 平均 W
     W = np.mean(W_list, axis=0)
-    
+
     # 归一化
     for k in range(K):
         norms = np.linalg.norm(W, axis=0)
         W = W / norms
         H_list[k] = H_list[k] * norms[:, np.newaxis]
-    
+
     # 交替迭代（简化版，实际应使用乘法更新）
     for iteration in range(max_iter):
         W_prev = W.copy()
-        
+
         # 更新 W（简化：最小化平方误差）
         # 实际应使用乘法更新规则
         numerator = np.zeros_like(W)
@@ -421,17 +421,17 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
             numerator += X_list[k] @ H_list[k].T
             denominator += W @ (H_list[k] @ H_list[k].T)
         W = W * (numerator / (denominator + 1e-10))
-        
+
         # 归一化
         norms = np.linalg.norm(W, axis=0)
         W = W / norms
         for k in range(K):
             H_list[k] = H_list[k] * norms[:, np.newaxis]
-        
+
         # 检查收敛
         if np.linalg.norm(W - W_prev) < tol:
             break
-    
+
     return W, H_list
 ```
 

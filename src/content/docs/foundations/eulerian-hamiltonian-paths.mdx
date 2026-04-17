@@ -94,14 +94,14 @@ EULERIANPATH(G):
     // 1. 检查存在性
     if 不满足定理 8.2:
         return "无欧拉路径"
-    
+
     // 2. 确定起点
     s = 入度 = 出度 - 1 的顶点（如有），否则任意顶点
-    
+
     // 3. 构造路径
     path = []
     stack = [s]
-    
+
     while stack 非空:
         v = stack.top()
         if v 有未使用的出边:
@@ -110,7 +110,7 @@ EULERIANPATH(G):
             标记边（v,w）为已使用
         else:
             path.append(stack.pop())
-    
+
     return reverse(path)
 ```
 
@@ -229,11 +229,11 @@ def eulerian_path(graph):
     """
     # 找到起点（半平衡顶点）
     start = find_semi_balanced_vertex(graph)
-    
+
     # Hierholzer 算法
     path = []
     stack = [start]
-    
+
     while stack:
         v = stack[-1]
         if graph[v]:  # 还有未使用的边
@@ -241,7 +241,7 @@ def eulerian_path(graph):
             stack.append(w)
         else:  # 无路可走，回溯
             path.append(stack.pop())
-    
+
     return path[::-1]  # 反转得到正确顺序
 ```
 

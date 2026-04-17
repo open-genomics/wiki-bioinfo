@@ -209,10 +209,10 @@ $$
    对每个组学 k：
    a. 计算其他网络的平均：
       P_avg = (∑_\{l ≠ k\} P^\{(l)\}_\{iteration-1\}) / (K-1)
-   
+
    b. 更新网络：
       P^\{(k)\}_\{iteration\} = S^\{(k)\} × P_avg × (S^\{(k)\})^T
-   
+
    c. 归一化：
       P^\{(k)\}_\{iteration\} = 归一化（P^\{(k）\}_\{iteration\})
 
@@ -457,53 +457,53 @@ from sklearn.cluster import SpectralClustering
 def construct_similarity_network(X, K=10, mu=0.5):
     """
     构建相似性网络
-    
+
     参数:
         X: 数据矩阵（n_samples, n_features）
         K: 近邻数
         mu: 超参数
-    
+
     返回:
         P: 相似性网络
     """
     n = X.shape[0]
-    
+
     # 计算欧氏距离
     D = euclidean_distances(X)
-    
+
     # 计算局部缩放参数
     epsilon = np.sort(D, axis=1)[:, K]
-    
+
     # 计算相似性矩阵
     W = np.zeros((n, n))
     for i in range(n):
         for j in range(n):
             W[i, j] = np.exp(-D[i, j]**2 / (mu * epsilon[i] * epsilon[j]))
-    
+
     # 归一化
     P = W / W.sum(axis=1, keepdims=True)
-    
+
     return P
 
 
 def snf(P_list, T=20, K=20):
     """
     相似性网络融合
-    
+
     参数:
         P_list: 相似性网络列表
         T: 迭代次数
         K: 近邻数（用于消息传递）
-    
+
     返回:
         P_fused: 融合网络
     """
     K_omics = len(P_list)
     n = P_list[0].shape[0]
-    
+
     # 对称化网络
     S_list = [(P.T + P) / 2 for P in P_list]
-    
+
     # 迭代融合
     P_current = P_list.copy()
     for t in range(T):
@@ -511,19 +511,19 @@ def snf(P_list, T=20, K=20):
         for k in range(K_omics):
             # 计算其他网络的平均
             P_avg = np.mean([P_current[l] for l in range(K_omics) if l != k], axis=0)
-            
+
             # 消息传递
             P_k = S_list[k] @ P_avg @ S_list[k].T
-            
+
             # 归一化
             P_k = P_k / P_k.sum(axis=1, keepdims=True)
             P_next.append(P_k)
-        
+
         P_current = P_next
-    
+
     # 融合所有网络
     P_fused = np.mean(P_current, axis=0)
-    
+
     return P_fused
 
 

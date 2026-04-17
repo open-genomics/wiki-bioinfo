@@ -65,7 +65,7 @@ You can locate relevant pages through the directory or search. Each topic page s
 
 ### If You Want to Contribute
 
-Refer to the [Writing Standards](./style-guide.mdx) and [Contributing Guide](./contributing.mdx). We welcome:
+Refer to the [Writing Standards](../../intro/style-guide.md) and [Contributing Guide](./contributing.mdx). We welcome:
 - Supplements and improvements to existing pages
 - New knowledge point pages (especially filling gaps in the knowledge network)
 - Improvements to diagrams, examples, and cross-links

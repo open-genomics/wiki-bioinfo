@@ -106,10 +106,10 @@ $$
 2. repeat:
    // E步：计算Q函数
    a. Q(θ, θ^(t)) = E_\{Z|X,θ^(t)\}[log P(X, Z; θ)]
-   
+
    // M步：最大化Q函数
    b. θ^(t+1) = argmax_θ Q(θ, θ^(t))
-   
+
    c. t = t + 1
 3. until |ℓ(θ^(t)) - ℓ(θ^(t-1))| < ε
 4. return θ^(t)
@@ -141,7 +141,7 @@ $$
    a. for each 序列 s_i:
       for each 可能起始位置 j:
          P(位置 j 是motif | s_i, M) ∝ P(s_i[j:j+L] | M) · P(j)
-   
+
    // M步：基于概率更新PWM
    b. for each motif位置 k = 1 to L:
       for each 字符 c ∈ \{A, C, G, T\}:
@@ -174,7 +174,7 @@ $$
    a. for each 数据点 x_i:
       for each 分量 k:
          γ_ik = P(z_i = k | x_i, θ) = π_k · N(x_i | μ_k, Σ_k) / Σ_j π_j · N(x_i | μ_j, Σ_j)
-   
+
    // M步：更新参数
    b. N_k = Σ_i γ_ik
    c. π_k = N_k / n

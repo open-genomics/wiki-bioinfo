@@ -71,20 +71,20 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 LONGEST-PATH-DAG(G, source, sink):
     // 拓扑排序
     topo_order = TOPOLOGICAL-SORT(G)
-    
+
     // 初始化
     for each vertex v:
         dist[v] = -∞
         prev[v] = null
     dist[source] = 0
-    
+
     // 动态规划：按拓扑序遍历
     for v in topo_order:
         for each edge (v, u) in G.adj[v]:
             if dist[u] < dist[v] + weight(v, u):
                 dist[u] = dist[v] + weight(v, u)
                 prev[u] = v
-    
+
     // 回溯路径
     path = []
     v = sink
@@ -92,7 +92,7 @@ LONGEST-PATH-DAG(G, source, sink):
         path.prepend(v)
         v = prev[v]
     path.prepend(source)
-    
+
     return path, dist[sink]
 ```
 
@@ -225,19 +225,19 @@ DAG 中的最长路径问题可通过动态规划在 $O(V + E)$ 时间内求解�
 LONGEST-PATH-DAG(G, source, sink):
     // 拓扑排序
     topo_order = TOPOLOGICAL-SORT(G)
-    
+
     // 初始化
     for each vertex v:
         dist[v] = -∞
         dist[source] = 0
-    
+
     // 动态规划
     for v in topo_order:
         for each edge (v, u) in G:
             if dist[u] < dist[v] + 1:
                 dist[u] = dist[v] + 1
                 prev[u] = v
-    
+
     // 回溯路径
     path = BACKTRACK(sink, prev)
     return path

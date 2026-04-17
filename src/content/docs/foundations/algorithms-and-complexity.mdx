@@ -94,14 +94,14 @@ graph TD
     Polymerase["Polymerase (聚合酶)"] -->|"Adds Bases"| Synthesis
     Ligase["Ligase (连接酶)"] -->|"Seals"| Result["New DNA"]
     end
-    
+
     subgraph "Algorithmic Abstraction"
     Read["Read Input String"]
     Init["Initialize Pointer"]
     Copy["Copy & Append"]
     Check["Error Check & Concat"]
     end
-    
+
     Helicase --- Read
     Primase --- Init
     Polymerase --- Copy
@@ -134,7 +134,7 @@ graph LR
     ONlogN --> ON2["O(n^2)"]
     ON2 --> O2N["O(2^n)"]
     end
-    
+
     style O1 fill:#dfd
     style ON fill:#fff
     style O2N fill:#fdd

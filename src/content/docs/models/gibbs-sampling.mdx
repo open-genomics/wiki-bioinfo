@@ -81,20 +81,20 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 GIBBS_SAMPLING(DNA, t, n, l, max_iter):
     // 随机初始化
     s = 随机选择 t 个起始位置
-    
+
     for iter = 1 to max_iter:
         // 步骤 1：随机选择一条序列 i 暂时移除
         i = random(1, t)
-        
+
         // 步骤 2：用剩余 t-1 条序列构建 profile
         profile = BUILD_PROFILE(DNA, s, i)  // 不包含序列 i
-        
+
         // 步骤 3：计算序列 i 每个位置的匹配概率
         probabilities = CALC_PROBABILITIES(DNA[i], profile)
-        
+
         // 步骤 4：根据概率随机采样新位置
         s[i] = SAMPLE_POSITION(probabilities)
-    
+
     return s, BUILD_PROFILE(DNA, s, -1)
 ```
 
@@ -105,18 +105,18 @@ GIBBS_SAMPLING(DNA, t, n, l, max_iter):
 ```text
 BUILD_PROFILE(DNA, s, exclude_i):
     profile = 4 × l 的零矩阵（A,C,G,T × motif 位置）
-    
+
     for j = 1 to t, j ≠ exclude_i:
         motif = DNA[j][s[j] : s[j]+l-1]
         for pos = 1 to l:
             nucleotide = motif[pos]
             profile[nucleotide][pos] += 1
-    
+
     // 归一化为频率（加伪计数避免零概率）
     for pos = 1 to l:
         for each nucleotide:
             profile[nucleotide][pos] = (count + 1) / (t-1 + 4)
-    
+
     return profile
 ```
 
@@ -127,23 +127,23 @@ BUILD_PROFILE(DNA, s, exclude_i):
 ```text
 CALC_PROBABILITIES(DNA_i, profile, l):
     probabilities = 长度为 n-l+1 的数组
-    
+
     for pos = 1 to n-l+1:
         lmer = DNA_i[pos : pos+l-1]
-        
+
         // 计算该 l-mer 在 profile 下的概率
         prob = 1.0
         for k = 1 to l:
             nucleotide = lmer[k]
             prob *= profile[nucleotide][k]
-        
+
         probabilities[pos] = prob
-    
+
     // 归一化
     total = sum(probabilities)
     for pos = 1 to n-l+1:
         probabilities[pos] /= total
-    
+
     return probabilities
 ```
 
@@ -156,12 +156,12 @@ SAMPLE_POSITION(probabilities):
     // 轮盘赌采样
     r = random(0, 1)
     cumsum = 0
-    
+
     for pos = 1 to length(probabilities):
         cumsum += probabilities[pos]
         if r <= cumsum:
             return pos
-    
+
     return last_position
 ```
 
@@ -177,35 +177,35 @@ GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
     s = random_positions(t, n, l)
     best_s = s
     best_score = SCORE(s, DNA)
-    
+
     for iter = 1 to max_iter:
         // 选择要更新的序列
         i = iter mod t  // 或随机选择
-        
+
         // 移除序列 i 的贡献，构建临时 profile
         profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
-        
+
         // 计算序列 i 所有可能位置的概率
         for pos = 1 to n-l+1:
             lmer = DNA[i][pos:pos+l-1]
             Q[pos] = 1.0
             for k = 1 to l:
                 Q[pos] *= profile[lmer[k]][k]
-        
+
         // 归一化 Q
         total = sum(Q)
         for pos = 1 to n-l+1:
             Q[pos] /= total
-        
+
         // 根据 Q 采样新位置
         s[i] = SAMPLE(Q)
-        
+
         // 评估新解
         current_score = SCORE(s, DNA)
         if current_score > best_score:
             best_score = current_score
             best_s = s
-    
+
     return best_s, best_score
 ```
 
@@ -239,11 +239,11 @@ Gibbs Sampling 形成一条**马尔可夫链**：
     for iter = 1 to max_iter:
         // 执行一次 Gibbs 迭代
         ...
-        
+
         // 预热期不记录结果
         if iter > burn_in:
             RECORD_SAMPLE(s)
-    
+
     // 返回出现频率最高的 motif
     return MOST_FREQUENT(samples)
 ```
@@ -292,15 +292,15 @@ Seq3: G A T C G A T C G A T C G T A C G A
 ```text
 GREEDY_GIBBS(DNA, t, n, l, max_iter):
     s = random_positions()
-    
+
     for iter = 1 to max_iter:
         i = random(1, t)
         profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
-        
+
         // 贪婪选择：概率最高的位置
         best_pos = argmax_{pos} P(lmer_i(pos) | profile)
         s[i] = best_pos
-    
+
     return s
 ```
 
@@ -316,18 +316,18 @@ GREEDY_GIBBS(DNA, t, n, l, max_iter):
 TEMPERED_GIBBS(DNA, t, n, l, max_iter):
     s = random_positions()
     temperature = 1.0
-    
+
     for iter = 1 to max_iter:
         i = random(1, t)
         profile = BUILD_PROFILE_WITHOUT_I(DNA, s, i)
-        
+
         // 使用温度调整概率
         for pos:
             Q[pos] = exp(log(P(pos)) / temperature)
-        
+
         s[i] = SAMPLE(Q)
         temperature *= 0.99  // 降温
-    
+
     return s
 ```
 

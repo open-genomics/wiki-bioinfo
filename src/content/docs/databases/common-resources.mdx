@@ -68,13 +68,13 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ### 9.2.2 对象混淆的典型错误模式
 
-**错误模式 1：Gene Symbol 歧义**  
+**错误模式 1：Gene Symbol 歧义**
 如 "TP53" 可能指代不同转录本（NM_000546、NM_001126112），直接按 symbol 查询可能遗漏重要变体。
 
-**错误模式 2：参考版本不匹配**  
+**错误模式 2：参考版本不匹配**
 使用 hg19 坐标查询基于 hg38 的数据库，导致坐标偏移或记录不存在。
 
-**错误模式 3：门户与子数据库混淆**  
+**错误模式 3：门户与子数据库混淆**
 将 NCBI 视为单一数据库，而实际查询可能落在 Gene、RefSeq、SRA 等不同子系统。
 
 <PrerequisitesBox

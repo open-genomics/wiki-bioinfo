@@ -142,30 +142,30 @@ $$d_H(P, T[i..i+m-1]) = \sum_{j=1}^{m} \mathbb{1}[p_j \neq t_{i+j-1}]$$
 APPROXIMATE_MATCH_DP(T, P, n, m, k):
     // DP 表：（n+1） × (m+1)
     // D[i,j] = T[1..i] 与 P[1..j] 的编辑距离
-    
+
     // 初始化
     for i = 0 to n:
         D[i, 0] = i  // 删除 i 个字符
     for j = 0 to m:
         D[0, j] = j  // 插入 j 个字符
-    
+
     // 填表
     for i = 1 to n:
         for j = 1 to m:
             match_cost = 0 if T[i] == P[j] else 1
-            
+
             D[i,j] = min(
                 D[i-1, j] + 1,      // 删除 T[i]
                 D[i, j-1] + 1,      // 插入 P[j]
                 D[i-1, j-1] + match_cost  // 匹配/替换
             )
-    
+
     // 查找所有满足条件的结束位置
     matches = []
     for i = 1 to n:
         if D[i, m] <= k:
             matches.append(i - m + 1)  // 计算起始位置
-    
+
     return matches
 ```
 
@@ -216,24 +216,24 @@ APPROXIMATE_MATCH_DP(T, P, n, m, k):
 QGRAM_APPROXIMATE_MATCH(T, P, m, k):
     // 将模式分割为 k+1 个片段
     // 每个片段长度 ≈ m/(k+1)
-    
+
     // 构建 T 中所有 q-gram 的索引
     index = BUILD_QGRAM_INDEX(T, q)
-    
+
     matches = empty set
-    
+
     for each piece p_i of P:
         // 查找 p_i 在 T 中的所有精确匹配位置
         positions = EXACT_MATCH(index, p_i)
-        
+
         for pos in positions:
             // 验证扩展区域的总编辑距离
             start = pos - offset_of_p_i_in_P
             end = start + m
-            
+
             if EDIT_DISTANCE(T[start..end], P) <= k:
                 matches.add(start)
-    
+
     return matches
 ```
 
@@ -265,15 +265,15 @@ BLAST（Basic Local Alignment Search Tool）是生物信息学中最广泛使用
 BLAST(query, database):
     // 1. 预处理查询序列
     seeds = EXTRACT_SHORT_WORDS(query, word_size)
-    
+
     // 2. 查找种子匹配
     for seed in seeds:
         hit_positions = LOOKUP_NEIGHBORHOOD(seed, database_index)
-        
+
         for pos in hit_positions:
             // 3. 单向或双向扩展
             alignment = EXTEND_ALIGNMENT(query, database, seed, pos)
-            
+
             // 4. 评估显著性
             if alignment.score > threshold:
                 e_value = CALCULATE_E_VALUE(alignment)

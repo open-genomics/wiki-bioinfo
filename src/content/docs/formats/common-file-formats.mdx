@@ -164,17 +164,17 @@ graph LR
     subgraph "Read Space"
     R["Read: ATGC..."]
     end
-    
+
     subgraph "Alignment Process"
     Map["Mapper"]
     end
-    
+
     subgraph "Reference Space"
     Ref["Reference: ...NNNATGCNNN..."]
     Pos["Position: chr1:1000"]
     CIGAR["CIGAR: 4M"]
     end
-    
+
     R --> Map
     Map --> Ref
     Map --> Pos

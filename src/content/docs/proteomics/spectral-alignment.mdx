@@ -138,7 +138,7 @@ SPECTRAL-ALIGNMENT(A, B, k):
     for all i, j, k':
         D[i][j][k'] = 0
         M[i][j][k'] = 0
-    
+
     // 动态规划填表
     for k' = 0 to k:
         for i = 1 to |A|:
@@ -147,16 +147,16 @@ SPECTRAL-ALIGNMENT(A, B, k):
                     // 延续当前对角线
                     d = DIAG(i, j)  // 同一对角线上的前一个位置
                     continue_score = D[d.i][d.j][k'] + 1
-                    
+
                     // 切换对角线（如果 k' > 0）
                     if k' > 0:
                         switch_score = M[i-1][j-1][k'-1] + 1
                     else:
                         switch_score = 0
-                    
+
                     D[i][j][k'] = max(continue_score, switch_score)
                     M[i][j][k'] = max(M[i-1][j][k'], M[i][j-1][k'], D[i][j][k'])
-    
+
     return max_{i,j} D[i][j][k]
 ```
 

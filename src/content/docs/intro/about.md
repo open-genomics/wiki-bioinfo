@@ -87,7 +87,7 @@ BioInfo Wiki 希望成为：
 - Durbin, R., Eddy, S., Krogh, A., & Mitchison, G. (1998). *Biological Sequence Analysis*. Cambridge University Press.
 - Cormen, T. H., et al. (2022). *Introduction to Algorithms* (4th ed.). MIT Press.
 
-组织方式借鉴 [OI Wiki](https/oi-wiki.org/) 的模式：用清晰的层级结构串起知识点，用社区协作机制持续积累内容。
+组织方式借鉴 [OI Wiki](https://oi-wiki.org/) 的模式：用清晰的层级结构串起知识点，用社区协作机制持续积累内容。
 
 ## 相关页面
 

@@ -1,0 +1,42 @@
+# Markdownlint configuration
+# https://github.com/DavidAnson/markdownlint
+
+# 默认规则
+default: true
+
+# 禁用规则
+MD013: false  # 不限制行长（中文文档需要较长行）
+MD024: false  # 允许相同标题（不同章节可以有相同标题）
+MD033: false  # 允许内联 HTML（MDX 需要）
+MD034: false  # 允许裸 URL（Starlight 会自动处理）
+MD041: false  # 不要求文档第一个标题（MDX 可能有 frontmatter）
+
+# 自定义规则
+MD003:
+  style: atx  # 使用 # 样式的标题
+
+MD007:
+  indent: 2  # 列表缩进 2 空格
+
+MD012:
+  maximum: 2  # 允许最多 2 个连续空行
+
+MD025:
+  level: 1  # 文档只能有一个 level-1 标题
+
+MD026:
+  punctuation: ".,;:!?"  # 标题结尾标点
+
+MD029:
+  style: ordered  # 有序列表样式
+
+MD035:
+  style: ---  # 水平分隔线样式
+
+MD046:
+  style: fenced  # 代码块使用围栏式
+
+# 文档前元数据规则
+MD041:
+  level: 1
+  front_matter_title: "^\s*title\s*:\s*"  # 从 frontmatter 读取标题

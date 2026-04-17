@@ -1,0 +1,19 @@
+---
+title: Genome Assembly
+description: Algorithms for reconstructing genomes from sequencing reads
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+Genome assembly reconstructs complete genomes from short DNA fragments.
+
+## Approaches
+
+<CardGrid>
+  <LinkCard title="OLC" href="./olc/" description="Overlap-Layout-Consensus for long reads" />
+  <LinkCard title="de Bruijn Graphs" href="./de-bruijn/" description="k-mer based assembly" />
+  <LinkCard title="Graph Cleaning" href="./repeats-and-graph-cleaning/" description="Handling repeats and errors" />
+  <LinkCard title="Evaluation" href="./assembly-evaluation/" description="Assembly quality metrics" />
+</CardGrid>
+
+See [中文版本](../../zh/assembly/) for detailed content.

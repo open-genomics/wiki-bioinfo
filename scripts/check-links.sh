@@ -7,7 +7,8 @@ cd "$(dirname "$0")/.."
 DOCS_DIR="src/content/docs"
 broken=0
 
-grep -rn -oP '\[([^\]]*)\]\(([^)]+)\)' "$DOCS_DIR" --include='*.md' --include='*.mdx' | while IFS=: read -r filepath linenum link; do
+# Use process substitution instead of pipe to avoid subshell issues
+while IFS=: read -r filepath linenum link; do
   url=$(echo "$link" | grep -oP '\]\(\K[^)]+')
 
   # Skip external links, anchors, mailto
@@ -19,6 +20,8 @@ grep -rn -oP '\[([^\]]*)\]\(([^)]+)\)' "$DOCS_DIR" --include='*.md' --include='*
   srcdir=$(dirname "$filepath")
   target="$srcdir/$url"
   target="${target%%#*}"
+  target="${target%.md}"     # Remove .md extension if present
+  target="${target%.mdx}"    # Remove .mdx extension if present
 
   found=false
   [ -f "$target" ] && found=true
@@ -31,6 +34,6 @@ grep -rn -oP '\[([^\]]*)\]\(([^)]+)\)' "$DOCS_DIR" --include='*.md' --include='*
     echo "BROKEN: $relsrc:$linenum -> $url"
     broken=1
   fi
-done
+done < <(grep -rn -oP '\[([^\]]*)\]\(([^)]+)\)' "$DOCS_DIR" --include='*.md' --include='*.mdx')
 
 exit $broken

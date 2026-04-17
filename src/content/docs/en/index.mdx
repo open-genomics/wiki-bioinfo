@@ -1,0 +1,99 @@
+---
+title: BioInfo Wiki
+description: A systematic knowledge base for bioinformatics
+template: splash
+hero:
+  tagline: From sequences, alignment, and assembly to HMMs—organized around stable knowledge pillars. A systematic bioinformatics knowledge base for the global community.
+  image:
+    file: ../../../assets/bioinfo-logo.svg
+  actions:
+    - text: Start Reading
+      link: ./intro/
+      icon: right-arrow
+      variant: primary
+    - text: Core Methods
+      link: ./core-methods/
+      icon: open-book
+    - text: GitHub
+      link: https://github.com/LessUp/wiki-bioinfo
+      icon: external
+      variant: minimal
+---
+
+import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+
+<div class="hero-bg-overlay"></div>
+
+<img src="./img/illustrations/home-hero.svg" alt="BioInfo Wiki Knowledge Exploration Illustration" style="max-width: 480px; margin: 0 auto 2rem; display: block;" />
+
+## Why BioInfo Wiki
+
+<CardGrid>
+  <Card title="Structure First" icon="document">
+    From sequences, alignment, and assembly to HMMs—organized around stable knowledge pillars rather than tool command listings.
+  </Card>
+  <Card title="Methods to Applications" icon="puzzle">
+    Algorithms, data formats, databases, and workflows connected: from textbook formulas to real analysis pipelines.
+  </Card>
+  <Card title="Bilingual" icon="translate">
+    Chinese-first content with English translations. Key terms annotated with Chinese on first occurrence.
+  </Card>
+  <Card title="Open Collaboration" icon="github">
+    Continuously improved through GitHub with unified templates, evolving content and structure together.
+  </Card>
+</CardGrid>
+
+## Knowledge Map
+
+Six main entrances covering the complete pipeline from fundamentals to applications.
+
+<CardGrid>
+  <LinkCard title="🚀 Introduction" description="Project overview, learning roadmap, contribution guidelines, and writing standards." href="./intro/" />
+  <LinkCard title="🧮 Foundations" description="Sequences, reads, coverage, coordinate systems, and probability—the foundations of everything." href="./foundations/" />
+  <LinkCard title="⚙️ Core Methods" description="Indexing, alignment, assembly, and probabilistic models converging to a unified methodology." href="./core-methods/" />
+  <LinkCard title="🔬 Analysis & Cases" description="Analysis entry points for DNA-seq, RNA-seq, single-cell, long-read, and spatial omics." href="./applications/" />
+  <LinkCard title="📚 Data & Resources" description="Reference genomes, annotation systems, file formats, and database entry points." href="./data-references/" />
+  <LinkCard title="📝 Appendix" description="Glossary, references, and indexes—serving as the Wiki's lookup and conclusion function." href="./appendix/" />
+</CardGrid>
+
+## Recommended Learning Paths
+
+<CardGrid>
+  <Card title="🎯 Beginner Path" icon="rocket">
+    **Zero to Hero** — Understand objects and process maps first, then dive into indexing, alignment, assembly, and applications.
+
+    1. Introduction → 2. Foundations → 3. Data & Resources → 4. Analysis
+  </Card>
+  <Card title="🧠 Algorithm Path" icon="setting">
+    **Theory-Driven** — Start with strings, DP, graphs, and probabilistic models, then see their places in real tools.
+
+    1. Foundations → 2. Core Methods → 3. Applications
+  </Card>
+  <Card title="🛠️ Practical Path" icon="laptop">
+    **Task-Driven** — From DNA-seq, RNA-seq, single-cell analyses back to their underlying methods and data structures.
+
+    1. Data & Resources → 2. Analysis → 3. Review Core Methods
+  </Card>
+</CardGrid>
+
+## From Textbooks to Practice
+
+Putting strings, graphs, probabilistic models, and workflows into the same knowledge coordinate system is what distinguishes BioInfo Wiki from scattered tutorials.
+
+<CardGrid>
+  <LinkCard title="📐 Strings & Dynamic Programming" description="Edit distance, global/local alignment to affine gap—the mathematical backbone behind read mapping." href="./alignment/" />
+  <LinkCard title="🔍 Indexing & Fast Search" description="k-mer, suffix array, BWT to FM-index—fast location on massive reference sequences." href="./sequence/" />
+  <LinkCard title="🕸️ Graph Algorithms & Assembly" description="OLC to de Bruijn graph, repeat and error handling, recovering fragments into wholeness." href="./assembly/" />
+  <LinkCard title="🎲 Probabilistic Models & Inference" description="HMM, PWM/PSSM to gene prediction—how uncertainty is formalized." href="./models/" />
+</CardGrid>
+
+---
+
+## Language Selection
+
+Welcome to the English version of BioInfo Wiki! 
+
+- **English (Current)**: Core concepts and high-level overviews
+- **[中文版本](../)**: Complete 200+ page knowledge base in Chinese
+
+We're actively expanding English content. Core concept pages are being translated progressively.

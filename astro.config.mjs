@@ -22,6 +22,10 @@ export default defineConfig({
           label: '简体中文',
           lang: 'zh-CN',
         },
+        en: {
+          label: 'English',
+          lang: 'en',
+        },
       },
       logo: {
         src: './src/assets/bioinfo-logo.svg',
@@ -62,6 +66,31 @@ export default defineConfig({
         },
       ],
       sidebar: [
+        {
+          label: 'Introduction',
+          translations: {
+            'zh-CN': '导论',
+          },
+          items: [
+            { slug: 'en' },
+            { slug: 'en/intro' },
+            { slug: 'en/intro/about' },
+            { slug: 'en/intro/contributing' },
+          ]
+        },
+        {
+          label: 'Core Methods',
+          translations: {
+            'zh-CN': '核心方法',
+          },
+          items: [
+            { slug: 'en/core-methods' },
+            { slug: 'en/sequence' },
+            { slug: 'en/alignment' },
+            { slug: 'en/assembly' },
+            { slug: 'en/models' },
+          ]
+        },
         {
           label: '导论',
           items: [

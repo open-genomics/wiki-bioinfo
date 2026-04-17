@@ -1,5 +1,6 @@
 import { defineConfig } from 'astro/config';
 import starlight from '@astrojs/starlight';
+import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 
@@ -11,6 +12,22 @@ export default defineConfig({
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
+  },
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp',
+    },
+  },
+  vite: {
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            katex: ['katex'],
+          },
+        },
+      },
+    },
   },
   integrations: [
     starlight({
@@ -464,6 +481,19 @@ export default defineConfig({
           ],
         },
       ],
+    }),
+    sitemap({
+      filter: (page) => !page.includes('/en/'),
+      changefreq: 'weekly',
+      priority: 0.7,
+      lastmod: new Date(),
+      i18n: {
+        defaultLocale: 'zh-CN',
+        locales: {
+          'zh-CN': 'zh-CN',
+          'en': 'en',
+        },
+      },
     }),
   ],
 });

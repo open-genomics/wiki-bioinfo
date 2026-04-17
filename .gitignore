@@ -26,3 +26,7 @@ yarn-error.log*
 /public/fonts/*.woff
 /public/fonts/*.woff2
 !/public/fonts/README.md
+
+# AI agent work files
+.kimi/
+.agents/

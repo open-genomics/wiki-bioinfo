@@ -8,13 +8,6 @@ description: BioInfo Wiki 项目导论、知识体系结构与阅读导航
 
 这是一个面向中文社区的生物信息学体系化知识库。我们的目标是把**生物学对象、算法模型、数据资源与分析流程**连接成一张可以系统学习的知识地图。
 
-<!-- TODO: 知识地图配图待重新设计后启用
-<figure>
-  <img src="../img/figures/wiki-knowledge-map.webp" alt="BioInfo Wiki 全局知识地图，展示基础层、核心方法层、应用层、数据与资源层、工作流层的层次结构" />
-  <figcaption>BioInfo Wiki 知识体系的五个层次：从基础对象到完整工作流</figcaption>
-</figure>
--->
-
 ## 知识体系概览
 
 本知识库按以下五层结构组织内容：

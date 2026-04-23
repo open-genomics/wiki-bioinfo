@@ -135,7 +135,7 @@ $$\text{Cost}(k) = g_o + k \cdot g_e$$
 - $g_o$ (Gap Open)：开启一个新缺口的高额代价。
 - $g_e$ (Gap Extend)：每增加一个碱基的低廉代价。
 
-**算法影响**：在动态规划中，这要求我们维护三个平行的矩阵（$M, I, D$），分别记录匹配、插入和删除的状态，从而追踪 Gap 是否正在延长。详见 [仿射 Gap 罚分](./affine-gap-penalty.mdx)。
+**算法影响**：在动态规划中，这要求我们维护三个平行的矩阵（$M, I, D$），分别记录匹配、插入和删除的状态，从而追踪 Gap 是否正在延长。详见 [仿射 Gap 罚分](./affine-gap-penalty/)。
 
 ### 常见参数设置
 
@@ -211,7 +211,7 @@ $$s(a, b) = \lambda \cdot \log \frac{P_{observed}(a, b)}{P_{expected}(a, b)}$$
 
 ## 9. 与真实工具的连接
 
-- **BLAST** 默认使用 BLOSUM62 作为蛋白质比对的替换矩阵，可通过 `-matrix` 参数切换。详见 [BLAST](./blast.mdx)。
+- **BLAST** 默认使用 BLOSUM62 作为蛋白质比对的替换矩阵，可通过 `-matrix` 参数切换。详见 [BLAST](./blast/)。
 - **ClustalW / MUSCLE / MAFFT** 等 MSA 工具均支持自定义替换矩阵和 Gap 罚分参数。
 - **BWA** 等短序列比对工具通常使用简单的匹配/错配得分（如匹配 +1，错配 -3，Gap Open -6，Gap Extend -1），因为核酸的替换模式比蛋白质简单。
 - **替换矩阵数据库**：NCBI 提供了完整的 PAM 和 BLOSUM 系列矩阵，可在 NCBI FTP 站点下载。

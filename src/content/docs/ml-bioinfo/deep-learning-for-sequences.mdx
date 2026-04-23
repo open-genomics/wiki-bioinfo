@@ -52,7 +52,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 ### 1. 演进：从 Profile HMM 到神经网络
 
-在[Profile HMM](../models/profile-hmm.mdx)中，我们通过状态转移（M/I/D）来刻画序列家族。神经网络可以看作是这种概率模型的非线性、高维扩展：
+在[Profile HMM](../models/profile-hmm/)中，我们通过状态转移（M/I/D）来刻画序列家族。神经网络可以看作是这种概率模型的非线性、高维扩展：
 
 - **Profile HMM**：使用显式状态和线性转换，解释性强，但难以捕获非线性的长程依赖。状态空间是手工设计的（匹配、插入、删除），灵活性有限。
 - **神经网络**：通过隐藏层提取特征，虽然解释性较弱（黑盒），但能通过多层嵌套识别极其复杂的变异模式和结构约束。每一层都可以看作是对输入的一种非线性变换。

@@ -25,10 +25,10 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法策略 | Wiki 对应 |
 |---------|---------|---------|-----------|
-| **Partial Digest Problem (PDP)** | 给定所有点对距离的多重集，重构点的位置 | 穷举 + 分支定界 | [限制图谱](../foundations/restriction-mapping.mdx) |
-| **Motif Finding Problem** | 在 t 个序列中找到 l-mer，使最小汉明距离最小 | 穷举所有位置组合 | [Motif 发现](../models/motif-finding.mdx) |
-| **Median String Problem** | 找到与所有序列最接近的模式串 | 穷举 4^l 空间 | [Median String](../models/median-string.mdx) |
-| **Turnpike Problem** | PDP 的等价表述，求一维点集 | 分支定界 | [限制图谱](../foundations/restriction-mapping.mdx) |
+| **Partial Digest Problem (PDP)** | 给定所有点对距离的多重集，重构点的位置 | 穷举 + 分支定界 | [限制图谱](../foundations/restriction-mapping/) |
+| **Motif Finding Problem** | 在 t 个序列中找到 l-mer，使最小汉明距离最小 | 穷举所有位置组合 | [Motif 发现](../models/motif-finding/) |
+| **Median String Problem** | 找到与所有序列最接近的模式串 | 穷举 4^l 空间 | [Median String](../models/median-string/) |
+| **Turnpike Problem** | PDP 的等价表述，求一维点集 | 分支定界 | [限制图谱](../foundations/restriction-mapping/) |
 
 **关键概念**：
 - **分支定界**（Branch and Bound）：通过上下界剪枝减少搜索空间
@@ -40,9 +40,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法策略 | Wiki 对应 |
 |---------|---------|---------|-----------|
-| **Sorting by Reversals** | 用最少的反转操作将排列排序 | 断点贪心 | [基因组重排](../foundations/genome-rearrangements.mdx) |
-| **Reversal Distance Problem** | 计算两个排列之间的反转距离 | 近似算法（断点） | [基因组重排](../foundations/genome-rearrangements.mdx) |
-| **Greedy Motif Search** | 用贪心策略改进 Motif 搜索 | 逐步构建谱 | [Motif 发现算法](../models/motif-discovery-algorithms.mdx) |
+| **Sorting by Reversals** | 用最少的反转操作将排列排序 | 断点贪心 | [基因组重排](../foundations/genome-rearrangements/) |
+| **Reversal Distance Problem** | 计算两个排列之间的反转距离 | 近似算法（断点） | [基因组重排](../foundations/genome-rearrangements/) |
+| **Greedy Motif Search** | 用贪心策略改进 Motif 搜索 | 逐步构建谱 | [Motif 发现算法](../models/motif-discovery-algorithms/) |
 
 **关键概念**：
 - **断点**（Breakpoint）：排列中相邻元素不连续的位置
@@ -54,20 +54,20 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | DP 结构 | Wiki 对应 |
 |---------|---------|---------|-----------|
-| **Change Problem** | 用最少的硬币组合出金额 M | 一维 DP | [动态规划基础](../foundations/dynamic-programming-basics.mdx) |
-| **Manhattan Tourist Problem** | 在加权网格中找最长路径 | 二维网格 DP | [动态规划基础](../foundations/dynamic-programming-basics.mdx) |
-| **Edit Distance** | 两个字符串间的最小编辑操作数 | 二维 DP | [编辑距离](../alignment/edit-distance.mdx) |
-| **Longest Common Subsequence (LCS)** | 最长公共子序列 | 二维 DP | [动态规划基础](../foundations/dynamic-programming-basics.mdx) |
-| **Global Alignment Problem** | 全局序列比对（Needleman-Wunsch） | 网格 DP | [Needleman-Wunsch](../alignment/needleman-wunsch.mdx) |
-| **Local Alignment Problem** | 局部序列比对（Smith-Waterman） | 网格 DP，允许负分重置 | [Smith-Waterman](../alignment/smith-waterman.mdx) |
+| **Change Problem** | 用最少的硬币组合出金额 M | 一维 DP | [动态规划基础](../foundations/dynamic-programming-basics/) |
+| **Manhattan Tourist Problem** | 在加权网格中找最长路径 | 二维网格 DP | [动态规划基础](../foundations/dynamic-programming-basics/) |
+| **Edit Distance** | 两个字符串间的最小编辑操作数 | 二维 DP | [编辑距离](../alignment/edit-distance/) |
+| **Longest Common Subsequence (LCS)** | 最长公共子序列 | 二维 DP | [动态规划基础](../foundations/dynamic-programming-basics/) |
+| **Global Alignment Problem** | 全局序列比对（Needleman-Wunsch） | 网格 DP | [Needleman-Wunsch](../alignment/needleman-wunsch/) |
+| **Local Alignment Problem** | 局部序列比对（Smith-Waterman） | 网格 DP，允许负分重置 | [Smith-Waterman](../alignment/smith-waterman/) |
 | **Fitting Alignment** | 将一个序列比对到另一个的子串 | 网格 DP，特殊边界 | - |
 | **Overlap Alignment** | 一个后缀与另一个前缀的最优比对 | 网格 DP，特殊边界 | - |
-| **Semiglobal Alignment** | 不计末端间隙的全局比对 | 网格 DP，特殊边界 | [半全局比对](../alignment/semi-global-alignment.mdx) |
-| **Affine Gap Penalty Alignment** | 带仿射间隙惩罚的比对 | 三维 DP 状态 | [Gotoh 算法](../alignment/gotoh.mdx) |
-| **Multiple Alignment** | 多个序列的同时比对 | 多维 DP（NP-hard，启发式） | [多序列比对](../alignment/multiple-sequence-alignment.mdx) |
-| **Spliced Alignment** | 考虑剪接的外显子链比对 | DAG 上的路径 DP | [基因预测](../models/gene-prediction.mdx) |
-| **Exon Chaining** | 选择非重叠外显子使总权重最大 | 加权区间调度 DP | [基因预测](../models/gene-prediction.mdx) |
-| **Block Alignment** | 块比对（Four Russians 技术） | 分块 DP | [分治算法](../foundations/divide-and-conquer.mdx) |
+| **Semiglobal Alignment** | 不计末端间隙的全局比对 | 网格 DP，特殊边界 | [半全局比对](../alignment/semi-global-alignment/) |
+| **Affine Gap Penalty Alignment** | 带仿射间隙惩罚的比对 | 三维 DP 状态 | [Gotoh 算法](../alignment/gotoh/) |
+| **Multiple Alignment** | 多个序列的同时比对 | 多维 DP（NP-hard，启发式） | [多序列比对](../alignment/multiple-sequence-alignment/) |
+| **Spliced Alignment** | 考虑剪接的外显子链比对 | DAG 上的路径 DP | [基因预测](../models/gene-prediction/) |
+| **Exon Chaining** | 选择非重叠外显子使总权重最大 | 加权区间调度 DP | [基因预测](../models/gene-prediction/) |
+| **Block Alignment** | 块比对（Four Russians 技术） | 分块 DP | [分治算法](../foundations/divide-and-conquer/) |
 
 **关键概念**：
 - **递推关系**（Recurrence）：DP 的核心数学表达
@@ -80,12 +80,12 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 图论概念 | Wiki 对应 |
 |---------|---------|---------|-----------|
-| **Shortest Path Problem** | 图中两点间最短路径 | Dijkstra, Bellman-Ford | [图算法基础](../foundations/graph-algorithms.mdx) |
-| **Longest Path in DAG** | DAG 中最长路径 | 拓扑序 + DP | [图算法基础](../foundations/graph-algorithms.mdx) |
-| **Eulerian Cycle Problem** | 图中经过每条边一次的回路 | 欧拉路径理论 | [de Bruijn 图](../assembly/de-bruijn.mdx) |
-| **Hamiltonian Cycle Problem** | 图中经过每个顶点一次的回路 | NP-hard | [测序杂交](../assembly/sequencing-by-hybridization.mdx) |
-| **Shortest Superstring Problem** | 包含所有输入字符串的最短超串 | Overlap 图 | [最短超串](../assembly/shortest-superstring.mdx) |
-| **Sequencing by Hybridization (SBH)** | 从杂交数据重构序列 | de Bruijn 图 | [测序杂交](../assembly/sequencing-by-hybridization.mdx) |
+| **Shortest Path Problem** | 图中两点间最短路径 | Dijkstra, Bellman-Ford | [图算法基础](../foundations/graph-algorithms/) |
+| **Longest Path in DAG** | DAG 中最长路径 | 拓扑序 + DP | [图算法基础](../foundations/graph-algorithms/) |
+| **Eulerian Cycle Problem** | 图中经过每条边一次的回路 | 欧拉路径理论 | [de Bruijn 图](../assembly/de-bruijn/) |
+| **Hamiltonian Cycle Problem** | 图中经过每个顶点一次的回路 | NP-hard | [测序杂交](../assembly/sequencing-by-hybridization/) |
+| **Shortest Superstring Problem** | 包含所有输入字符串的最短超串 | Overlap 图 | [最短超串](../assembly/shortest-superstring/) |
+| **Sequencing by Hybridization (SBH)** | 从杂交数据重构序列 | de Bruijn 图 | [测序杂交](../assembly/sequencing-by-hybridization/) |
 | **Peptide Sequencing Problem** | 从质谱数据推导肽段序列 | 谱图 | [蛋白质组学](../proteomics/) |
 | **Spectral Alignment** | 实验谱与理论谱的对齐 | 谱图比对 | [蛋白质组学](../proteomics/) |
 
@@ -100,13 +100,13 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [层次聚类](../phylogeny/hierarchical-clustering.mdx) |
-| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [k-Means](../phylogeny/k-means-bioinformatics.mdx) |
+| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [层次聚类](../phylogeny/hierarchical-clustering/) |
+| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [k-Means](../phylogeny/k-means-bioinformatics/) |
 | **Corrupted Cliques** | 在噪声中寻找紧密子图 | 启发式搜索 | - |
-| **Distance-Based Phylogeny** | 从距离矩阵构建进化树 | 邻接法、UPGMA | [邻接法](../phylogeny/neighbor-joining.mdx), [UPGMA](../phylogeny/upgma.mdx) |
-| **Additive Phylogeny** | 从可加矩阵构建树 | 递归降维 | [可加性系统发育](../phylogeny/additive-phylogeny.mdx) |
-| **Small Parsimony Problem** | 给定树结构，求最节俭标签 | Fitch、Sankoff 算法 | [简约法](../phylogeny/parsimony.mdx) |
-| **Large Parsimony Problem** | 同时优化树结构和标签 | NP-hard，启发式 | [简约法](../phylogeny/parsimony.mdx) |
+| **Distance-Based Phylogeny** | 从距离矩阵构建进化树 | 邻接法、UPGMA | [邻接法](../phylogeny/neighbor-joining/), [UPGMA](../phylogeny/upgma/) |
+| **Additive Phylogeny** | 从可加矩阵构建树 | 递归降维 | [可加性系统发育](../phylogeny/additive-phylogeny/) |
+| **Small Parsimony Problem** | 给定树结构，求最节俭标签 | Fitch、Sankoff 算法 | [简约法](../phylogeny/parsimony/) |
+| **Large Parsimony Problem** | 同时优化树结构和标签 | NP-hard，启发式 | [简约法](../phylogeny/parsimony/) |
 
 **关键概念**：
 - **可加矩阵**（Additive Matrix）：满足四点条件的距离矩阵
@@ -118,12 +118,12 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Decoding Problem** | HMM 最可能状态序列 | Viterbi 算法 | [Viterbi 算法](../models/viterbi-forward-backward.mdx) |
-| **Evaluation Problem** | 序列在 HMM 下的概率 | Forward 算法 | [Forward-Backward](../models/viterbi-forward-backward.mdx) |
-| **HMM Parameter Estimation** | 估计 HMM 参数 | Baum-Welch (EM) | [EM 算法](../models/em-algorithm.mdx) |
-| **Profile HMM Alignment** | 用 Profile HMM 比对序列 | Viterbi / Forward | [Profile HMM](../models/profile-hmm.mdx) |
-| **Gene Prediction** | 识别基因结构 | 结合 HMM 与 DP | [基因预测](../models/gene-prediction.mdx) |
-| **CG-Island Detection** | 识别高 CG 含量区域 | HMM（Fair Bet Casino） | [HMM 基础](../models/hmm.mdx) |
+| **Decoding Problem** | HMM 最可能状态序列 | Viterbi 算法 | [Viterbi 算法](../models/viterbi-forward-backward/) |
+| **Evaluation Problem** | 序列在 HMM 下的概率 | Forward 算法 | [Forward-Backward](../models/viterbi-forward-backward/) |
+| **HMM Parameter Estimation** | 估计 HMM 参数 | Baum-Welch (EM) | [EM 算法](../models/em-algorithm/) |
+| **Profile HMM Alignment** | 用 Profile HMM 比对序列 | Viterbi / Forward | [Profile HMM](../models/profile-hmm/) |
+| **Gene Prediction** | 识别基因结构 | 结合 HMM 与 DP | [基因预测](../models/gene-prediction/) |
+| **CG-Island Detection** | 识别高 CG 含量区域 | HMM（Fair Bet Casino） | [HMM 基础](../models/hmm/) |
 
 **关键概念**：
 - **Viterbi**：DP 求解 HMM 最可能路径
@@ -136,10 +136,10 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Exact Pattern Matching** | 精确字符串匹配 | KMP、Boyer-Moore、Rabin-Karp | [精确匹配](../sequence/exact-string-matching.mdx) |
-| **Multiple Pattern Matching** | 多模式同时匹配 | Aho-Corasick、后缀树 | [多模式匹配](../sequence/trie-and-multi-pattern-matching.mdx) |
+| **Exact Pattern Matching** | 精确字符串匹配 | KMP、Boyer-Moore、Rabin-Karp | [精确匹配](../sequence/exact-string-matching/) |
+| **Multiple Pattern Matching** | 多模式同时匹配 | Aho-Corasick、后缀树 | [多模式匹配](../sequence/trie-and-multi-pattern-matching/) |
 | **Approximate Pattern Matching** | 允许错误的匹配 | DP、索引过滤 | [近似模式匹配](../alignment/) |
-| **Suffix Tree Construction** | 构建后缀树 | Ukkonen 算法 | [后缀树](../sequence/suffix-tree.mdx) |
+| **Suffix Tree Construction** | 构建后缀树 | Ukkonen 算法 | [后缀树](../sequence/suffix-tree/) |
 | **Tandem Repeat Finding** | 发现串联重复 | 后缀树、过滤 | - |
 | **Repeat Finding** | 发现序列重复 | 散列表、后缀结构 | - |
 
@@ -153,10 +153,10 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Gibbs Sampling for Motif** | 随机采样找 Motif | Gibbs 采样 | [随机化算法](../foundations/randomized-algorithms.mdx) |
-| **Random Projections** | 随机投影降维搜索 | 局部敏感哈希 | [随机化算法](../foundations/randomized-algorithms.mdx) |
-| **Randomized QuickSort** | 随机 pivot 快速排序 | 随机化 | [随机化算法](../foundations/randomized-algorithms.mdx) |
-| **Approximation for Reversal** | 反转排序近似算法 | 断点近似 | [近似算法](../foundations/approximation-algorithms.mdx) |
+| **Gibbs Sampling for Motif** | 随机采样找 Motif | Gibbs 采样 | [随机化算法](../foundations/randomized-algorithms/) |
+| **Random Projections** | 随机投影降维搜索 | 局部敏感哈希 | [随机化算法](../foundations/randomized-algorithms/) |
+| **Randomized QuickSort** | 随机 pivot 快速排序 | 随机化 | [随机化算法](../foundations/randomized-algorithms/) |
+| **Approximation for Reversal** | 反转排序近似算法 | 断点近似 | [近似算法](../foundations/approximation-algorithms/) |
 
 ---
 

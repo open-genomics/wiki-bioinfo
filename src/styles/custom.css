@@ -1,791 +1,198 @@
-/* ===== BioInfo Wiki Custom Styles for Starlight ===== */
-
-/* --- Optimized Font Loading: System fonts first for performance ---
- * 
- * DEPLOYMENT OPTIMIZATION: 
- * - System fonts: 0MB download, instant render
- * - Local fonts: 23MB download, progressive enhancement
- * 
- * To use local fonts, set USE_LOCAL_FONTS=1 in build environment
- */
-
-@font-face {
-  font-family: 'BioInfo Sans';
-  src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range:
-    U+0000-00FF,
-    U+0100-024F,
-    U+0259,
-    U+1E00-1EFF,
-    U+2000-206F,
-    U+20A0-20CF,
-    U+2100-214F,
-    U+2190-22FF,
-    U+2460-24FF,
-    U+25A0-27BF;
-}
-
-@font-face {
-  font-family: 'BioInfo Sans';
-  src: url('/wiki-bioinfo/fonts/ResourceHanRoundedCN-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-  unicode-range:
-    U+2E80-2EFF,
-    U+2F00-2FDF,
-    U+3000-303F,
-    U+3040-30FF,
-    U+3100-312F,
-    U+31A0-31BF,
-    U+3400-4DBF,
-    U+4E00-9FFF,
-    U+F900-FAFF,
-    U+FF00-FFEF;
-}
-
-@font-face {
-  font-family: 'Code New Roman';
-  src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.otf') format('opentype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
-  font-family: 'Resource Han Rounded CN';
-  src: url('/wiki-bioinfo/fonts/ResourceHanRoundedCN-Regular.ttf') format('truetype');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* --- Design Tokens --- */
-/* Dark mode (default) — deep charcoal with indigo accent */
 :root {
-  --sl-color-accent-low: #1e1b4b;
-  --sl-color-accent: #818cf8;
-  --sl-color-accent-high: #c7d2fe;
-  --sl-color-white: #f1f5f9;
-  --sl-color-gray-1: #e2e8f0;
-  --sl-color-gray-2: #94a3b8;
-  --sl-color-gray-3: #64748b;
-  --sl-color-gray-4: #475569;
-  --sl-color-gray-5: #1e293b;
-  --sl-color-gray-6: #0f172a;
-  --sl-color-black: #020617;
-
-  --bioinfo-card-radius: 12px;
-  --bioinfo-card-border: rgba(148, 163, 184, 0.08);
-  --bioinfo-card-bg: rgba(15, 23, 42, 0.6);
-  --bioinfo-card-glass: saturate(180%) blur(16px);
-  --bioinfo-card-shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(148, 163, 184, 0.04);
-  --bioinfo-card-shadow-hover: 0 8px 24px -4px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(129, 140, 248, 0.15);
-  --bioinfo-transition: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-  --sl-font-system: 'BioInfo Sans', 'Resource Han Rounded CN', 'Code New Roman', 'Inter Variable', 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans SC', sans-serif;
-  --sl-font-system-mono: 'Code New Roman', 'Resource Han Rounded CN', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --sl-font-mono: 'Code New Roman', 'Resource Han Rounded CN', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
-  --sl-text-lg: 1.05rem;
-  --sl-line-height: 1.8;
-  --sl-line-height-headings: 1.3;
-
-  --bioinfo-selection-bg: rgba(129, 140, 248, 0.25);
-  --bioinfo-selection-text: #f1f5f9;
-  --bioinfo-accent-gradient: linear-gradient(135deg, #818cf8, #a78bfa);
-}
-
-/* Light mode — clean white with slate + deeper indigo accent */
-:root[data-theme='light'] {
   --sl-color-accent-low: #eef2ff;
   --sl-color-accent: #4f46e5;
   --sl-color-accent-high: #312e81;
-  --sl-color-white: #0f172a;
-  --sl-color-gray-1: #1e293b;
-  --sl-color-gray-2: #334155;
-  --sl-color-gray-3: #64748b;
-  --sl-color-gray-4: #94a3b8;
-  --sl-color-gray-5: #e2e8f0;
-  --sl-color-gray-6: #f8fafc;
-  --sl-color-black: #ffffff;
-
-  --bioinfo-card-border: rgba(0, 0, 0, 0.06);
-  --bioinfo-card-bg: rgba(255, 255, 255, 0.85);
-  --bioinfo-card-shadow: 0 1px 3px rgba(0, 0, 0, 0.04), 0 0 0 1px rgba(0, 0, 0, 0.03);
-  --bioinfo-card-shadow-hover: 0 8px 20px -4px rgba(0, 0, 0, 0.08), 0 0 0 1px rgba(79, 70, 229, 0.12);
-
-  --bioinfo-selection-bg: rgba(79, 70, 229, 0.15);
-  --bioinfo-selection-text: #0f172a;
-  --bioinfo-accent-gradient: linear-gradient(135deg, #4f46e5, #7c3aed);
+  --bioinfo-card-border: rgba(15, 23, 42, 0.08);
+  --bioinfo-card-bg: rgba(255, 255, 255, 0.88);
+  --bioinfo-card-shadow: 0 12px 30px -24px rgba(15, 23, 42, 0.4);
+  --bioinfo-radius: 14px;
 }
 
-/* --- Text Selection --- */
-::selection {
-  background: var(--bioinfo-selection-bg);
-  color: var(--bioinfo-selection-text);
-}
-
-/* --- Base Animations --- */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(6px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+:root[data-theme='dark'] {
+  --sl-color-accent-low: #1e1b4b;
+  --sl-color-accent: #a5b4fc;
+  --sl-color-accent-high: #e0e7ff;
+  --bioinfo-card-border: rgba(148, 163, 184, 0.12);
+  --bioinfo-card-bg: rgba(15, 23, 42, 0.72);
+  --bioinfo-card-shadow: 0 18px 42px -28px rgba(2, 6, 23, 0.8);
 }
 
 .sl-markdown-content {
-  animation: fadeIn 0.4s ease-out;
-}
-
-/* --- Reading Progress Bar --- */
-.reading-progress {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 0%;
-  height: 2px;
-  background: var(--bioinfo-accent-gradient);
-  z-index: 10000;
-  transition: width 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-/* --- Global Typography & Content Polish --- */
-.sl-markdown-content {
-  font-size: var(--sl-text-lg);
-  color: var(--sl-color-gray-2);
+  font-size: 1.02rem;
+  line-height: 1.8;
 }
 
 .sl-markdown-content h2 {
-  margin-top: 3rem;
-  padding-bottom: 0.4rem;
-  border-bottom: 1px solid var(--sl-color-gray-5);
-  font-weight: 700;
-  letter-spacing: -0.02em;
-  color: var(--sl-color-white);
-}
-
-.sl-markdown-content h3 {
-  margin-top: 2rem;
-  font-weight: 650;
-  color: var(--sl-color-white);
-}
-
-.sl-markdown-content h4 {
-  margin-top: 1.5rem;
-  font-weight: 600;
-  color: var(--sl-color-gray-1);
+  margin-top: 2.8rem;
+  padding-bottom: 0.35rem;
+  border-bottom: 1px solid var(--sl-color-hairline-light);
 }
 
 .sl-markdown-content blockquote {
-  border-left: 3px solid var(--sl-color-accent);
+  border-inline-start: 3px solid var(--sl-color-accent);
   background: var(--sl-color-accent-low);
-  border-radius: 0 var(--bioinfo-card-radius) var(--bioinfo-card-radius) 0;
-  padding: 0.875rem 1.25rem;
-  font-style: italic;
-  color: var(--sl-color-gray-2);
+  border-radius: 0 var(--bioinfo-radius) var(--bioinfo-radius) 0;
+  padding: 0.9rem 1.1rem;
 }
 
-/* --- Inline Code --- */
-.sl-markdown-content :not(pre)>code {
-  background: var(--sl-color-gray-5);
-  padding: 0.15em 0.4em;
-  border-radius: 4px;
-  font-size: 0.9em;
+.sl-markdown-content :not(pre) > code {
+  border-radius: 0.35rem;
+  padding: 0.15rem 0.35rem;
 }
 
-/* --- Table Enhancement --- */
 .sl-markdown-content table {
-  border-collapse: collapse;
   width: 100%;
 }
 
-.sl-markdown-content th {
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent);
-  font-weight: 700;
-  font-size: 0.85rem;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.sl-link-card,
+.header-meta-card,
+.summary-card,
+.section-nav-card,
+.workflow-card,
+.related-card,
+.note-card,
+.definition-card,
+.table-wrapper {
+  border: 1px solid var(--bioinfo-card-border);
+  border-radius: var(--bioinfo-radius);
+  background: var(--bioinfo-card-bg);
+  box-shadow: var(--bioinfo-card-shadow);
 }
 
-.sl-markdown-content th,
-.sl-markdown-content td {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--sl-color-gray-5);
-}
-
-.sl-markdown-content tbody tr:hover {
-  background: rgba(129, 140, 248, 0.04);
-}
-
-:root[data-theme='light'] .sl-markdown-content tbody tr:hover {
-  background: rgba(79, 70, 229, 0.03);
-}
-
-/* --- Scrollbar --- */
-* {
-  scrollbar-width: thin;
-  scrollbar-color: var(--sl-color-gray-4) transparent;
-}
-
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--sl-color-gray-4);
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--sl-color-gray-3);
-}
-
-/* --- Hero Section Enhancement --- */
-.hero {
-  padding-block: 4rem;
-  position: relative;
-  overflow: visible;
-}
-
-.hero-bg-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: radial-gradient(ellipse at 50% 0%, rgba(129, 140, 248, 0.06) 0%, transparent 60%);
-  pointer-events: none;
-  z-index: -1;
-}
-
-.hero::before {
-  content: '';
-  position: absolute;
-  top: -15%;
-  right: -10%;
-  width: 50%;
-  height: 70%;
-  background: radial-gradient(circle, rgba(129, 140, 248, 0.08) 0%, transparent 60%);
-  z-index: -1;
-  filter: blur(80px);
-}
-
-.hero::after {
-  content: '';
-  position: absolute;
-  bottom: -20%;
-  left: -10%;
-  width: 40%;
-  height: 50%;
-  background: radial-gradient(circle, rgba(167, 139, 250, 0.06) 0%, transparent 60%);
-  z-index: -1;
-  filter: blur(80px);
-}
-
-.hero .tagline {
-  max-width: 48ch;
-  font-size: 1.2rem;
-  line-height: 1.65;
-  opacity: 0.85;
-}
-
-/* --- Sidebar Polish --- */
-nav.sidebar {
-  border-inline-end: 1px solid var(--sl-color-gray-5);
-}
-
-nav.sidebar .top-level>li>details>summary {
-  font-weight: 650;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  font-size: 0.8rem;
-  color: var(--sl-color-gray-3);
-  padding-block: 0.35rem;
-}
-
-nav.sidebar a {
-  border-radius: 6px;
-  padding: 0.3rem 0.65rem;
-  transition: background var(--bioinfo-transition), color var(--bioinfo-transition);
-}
-
-nav.sidebar a:hover {
-  background: var(--sl-color-gray-5);
-}
-
-nav.sidebar a[aria-current='page'] {
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent);
-  font-weight: 600;
-  border-inline-start: 2px solid var(--sl-color-accent);
-}
-
-/* --- Component: PageHeaderMeta --- */
-.header-meta-grid {
+.header-meta-grid,
+.section-nav-grid,
+.related-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  align-items: stretch;
+  gap: 1rem;
   margin: 2rem 0;
 }
 
-.header-meta-card {
+.header-meta-card,
+.section-nav-card,
+.related-card {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  height: 100%;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
+  gap: 0.8rem;
+  padding: 1.2rem;
+}
+
+.summary-card,
+.note-card {
+  margin: 2rem 0;
   padding: 1.25rem;
-  transition: transform var(--bioinfo-transition), box-shadow var(--bioinfo-transition);
 }
 
-.header-meta-card:hover {
-  transform: translateY(-1px);
-  box-shadow: var(--bioinfo-card-shadow-hover);
-  border-color: rgba(129, 140, 248, 0.15);
+.section-nav-card,
+.related-card {
+  color: inherit;
+  text-decoration: none;
 }
 
+.section-nav-card:hover,
+.related-card:hover,
+.sl-link-card:hover {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 30%, transparent);
+}
+
+.section-nav-card h3,
+.related-card h3,
+.workflow-content h3,
+.definition-card dt {
+  margin: 0;
+}
+
+.section-nav-topline,
+.related-header {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.summary-card strong,
+.note-card strong {
+  display: block;
+  margin-bottom: 0.75rem;
+}
+
+.workflow-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.workflow-card {
+  display: grid;
+  grid-template-columns: 3rem minmax(0, 1fr);
+  gap: 1rem;
+  padding: 1.25rem;
+}
+
+.step-index {
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3rem;
+  border-radius: 999px;
+  background: var(--sl-color-accent-low);
+  color: var(--sl-color-accent);
+  font-weight: 700;
+}
+
+.workflow-description,
+.workflow-hint,
+.section-nav-card p,
+.related-card p,
+.header-meta-card .meta-detail,
+.definition-card dd,
+.note-card li {
+  color: var(--sl-color-text-accent);
+}
+
+.pitfalls-card {
+  border-color: rgba(220, 38, 38, 0.18);
+}
+
+.tool-mapping-card {
+  border-color: color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
+}
+
+.definition-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.definition-card {
+  padding: 1.2rem;
+}
+
+.definition-card dd {
+  margin: 0.6rem 0 0;
+}
+
+.card-badge,
+.section-meta,
+.related-label,
 .header-meta-card .meta-label {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  gap: 0.4rem;
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.65rem;
   border-radius: 999px;
   background: var(--sl-color-accent-low);
   color: var(--sl-color-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
+  font-size: 0.78rem;
+  font-weight: 600;
 }
 
-.header-meta-card strong {
-  display: block;
-  color: var(--sl-color-white);
-  font-size: 1.1rem;
-  line-height: 1.4;
-  text-wrap: pretty;
-}
-
-.header-meta-card .meta-detail {
-  margin: 0;
-  flex: 1;
-  color: var(--sl-color-gray-3);
-  font-size: 0.95rem;
-  line-height: 1.6;
-}
-
-/* --- Component: SummaryBox --- */
-.summary-card {
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background:
-    linear-gradient(135deg, var(--sl-color-accent-low) 0%, transparent 60%),
-    var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  margin: 2rem 0;
-  padding: 1.5rem;
-}
-
-.summary-card strong {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  font-size: 1.2rem;
-  margin-bottom: 1rem;
-  color: var(--sl-color-accent);
-}
-
-.summary-card> :not(strong) {
-  margin-top: 1rem;
-}
-
-.summary-card> :not(strong):first-child {
-  margin-top: 0;
-}
-
-.summary-card p,
-.summary-card ul,
-.summary-card ol {
-  margin-bottom: 0;
-}
-
-/* --- Component: SectionNavigator --- */
-.section-nav-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 2.5rem 0;
-}
-
-.section-nav-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  color: inherit;
-  text-decoration: none;
-  transition: all var(--bioinfo-transition);
-}
-
-.section-nav-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(129, 140, 248, 0.3);
-  box-shadow: var(--bioinfo-card-shadow-hover);
-}
-
-.section-nav-card:focus-visible {
-  outline: 2px solid var(--sl-color-accent);
-  outline-offset: 2px;
-}
-
-.section-nav-card h3 {
-  margin: 0 !important;
-  font-size: 1.2rem;
-  font-weight: 700;
-}
-
-.section-nav-card p {
-  margin: 0;
-  color: var(--sl-color-gray-3);
-  font-size: 0.95rem;
-  line-height: 1.6;
-  flex-grow: 1;
-}
-
-.section-nav-card .primary-action {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  margin-top: 0.5rem;
-  font-weight: 700;
-  font-size: 0.9rem;
-  color: var(--sl-color-accent);
-}
-
-.section-nav-card .primary-action :global(svg) {
-  transition: transform 0.2s ease;
-}
-
-.section-nav-card:hover .primary-action :global(svg) {
-  transform: translateX(4px);
-}
-
-.section-nav-topline {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-}
-
-/* --- Workflow Steps Enhancement --- */
-.workflow-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 2.5rem 0;
-}
-
-.workflow-card {
-  position: relative;
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr);
-  gap: 1.25rem;
-  padding: 1.5rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-}
-
-.workflow-card::before {
-  content: '';
-  position: absolute;
-  left: 28px;
-  top: 70px;
-  bottom: -30px;
-  width: 2px;
-  background: var(--sl-color-accent-low);
-  z-index: 0;
-}
-
-.workflow-card:last-child::before {
-  display: none;
-}
-
-.step-index {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  width: 56px;
-  height: 56px;
-  border-radius: 18px;
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent);
-  font-size: 1.1rem;
-  font-weight: 800;
-  box-shadow: 0 0 0 6px var(--sl-color-black);
-}
-
-.step-number {
-  position: absolute;
-  font-size: 0.7rem;
-  bottom: 4px;
-  right: 8px;
-  opacity: 0.8;
-}
-
-.workflow-content h3 {
-  margin: 0 0 0.5rem 0 !important;
-  font-size: 1.1rem;
-}
-
-.workflow-description {
-  color: var(--sl-color-gray-3);
-  line-height: 1.6;
-}
-
-.workflow-hint {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 1px dashed var(--bioinfo-card-border);
-  color: var(--sl-color-gray-4);
-  font-size: 0.85rem;
-  font-weight: 500;
-}
-
-/* --- Component: RelatedLinks --- */
-.related-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 1.25rem;
-  margin: 2.5rem 0;
-}
-
-.related-card {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-  padding: 1.5rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  color: inherit;
-  text-decoration: none;
-  transition: all var(--bioinfo-transition);
-}
-
-.related-card:hover {
-  transform: translateY(-3px);
-  border-color: rgba(129, 140, 248, 0.3);
-  box-shadow: var(--bioinfo-card-shadow-hover);
-}
-
-.related-card:focus-visible {
-  outline: 2px solid var(--sl-color-accent);
-  outline-offset: 2px;
-}
-
-.related-card h3 {
-  margin: 0 !important;
-  font-size: 1.1rem;
-  font-weight: 700;
-}
-
-.related-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 0.5rem;
-}
-
-.related-card p {
-  margin: 0;
-  color: var(--sl-color-gray-3);
-  font-size: 0.92rem;
-  line-height: 1.6;
-  flex-grow: 1;
-}
-
-.secondary-action {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-weight: 700;
-  color: var(--sl-color-gray-3);
-  font-size: 0.9rem;
-}
-
-/* --- Component: Mermaid Diagram --- */
-.mermaid-diagram {
-  margin: 1.5rem 0;
-  padding: 1rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  overflow-x: auto;
-}
-
-.mermaid-diagram svg {
-  display: block;
-  width: 100%;
-  height: auto;
-  min-width: 32rem;
-}
-
-@media screen and (max-width: 50rem) {
-  .mermaid-diagram svg {
-    min-width: 0;
-  }
-}
-
-/* --- Component: NoteCard (Prerequisites, ToolMapping, Pitfalls) --- */
-.note-card {
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  margin: 2rem 0;
-  padding: 1.5rem;
-}
-
-.note-card strong {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 1rem;
-  color: var(--sl-color-white);
-}
-
-.note-card ul {
-  margin: 0;
-  padding-left: 1.25rem;
-}
-
-.note-card li {
-  color: var(--sl-color-gray-3);
-  line-height: 1.6;
-}
-
-.note-card li+li {
-  margin-top: 0.5rem;
-}
-
-.note-card a {
-  color: var(--sl-color-accent);
-  text-decoration: underline;
-  text-underline-offset: 0.2em;
-}
-
-.note-card> :last-child {
-  margin-bottom: 0;
-}
-
-.pitfalls-card {
-  border-color: rgba(239, 68, 68, 0.2);
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.04) 0%, transparent 60%), var(--bioinfo-card-bg);
-}
-
-.pitfalls-card strong {
-  color: #f87171;
-}
-
-:root[data-theme='light'] .pitfalls-card strong {
-  color: #dc2626;
-}
-
-.tool-mapping-card {
-  border-color: rgba(129, 140, 248, 0.2);
-}
-
-/* --- Component: DefinitionList --- */
-.definition-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 1.25rem;
-  margin: 2.5rem 0;
-}
-
-.definition-card {
-  display: grid;
-  grid-row: span 2;
-  grid-template-rows: subgrid;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
-  background: var(--bioinfo-card-bg);
-  backdrop-filter: var(--bioinfo-card-glass);
-  box-shadow: var(--bioinfo-card-shadow);
-  padding: 1.25rem;
-}
-
-.definition-card dt {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  color: var(--sl-color-white);
-  font-weight: 800;
-  margin-bottom: 0.6rem;
-}
-
-.definition-card dd {
-  margin: 0;
-  color: var(--sl-color-gray-3);
-  line-height: 1.6;
-  align-self: start;
-}
-
-/* --- Shared badges / labels --- */
-.card-badge,
-.section-meta,
-.related-label {
-  display: inline-flex;
-  align-items: center;
-  width: fit-content;
-  padding: 0.25rem 0.75rem;
-  border-radius: 999px;
-  background: var(--sl-color-accent-low);
-  color: var(--sl-color-accent);
-  font-size: 0.75rem;
-  font-weight: 700;
-}
-
-/* --- Component: ComparisonTable / DecisionMatrix --- */
 .table-wrapper {
-  margin: 2.5rem 0;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-card-radius);
   overflow: hidden;
-  box-shadow: var(--bioinfo-card-shadow);
+  margin: 2rem 0;
 }
 
 .table-scroll {
@@ -794,121 +201,81 @@ nav.sidebar a[aria-current='page'] {
 
 .comparison-table {
   width: 100%;
-  min-width: 640px;
+  min-width: 40rem;
   border-collapse: collapse;
-  background: var(--bioinfo-card-bg);
-}
-
-.comparison-table thead tr {
-  background: var(--sl-color-accent-low);
-}
-
-.comparison-table th {
-  color: var(--sl-color-accent);
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 0.85rem;
-  letter-spacing: 0.05em;
 }
 
 .comparison-table th,
 .comparison-table td {
-  padding: 1rem 1.25rem;
+  padding: 0.9rem 1rem;
   border: 1px solid var(--bioinfo-card-border);
   text-align: left;
   vertical-align: top;
 }
 
-/* --- Responsive --- */
-@media screen and (max-width: 72rem) {
+.home-intro,
+.home-note,
+.home-cta {
+  max-width: 52rem;
+  margin: 0 auto 2rem;
+}
 
+.home-intro p,
+.home-note p,
+.home-cta p {
+  font-size: 1.05rem;
+}
+
+.home-note {
+  padding: 1rem 1.2rem;
+  border-inline-start: 3px solid var(--sl-color-accent);
+  background: var(--sl-color-accent-low);
+  border-radius: 0 var(--bioinfo-radius) var(--bioinfo-radius) 0;
+}
+
+.home-path-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.home-path-card {
+  padding: 1.2rem;
+  border: 1px solid var(--bioinfo-card-border);
+  border-radius: var(--bioinfo-radius);
+  background: var(--bioinfo-card-bg);
+  box-shadow: var(--bioinfo-card-shadow);
+}
+
+.home-path-card h3 {
+  margin-top: 0;
+}
+
+.home-path-card ol {
+  margin: 0.75rem 0 0;
+}
+
+@media (max-width: 72rem) {
+  .header-meta-grid,
   .section-nav-grid,
   .related-grid,
-  .header-meta-grid {
+  .home-path-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
-@media screen and (max-width: 50rem) {
-
-  .workflow-grid,
-  .related-grid,
-  .section-nav-grid,
+@media (max-width: 50rem) {
   .header-meta-grid,
-  .definition-list {
+  .section-nav-grid,
+  .related-grid,
+  .workflow-grid,
+  .definition-list,
+  .home-path-grid {
     grid-template-columns: 1fr;
   }
 
   .workflow-card {
     grid-template-columns: 1fr;
   }
-
-  .step-index {
-    margin-bottom: 1rem;
-  }
-}
-
-/* --- Smooth Scrolling --- */
-html {
-  scroll-behavior: smooth;
-}
-
-/* --- Anchor offset for fixed header --- */
-:target {
-  scroll-margin-top: 5rem;
-}
-
-/* --- Better link styling in content --- */
-.sl-markdown-content a:not([class]) {
-  color: var(--sl-color-accent);
-  text-decoration: none;
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--bioinfo-transition);
-}
-
-.sl-markdown-content a:not([class]):hover {
-  border-bottom-color: var(--sl-color-accent);
-}
-
-/* --- Starlight Card overrides for homepage --- */
-.sl-link-card {
-  border-radius: var(--bioinfo-card-radius) !important;
-  transition: transform var(--bioinfo-transition), box-shadow var(--bioinfo-transition), border-color var(--bioinfo-transition) !important;
-  background: var(--bioinfo-card-bg) !important;
-  backdrop-filter: var(--bioinfo-card-glass) !important;
-  border: 1px solid var(--bioinfo-card-border) !important;
-}
-
-.sl-link-card:hover {
-  transform: translateY(-2px);
-  border-color: rgba(129, 140, 248, 0.25) !important;
-  box-shadow: var(--bioinfo-card-shadow-hover) !important;
-}
-
-/* --- Focus visible global --- */
-:focus-visible {
-  outline: 2px solid var(--sl-color-accent);
-  outline-offset: 2px;
-}
-
-/* --- HR separator --- */
-.sl-markdown-content hr {
-  border: none;
-  height: 1px;
-  background: var(--sl-color-gray-5);
-  margin: 2.5rem 0;
-}
-
-/* --- List styling refinement --- */
-.sl-markdown-content ul,
-.sl-markdown-content ol {
-  padding-left: 1.5rem;
-}
-
-.sl-markdown-content li+li {
-  margin-top: 0.35rem;
-}
-
-.sl-markdown-content li::marker {
-  color: var(--sl-color-gray-3);
 }

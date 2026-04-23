@@ -45,17 +45,17 @@ RNA-seq 数据分析涉及一系列相互关联的计算问题：
 
 - **索引与比对**：FM-index、后缀数组支持快速 read 定位（见[序列表示与索引](../sequence/)）
 - **概率模型**：EM 算法用于处理 read 多重归属的不确定性（见[隐马尔可夫模型](../models/)）
-- **图算法**：转录本组装可建模为图遍历问题（见[图算法](../foundations/graph-algorithms.mdx)）
+- **图算法**：转录本组装可建模为图遍历问题（见[图算法](../foundations/graph-algorithms/)）
 
 ## 内容组织与学习路径
 
 本节按照数据处理的逻辑流程组织，建议按以下顺序阅读：
 
-1. **[RNA-seq 工作流概览](../workflows/rna-seq.mdx)**：理解从原始数据到生物学结论的完整流程
-2. **[Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification.mdx)**：学习 k-mer 索引与快速定量算法
-3. **[TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm.mdx)**：掌握归一化方法的数学定义与适用场景
-4. **[基因层与转录本层表达定量](./gene-vs-transcript-quant.mdx)**：区分解析层级对下游分析的影响
-5. **[差异表达：从 counts 到统计检验](./differential-expression.mdx)**：理解负二项分布模型与多重检验校正
+1. **[RNA-seq 工作流概览](../workflows/rna-seq/)**：理解从原始数据到生物学结论的完整流程
+2. **[Pseudo-alignment 与表达定量](./pseudo-alignment-and-quantification/)**：学习 k-mer 索引与快速定量算法
+3. **[TPM、FPKM、CPM 与有效长度](./tpm-fpkm-cpm/)**：掌握归一化方法的数学定义与适用场景
+4. **[基因层与转录本层表达定量](./gene-vs-transcript-quant/)**：区分解析层级对下游分析的影响
+5. **[差异表达：从 counts 到统计检验](./differential-expression/)**：理解负二项分布模型与多重检验校正
 
 ## 为什么这些算法问题值得关注
 

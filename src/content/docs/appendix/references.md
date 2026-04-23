@@ -124,7 +124,7 @@ wiki 页面适合建立主线理解，但当你需要进一步确认定义、算
 - 想补算法主线：先看教材（Jones & Pevzner, Durbin 等）；
 - 想确认数据库对象与版本：优先看官方资源（NCBI, Ensembl, UniProt）；
 - 想深入了解某个方法的历史和原理：查看经典论文的原文；
-- 想确认站内页面该如何组织：参考 OI Wiki 与现有 [style guide](../intro/style-guide.md)；
+- 想确认站内页面该如何组织：参考 OI Wiki 与现有 [style guide](../intro/style-guide/)；
 - 想确认站点功能或导航实现：查看 Astro 和 Starlight 文档；
 - 想快速上手某个分析流程：查看 Galaxy 教程或 Bioconductor vignettes。
 
@@ -139,7 +139,7 @@ wiki 页面适合建立主线理解，但当你需要进一步确认定义、算
 
 ## 相关页面
 
-- [写作规范](../intro/style-guide.md)
-- [常用数据库与资源](../databases/common-resources.mdx)
-- [数据库与注释系统一览](../data-references/databases-and-annotations.mdx)
-- [术语表](./glossary.md)
+- [写作规范](../intro/style-guide/)
+- [常用数据库与资源](../databases/common-resources/)
+- [数据库与注释系统一览](../data-references/databases-and-annotations/)
+- [术语表](./glossary/)

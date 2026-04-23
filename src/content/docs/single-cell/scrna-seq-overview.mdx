@@ -166,7 +166,7 @@ scRNA-seq 标准分析流程包含以下关键步骤：
 **常见错误**：
 - 对所有样本使用相同的固定阈值，忽略了样本间的技术差异。应基于数据的分布（如 MAD 规则）设定动态阈值。
 - 过度过滤导致丢失稀有细胞群。稀有细胞通常 UMI 较低，需要结合 marker 基因表达来确认。
-- 忽略 Doublet（双联体）检测。参见 [Doublet 检测](./doublet-detection.mdx)。
+- 忽略 Doublet（双联体）检测。参见 [Doublet 检测](./doublet-detection/)。
 
 ### 6.3 归一化
 
@@ -211,7 +211,7 @@ $$
 **依赖**：高变异基因子矩阵。
 
 **常见错误**：
-- PCA 使用了错误的主成分数量。参见 [聚类与 UMAP](./clustering-and-umap.mdx) 中的详细讨论。
+- PCA 使用了错误的主成分数量。参见 [聚类与 UMAP](./clustering-and-umap/) 中的详细讨论。
 - 直接在原始高维空间进行聚类而非 PCA 降维后。
 - k-NN 图的 $k$ 值选择不当。
 
@@ -258,12 +258,12 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 
 | 分析步骤 | 核心算法 | 对应页面 |
 |---------|---------|---------|
-| Barcode 分配 | 序列比对、白名单过滤 | [细胞 Barcode 与 UMI](./cell-barcode-umi.mdx) |
-| UMI 去重 | 邻域聚类、方向性合并 | [细胞 Barcode 与 UMI](./cell-barcode-umi.mdx) |
-| 降维 | PCA、UMAP | [聚类与 UMAP](./clustering-and-umap.mdx) |
-| 聚类 | Leiden/Louvain 图社区检测 | [聚类与 UMAP](./clustering-and-umap.mdx) |
-| 轨迹推断 | 伪时间、RNA Velocity | [轨迹推断](./trajectory-analysis.mdx) |
-| Doublet 检测 | 人工模拟、k-NN 评分 | [Doublet 检测](./doublet-detection.mdx) |
+| Barcode 分配 | 序列比对、白名单过滤 | [细胞 Barcode 与 UMI](./cell-barcode-umi/) |
+| UMI 去重 | 邻域聚类、方向性合并 | [细胞 Barcode 与 UMI](./cell-barcode-umi/) |
+| 降维 | PCA、UMAP | [聚类与 UMAP](./clustering-and-umap/) |
+| 聚类 | Leiden/Louvain 图社区检测 | [聚类与 UMAP](./clustering-and-umap/) |
+| 轨迹推断 | 伪时间、RNA Velocity | [轨迹推断](./trajectory-analysis/) |
+| Doublet 检测 | 人工模拟、k-NN 评分 | [Doublet 检测](./doublet-detection/) |
 
 ## 9. 注意事项
 
@@ -307,9 +307,9 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 
 完成 scRNA-seq 标准流程后，可以根据研究目标深入以下方向：
 
-- **轨迹推断**：追踪细胞分化的动态过程。参见 [轨迹推断](./trajectory-analysis.mdx)。
+- **轨迹推断**：追踪细胞分化的动态过程。参见 [轨迹推断](./trajectory-analysis/)。
 - **细胞通讯分析**：推断细胞间的配体-受体互作（如 CellChat、NicheNet）。
-- **空间转录组整合**：将 scRNA-seq 数据映射到空间坐标。参见 [空间去卷积](../spatial/deconvolution-and-mapping.md)。
+- **空间转录组整合**：将 scRNA-seq 数据映射到空间坐标。参见 [空间去卷积](../spatial/deconvolution-and-mapping/)。
 - **多组学整合**：scATAC-seq + scRNA-seq 联合分析（如 Signac、ArchR）。
 - **大规模整合分析**：如 Human Cell Atlas、Tabula Muris 等图谱级项目。
 

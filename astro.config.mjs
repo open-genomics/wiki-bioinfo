@@ -13,22 +13,13 @@ export default defineConfig({
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
   },
+
   image: {
     service: {
       entrypoint: 'astro/assets/services/sharp',
     },
   },
-  vite: {
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: {
-            // 数学库已作为外部资源加载，无需打包
-          },
-        },
-      },
-    },
-  },
+
   integrations: [
     starlight({
       title: 'BioInfo Wiki',
@@ -38,10 +29,6 @@ export default defineConfig({
         root: {
           label: '简体中文',
           lang: 'zh-CN',
-        },
-        en: {
-          label: 'English',
-          lang: 'en',
         },
       },
       logo: {
@@ -83,32 +70,6 @@ export default defineConfig({
         },
       ],
       sidebar: [
-        // 英文内容暂不启用（内容尚未完善）
-        // {
-        //   label: 'Introduction',
-        //   translations: {
-        //     'zh-CN': '导论',
-        //   },
-        //   items: [
-        //     { slug: 'en' },
-        //     { slug: 'en/intro' },
-        //     { slug: 'en/intro/about' },
-        //     { slug: 'en/intro/contributing' },
-        //   ]
-        // },
-        // {
-        //   label: 'Core Methods',
-        //   translations: {
-        //     'zh-CN': '核心方法',
-        //   },
-        //   items: [
-        //     { slug: 'en/core-methods' },
-        //     { slug: 'en/sequence' },
-        //     { slug: 'en/alignment' },
-        //     { slug: 'en/assembly' },
-        //     { slug: 'en/models' },
-        //   ]
-        // },
         {
           label: '导论',
           items: [
@@ -484,17 +445,9 @@ export default defineConfig({
       ],
     }),
     sitemap({
-      filter: (page) => !page.includes('/en/'),
       changefreq: 'weekly',
       priority: 0.7,
       lastmod: new Date(),
-      i18n: {
-        defaultLocale: 'zh-CN',
-        locales: {
-          'zh-CN': 'zh-CN',
-          'en': 'en',
-        },
-      },
     }),
   ],
 });

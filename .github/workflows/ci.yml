@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - main
   pull_request:
   workflow_dispatch:
 
@@ -16,8 +15,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  lint:
-    name: Lint & Type Check
+  check:
+    name: Check
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
@@ -28,60 +27,16 @@ jobs:
         with:
           node-version: 22
           cache: npm
-
-      # Restore Astro cache
-      - name: Restore Astro cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            .astro
-            node_modules/.astro
-          key: astro-ci-${{ hashFiles('src/content/docs/**/*.mdx') }}-${{ hashFiles('src/content/docs/**/*.md') }}
-          restore-keys: |
-            astro-ci-
-            astro-build-
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Type check
-        run: npx astro check
+      - name: Run project check
+        run: npm run check
 
-      - name: Check code formatting
-        run: |
-          # Check for trailing whitespace
-          if grep -rn '[[:space:]]$' src/content/docs --include='*.md' --include='*.mdx' | grep -q .; then
-            echo "❌ Found trailing whitespace in files:"
-            grep -rn '[[:space:]]$' src/content/docs --include='*.md' --include='*.mdx' | head -20
-            exit 1
-          fi
-          echo "✅ No trailing whitespace found"
-
-  markdown-lint:
-    name: Markdown Lint
-    runs-on: ubuntu-latest
-    continue-on-error: true
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      - name: Install markdownlint-cli
-        run: npm install -g markdownlint-cli
-
-      - name: Run Markdown Lint
-        run: markdownlint 'src/content/docs/**/*.md' 'src/content/docs/**/*.mdx' --ignore 'src/content/docs/**/node_modules/**' || true
-
-  link-check:
+  links:
     name: Link Check
     runs-on: ubuntu-latest
-    needs: lint
-    continue-on-error: true
     steps:
       - name: Checkout repository
         uses: actions/checkout@v6
@@ -96,59 +51,4 @@ jobs:
         run: npm ci
 
       - name: Check internal links
-        run: bash scripts/checks/check-links.sh
-
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-    needs: lint
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v6
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v6
-        with:
-          node-version: 22
-          cache: npm
-
-      # Restore Astro cache for faster builds
-      - name: Restore Astro cache
-        uses: actions/cache@v5
-        with:
-          path: |
-            .astro
-            node_modules/.astro
-          key: astro-ci-build-${{ hashFiles('src/content/docs/**/*.mdx') }}-${{ hashFiles('src/content/docs/**/*.md') }}
-          restore-keys: |
-            astro-ci-build-
-            astro-build-
-
-      - name: Install dependencies
-        run: npm ci
-
-      - name: Build site
-        run: npm run build
-        env:
-          CI: true
-          # Optimize build for CI (faster, smaller)
-          SKIP_FONT_OPTIMIZATION: 1
-
-      # Show build stats
-      - name: Build stats
-        run: |
-          echo "=== Build Output Stats ==="
-          du -sh dist/
-          echo ""
-          echo "=== Largest files ==="
-          find dist -type f -exec ls -lh {} \; | sort -k5 -rh | head -10
-          echo ""
-          echo "=== File count ==="
-          find dist -type f | wc -l
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v7
-        with:
-          name: dist
-          path: dist
-          retention-days: 1
+        run: npm run check:links

@@ -1,0 +1,13 @@
+{
+  "files.insertFinalNewline": true,
+  "files.trimTrailingWhitespace": true,
+  "files.associations": {
+    "*.mdx": "mdx"
+  },
+  "[markdown]": {
+    "editor.wordWrap": "bounded"
+  },
+  "[mdx]": {
+    "editor.wordWrap": "bounded"
+  }
+}

@@ -1,0 +1,12 @@
+schema: spec-driven
+
+# Project context
+# This is shown to AI when creating artifacts.
+context: |
+  Tech stack: Astro 6.x, Starlight 0.38.x, TypeScript 5.6.x, KaTeX
+  Language: Simplified Chinese (简体中文)
+  Project: BioInfo Wiki - 面向中文社区的生物信息学体系化知识库
+  Domain: Bioinformatics algorithms, workflows, and concepts
+  Key constraint: 维持现有 6 个主入口，不重做顶层信息架构
+  Writing style: 优先解释"是什么、为什么重要"，不堆砌术语
+  Term format: 首次出现使用"中文（English, 缩写）"格式

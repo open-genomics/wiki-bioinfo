@@ -35,6 +35,7 @@ yarn-error.log*
 # AI agent work files
 .kimi/
 .agents/
+.omc/
 
 # BMad Method V6
 _bmad/

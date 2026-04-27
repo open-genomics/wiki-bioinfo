@@ -44,3 +44,10 @@
 - subagent 用于批量审计和高噪音检查
 - 默认不常态化使用 `/fleet`
 - Copilot 回复默认使用中文；项目级规则见 `.github/copilot-instructions.md`
+
+## 7. Closeout Status
+
+- 项目已进入收尾阶段，核心功能稳定
+- 维护原则：closeout-first（收敛优先）
+- 后续维护：低频更新，以内容修正为主
+- BMAD skills 已移除，仅保留 4 个 OpenSpec skills

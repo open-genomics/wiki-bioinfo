@@ -1,0 +1,245 @@
+{
+  "version": "1.0.0",
+  "lastScanned": 1777255245133,
+  "projectRoot": "/home/shane/dev/wiki-bioinfo",
+  "techStack": {
+    "languages": [
+      {
+        "name": "JavaScript/TypeScript",
+        "version": ">=20.0",
+        "confidence": "high",
+        "markers": [
+          "package.json"
+        ]
+      },
+      {
+        "name": "TypeScript",
+        "version": null,
+        "confidence": "high",
+        "markers": [
+          "tsconfig.json"
+        ]
+      }
+    ],
+    "frameworks": [
+      {
+        "name": "astro",
+        "version": "6.1.0",
+        "category": "fullstack"
+      }
+    ],
+    "packageManager": "npm",
+    "runtime": "Node.js 20.0"
+  },
+  "build": {
+    "buildCommand": "npm run build",
+    "testCommand": null,
+    "lintCommand": null,
+    "devCommand": "npm run dev",
+    "scripts": {
+      "dev": "astro dev",
+      "start": "astro dev",
+      "build": "astro build",
+      "preview": "astro preview",
+      "check": "astro check && astro build",
+      "check:links": "bash scripts/checks/check-links.sh",
+      "clean": "rm -rf dist .astro",
+      "astro": "astro"
+    }
+  },
+  "conventions": {
+    "namingStyle": null,
+    "importStyle": "ES modules",
+    "testPattern": null,
+    "fileOrganization": "type-based"
+  },
+  "structure": {
+    "isMonorepo": false,
+    "workspaces": [],
+    "mainDirectories": [
+      "docs",
+      "public",
+      "scripts",
+      "src"
+    ],
+    "gitBranches": {
+      "defaultBranch": "master",
+      "branchingStrategy": null
+    }
+  },
+  "customNotes": [],
+  "directoryMap": {
+    "_bmad": {
+      "path": "_bmad",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777255245107,
+      "keyFiles": []
+    },
+    "_bmad-output": {
+      "path": "_bmad-output",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777255245108,
+      "keyFiles": []
+    },
+    "dist": {
+      "path": "dist",
+      "purpose": "Distribution/build output",
+      "fileCount": 6,
+      "lastAccessed": 1777255245121,
+      "keyFiles": [
+        "404.html",
+        "index.html",
+        "robots.txt",
+        "sitemap-0.xml",
+        "sitemap-index.xml"
+      ]
+    },
+    "docs": {
+      "path": "docs",
+      "purpose": "Documentation",
+      "fileCount": 0,
+      "lastAccessed": 1777255245125,
+      "keyFiles": []
+    },
+    "openspec": {
+      "path": "openspec",
+      "purpose": null,
+      "fileCount": 1,
+      "lastAccessed": 1777255245126,
+      "keyFiles": [
+        "config.yaml"
+      ]
+    },
+    "planning": {
+      "path": "planning",
+      "purpose": null,
+      "fileCount": 0,
+      "lastAccessed": 1777255245126,
+      "keyFiles": []
+    },
+    "public": {
+      "path": "public",
+      "purpose": "Public files",
+      "fileCount": 2,
+      "lastAccessed": 1777255245126,
+      "keyFiles": [
+        "robots.txt"
+      ]
+    },
+    "scripts": {
+      "path": "scripts",
+      "purpose": "Build/utility scripts",
+      "fileCount": 0,
+      "lastAccessed": 1777255245127,
+      "keyFiles": []
+    },
+    "src": {
+      "path": "src",
+      "purpose": "Source code",
+      "fileCount": 1,
+      "lastAccessed": 1777255245127,
+      "keyFiles": [
+        "content.config.ts"
+      ]
+    },
+    "src/assets": {
+      "path": "src/assets",
+      "purpose": "Static assets",
+      "fileCount": 1,
+      "lastAccessed": 1777255245130,
+      "keyFiles": [
+        "bioinfo-logo.svg"
+      ]
+    },
+    "src/components": {
+      "path": "src/components",
+      "purpose": "UI components",
+      "fileCount": 0,
+      "lastAccessed": 1777255245131,
+      "keyFiles": []
+    }
+  },
+  "hotPaths": [
+    {
+      "path": "astro.config.mjs",
+      "accessCount": 1,
+      "lastAccessed": 1777255382169,
+      "type": "file"
+    },
+    {
+      "path": "package.json",
+      "accessCount": 1,
+      "lastAccessed": 1777255382312,
+      "type": "file"
+    },
+    {
+      "path": "openspec/specs/project/spec.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255382369,
+      "type": "file"
+    },
+    {
+      "path": "tsconfig.json",
+      "accessCount": 1,
+      "lastAccessed": 1777255382423,
+      "type": "file"
+    },
+    {
+      "path": "CLAUDE.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255382530,
+      "type": "file"
+    },
+    {
+      "path": "openspec/config.yaml",
+      "accessCount": 1,
+      "lastAccessed": 1777255382633,
+      "type": "file"
+    },
+    {
+      "path": "openspec/specs/workflow/spec.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255393924,
+      "type": "file"
+    },
+    {
+      "path": "openspec/specs/ci-cd/spec.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394048,
+      "type": "file"
+    },
+    {
+      "path": "openspec/changes/project-closeout/tasks.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394209,
+      "type": "file"
+    },
+    {
+      "path": "openspec/changes/project-closeout/proposal.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394350,
+      "type": "file"
+    },
+    {
+      "path": "AGENTS.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394486,
+      "type": "file"
+    },
+    {
+      "path": "openspec/specs/tasks/spec.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394587,
+      "type": "file"
+    },
+    {
+      "path": "openspec/specs/components/spec.md",
+      "accessCount": 1,
+      "lastAccessed": 1777255394699,
+      "type": "file"
+    }
+  ],
+  "userDirectives": []
+}

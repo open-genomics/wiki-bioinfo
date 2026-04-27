@@ -1,7 +1,0 @@
-{
-  "tool_name": "Bash",
-  "tool_input_preview": "{\"command\":\"npm install && git add package-lock.json package.json && git rebase --continue\",\"description\":\"重新安装依赖并解决冲突\"}",
-  "error": "Exit code 1\n\nremoved 9 packages, changed 6 packages, and audited 440 packages in 5s\n\n207 packages are looking for funding\n  run `npm fund` for details\n\n5 moderate severity vulnerabilities\n\nTo address all issues, run:\n  npm audit fix\n\nRun `npm audit` for details.\nYou must edit all merge conflicts and then\nmark them as resolved using git add",
-  "timestamp": "2026-04-27T11:08:30.546Z",
-  "retry_count": 3
-}

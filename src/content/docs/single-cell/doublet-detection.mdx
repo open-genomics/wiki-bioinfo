@@ -88,14 +88,14 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 **处理决策**：从表达矩阵中剔除该细胞，重新运行聚类。如果剔除后 T 细胞和 B 细胞簇之间的"桥梁"细胞消失，进一步验证了判断。
 
-## 4. 实践中的综合判定
+## 5. 实践中的综合判定
 
 单靠算法评分往往存在假阳性，通常需要结合以下证据：
 - **UMI 计数**：是否显著高于该类型细胞的平均水平？
 - **标记基因**：是否出现了生物学上互斥的标记（如 *CD3E* 与 *CD19* 同时高表达）？
 - **聚类位置**：是否位于两个原本界限清晰的 cluster 之间？
 
-## 5. 何时 Doublet 率更高
+## 6. 何时 Doublet 率更高
 
 以下实验条件会显著增加 Doublet 发生率：
 
@@ -146,7 +146,7 @@ Doublet 的转录组是两种细胞类型的混合物，其基因表达谱不代
   ]}
 />
 
-## 7. 参考资料
+## 8. 参考资料
 
 - Wolock et al., *Scrublet: Computational Identification of Cell Doublets in Single-Cell Transcriptomic Data* (Cell Systems, 2019)
 - McGinnis et al., *DoubletFinder: Doublet Detection in Single-Cell RNA Sequencing Data Using Artificial Nearest Neighbors* (Cell Systems, 2019)

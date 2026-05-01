@@ -37,7 +37,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 这一现象可以通过**维度灾难（Curse of Dimensionality）**的数学直觉来理解。对于均匀分布在 $d$ 维单位超立方体中的 $n$ 个点，最远点与最近点的距离之比为：
 
 $$
-\frac{d_{\max}}{d_{\min}} \to 1 \quad \text{当 } d \to \infty
+\frac{d_{\max}}{d_{\min}} \to 1 \quad \text{as } d \to \infty
 $$
 
 这意味着在高维空间中，所有点对之间的距离几乎相同，基于距离的度量方法（如 k-NN）将失去区分能力。

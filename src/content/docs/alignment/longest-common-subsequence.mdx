@@ -97,11 +97,16 @@ s[i][j] = max   { s[i][j-1]                  (插入 wj)
 
 $$
 s[i,j] = \max \begin{cases}
-s[i-1, j] & \text{（vi 不在 LCS 中）} \\
-s[i, j-1] & \text{（wj 不在 LCS 中）} \\
-s[i-1, j-1] + 1 & \text{（如果 } v_i = w_j \text{）}
+s[i-1, j] & \text{if } v_i \notin \text{LCS} \\
+s[i, j-1] & \text{if } w_j \notin \text{LCS} \\
+s[i-1, j-1] + 1 & \text{if } v_i = w_j
 \end{cases}
 $$
+
+其中：
+- 第一项表示 $v_i$ 不在 LCS 中
+- 第二项表示 $w_j$ 不在 LCS 中
+- 第三项表示 $v_i$ 和 $w_j$ 匹配
 
 ### 边界条件
 

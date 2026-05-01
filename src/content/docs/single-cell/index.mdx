@@ -181,7 +181,7 @@ scRNA-seq 可以捕捉发育过程中的连续状态：
 **流程链路**：
 
 $$
-\text{FASTQ} \xrightarrow{\text{比对}} \text{BAM} \xrightarrow{\text{定量}} \text{Counts} \xrightarrow{\text{QC}} \text{Filtered Matrix}$$
+\text{FASTQ} \xrightarrow{\text{alignment}} \text{BAM} \xrightarrow{\text{quantification}} \text{Counts} \xrightarrow{\text{QC}} \text{Filtered Matrix}$$
 
 关键步骤：
 1. **Read 比对**：STARsolo、Cell Ranger 将 reads 比对到参考基因组

@@ -22,10 +22,10 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PrerequisitesBox
-  links={[
-    { title: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' },
-    { title: 'Boyer-Moore 算法', href: '/wiki-bioinfo/sequence/boyer-moore-algorithm' },
-    { title: '哈希表', href: '/wiki-bioinfo/sequence/hash-tables' },
+  items={[
+    { name: '精确字符串匹配', href: '/wiki-bioinfo/sequence/exact-string-matching' },
+    { name: 'Boyer-Moore 算法', href: '/wiki-bioinfo/sequence/boyer-moore-algorithm' },
+    { name: '哈希表', href: '/wiki-bioinfo/sequence/hash-tables' },
   ]}
 />
 
@@ -123,7 +123,7 @@ KMP的关键观察是：当在位置 `i` 失配时，我们已经知道 `T[i-j:i
 对于模式串 `P = p_0p_1...p_{m-1}`，定义 `π[i]` 为：
 
 $$
-\pi[i] = \max\\{k < i \mid P[0:k] = P[i-k:i]\\}
+\pi[i] = \max\{k < i \mid P[0:k] = P[i-k:i]\}
 $$
 
 即：`P[0:i]` 的最长真前缀同时也是该前缀后缀的长度。

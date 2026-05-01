@@ -88,15 +88,15 @@ $$
 cell2location 使用以下生成过程：
 
 $$
-w_{k,s} \sim \text{Gamma}(\alpha_k, \beta_k) \quad \text{(细胞类型先验)}
+w_{k,s} \sim \text{Gamma}(\alpha_k, \beta_k) \quad \text{(cell type prior)}
 $$
 
 $$
-\lambda_{g,s} = \sum_{k} w_{k,s} \cdot \mu_{g,k} \cdot \gamma_s \quad \text{(期望表达)}
+\lambda_{g,s} = \sum_{k} w_{k,s} \cdot \mu_{g,k} \cdot \gamma_s \quad \text{(expected expression)}
 $$
 
 $$
-y_{g,s} \sim \text{Poisson}(\lambda_{g,s}) \quad \text{(观测似然)}
+y_{g,s} \sim \text{Poisson}(\lambda_{g,s}) \quad \text{(observation likelihood)}
 $$
 
 其中 $\gamma_s$ 是 spot 特异的总 mRNA 丰度（反映细胞密度差异）。

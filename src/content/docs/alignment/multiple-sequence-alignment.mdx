@@ -102,7 +102,7 @@ $$\text{SP}(A) = \sum_{1 \leq i < j \leq k} \text{Score}(A_i, A_j)$$
 
 **Profile**（也称 Position-Specific Scoring Matrix, PSSM）记录了对齐列中每个字符出现的频率分布。给定一个包含 $k$ 条已比对序列的 Profile，其在第 $j$ 列的频率向量为：
 
-$$f_j(a) = \frac{\text{字符 } a \text{ 在第 } j \text{ 列出现的次数}}{k}, \quad a \in \Sigma$$
+$$f_j(a) = \frac{\text{count of } a \text{ in column } j}{k}, \quad a \in \Sigma$$
 
 将序列对 Profile 或 Profile 对 Profile 的比对，在算法上可以简化为类似于双序列比对的复杂度：
 

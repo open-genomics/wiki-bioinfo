@@ -105,13 +105,13 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 与标准序列比对相同：
 
-$$S(i, j, B) = \max \begin{cases} S(i-1, j, B) - \sigma & \text{删除} \\ S(i, j-1, B) - \sigma & \text{插入} \\ S(i-1, j-1, B) + \delta(g_i, t_j) & \text{匹配/错配} \end{cases}$$
+$$S(i, j, B) = \max \begin{cases} S(i-1, j, B) - \sigma & \text{deletion} \\ S(i, j-1, B) - \sigma & \text{insertion} \\ S(i-1, j-1, B) + \delta(g_i, t_j) & \text{match/mismatch} \end{cases}$$
 
 **情况 2**：$i$ 是外显子 $B$ 的起始位置
 
 需要考虑从前一个外显子 $B_{pre}$ 转移：
 
-$$S(i, j, B) = \max \begin{cases} S(i, j-1, B) - \sigma & \text{在 B 开始处插入} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j-1, B_{pre}) + \delta(g_i, t_j) & \text{从 B_pre 转移并匹配} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j, B_{pre}) - \sigma & \text{从 B_pre 转移并删除} \end{cases}$$
+$$S(i, j, B) = \max \begin{cases} S(i, j-1, B) - \sigma & \text{insertion at B start} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j-1, B_{pre}) + \delta(g_i, t_j) & \text{transfer from } B_{pre} \text{ and match} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j, B_{pre}) - \sigma & \text{transfer from } B_{pre} \text{ and delete} \end{cases}$$
 
 ### 初始化与终止
 

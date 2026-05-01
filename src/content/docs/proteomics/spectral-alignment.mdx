@@ -124,9 +124,11 @@ $$a_i - a_{i'} = b_j - b_{j'}$$
 
 **递推公式**：
 
-$$D_{i,j}(k) = \max \begin{cases} D_{\text{diag}(i,j)}(k) + 1 & \text{如果延续当前对角线} \\ M_{i-1,j-1}(k-1) + 1 & \text{如果切换对角线（消耗1次变换）} \end{cases}$$
+$$D_{i,j}(k) = \max \begin{cases} D_{\text{diag}(i,j)}(k) + 1 & \text{if continue current diagonal} \\ M_{i-1,j-1}(k-1) + 1 & \text{if switch diagonal (costs 1 transformation)} \end{cases}$$
 
 其中：
+- 第一项表示延续当前对角线（不消耗变换次数）
+- 第二项表示切换对角线（消耗 1 次变换机会）
 - $\text{diag}(i,j)$ 是同一对角线上的前一个位置
 - $M_{i,j}(k) = \max_{(i',j') \leq (i,j)} D_{i',j'}(k)$ 是前缀最大值矩阵
 

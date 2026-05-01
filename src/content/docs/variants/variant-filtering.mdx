@@ -59,7 +59,7 @@ caller 产生的原始候选集通常包含大量假阳性。研究表明，未�
   items={[
     {
       term: 'QUAL (Quality Score)',
-      definition: '变异位点的整体质量估计，通常为 Phred 标度：$QUAL = -10 \log_{10} P(\text{变异不存在} | \text{数据})$。注意不同 caller 的计算方法可能有差异。',
+      definition: '变异位点的整体质量估计，通常为 Phred 标度：$QUAL = -10 \log_{10} P(\text{not variant} \mid \text{data})$。注意不同 caller 的计算方法可能有差异。',
     },
     {
       term: 'DP (Depth / Read Depth)',

@@ -277,13 +277,13 @@ Rabin-Karp 使用**哈希**将字符串匹配转化为整数比较。
 对于长度为 $m$ 的窗口，哈希值计算：
 
 $$
-H = \sum_\{i=0\}^\{m-1\} s_i \cdot d^\{m-1-i\} \mod q
+H = \sum_{i=0}^{m-1} s_i \cdot d^{m-1-i} \mod q
 $$
 
 滚动更新：
 
 $$
-H_\{new\} = (H_\{old\} - s_\{old\} \cdot d^\{m-1\}) \cdot d + s_\{new\} \mod q
+H_{new} = (H_{old} - s_{old} \cdot d^{m-1}) \cdot d + s_{new} \mod q
 $$
 
 其中 $d$ 是基数（如 4 对应 DNA），$q$ 是大质数。

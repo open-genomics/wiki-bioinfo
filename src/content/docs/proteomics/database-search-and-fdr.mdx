@@ -76,7 +76,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 数据库搜索的第一步是定义候选肽段集合。对于给定的蛋白质序列数据库和酶切规则：
 
-$$\mathcal{P} = \{p : p \text{ 是数据库中某条蛋白质的 Trypsin 酶切产物, } M_{\min} \leq M_p \leq M_{\max}\}$$
+$$\mathcal{P} = \{p : p \text{ is a Trypsin digest product from database}, M_{\min} \leq M_p \leq M_{\max}\}$$
 
 例如，人类 UniProt 数据库（约 20,000 条蛋白）经 Trypsin 酶切后可产生约 300--500 万个候选肽段。对于每张谱图，搜索算法需要在这个候选集合中找到最佳匹配。
 

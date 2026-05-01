@@ -95,8 +95,8 @@ $$
 $$
 \begin{aligned}
 F[0][0] &= 0 \\
-F[i][0] &= i \cdot g \quad \text{（前 i 个字符与空串对齐）} \\
-F[0][j] &= j \cdot g \quad \text{（空串与前 j 个字符对齐）}
+F[i][0] &= i \cdot g \quad \text{(align first i chars with empty)} \\
+F[0][j] &= j \cdot g \quad \text{(align empty with first j chars)}
 \end{aligned}
 $$
 
@@ -211,10 +211,10 @@ $$
 $$
 D[i][j] = \min
 \begin{cases}
-D[i-1][j-1] & \text{如果 } x_i = y_j \\
-D[i-1][j-1] + 1 & \text{如果 } x_i \neq y_j \text{（替换）} \\
-D[i-1][j] + 1 & \text{删除 } x_i \\
-D[i][j-1] + 1 & \text{插入 } y_j
+D[i-1][j-1] & \text{if } x_i = y_j \\
+D[i-1][j-1] + 1 & \text{if } x_i \neq y_j \text{ (substitution)} \\
+D[i-1][j] + 1 & \text{delete } x_i \\
+D[i][j-1] + 1 & \text{insert } y_j
 \end{cases}
 $$
 

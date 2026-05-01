@@ -47,8 +47,13 @@ Minimap2 的核心洞察是：**不需要在整个基因组上进行动态规划
 这引出了三阶段框架：
 
 $$
-\text{完整比对} = \underbrace{\text{Seeding（粗筛）}}_{\text{找到候选区域}} + \underbrace{\text{Chaining（精筛）}}_{\text{组织候选为链}} + \underbrace{\text{Alignment（精确比对）}}_{\text{局部位点计算}}
+\text{Alignment} = \underbrace{\text{Seeding}}_{\text{find candidate regions}} + \underbrace{\text{Chaining}}_{\text{organize into chains}} + \underbrace{\text{Alignment}}_{\text{local computation}}
 $$
+
+这三个阶段分别是：
+1. **Seeding（种子定位）**：快速找到候选区域
+2. **Chaining（链式组织）**：将候选组织为链
+3. **Alignment（精确比对）**：局部位点计算
 
 ### 阶段 1：Seeding - 粗定位
 
@@ -189,9 +194,9 @@ $$
 
 $$
 F[i][j] = \max \begin{cases}
-F[i-1][j-1] + s(r_i, g_j) & \text{匹配/错配} \\
+F[i-1][j-1] + s(r_i, g_j) & \text{match/mismatch} \\
 F[i-1][j] + \gamma_{\text{open/extend}} & \text{read gap} \\
-F[i][j-1] + \gamma_{\text{open/extend}} & \text{参考 gap}
+F[i][j-1] + \gamma_{\text{open/extend}} & \text{reference gap}
 \end{cases}
 $$
 

@@ -130,8 +130,8 @@ $$
 
 $$
 \begin{aligned}
-  dp[0][j] &= 0 \quad \text{（S1开头gap不罚分）} \\
-  dp[i][0] &= i \cdot g \quad \text{（S2开头gap要罚分）}
+  dp[0][j] &= 0 \quad \text{(no penalty for S1 start gap)} \\
+  dp[i][0] &= i \cdot g \quad \text{(penalty for S2 start gap)}
 \end{aligned}
 $$
 
@@ -139,8 +139,8 @@ $$
 
 $$
 \begin{aligned}
-  dp[0][j] &= j \cdot g \quad \text{（S1开头gap要罚分）} \\
-  dp[i][0] &= 0 \quad \text{（S2开头gap不罚分）}
+  dp[0][j] &= j \cdot g \quad \text{(penalty for S1 start gap)} \\
+  dp[i][0] &= 0 \quad \text{(no penalty for S2 start gap)}
 \end{aligned}
 $$
 
@@ -148,8 +148,8 @@ $$
 
 $$
 \begin{aligned}
-  dp[0][j] &= 0 \quad \text{（S1开头gap不罚分）} \\
-  dp[i][0] &= 0 \quad \text{（S2开头gap不罚分）}
+  dp[0][j] &= 0 \quad \text{(no penalty for S1 start gap)} \\
+  dp[i][0] &= 0 \quad \text{(no penalty for S2 start gap)}
 \end{aligned}
 $$
 

@@ -51,7 +51,7 @@ affine gap penalty 更符合生物学直觉：一个长 indel 往往比多个零
 Gotoh 算法引入 affine gap penalty：
 
 $$
-\text\{GapCost\}(k) = g_o + k \cdot g_e
+\text{GapCost}(k) = g_o + k \cdot g_e
 $$
 
 其中：
@@ -87,7 +87,7 @@ Gotoh 算法维护三个矩阵：
 ### 边界条件
 
 $$
-\begin\{aligned\}
+\begin{aligned}
 M[0][0] &= 0 \\
 M[i][0] &= -\infty, \quad i > 0 \\
 M[0][j] &= -\infty, \quad j > 0 \\
@@ -97,7 +97,7 @@ Ix[0][j] &= -\infty, \quad j > 0 \\
 Iy[0][0] &= -\infty \\
 Iy[i][0] &= -\infty, \quad i > 0 \\
 Iy[0][j] &= g_o + j \cdot g_e, \quad j > 0
-\end\{aligned\}
+\end{aligned}
 $$
 
 边界条件的含义：
@@ -143,7 +143,7 @@ $$
 ### 最终得分
 
 $$
-F[i][j] = \max \\{ M[i][j], Ix[i][j], Iy[i][j] \\}
+F[i][j] = \max \{ M[i][j], Ix[i][j], Iy[i][j] \}
 $$
 
 ## 算法步骤

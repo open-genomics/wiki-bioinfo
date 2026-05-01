@@ -84,9 +84,9 @@ $$
 $$
 F[i][j] = \max
 \begin{cases}
-F[i-1][j-1] + s(x_i, y_j) & \text{匹配或替换} \\
-F[i-1][j] + g & \text{在 X 中插入 gap（删除 } x_i \text{）} \\
-F[i][j-1] + g & \text{在 Y 中插入 gap（插入 } y_j \text{）}
+F[i-1][j-1] + s(x_i, y_j) & \text{match or substitution} \\
+F[i-1][j] + g & \text{gap in X (delete } x_i \text{)} \\
+F[i][j-1] + g & \text{gap in Y (insert } y_j \text{)}
 \end{cases}
 $$
 

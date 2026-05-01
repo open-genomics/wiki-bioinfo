@@ -255,7 +255,7 @@ TPM 总和验证：$637209 + 286524 + 76267 = 1000000$。
 
 现代 RNA-seq 定量的推荐工作流为：
 
-$$\text{Salmon/Kallisto（转录本级定量）} \xrightarrow{\text{tximport}} \text{DESeq2（差异分析）}$$
+$$\text{Salmon/Kallisto} \xrightarrow{\text{tximport}} \text{DESeq2}$$
 
 其中 `tximport` 负责将转录本级的 TPM 和有效计数聚合为基因级的长度校正计数，DESeq2 使用原始计数性质的数据进行统计建模。TPM 仅用于可视化和样本间趋势比较。
 

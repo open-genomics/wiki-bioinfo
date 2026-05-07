@@ -51,3 +51,17 @@
 - 维护原则：closeout-first（收敛优先）
 - 后续维护：低频更新，以内容修正为主
 - BMAD skills 已移除，仅保留 4 个 OpenSpec skills
+
+## Agent skills
+
+### Issue tracker
+
+GitHub Issues (`gh` CLI). See `docs/agents/issue-tracker.md`.
+
+### Triage labels
+
+Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+
+### Domain docs
+
+Single-context: `CONTEXT.md` and `docs/adr/` at repo root. See `docs/agents/domain.md`.

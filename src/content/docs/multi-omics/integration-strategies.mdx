@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 
 <NoteCard variant="summary"
   summary="多组学整合不是简单把多个矩阵拼起来，而是要先想清楚数据来源、分析目标和组学特性，再选择合适的整合策略。早期、中期和后期整合各有适用场景，没有万能方案。"
@@ -346,7 +346,7 @@ model_survival.fit(X, y)
 
 ## 选择策略的关键问题
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     { scenario: '样本完全匹配、组学少、特征维度接近', recommendation: '早期整合', rationale: '实现简单，模型可直接捕获跨组学交互' },
     { scenario: '组学尺度差异大、部分样本有缺失', recommendation: '中期整合（MOFA+/SNF）', rationale: '各组学独立编码，天然处理尺度和缺失问题' },

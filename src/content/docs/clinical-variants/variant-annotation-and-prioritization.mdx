@@ -8,7 +8,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <PrerequisitesBox
@@ -305,7 +305,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 在面对多个候选变异时，可以参考以下决策逻辑进行排序：
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: '已知致病基因 + 高匹配表型 + LoF 变异',

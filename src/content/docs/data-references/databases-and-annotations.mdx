@@ -6,7 +6,7 @@ title: "数据库与注释系统一览"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
@@ -137,7 +137,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 选择资源时，先问自己什么问题
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: '我要确认 gene / transcript 注释与坐标背景',

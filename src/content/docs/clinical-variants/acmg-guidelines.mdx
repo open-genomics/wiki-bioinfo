@@ -8,7 +8,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <PrerequisitesBox
@@ -294,7 +294,7 @@ Likely pathogenic、VUS、Likely benign 和 Benign 也有各自的组合阈值�
 
 当强致病证据与强良性证据并存时，不应简单抵消，而应采用以下决策逻辑：
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: 'de novo 变异但人群频率略高',

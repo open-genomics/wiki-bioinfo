@@ -5,7 +5,7 @@ description: "NCBI、Ensembl、UniProt、PDB、KEGG、GEO/SRA 等核心生物信
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
@@ -82,7 +82,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 先按问题选资源
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: '想确认某个基因或转录本的坐标、注释与版本',

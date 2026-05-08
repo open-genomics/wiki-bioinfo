@@ -5,7 +5,7 @@ description: "序列数据库搜索的核心算法：k-mer 索引、Seed-and-Ext
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
@@ -301,7 +301,7 @@ $$E = Kmn e^{-\lambda S}$$
 
 ### 9.12.1 算法选择决策矩阵
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: '在大型数据库（如 NCBI nr）中搜索蛋白质序列',

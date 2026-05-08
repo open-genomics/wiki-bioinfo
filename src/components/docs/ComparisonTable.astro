@@ -1,8 +1,12 @@
 ---
+/**
+ * ComparisonTable - 兼容层，委托给 DataTable
+ * 保留以避免修改 55 个使用此组件的 .mdx 文件
+ */
+import DataTable from './DataTable.astro';
+
 interface ComparisonRow {
-  aspect: string;
-  left: string;
-  right: string;
+  [key: string]: string;
 }
 
 interface Props {
@@ -10,29 +14,6 @@ interface Props {
   rightTitle: string;
   rows: ComparisonRow[];
 }
-
-import { Icon } from '@astrojs/starlight/components';
-
-const { leftTitle, rightTitle, rows } = Astro.props;
 ---
 
-<div class="table-wrapper table-scroll">
-  <table class="comparison-table">
-    <thead>
-      <tr>
-        <th><Icon name="list-format" size="1rem" /> 维度</th>
-        <th>{leftTitle}</th>
-        <th>{rightTitle}</th>
-      </tr>
-    </thead>
-    <tbody>
-      {rows.map((row) => (
-        <tr>
-          <th scope="row">{row.aspect}</th>
-          <td>{row.left}</td>
-          <td>{row.right}</td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+<DataTable variant="comparison" {...Astro.props} />

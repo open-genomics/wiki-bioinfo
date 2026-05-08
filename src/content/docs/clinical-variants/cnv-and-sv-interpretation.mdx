@@ -7,7 +7,7 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
@@ -115,7 +115,7 @@ CNV 的致病性不能仅用大小判断：
 
 根据 CNV 的特征，临床解释的优先级和方向有所不同：
 
-<DecisionMatrix
+<DataTable variant="decision-matrix"
   rows={[
     {
       scenario: 'CNV 完全覆盖已知的致病剂量敏感基因',

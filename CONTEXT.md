@@ -102,12 +102,10 @@
 | `RelatedLinks` | 兼容层，委托给 LinkGrid | 兼容层 |
 | `SectionNavigator` | 兼容层，委托给 LinkGrid | 兼容层 |
 | `NoteCard` | 统一的笔记卡片（summary/pitfalls/tools） | Deep Module |
+| `DataTable` | 统一的数据表格（comparison/decision-matrix） | Deep Module |
+| `ComparisonTable` | 兼容层，委托给 DataTable | 兼容层 |
 | `PageHeaderMeta` | 页面头部元信息 | 页面元信息 |
-| `RelatedLinks` | 相关链接网格 | 导航 |
-| `SectionNavigator` | 板块导航卡片 | 导航 |
 | `PrerequisitesBox` | 前置知识提示框 | 学习路径 |
-| `ComparisonTable` | 对比表格 | 数据展示 |
-| `DecisionMatrix` | 决策矩阵 | 数据展示 |
 | `DefinitionList` | 定义列表 | 数据展示 |
 | `WorkflowSteps` | 工作流步骤 | 流程展示 |
 
@@ -160,6 +158,18 @@
 - Locality：映射逻辑集中在 `sections.ts`
 - Leverage：一个函数服务多种查找方式
 - 消除同步点：无需手动维护映射表
+
+### 2026-05-08: 合并 ComparisonTable 与 DecisionMatrix 为 DataTable
+
+**背景**：`ComparisonTable` 和 `DecisionMatrix` 是结构完全相同的浅层模块——都是 3 列表格，共享 `comparison-table` CSS 类。区别仅在列标题（维度/左/右 vs 场景/推荐/原因）和行数据类型。删除任何一个，复杂性不会集中到另一个。
+
+**决策**：创建统一的 `DataTable` 组件，通过 `variant` prop 区分 `comparison`（维度对比）和 `decision-matrix`（场景决策）两种场景。`ComparisonTable` 保留为兼容层（55 个文件无需修改），`DecisionMatrix` 的 8 个调用直接迁移到 `DataTable` 后删除。
+
+**收益**：
+- Leverage：一个组件处理两种表格场景
+- Locality：表格渲染逻辑和样式集中在一处
+- 减少组件数量：从 12 个文档组件减至 11 个
+- 消除重复的类型定义（`ComparisonRow` / `MatrixRow`）
 
 ---
 

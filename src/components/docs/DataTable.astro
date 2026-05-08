@@ -1,0 +1,57 @@
+---
+/**
+ * DataTable - 统一的数据表格组件
+ *
+ * 作为 Seam，合并了两个浅层组件：
+ * - variant="comparison" 替代 ComparisonTable（维度对比）
+ * - variant="decision-matrix" 替代 DecisionMatrix（场景决策）
+ *
+ * 提升了 Depth（Leverage + Locality），减少组件数量
+ */
+interface Props {
+  variant: 'comparison' | 'decision-matrix';
+  leftTitle?: string;
+  rightTitle?: string;
+  rows: { [key: string]: string }[];
+}
+
+import { Icon } from '@astrojs/starlight/components';
+
+const { variant, leftTitle, rightTitle, rows } = Astro.props;
+
+const config = {
+  comparison: {
+    headers: ['维度', leftTitle ?? '', rightTitle ?? ''],
+    rowKeys: ['aspect', 'left', 'right'],
+    icon: 'list-format' as const,
+  },
+  'decision-matrix': {
+    headers: ['场景', '推荐选择', '原因'],
+    rowKeys: ['scenario', 'recommendation', 'rationale'],
+    icon: 'puzzle' as const,
+  },
+} as const;
+
+const { headers, rowKeys, icon } = config[variant];
+---
+
+<div class="table-wrapper table-scroll">
+  <table class="comparison-table">
+    <thead>
+      <tr>
+        <th><Icon name={icon} size="1rem" /> {headers[0]}</th>
+        <th>{headers[1]}</th>
+        <th>{headers[2]}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {rows.map((row) => (
+        <tr>
+          <th scope="row">{row[rowKeys[0]]}</th>
+          <td>{row[rowKeys[1]]}</td>
+          <td>{row[rowKeys[2]]}</td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>

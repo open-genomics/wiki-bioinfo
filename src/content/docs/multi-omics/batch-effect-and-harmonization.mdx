@@ -2,13 +2,13 @@
 description: 多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。
 title: "批次效应与数据协调"
 ---
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。"
 />
 
@@ -152,8 +152,7 @@ $$
 - 细胞类型混合指数（Cell Type Mixing Index）
 - 伪时间相关性（Pseudotime Correlation）
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '真实的生物学差异被过度校正消除',
     '不同细胞类型被错误地混合在一起',

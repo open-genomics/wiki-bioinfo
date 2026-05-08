@@ -3,14 +3,12 @@ description: DMR（差异甲基化区域）检测算法的核心统计思想，�
 title: "DMR 检测算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="DMR（Differentially Methylated Region）检测算法识别不同条件间甲基化状态显著差异的基因组区域，是表观遗传学研究的核心统计问题。"
   bullets={[
     '核心是使用 beta-binomial 模型建模甲基化比例的有界性和过离散性',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题背景
 
 ### 核心问题：从单个位点到生物学区域
@@ -262,7 +258,7 @@ C++ 工具，特点：
 - 使用分段算法
 - 适用于大规模数据
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'DMR 一定对应基因表达变化：',
     '不一定。甲基化和表达的关系复杂：',

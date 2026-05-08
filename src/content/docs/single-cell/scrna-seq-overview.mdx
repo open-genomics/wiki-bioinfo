@@ -3,14 +3,13 @@ description: 单细胞 RNA 测序（scRNA-seq）的技术原理、主流平台�
 title: "scRNA-seq 总览"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的「平均值」迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。'
   bullets={[
     '理解 scRNA-seq 与 Bulk RNA-seq 的本质差异：从"果昔"到"水果切盘"',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 任务目标
 
 scRNA-seq 分析流程的核心目标是：**将原始测序数据转化为可解释的细胞图谱**。具体包括：
@@ -313,7 +310,7 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 - **多组学整合**：scATAC-seq + scRNA-seq 联合分析（如 Signac、ArchR）。
 - **大规模整合分析**：如 Human Cell Atlas、Tabula Muris 等图谱级项目。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '更多细胞数一定带来更好的结果：',
     '不是。细胞数增加会提高检测稀有细胞群的能力，但也同时增加 Doublet（双联体）率、计算成本和批次效应的复杂性。如果细胞捕获质量差或样本本身异质性低，盲目追求细胞数反而可能引入更多噪声。关键是在细胞数和数据质量之间取得平衡，并做好 Doublet 检测与去除。',

@@ -3,14 +3,12 @@ description: 临床变异解释中的计算算法：优先级排序、ACMG 自�
 title: "临床变异解释算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-
 
 <PrerequisitesBox
   items={[
@@ -20,7 +18,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="算法在临床变异解释中扮演证据整合与决策支持的角色。从变异优先级排序、ACMG 自动化分类、致病性预测到 de novo 检测和家系分离分析，算法帮助处理海量数据、整合多维证据、量化不确定性，但最终临床判断仍需人工审核。"
   bullets={[
     '变异优先级排序算法通过频率过滤、功能评估和表型匹配，从数万候选中聚焦高置信度变异',
@@ -31,8 +29,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 算法驱动的解释工作流
 
 临床变异解释算法通常在以下关键节点发挥作用，将海量原始数据转化为可用的临床证据：
@@ -317,7 +313,7 @@ De novo 检测工具通常输出质量分数（如 Q-score），反映：
 - **文献和数据库更新**：新证据可能改变分类；
 - **患者和医生沟通**：算法分数需要转化为临床语言。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '算法分数越高越可靠：分数只是优先级排序，不等于临床确定性；',
     'ACMG 自动分类可以直接报告：仍需人工审核证据冲突和上下文；',

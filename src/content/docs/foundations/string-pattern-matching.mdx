@@ -3,15 +3,13 @@ description: 字符串模式匹配算法：KMP、Boyer-Moore、Rabin-Karp，在�
 title: "字符串模式匹配"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="字符串模式匹配是序列比对、motif 搜索和数据库检索的算法基础。这一页从朴素匹配出发，介绍 KMP、Boyer-Moore 等经典算法的核心思想。"
   bullets={[
     '先理解朴素匹配为什么慢，再看 KMP 和 Boyer-Moore 如何优化会更顺。',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 字符串模式匹配（string pattern matching）的目标是：在一个长文本（text）中查找一个模式串（pattern）的所有出现位置。
@@ -332,7 +328,7 @@ BLAST 并不直接使用上述算法，但借鉴了思想：
 - **Minimizer sketch**：用采样代替完整匹配，加速大规模搜索
 - **k-mer hash table**：类似 Rabin-Karp 的哈希思想
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'KMP 总是最优的：',
     '不是。在实际应用中：',

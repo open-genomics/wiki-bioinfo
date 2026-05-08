@@ -2,14 +2,14 @@
 description: spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与解释上的差异
 title: "spot 与单细胞"
 ---
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与解释上的差异"
 />
 
@@ -162,8 +162,7 @@ scRNA-seq 数据
 - **空间数据质量过低**：增加测序深度或更换技术平台
 - **存在空间特有的细胞状态**：scRNA-seq 可能无法捕获（如特定微环境下的细胞）
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"空间数据一定比单细胞更高级"',
     '"单细胞注释可以直接搬到每个 spot"',

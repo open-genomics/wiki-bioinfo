@@ -3,14 +3,13 @@ description: 断点（Breakpoints）是基因组重排中的关键概念，用�
 title: "断点与基因组重排"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="断点是基因组重排中的核心概念，用于度量两个基因组间的结构差异。通过消除断点，可以设计近似算法求解基因组排序问题。"
   bullets={[
     '断点是相邻基因对在一个基因组中连续但在另一个中不连续的位置',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 **断点（Breakpoint）** 是基因组重排分析中的关键概念，用于识别两个基因组间的结构差异点。通过分析断点，可以：
@@ -233,7 +230,7 @@ Strips：0(增), 8 2 7 6 5 1 4 3(减), 9(增)
 - William Gates 和 Christos Papadimitriou (1979) 证明：任何排列可在 $\frac{5n+5}{3}$ 步内完成
 - 该问题至今未完全解决
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '断点数除以 2 就是反转距离的最优解：',
     '$d(\pi) \geq b(\pi)/2$ 只是下界，实际最优解可能远大于这个值。例如，某些排列的最优反转距离接近 $b(\pi)$ 而非 $b(\pi)/2$。下界提供的是理论最低保证，不能当作最优解的估计值。',

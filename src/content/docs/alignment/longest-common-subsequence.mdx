@@ -3,15 +3,13 @@ description: 最长公共子序列（LCS）是序列相似性分析的最简形�
 title: "最长公共子序列（LCS）"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="最长公共子序列（Longest Common Subsequence, LCS）是理解序列相似性分析的最简形式。它只允许插入和删除操作，不允许替换，为理解更复杂的编辑距离和序列比对算法提供基础。"
   bullets={[
     'LCS 是最简化的序列相似性度量，只考虑匹配、插入和删除',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 **最长公共子序列（LCS）** 问题旨在找到两个字符串共有的最长子序列。
@@ -219,7 +215,7 @@ LCS 问题对应一个**编辑图**（Edit Graph）：
 
 在这个图中，LCS 对应**最长路径**问题。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'LCS 就是最佳比对：',
     '不一定。LCS 只考虑匹配，不考虑错配的代价。在生物学应用中，我们通常需要更复杂的打分方案来反映真实的进化或功能关系。',

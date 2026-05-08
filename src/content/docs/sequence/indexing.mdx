@@ -3,13 +3,12 @@ title: "索引结构概览"
 description: 系统介绍生物序列索引的主要类型，理解哈希表、后缀结构和压缩索引的技术谱系。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="在处理人类基因组等大规模数据时，逐位扫描的时间复杂度 $O(nm)$ 是不可接受的。索引（Index）通过预处理文本 T，构建辅助数据结构，使得后续查询可以在亚线性时间内完成。"
   bullets={[
     '理解哈希索引与后缀索引两大技术谱系',
@@ -27,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 为什么索引至关重要？
 
 在生物信息学中，我们通常面临"一个大文本 $T$（参考基因组）对大量小模式 $P$（测序 Reads）"的场景。
@@ -183,7 +180,7 @@ FM-index 的查询能力来自**后向搜索（Backward Search）**。其核心�
 | **MUMmer** | Suffix Tree | 全基因组比对，寻找最大唯一匹配 |
 | **Kraken2** | 最小完美哈希 | 物种分类，精确 k-mer 匹配 |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '索引越大越好：',
     '不是。索引过大会导致无法装入内存，需要频繁磁盘 I/O，反而比直接扫描更慢。FM-index 之所以成功，正是因为它在极小的空间内提供了足够的查询能力。',

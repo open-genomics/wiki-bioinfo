@@ -3,15 +3,15 @@ title: "蛋白质互作预测：从 docking 到网络推断"
 description: "计算方法如何预测蛋白质-蛋白质相互作用、结合界面和复合体结构"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="蛋白质-蛋白质相互作用（Protein-Protein Interaction, PPI）是细胞信号传导、代谢调控和免疫反应的核心。计算方法通过分子对接（docking）、界面预测和网络推断，从不同角度预测和理解 PPI。"
   bullets={[
     '分子对接（docking）：预测两个蛋白质如何结合形成复合体',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 是什么
 
 **蛋白质-蛋白质相互作用（PPI）** 是两个或多个蛋白质通过物理接触形成的功能性复合体。计算方法从不同层次预测 PPI：
@@ -178,7 +176,7 @@ graph LR
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '对接工具：HADDOCK、ClusPro、ZDOCK 预测复合体结构',
     '界面预测：PSIVER、SPPIDER 识别关键结合残基',
@@ -190,7 +188,7 @@ graph LR
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**对接 = 绝对真理**：对接结果是预测，需要实验验证。打分函数经常给出错误排名。',
     '**静态结构足够**：很多 PPI 涉及构象变化，刚性对接可能失败。',

@@ -3,13 +3,12 @@ title: "核心方法的内在连接：从索引到比对的算法链条"
 description: "序列表示、比对、组装和概率模型之间如何互相依赖和连接，形成统一的算法体系"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="核心方法的四个子板块（序列表示与索引、序列比对、组装与图算法、概率模型与模式识别）不是孤立的算法集合，而是围绕同一个计算问题——如何从海量序列中提取生物学信息——形成的有机链条。理解它们之间的内在连接，是选择合适方法和追溯分析依赖的前提。"
   bullets={[
     '索引结构（k-mer、BWT、FM-index）为比对算法提供快速搜索能力',
@@ -21,8 +20,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 为什么需要理解方法之间的连接
 
 在学习核心方法时，一个常见误区是将四个子板块视为**孤立的算法模块**：
@@ -207,7 +204,7 @@ VCF：变异候选 + 置信度
 
 ## 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '学算法只需要掌握每个算法的细节，不需要理解它们之间的联系：',
     '生物信息学工具链是环环相扣的——索引为比对加速、比对为组装提供证据、概率模型处理比对中的不确定性。不理解这些连接，就无法在工具失效时追溯问题根源，也无法根据数据特点选择最优方法组合。',

@@ -3,14 +3,13 @@ description: 蛋白质定量方法：Label-free、TMT/iTRAQ 等标记策略与�
 title: "定量蛋白质组学"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="定量蛋白质组学旨在比较不同生物条件下蛋白质的相对或绝对丰度。通过质谱技术，我们可以捕捉细胞在不同状态下蛋白水平的动态变化，这是理解生命过程的关键。"
   bullets={[
     '掌握 Label-free（无标记）定量的原理：峰面积与谱图计数',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 是什么
 
 定量蛋白质组学（Quantitative Proteomics）是指在蛋白质组学实验中对不同生物样本中蛋白质的相对或绝对丰度进行系统测量和比较的学科。与定性鉴定（即"这个蛋白存不存在"）不同，定量蛋白质组学的核心问题是："这个蛋白在不同条件下，量的变化是多少？"
@@ -134,7 +131,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 通过定量标记结合亲和纯化（Affinity Purification, AP-MS），可以定量比较诱饵蛋白（Bait Protein）与互作蛋白在实验组和对照组中的富集程度，从而鉴定真实的蛋白互作网络。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '缺失值的盲目插补：',
     '蛋白质组学数据中缺失值并非完全随机产生（MCAR），而是往往与蛋白丰度本身相关——低丰度蛋白更容易缺失（MNAR, Missing Not At Random）。简单的均值插补或零值填充会严重扭曲统计分布。推荐的做法包括：',

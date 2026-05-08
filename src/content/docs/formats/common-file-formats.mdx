@@ -3,17 +3,16 @@ title: "生物信息学数据格式：从存储结构到语义层次"
 description: "理解生物信息学文件格式的本质——它们不只是文件后缀的区别，而是编码了不同层次生物学对象的数据结构"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="文件格式是生物信息学分析中的核心抽象层。本章不赘述具体命令参数，而是阐明每种格式编码了什么样的生物学对象、在什么分析阶段出现、以及它们之间不可替代的语义差异。"
   bullets={[
     'FASTA、FASTQ、SAM/BAM、GTF/GFF、VCF 分别对应序列、原始观测、比对结果、注释信息、变异候选五个不同的抽象层次',
@@ -23,8 +22,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 为什么需要关注数据格式
 
 想象你正在分析一个肿瘤样本的外显子测序数据。你手头有五个文件：`reference.fa`、`sample.fastq`、`aligned.bam`、`genes.gtf`、`variants.vcf`。表面看来，它们都是"包含序列信息的文本文件"，但这种看法掩盖了关键事实：**这些文件编码的是完全不同的计算对象**。
@@ -368,7 +365,7 @@ project/
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'FASTQ 常连接到质控、比对、定量或组装入口，是原始观测层。',
     'BAM/CRAM 常连接到可视化、coverage、feature counting 与 variant calling，是定位证据层。',
@@ -379,7 +376,7 @@ project/
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**格式等价性误解**：认为 FASTA 和 FASTQ 都是"序列文件"就可以互相替换。实际上两者编码完全不同的对象层：FASTA 是参考序列骨架，FASTQ 是带质量分数的实验观测。',
     '**信息自足性误解**：认为 BAM 文件包含"所有信息"，不再需要参考序列和注释文件。实际上 BAM 只包含定位结果，功能解释仍需依赖外部注释。',

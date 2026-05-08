@@ -3,13 +3,11 @@ description: 单细胞 RNA 测序（scRNA-seq）技术的原理、数据处理�
 title: "单细胞组学"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="单细胞测序技术把'整体'打散成'个体'——让我们能在细胞分辨率下看到转录组、表观组甚至基因组的异质性。它揭示的是 bulk 平均无法呈现的细胞类型、发育轨迹和稀有亚群。"
   bullets={[
     '核心是从细胞分辨率理解生物系统，而不是组织或样本的平均值',
@@ -19,8 +17,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 单细胞组学的定义与范畴
 
 ### 什么是单细胞组学
@@ -232,7 +228,7 @@ $$
 - **差异表达基因列表**；
 - **可视化图表**：聚类图、热图、轨迹图等。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Dropout = 表达量为 0：',
     '不对。单细胞数据中大量的 0 值很多是技术性 dropout（未检测到），而不是真正的无表达。需要考虑零膨胀和归一化。',

@@ -3,14 +3,13 @@ description: 单细胞轨迹推断（Trajectory Inference）的算法原理：�
 title: "轨迹推断"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='单细胞测序捕捉的是细胞发育过程中的「瞬间快照」。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。'
   bullets={[
     '理解伪时间（Pseudotime） 的概念：基于转录组距离而非物理时间',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 从快照到过程：伪时间的诞生
 
 在发育生物学中，细胞的分化是一个连续过程。但在实验中，我们一次性杀死了所有细胞进行测序。
@@ -264,7 +261,7 @@ RNA Velocity（scVelo）验证方向
 可视化（沿伪时间的基因表达热图、速度流场图）
 ```
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"UMAP 形状就是轨迹"',
     '错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。UMAP 的全局拓扑不可靠。',

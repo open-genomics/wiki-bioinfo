@@ -3,14 +3,12 @@ description: 概率算法与统计推断：从 HMM、贝叶斯方法到 MCMC 采
 title: "概率算法与统计推断"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="概率算法是处理生物数据中噪声与不确定性的核心工具，它们不给出确定性答案，而是量化不同解释的可能性。"
   bullets={[
     '理解概率模型如何表示生物学知识的先验',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么需要概率方法
 
 生物数据本质上是不确定和有噪声的：
@@ -596,7 +592,7 @@ $$
 - **近似**：变分推断近似 MCMC
 - **预处理**：缓存中间结果
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'p < 0.05 就显著：',
     '不一定。需要考虑多重检验、效应大小、先验知识等因素。',

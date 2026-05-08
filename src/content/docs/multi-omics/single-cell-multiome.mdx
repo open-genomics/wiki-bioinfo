@@ -2,14 +2,14 @@
 description: 单细胞多模态数据（multiome）的技术原理与分析框架，涵盖 RNA+ATAC、CITE-seq 等联合测量方法。
 title: "单细胞 Multiome"
 ---
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="单细胞多模态数据（multiome）的技术原理与分析框架，涵盖 RNA+ATAC、CITE-seq 等联合测量方法。"
 />
 
@@ -137,8 +137,7 @@ Seurat 的 WNN 方法：
 | **模态异步** | 转录变化可能滞后于调控变化 | 时间序列分析、lag correlation |
 | **权重设置** | 模态贡献度平衡 | WNN 权重自动学习、人工调参 |
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '转座酶批次差异',
     '文库制备时间差异',

@@ -3,15 +3,13 @@ description: Smith-Waterman 算法的详细实现，包括动态规划递推公�
 title: "Smith-Waterman 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Smith-Waterman 算法是局部比对的标准动态规划算法：它在两条序列中寻找得分最高的局部相似片段，而不要求全局对齐。"
   bullets={[
     '关键区别在于允许从任意位置开始和结束比对',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 Smith-Waterman 算法是 1981 年提出的用于局部序列比对的动态规划算法。它解决了以下问题：
@@ -267,7 +263,7 @@ Smith-Waterman 算法是：
 - **硬件加速**：使用 GPU 或 FPGA 加速 Smith-Waterman
 - **索引技术**：结合 FM-index 等索引结构缩小搜索空间
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '局部比对一定比全局比对更先进：',
     '不是。局部和全局比对解决的是不同的问题，选择哪种取决于具体任务。',

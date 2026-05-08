@@ -3,16 +3,14 @@ description: Gotoh 算法的详细实现，包括三状态动态规划、affine 
 title: "Gotoh 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Gotoh 算法是处理 affine gap penalty 的标准动态规划算法：它通过引入三个状态矩阵，正确区分 gap 开启和 gap 延长，使比对模型更符合生物学直觉。"
   bullets={[
     '核心是维护三个独立的 DP 矩阵：匹配状态、X 方向 gap、Y 方向 gap',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 Gotoh 算法是 1982 年提出的用于处理 affine gap penalty 的动态规划算法。它解决了简单线性 gap 模型的问题：
@@ -337,7 +333,7 @@ Gotoh 算法是：
 
 现代工具如 BWA、minimap2、BLAST 等都使用 affine gap penalty，其核心思想来自 Gotoh 算法。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Affine gap 只是参数调整：',
     '不是。它改变了动态规划的状态设计和递推关系，是算法结构的根本变化。',

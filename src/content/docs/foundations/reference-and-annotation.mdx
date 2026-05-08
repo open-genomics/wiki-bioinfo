@@ -3,17 +3,14 @@ title: "参考基因组、坐标系统与注释"
 description: 参考基因组的构建与版本演进（GRCh37/38）、基因组坐标系统（0-based/1-based）以及基因注释（GTF/GFF）的结构与语义。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="这页想回答的是：为什么同一份测序数据，只有先放进某个参考背景、再配上正确的注释对象，后面的比对、定量、变异解释和数据库映射才真正有意义。"
   bullets={[
     '参考基因组提供的是共同坐标框架，不等于"真实基因组的完整代表"。',
@@ -22,8 +19,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 参考基因组是很多生物信息学流程默认的"共同坐标系"。
@@ -206,7 +201,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '比对工具默认把 reads 放进某个参考坐标系，但不会替你保证后续注释文件一定匹配。',
     'feature counting、RNA-seq 定量和 variant annotation 等步骤，都建立在正确注释对象和坐标背景之上。',
@@ -216,7 +211,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '把参考基因组当成"真实基因组"的完整代表，而忽略它只是分析框架。',
     '只要参考版本对了，注释文件就可以随便选。',

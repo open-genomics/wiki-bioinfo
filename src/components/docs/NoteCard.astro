@@ -1,0 +1,73 @@
+---
+/**
+ * NoteCard - 统一的笔记卡片组件
+ *
+ * 作为 Seam，合并了三个浅层组件：
+ * - variant="summary" 替代 SummaryBox
+ * - variant="pitfalls" 替代 PitfallsBox
+ * - variant="tools" 替代 ToolMappingBox
+ *
+ * 提升了 Depth（Leverage + Locality），减少组件数量
+ */
+interface Props {
+  variant: 'summary' | 'pitfalls' | 'tools';
+  title?: string;
+  summary?: string;
+  bullets?: string[];
+  items?: string[];
+  pitfalls?: string[];
+}
+
+import { Icon } from '@astrojs/starlight/components';
+
+const { variant, title, summary, bullets = [], items = [], pitfalls = [] } = Astro.props;
+
+// 根据 variant 选择配置
+const config = {
+  summary: {
+    defaultTitle: '快速概览',
+    icon: 'rocket',
+    class: 'summary-card',
+  },
+  pitfalls: {
+    defaultTitle: '常见误区',
+    icon: 'warning',
+    class: 'pitfalls-card',
+  },
+  tools: {
+    defaultTitle: '与真实工具或流程的连接',
+    icon: 'seti:json',
+    class: 'tool-mapping-card',
+  },
+} as const;
+
+const { defaultTitle, icon, class: cardClass } = config[variant];
+const resolvedTitle = title ?? defaultTitle;
+
+// 处理不同的列表数据源
+const resolvedItems = variant === 'summary'
+  ? bullets
+  : variant === 'pitfalls'
+    ? (items.length > 0 ? items : pitfalls)
+    : items;
+---
+
+{variant === 'summary' ? (
+  <section class={`summary-card`}>
+    <strong><Icon name={icon} size="1.2rem" /> {resolvedTitle}</strong>
+    {summary && <p>{summary}</p>}
+    <slot />
+    {resolvedItems.length > 0 && (
+      <ul>
+        {resolvedItems.map((item) => <li>{item}</li>)}
+      </ul>
+    )}
+  </section>
+) : (
+  <aside class={`note-card ${cardClass}`}>
+    <strong><Icon name={icon} size="1.2rem" /> {resolvedTitle}</strong>
+    <ul>
+      {resolvedItems.map((item) => <li>{item}</li>)}
+    </ul>
+  </aside>
+)}

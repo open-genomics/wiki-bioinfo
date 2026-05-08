@@ -3,14 +3,13 @@ description: DNA-seq 变异过滤与质量控制概览，解释 QUAL、DP、AF�
 title: "DNA-seq 变异过滤与质量控制"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成'真变异'。"
   bullets={[
     '理解 QUAL、DP、AF、FILTER 等 VCF 字段的大致含义，比死记具体软件参数更重要。',
@@ -27,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 变异过滤（Variant Filtering）要解决的核心问题是：
@@ -156,7 +153,7 @@ $$\text{Keep}(v) = \begin{cases} \text{True} & \text{if } DP(v) \geq DP_{\min} \
 
 因此，它是连接 caller 输出与结果解释的一层关键桥梁。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '仅凭单个字段（例如 QUAL）做一刀切过滤；',
     '把某套阈值原封不动复制到不同平台和 caller；',

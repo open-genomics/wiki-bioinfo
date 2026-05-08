@@ -3,15 +3,15 @@ title: "参考基因组版本历史：从 hg19 到 GRCh38 的演进"
 description: "参考基因组版本体系、主要差异、以及如何选择合适的参考版本"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
   bullets={[
     'GRCh37（hg19）和 GRCh38（hg38）是两个主要人类参考版本',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **参考基因组版本**是人类基因组的标准化表示，定义了整个基因组的序列内容和坐标系统。所有比对、注释和变异检测都相对于特定版本进行。
@@ -183,7 +181,7 @@ CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '参考下载：NCBI、Ensembl、UCSC 提供 GRCh37/GRCh38 FASTA 和 GTF',
     'Liftover 工具：UCSC liftOver、CrossMap 转换坐标',
@@ -194,7 +192,7 @@ CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**hg19 = GRCh37 完全等价**：大部分相同，但 UCSC 添加了额外的 chrM 和 unplaced scaffolds。',
     '**补丁版本无关紧要**：不同 patch 版本可能修复关键错误，应记录完整版本号。',

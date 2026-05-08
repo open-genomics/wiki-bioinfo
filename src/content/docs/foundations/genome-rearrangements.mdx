@@ -3,13 +3,12 @@ description: 基因组重排与反转排序：理解物种进化中的基因组�
 title: "基因组重排与反转排序"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="基因组重排研究物种进化过程中基因组结构的变化，特别是通过反转（inversion）事件改变基因顺序。反转排序问题是要找到将一个基因组排列转换为目标排列所需的最少反转次数。"
   bullets={[
     '理解同源区块（synteny blocks）和基因组重排的生物学背景',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 生物学背景
 
 ### 同源区块
@@ -249,7 +246,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 
 某些遗传疾病与特定的基因组重排相关，理解这些重排有助于诊断和治疗。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '反转距离就是两个基因组间的"进化距离"：',
     '反转距离度量的是将一个排列转换为另一个所需的最少反转次数，它是结构差异的一种度量，但不直接等同于进化距离。实际进化中可能同时发生反转、易位、转座等多种事件，且同一位置可能经历多次重排。将反转距离直接解释为"进化步骤数"会低估真实的进化历史。',

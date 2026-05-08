@@ -3,14 +3,13 @@ description: 基因预测的基础算法：理解如何从基因组序列中识�
 title: "基因预测"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="基因预测是从基因组序列中识别基因位置和结构的计算过程。真核生物基因常被内含子分割成外显子，需要专门的算法来识别基因边界和剪接位点。"
   bullets={[
     '统计方法基于基因组中编码区和非编码区的统计差异',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 什么是基因预测
 
 基因预测（gene prediction）是从基因组 DNA 序列中识别基因的过程。在原核生物中，基因通常是连续的编码序列，但在真核生物中，基因被内含子（introns）分割成外显子（exons），需要复杂的剪接过程。
@@ -154,7 +151,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '长的 ORF 一定是真实基因：',
     'ORF（开放阅读框）只是基因存在的必要条件，远非充分条件。随机 DNA 中也会出现较长的偶然 ORF；反之，真实基因可能因为测序或组装错误而不形成完整 ORF。特别是在真核生物中，基因被内含子分割，简单的 ORF 扫描几乎无法工作。',

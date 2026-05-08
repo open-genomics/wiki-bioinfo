@@ -3,13 +3,12 @@ description: BLAST 与局部相似性搜索的概览，详细解释基于启发�
 title: "BLAST：基于 seed-and-extend 的局部搜索"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="BLAST (Basic Local Alignment Search Tool) 是生物信息学中使用最广泛的工具之一。它通过牺牲一定的敏感性，利用启发式算法在巨大的数据库中极速寻找局部相似片段。"
   bullets={[
     '理解 BLAST 的三步走策略：Word 列表生成、扫描命中与局部扩展',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 是什么
 
 BLAST（Basic Local Alignment Search Tool）是由 Altschul 等人于 1990 年开发的序列相似性搜索工具。它不追求找到数学上最优的局部比对，而是通过一套启发式策略（Heuristic），在极短的时间内找到数据库中与查询序列（Query Sequence）高度相似的片段。
@@ -256,7 +253,7 @@ NCBI 的 **BLAST+** 命令行工具套件是本地运行的推荐选择。主要
 
 **BLAT**（BLAST-Like Alignment Tool）由 UCSC 开发，专门针对同一物种内的高相似度序列搜索（如将 cDNA 比对到基因组）。它使用索引策略而非 seed-and-extend，在 > 95% 一致性时比 BLAST 快得多。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'E-value 越低，同源性越强：',
     'E-value 衡量的是统计显著性，而非同源性的强度。一个短的完美匹配可能有很低的 E-value，但不一定代表生物学上有意义的同源关系。E-value 受查询序列长度、数据库大小和打分体系的影响，在不同搜索之间需要谨慎比较。',

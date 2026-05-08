@@ -3,13 +3,12 @@ description: 联合非负矩阵分解详解：通过共享基矩阵实现多组�
 title: "联合非负矩阵分解（Joint NMF）"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Joint NMF 通过在多个组学矩阵间共享基矩阵，强制它们在低维空间对齐，是多组学整合中最直观的矩阵分解方法。"
   bullets={[
     '核心思想是假设不同组学共享某些潜在的生物学因子',
@@ -371,6 +370,7 @@ $$
 
 ```python
 import numpy as np
+
 from sklearn.decomposition import NMF
 
 def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
@@ -438,11 +438,9 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
 ### R 实现
 
 使用 `NMF` 包或 `MultiAssayExperiment` 生态系统。
-
-
 <PageHeaderMeta section="Applications" />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Joint NMF 总能得到生物学有意义的因子：',
     '不一定。需要结合：',

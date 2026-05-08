@@ -3,14 +3,14 @@ title: "分子动力学基础：蛋白质运动的计算模拟"
 description: "分子动力学如何模拟蛋白质的构象变化、稳定性和自由能景观"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="分子动力学（Molecular Dynamics, MD）模拟通过数值积分牛顿运动方程，追踪蛋白质等生物大分子在原子级别的运动轨迹。它回答的核心问题是：蛋白质如何在三维空间中运动？构象变化如何影响功能？自由能景观如何决定稳定性？"
   bullets={[
     'MD 模拟基于力场（Force Field）：键合项 + 非键合项（van der Waals + 静电）',
@@ -22,8 +22,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 是什么
 
 **分子动力学（Molecular Dynamics, MD）** 是一种计算方法，通过模拟原子级别的运动来研究生物大分子的结构动态性和功能机制。
@@ -186,7 +184,7 @@ $$RMSF_i = \sqrt{\frac{1}{T} \sum_{t=1}^{T} |\mathbf{r}_i(t) - \langle\mathbf{r}
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'MD 引擎：GROMACS、AMBER、NAMD、OpenMM 执行原子级别模拟',
     '轨迹分析：MDTraj、PyEMMA、cpptraj 分析 RMSD、RMSF、氢键',
@@ -197,7 +195,7 @@ $$RMSF_i = \sqrt{\frac{1}{T} \sum_{t=1}^{T} |\mathbf{r}_i(t) - \langle\mathbf{r}
 
 ## 局限性与挑战
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**时间尺度限制**：典型 MD 模拟为 ns-μs，但很多生物学过程（如蛋白质折叠）需要 ms-s。',
     '**力场精度**：力场是近似模型，某些相互作用（如 π-π stacking、cation-π）可能不准确。',

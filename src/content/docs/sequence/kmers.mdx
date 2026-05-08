@@ -3,14 +3,13 @@ title: "k-mer 与序列表示"
 description: k-mer 作为生物序列离散化表示的基础，理解其在索引、比对、组装和分类中的核心作用。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="面对数十亿碱基的基因组，直接处理长字符串往往效率低下。k-mer（长度为 k 的连续子串）是生物信息学中最基础的离散化表示方法，它是统计序列特征、构建索引和组装图的基石。"
   bullets={[
     '掌握 k-mer 的形式化定义及其在长序列中的分布特性',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 什么是 k-mer？
 
 <DefinitionList
@@ -198,7 +195,7 @@ k-mer 是现代组装算法的核心抽象。
 | **Kraken2** | 物种分类 | $k=35$ 的精确 k-mer 匹配 + 最小完美哈希 |
 | **Minimap2** | Read Mapping | Minimizers（一种稀疏 k-mer 采样） |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'k-mer 越长越好：',
     '不一定。过长的 $k$ 值会导致：测序错误产生的错误 k-mer 大量占据存储空间；图中出现过多孤立节点（Dead Ends），使得欧拉路径难以找到。实践中通常通过分析 k-mer 频谱来选择合适的 $k$。',

@@ -3,15 +3,15 @@ description: 多组学整合中的常见策略、问题定义与选择原则。
 title: "多组学整合策略"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="多组学整合不是简单把多个矩阵拼起来，而是要先想清楚数据来源、分析目标和组学特性，再选择合适的整合策略。早期、中期和后期整合各有适用场景，没有万能方案。"
   bullets={[
     '整合前必须先明确：数据是否匹配、目标是什么、组学特性差异有多大',
@@ -29,8 +29,6 @@ import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 ### 什么是多组学整合
@@ -399,7 +397,7 @@ model_survival.fit(X, y)
 - 为临床预测提供更鲁棒的模型；
 - 为实验设计提供多组学证据支持。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '组学越多越好：',
     '不对。如果问题不清晰，更多数据只会增加噪声和计算负担。先明确科学问题，再决定需要哪些组学。',

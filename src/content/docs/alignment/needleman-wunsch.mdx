@@ -3,14 +3,12 @@ description: Needleman-Wunsch 算法的详细实现，包括动态规划递推�
 title: "Needleman-Wunsch 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Needleman-Wunsch 算法是全局比对的标准动态规划算法：它通过系统地枚举所有可能的比对路径，找到两条序列之间得分最高的全局比对。"
   bullets={[
     '掌握递推公式和回溯算法是理解的关键',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 Needleman-Wunsch 算法是 1970 年提出的第一个用于序列比对的动态规划算法。它解决了以下问题：
@@ -233,7 +229,7 @@ Needleman-Wunsch 算法本身很少直接用于大规模数据分析，主要因
 
 现代工具如 BLAST、BWA 等虽不直接使用 Needleman-Wunsch，但其扩展阶段的精确比对仍然基于类似的动态规划原理。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '全局比对总是优于局部比对：',
     '不是。全局比对强制两条序列从头到尾对齐，如果两条序列只有局部相似，全局比对可能产生误导性结果。',

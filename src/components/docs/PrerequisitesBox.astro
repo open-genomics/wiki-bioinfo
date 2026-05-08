@@ -12,27 +12,10 @@ interface Props {
 }
 
 import { Icon } from '@astrojs/starlight/components';
-import { buildHref, isExternalHref } from './link-utils';
+import { resolvePrereqItems } from './link-utils';
 
 const { title = '前置知识', items = [] } = Astro.props;
-const base = import.meta.env.BASE_URL;
-
-const resolvedItems = items.map((item) => {
-  if (typeof item === 'string') {
-    return {
-      label: item,
-    };
-  }
-
-  const target = item.href ?? item.to;
-  const href = target ? buildHref(target, base) : undefined;
-
-  return {
-    label: item.label ?? item.name ?? item.title ?? item.text ?? target ?? '',
-    href,
-    external: href ? isExternalHref(href) : false,
-  };
-});
+const resolvedItems = resolvePrereqItems(items, import.meta.env.BASE_URL);
 ---
 
 <aside class="note-card">

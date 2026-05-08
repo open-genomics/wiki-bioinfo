@@ -3,13 +3,12 @@ description: 细胞 Barcode 与 UMI 的定义、原理、纠错策略，以及�
 title: "细胞 Barcode 与 UMI"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="在单细胞测序中，我们面临两个核心挑战：如何识别 Read 来自哪个细胞？以及如何区分真实的分子与 PCR 重复？细胞 Barcode 与 UMI (Unique Molecular Identifier) 正是为此设计的分子标签。"
   bullets={[
     '掌握细胞 Barcode 的作用：细胞身份的"身份证"',
@@ -27,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 细胞 Barcode：标记空间身份
 
 在液滴法（如 10x Genomics）中，每个液滴包含一个带有数百万条引物的凝胶珠。
@@ -173,7 +170,7 @@ UMI 去重与计数（cellranger count / UMI-tools）
 - **定量阶段**：通过 UMI 去重获得无 PCR 偏差的基因表达矩阵。
 - **多样本整合**：通过基因型或样本特异性 Barcode 实现多样本混池测序（如 Demuxlet、CellHashing）。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"UMI 完全消除了 PCR 偏差"',
     'UMI 去重能校正 PCR 扩增的不均匀性，但无法解决捕获效率差异、转录本长度偏差等问题。UMI 计数仍然需要归一化才能进行跨细胞比较。',

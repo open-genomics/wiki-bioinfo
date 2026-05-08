@@ -3,15 +3,13 @@ description: 循环神经网络和长短期记忆网络在生物序列中的应�
 title: "循环神经网络（RNN）与 LSTM"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="循环神经网络通过隐状态传递信息，能够建模序列中的长程依赖关系；LSTM 通过门控机制解决了标准 RNN 的梯度消失问题，是序列建模的经典架构。"
   bullets={[
     '隐状态捕获序列上下文信息',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么需要递归建模
 
 与 CNN 的局部扫描不同，许多生物序列问题需要**考虑上下文**才能做出准确判断：
@@ -360,7 +356,7 @@ RNN/LSTM 在生物信息学中的代表性应用：
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'RNN 总是优于 CNN：',
     '不是。CNN 在检测局部 motif 时更高效，RNN 在建模长程依赖时更有优势。选择取决于任务特点。',

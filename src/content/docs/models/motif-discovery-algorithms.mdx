@@ -3,14 +3,12 @@ description: motif discovery 的典型算法路线：从穷举到随机化搜索
 title: "Motif discovery 的算法路线"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Motif discovery 算法解决的是在未知 motif 模式和位置的情况下，从一组序列中找出统计显著的局部模式。主要算法包括穷举、贪心、随机化搜索和 Gibbs sampling。"
   bullets={[
     '核心挑战是搜索空间指数增长，需要启发式方法',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 在 `motif-finding.md` 里，我们把 motif 理解为"带有统计偏好的局部模式"。
@@ -359,7 +355,7 @@ motif discovery 的输出常常不是一句"找到了字符串 TATAAA"，而是�
 
 否则，高分 motif 可能只是统计上看起来"像"，但并不一定有真实生物学作用。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'motif discovery 一定能给出唯一正确答案：',
     '不一定。不同初始化、不同背景模型、不同参数都可能导致不同结果。',

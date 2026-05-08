@@ -3,15 +3,15 @@ description: ATAC-seq（Assay for Transposase-Accessible Chromatin using sequenc
 title: "ATAC-seq"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='ATAC-seq 是目前研究染色质可及性（Chromatin Accessibility）最主流的技术。它利用 Tn5 转座酶能够「特异性切割开放区域」的特性，仅需少量细胞即可在全基因组范围绘制调控地图。'
   bullets={[
     '掌握 Tn5 转座酶的"切割即连接"原理',
@@ -29,8 +29,6 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 核心原理：Tn5 的"降落伞"
 
 ATAC-seq 的精妙之处在于利用了 **Tn5 转座酶** 的生化特性：
@@ -144,7 +142,7 @@ Bulk ATAC-seq 测量的是细胞群体的平均信号，但生物样本通常是
     - **Motif 偏差分析（chromVAR）**：由于数据太稀疏无法直接检测 footprint，改为计算每个细胞中 motif 的插入偏差以推断转录因子活性差异。
     - **多组学整合**：与 scRNA-seq 联合分析，关联染色质开放性与基因表达，构建基因调控网络。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '开放染色质 ≠ 基因一定在表达：',
     '开放染色质是转录的必要条件而非充分条件。一个区域可以开放但不被使用——转录因子可能未结合、必需的协同因子可能缺失、或染色质需要额外的修饰才能激活。解释 ATAC-seq 结果时，需结合基因表达数据（如 RNA-seq）才能确认调控是否转化为转录输出。',

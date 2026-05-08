@@ -3,14 +3,13 @@ description: 从可加性距离矩阵重建系统发育树的算法理论，包�
 title: "加法系统发育"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='加法系统发育探讨如何从距离矩阵精确恢复树结构。如果矩阵满足「可加性」，我们就能通过递归算法找回那棵唯一的潜在树。'
   bullets={[
     '理解可加矩阵（Additive Matrix）的定义与生物学意义',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 在基于距离的方法构建系统发育树时，我们假设物种间的进化差异可以由一棵带权树完全解释。给定一组物种之间的成对距离，**ADDITIVEPHYLOGENY** 算法要解决的问题是：如果这些距离确实来源于一棵树，我们能否精确地重建这棵树？
@@ -179,7 +176,7 @@ $$LimbLength(4) = \min \left\{ \frac{7+7-2}{2}, \frac{7+6-3}{2}, \frac{7+6-3}{2}
 - **Neighbor-Joining (NJ)** 可以看作是 `ADDITIVEPHYLOGENY` 的鲁棒变体，它在矩阵非严格可加时仍能寻找最优的邻居合并方案。
 - **Nearest Neighbor Interchange (NNI)** 是一种树拓扑搜索方法，可以在 ADDITIVEPHYLOGENY 产出的初始树基础上进行局部优化。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"ADDITIVEPHYLOGENY 可以直接用于真实数据"：',
     '由于真实的距离矩阵几乎从不严格满足可加性，直接使用 ADDITIVEPHYLOGENY 可能导致错误的结果——算法可能在某个步骤中找不到退化三元组，或者找到的插入位置产生不一致的边权。在实际应用中，应使用 Neighbor-Joining 等对非可加矩阵更鲁棒的方法。',

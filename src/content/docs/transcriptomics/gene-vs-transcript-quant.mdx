@@ -3,14 +3,13 @@ description: 基因层（Gene-level）与转录本层（Transcript-level）表�
 title: "基因层与转录本层表达定量"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="RNA-seq 定量可以在两个维度进行：转录本层（Isoform-level）提供了精细的剪接信息，而基因层（Gene-level）则在统计上更稳健。理解这两者的转化逻辑是差异表达分析的关键。"
   bullets={[
     '区分转录本层定量的"高维度不确定性"与基因层聚合的"信息损失"',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 是什么
 
 RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcript-level / Isoform-level）和**基因层**（Gene-level）。
@@ -130,7 +127,7 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
 | **共表达网络分析（WGCNA）** | **基因层** | 网络节点通常定义为基因，且需要较高的数据稳健性。 |
 | **蛋白质丰度预测** | **转录本层** | 不同的剪接变体可能编码不同的蛋白质产物，需要转录本级信息来预测。 |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '先做基因层比对再定量：',
     '直接把 Reads 比对到基因区间（即忽略剪接结构，只看基因的外显子-内含子边界）会导致严重的定量错误。原因在于：',

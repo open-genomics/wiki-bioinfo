@@ -3,14 +3,13 @@ description: DAG（有向无环图）最长路径问题是曼哈顿游客问题�
 title: "DAG 最长路径问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="DAG 最长路径问题是曼哈顿游客问题的推广形式，用于在任意有向无环图中寻找权重最大的路径，广泛应用于基因预测、序列组装和进化分析。"
   bullets={[
     '曼哈顿游客问题是 DAG 最长路径的特例',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 **DAG 最长路径问题**是曼哈顿游客问题（Manhattan Tourist Problem）的推广形式。它不再局限于规则的网格结构，而是适用于任意的**有向无环图（Directed Acyclic Graph, DAG）**。
@@ -315,7 +312,7 @@ DAG 最长路径算法可以处理负权重边：
 - **方法 1**：添加超级源点/汇点，连接到所有实际的源点/汇点
 - **方法 2**：对每个源点分别运行算法，取最大值
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'DAG 最长路径算法可以用于一般图：',
     '不能。一般图（含环）的最长路径问题是 NP-hard 的。DAG 最长路径算法的核心依赖——拓扑排序——在有环图上无法执行。如果图中有正权环，"最长路径"的概念本身就不存在（可以无限绕环增加权重）。',

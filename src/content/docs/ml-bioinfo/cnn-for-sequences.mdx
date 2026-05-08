@@ -3,14 +3,12 @@ description: 卷积神经网络在生物序列中的应用，包括卷积操作�
 title: "卷积神经网络（CNN）在序列中的应用"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="卷积神经网络通过局部卷积核在序列上滑动，自动识别局部 motif 和模式，是生物序列建模中最基础且有效的深度学习架构。"
   bullets={[
     '卷积核可以学习到位置无关的 motif',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么 CNN 适合检测生物序列模式
 
 生物序列中的功能性模式（如转录因子结合位点、调控元件）通常具有以下特征：
@@ -271,7 +267,7 @@ CNN 在生物信息学中的代表性应用：
 - 结合池化实现位置不变性
 - 输出层设计根据具体任务调整
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'CNN 只能检测局部模式：',
     '不是。通过多层堆叠，CNN 可以学习到层次化的特征，从局部 motif 到组合模式。',

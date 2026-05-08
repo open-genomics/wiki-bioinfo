@@ -3,17 +3,14 @@ description: 基因组数据格式的系统性认知框架。从 FASTA 参考序
 title: "常见数据格式总览"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学分析中，数据在多个层级间流动与转化。理解每种格式所处的层级——从参考序列、原始观测、定位结果，到注释对象、变异结果和派生指标——是正确使用这些数据的前提。"
   bullets={[
     '每种格式回答不同层级的问题：FASTA 定义参考框架，FASTQ 承载原始观测，BAM 记录定位结果，VCF 表示变异候选。',
@@ -23,8 +20,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 问题背景
 
 在基因组或转录组分析中，从原始测序数据到最终生物学结论，信息需要经过多个层级的转化与提炼。每一层都使用特定的文件格式来承载该层级的信息。一个核心问题是：**如何理解这些格式之间的关系，以及它们各自能够（和不能）回答什么问题？**
@@ -191,7 +186,7 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '不同软件经常被误认为"只是吃不同格式"，但它们实际上在处理不同语义层的对象。',
     'alignment、feature counting、variant calling、expression quantification 等步骤，本质上是在不同层之间做信息交接。',
@@ -201,7 +196,7 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
 
 ## 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '把 FASTQ 当成已经有坐标背景的数据，而不是原始观测。',
     '把 GTF/GFF 当成样本证据，而不是参考上的注释背景。',

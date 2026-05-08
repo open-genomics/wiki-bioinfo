@@ -3,16 +3,16 @@ title: "NCBI 资源体系：Gene、RefSeq、SRA 与 PubMed"
 description: "NCBI 作为综合生物信息学门户，其子系统如何组织基因、序列、数据集和文献资源"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="NCBI（National Center for Biotechnology Information）不是单一数据库，而是多个子系统的综合门户。理解 Gene、RefSeq、SRA、PubMed 等核心资源的对象类型和查询策略，是生物信息学分析的基础能力。"
   bullets={[
     'NCBI Gene：基因中心，整合多源注释信息，使用 Entrez Gene ID',
@@ -24,8 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **NCBI（National Center for Biotechnology Information）** 是美国国家生物技术信息中心，提供全球最大的生物信息学资源集合。
@@ -175,7 +173,7 @@ PubMed 存储超过 3500 万篇生物医学文献，通过 PMID（PubMed ID）�
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '数据下载：SRA Toolkit 从 SRA 获取原始 reads，转换为 FASTQ 进入分析流程',
     '注释查询：Entrez Programming Utilities（E-utilities）提供 API 批量获取 Gene 注释',
@@ -186,7 +184,7 @@ PubMed 存储超过 3500 万篇生物医学文献，通过 PMID（PubMed ID）�
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**NCBI 是单一数据库**：NCBI 是多个子系统的门户，Gene、RefSeq、SRA 是不同的数据库，有不同对象类型。',
     '**Gene Symbol 是稳定标识符**：基因符号可能随注释更新而变化，Entrez Gene ID 才是稳定的。',

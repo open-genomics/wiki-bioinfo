@@ -3,15 +3,15 @@ title: "精确匹配与近似匹配"
 description: 理解精确字符串匹配与允许误差（错配、插入缺失）的近似匹配之间的区别，以及"种子-延伸"架构如何连接这两者。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="在理想的数学世界中，我们寻找精确匹配。但在充满变异和错误的生物学现实中，近似匹配（Approximate Matching）才是常态。这两者的区别决定了算法的设计是从简单的索引查询走向复杂的动态规划。"
   bullets={[
     '区分精确匹配的确定性与近似匹配的容错性',
@@ -30,8 +30,6 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 为什么"精确"还不够？
 
 在生物信息学中，查询序列（Query）与参考序列（Reference）几乎永远不会完全相同：
@@ -205,7 +203,7 @@ $$
 - **近似匹配**适用于：Read Mapping、同源搜索、变异检测。
 - **种子-延伸**是两者的最佳折中，但种子长度和数量需要根据错误率 $e$ 和允许的错误数 $k$ 进行调优。当 $k$ 很大时（如跨物种搜索），可能需要更短的种子或更多的种子来保证敏感性。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '编辑距离越小，两个序列越同源：',
     '不一定。编辑距离没有考虑不同位置突变的生物学权重。在蛋白质比对中，某些氨基酸替换（如 I→V）比其他替换（如 G→W）更常见，因此需要使用打分矩阵（如 BLOSUM62）而非简单的编辑距离。',

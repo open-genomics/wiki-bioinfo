@@ -3,14 +3,12 @@ description: 最短超串问题：基因组组装的理论基础。理解如何�
 title: "最短超串问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="最短超串问题是基因组组装的理论简化版本：给定一组字符串片段，找到包含所有片段的最短字符串。这个问题是NP难的，但有实用的贪心近似算法。"
   bullets={[
     '理解最短超串问题的形式化定义和生物学意义',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 生物学背景
 
 ### 为什么需要最短超串
@@ -298,7 +294,7 @@ GREEDYSUPERSTRING(strings)
 
 虽然直接用于实际组装有限，但最短超串问题是理解组装算法原理的重要基础。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '最短超串问题的解就是真实的基因组序列：',
     '最短超串问题寻找的是包含所有输入片段的最短字符串，但真实的基因组序列不一定是"最短"的。例如，当输入 reads 中存在来自重复序列的片段时，最短超串可能将不同重复拷贝的 reads 压缩到一起，导致组装结果比真实基因组更短。此外，最短超串不考虑正负链问题，而真实基因组是双链的。',

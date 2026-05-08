@@ -3,15 +3,13 @@ description: 穷举搜索与分支定界：理解组合优化问题的基线方�
 title: "穷举搜索与分支定界"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="穷举搜索是解决组合优化问题的最直接方法，但搜索空间往往呈指数级增长。分支定界通过剪枝策略大幅减少需要探索的搜索空间，是许多生物信息学算法的基础。"
   bullets={[
     '理解穷举搜索作为理论基线的价值',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 为什么需要穷举搜索
 
 穷举搜索（exhaustive search）是最简单也最直观的算法策略：
@@ -223,8 +219,6 @@ BYPASS(a, i, L, k)
 4     return (a, j)
 5 return (a, 0)
 ```
-
-
 #### 部分共识分数
 
 给定起始位置 s = (s₁, s₂, ..., sₜ)，定义部分共识分数 `Score(s, i, DNA)` 为仅涉及前 i 行 DNA 的 i × l 比对矩阵的共识分数。
@@ -374,7 +368,7 @@ BRANCHANDBOUNDMOTIFSEARCH(DNA, t, n, l)
 - **多重序列比对**：某些精确比对算法使用分支定界
 - **组合优化**：许多生物信息学中的组合优化问题使用分支定界变种
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '分支定界总是比穷举快：',
     '不一定。如果：',

@@ -3,15 +3,13 @@ description: Hardy–Weinberg 平衡的数学原理、推导过程及其在群�
 title: "Hardy–Weinberg 平衡"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Hardy–Weinberg 平衡（HWE）是群体遗传学的理论基石。它证明了在理想条件下，等位基因频率和基因型频率将在代际间保持不变。这一模型为识别进化压力和评估测序质量提供了关键参照。"
   bullets={[
     '理解随机交配下基因型频率的数学推导：$p^2 + 2pq + q^2 = 1$',
@@ -29,8 +27,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 理想群体的稳定性
 
 1908 年，Hardy 和 Weinberg 独立证明了一个深刻的结论：在没有进化动力干扰的情况下，孟德尔遗传本身不会改变群体的遗传组成。
@@ -239,7 +235,7 @@ $$\hat{p}_{\text{MLE}} = \frac{2n_{AA} + n_{Aa}}{2n}$$
 
 ## 8. 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '认为 HWE 是自然界的"默认状态"。实际上，自然群体几乎不可能完全满足 HWE 的五个假设。HWE 的价值在于作为参照系来检测偏离。',
     '在 GWAS 中对病例组和对照组使用相同的 HWE 过滤阈值。病例组中致病位点天然可能偏离 HWE，过度过滤会丢失真实的遗传信号。',
@@ -251,7 +247,7 @@ $$\hat{p}_{\text{MLE}} = \frac{2n_{AA} + n_{Aa}}{2n}$$
 
 ## 9. 与真实工具的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '**PLINK**：`--hardy` 参数可对每个 SNP 执行 HWE 精确检验，`--hwe` 参数用于过滤偏离 HWE 的位点。',
     '**VCFtools**：`--hardy` 命令可计算 VCF 文件中每个位点的 HWE P 值。',

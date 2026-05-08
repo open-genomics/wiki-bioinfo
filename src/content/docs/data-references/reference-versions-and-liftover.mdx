@@ -3,17 +3,14 @@ description: 参考基因组版本体系与坐标转换（liftover）原理。�
 title: "参考版本、构建号与坐标转换"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="参考基因组版本（如 GRCh37、GRCh38）是所有基因组坐标的空间背景。理解版本差异的本质、掌握坐标转换（liftover）的原理与局限，是确保数据整合准确性的基础。"
   bullets={[
     '参考版本差异不仅是命名问题：同一坐标字符串在不同版本下可能指向完全不同的基因组位置甚至不同碱基。',
@@ -23,8 +20,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 问题背景
 
 基因组分析中的所有坐标——reads 的比对位置、变异位点、基因区间——都依赖于一个隐含的参照系：**参考基因组**。当我们说"chr1:1234567"时，完整的语义应包括：参考版本（如 GRCh38）、坐标系统（1-based 或 0-based）、染色体命名规范（chr1 或 1）。
@@ -228,7 +223,7 @@ liftover 依赖的是不同参考版本之间的全基因组比对关系。它�
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'variant calling、annotation、feature counting 和数据库对照等步骤，都默认结果位于某个明确的参考背景里。',
     '很多转换工具只负责坐标层映射，并不自动帮你统一 annotation release、数据库版本和命名规则。',
@@ -238,7 +233,7 @@ liftover 依赖的是不同参考版本之间的全基因组比对关系。它�
 
 ## 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '把 GRCh37 和 hg19 当成完全无需核查的同义词。',
     '只做坐标 liftover，就认为注释和数据库背景也自动统一了。',

@@ -3,16 +3,14 @@ description: 胚系变异（Germline）与体细胞变异（Somatic）检测的�
 title: "胚系变异与体细胞变异"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="区分变异的生物学来源对于选择正确的算法模型至关重要。胚系变异遵循孟德尔遗传规律，而体细胞变异则受克隆进化、肿瘤纯度和拷贝数变化的复杂驱动。"
   bullets={[
     '掌握 Germline 变异的合子型（Zygosity）与种群频率背景',
@@ -30,8 +28,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 变异来源的二元划分
 
 | 特征 | Germline Variants (胚系变异) | Somatic Variants (体细胞变异) |
@@ -192,7 +188,7 @@ PON 能有效捕获系统性技术噪音（如特定基因组区域的比对困�
 
 ## 7. 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '将 VAF = 0.5 作为胚系变异的绝对标准。测序覆盖度不足时（如 depth < 10），VAF 的置信区间很宽，0.3--0.7 的范围都可能与杂合胚系变异兼容。',
     '在肿瘤样本中忽略拷贝数变异对 VAF 的影响。如果一个杂合突变位点发生了拷贝数扩增（如从 2 拷贝扩增到 6 拷贝），VAF 可能远高于 0.5。',

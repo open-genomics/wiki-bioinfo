@@ -3,14 +3,12 @@ description: PWM 与 PSSM 的详细实现：理解位置权重矩阵和位置特
 title: "PWM 与 PSSM"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="PWM（位置权重矩阵）和 PSSM（位置特异打分矩阵）是 motif 的核心表示方法：它们通过位置相关的统计权重，使得我们可以对任意候选片段计算'像不像这个 motif'的得分。"
   bullets={[
     'PWM 是基于对数比值的打分矩阵，PSSM 是其应用形式',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 PWM（Position Weight Matrix，位置权重矩阵）和 PSSM（Position-Specific Scoring Matrix，位置特异打分矩阵）是描述序列 motif 的经典表示方式。
@@ -269,7 +265,7 @@ $$
 - 使用 PSSM 进行 genome-wide 扫描，给出高分候选位点；
 - 再结合进化保守性、表达数据和实验验证进行过滤。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'motif 一定对应一个固定的 consensus 串：',
     '不对。很多 motif 的本质正是"位置相关的偏好"，不是单个固定字符串。',

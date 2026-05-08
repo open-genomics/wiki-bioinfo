@@ -3,14 +3,12 @@ description: 字符串算法与索引结构：从 Trie、Suffix Array 到 FM-ind
 title: "字符串算法与索引结构"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="字符串算法与索引结构是生物信息学的基础设施，使得在人类基因组（3 Gb）甚至更大参考序列上进行快速搜索成为可能。"
   bullets={[
     '理解索引结构的设计权衡：查询速度、索引大小与构建时间',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么需要字符串算法与索引
 
 生物序列本质上是字符串（A、T、C、G 或 20 种氨基酸），因此面临以下挑战：
@@ -513,7 +509,7 @@ FindRepeats(SA, LCP, min_length):
 - **变异处理**：处理 SNP、indel
 - **质量控制**：过滤低质量 reads
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '索引越大越好：',
     '不是。索引应在查询速度与内存使用之间取得平衡。FM-index 通过压缩实现了良好的权衡。',

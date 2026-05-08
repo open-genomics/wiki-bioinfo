@@ -3,14 +3,13 @@ description: 典型相关分析详解：寻找两组变量间的最大相关性�
 title: "典型相关分析（CCA）"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="CCA 通过寻找两组变量的线性组合使它们之间的相关性最大化，是分析两组数据关联的经典统计方法，也是多组学整合的重要基础。"
   bullets={[
     '核心是最大化跨组学相关性，而非重构误差',
@@ -504,6 +503,7 @@ $$
 
 ```python
 import numpy as np
+
 from sklearn.cross_decomposition import CCA
 from scipy.linalg import eigh
 
@@ -551,8 +551,6 @@ def canonical_correlation_analysis(X, Y, n_components=None):
                     for i in range(n_components)]
 
     return W_x, W_y, correlations, U, V
-
-
 # 使用示例
 X = np.random.randn(100, 50)  # 100 样本，50 基因
 Y = np.random.randn(100, 30)  # 100 样本，30 甲基化位点
@@ -578,8 +576,6 @@ y_weights <- result$ycoef
 canonical_vars_X <- result$scores$xscores
 canonical_vars_Y <- result$scores$yscores
 ```
-
-
 <PageHeaderMeta section="Applications" />
 
 ## 统计检验
@@ -604,7 +600,7 @@ $$
 
 非参数方法，通过置换标签计算零分布。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '典型相关系数高意味着因果关系：',
     '不是。CCA 只能发现关联，不能推断因果方向。',

@@ -3,16 +3,13 @@ title: "数据库搜索与索引算法"
 description: "序列数据库搜索的核心算法：k-mer 索引、Seed-and-Extend、BWT/FM-index 与 BLAST 算法原理"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="序列数据库搜索面临的核心挑战：如何在数十亿碱基的数据库中快速找到与查询序列相似的记录。本章介绍 k-mer 索引、Seed-and-Extend 策略、BWT/FM-index 等核心算法，以及 BLAST 等工具的实现原理。"
   bullets={[
     '核心矛盾：搜索敏感性（Sensitivity）vs 计算速度（Speed）',
@@ -23,8 +20,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 9.10 为什么需要专门的数据库搜索算法
 
 ### 9.10.1 性能瓶颈分析
@@ -500,7 +495,7 @@ QGAMNKALELFRKDIAAKYKELGYQG
 
 ### 9.15.1 工具与算法映射
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'BLAST：seed-and-extend + 统计检验的典型实现，几乎所有数据库搜索的起点',
     'BWA/Bowtie：基于 FM-index 的 read mapping，现代 NGS 流程的基础',
@@ -522,7 +517,7 @@ QGAMNKALELFRKDIAAKYKELGYQG
 
 ## 9.16 常见误区与注意事项
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '认为 E-value 越小越好：E-value 依赖于数据库大小，不同数据库的 E-value 不能直接比较',
     '忽略 word size 的影响：word size 太大会漏掉真实同源，太小会产生太多假阳性',

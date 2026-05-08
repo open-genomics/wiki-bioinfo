@@ -3,13 +3,12 @@ description: 限制性图谱构建：通过限制性酶切和部分消化确定D
 title: "限制性图谱构建"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="限制性图谱（restriction mapping）是通过限制性酶切实验确定 DNA 分子上酶切位点位置的技术。核心计算问题是根据片段长度数据推断酶切位点的顺序和位置。"
   bullets={[
     '理解部分消化问题（Partial Digest Problem, PDP）的数学形式',
@@ -26,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 生物学背景
 
 ### 限制性酶
@@ -255,7 +252,7 @@ PPDP 可以分解为两个独立的 PDP：
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '部分消化问题（PDP）的解总是唯一的：',
     'PDP 可能存在多个解——不同的位点集合可能产生相同的距离多重集。即使分支定界找到了一个解，也不能保证它是唯一的。在实验中，测量误差会进一步增加解的不唯一性。实际应用中通常需要结合其他实验证据来消歧。',

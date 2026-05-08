@@ -3,14 +3,13 @@ description: 距离矩阵方法（Distance-based Methods）通过将序列差异
 title: "距离矩阵方法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能「解释」这些距离的树。'
   bullets={[
     '理解从多序列比对到距离矩阵的压缩过程',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 基于距离的方法要解决的核心问题是：**给定一组生物序列，如何高效地重建它们之间的进化关系？**
@@ -183,7 +180,7 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 - 序列之间具有足够的相似性，可以进行可靠的比对。
 - 距离矩阵中不应存在过多的缺失值。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"p-distance 和 Jukes-Cantor 距离差别不大"：',
     '对于高度分化的序列，两者的差别可以非常大。当 $p$ 接近 $75\%$（Jukes-Cantor 模型的上限）时，Jukes-Cantor 距离趋向无穷大，而 p-distance 仍然只是一个有限的分数。',

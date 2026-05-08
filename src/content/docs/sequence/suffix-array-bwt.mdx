@@ -3,14 +3,13 @@ title: "Suffix Array、BWT 与索引压缩"
 description: 理解后缀数组、Burrows-Wheeler 变换和压缩索引的理论基础，掌握后向搜索 (Backward Search) 的核心思想。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="当参考序列达到 3 Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
   bullets={[
     '掌握 Suffix Array (SA) 的定义：所有后缀按字典序排列的起始索引',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 Suffix Array（后缀数组）、Burrows-Wheeler Transform（BWT，Burrows-Wheeler 变换）和 FM-index 是现代序列索引技术的三大基石。它们共同解决了一个核心问题：如何在极小的内存开销下，对大规模参考序列（如人类基因组的 3 Gb 序列）实现极速的子串查询。
@@ -281,7 +278,7 @@ BWT 和 FM-index 的应用远不止序列比对：
 - **重复序列分析**：BWT 中的连续相同字符区域对应基因组中的重复序列；
 - **文本压缩**：BWT 变换后的文本经过 Move-to-Front 编码和算术编码，可以达到极高的压缩比。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '混淆 BWT 与压缩算法：BWT 本身不压缩数据，它只是一种排列变换。真正的压缩需要配合后续的编码步骤（如 Move-to-Front + 算术编码）。在索引应用中，BWT 的价值在于它支持后向搜索，而非压缩。',
     '认为 FM-index 只能做精确匹配：虽然基本的后向搜索只支持精确匹配，但通过扩展（如回溯搜索、seed-and-extend 策略），FM-index 也能支持带 mismatch 和 gap 的比对。BWA-MEM 就是这一思路的典型实现。',

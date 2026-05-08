@@ -3,15 +3,13 @@ description: ACMG/AMP 变异分类框架的系统阐述。理解证据标准化�
 title: "ACMG/AMP 变异分类框架"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-
 
 <PrerequisitesBox
   items={[
@@ -21,7 +19,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="ACMG/AMP 框架为临床变异解释提供了一套标准化的证据整合规则。其核心在于将不同来源的证据（群体频率、功能预测、家系分离、文献报道等）标准化为具有明确强度的条目，通过组合规则整合为 Pathogenic / Likely pathogenic / VUS / Likely benign / Benign 五级分类。"
   bullets={[
     '证据标准化与可追溯性是框架的核心：每类证据有明确的判定标准和强度等级',
@@ -31,8 +29,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 变异解释的核心流程
 
 ACMG 框架的实施通常遵循以下三个关键阶段：
@@ -381,7 +377,7 @@ ACMG 框架是变异解释的核心逻辑，但实际工作中还需要：
 
 因此，ACMG 框架是连接"原始变异数据"和"临床报告"的关键桥梁。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'ACMG 是完全机械打分，不需要判断：',
     '不对。ACMG 提供的是规则框架，但很多边界情况（如证据冲突、家系不完整、基因机制不明确）仍需要专业判断。',

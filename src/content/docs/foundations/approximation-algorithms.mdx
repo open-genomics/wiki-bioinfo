@@ -3,15 +3,13 @@ description: 近似算法：处理 NP-hard 问题的实用策略，在系统发�
 title: "近似算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="很多生物信息学问题是 NP-hard 的，无法在多项式时间内精确求解。近似算法提供了一种实用策略：在可接受的时间内找到足够好的解。"
   bullets={[
     '先理解什么是 NP-hard 问题，再看近似比的概念会更顺。',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 近似算法（approximation algorithm）用于解决优化问题，特别是 NP-hard 问题。它不追求最优解，而是在多项式时间内找到一个"足够好"的解。
@@ -349,7 +345,7 @@ Gibbs Sampling 没有理论保证的近似比，但通过多次运行可以提�
 - 缺点：结果不稳定
 - 适用：Motif 发现、树搜索等
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '近似算法总是比精确算法慢：',
     '不一定。近似算法：',

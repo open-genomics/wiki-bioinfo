@@ -3,14 +3,13 @@ title: "仿射 Gap 罚分 (Affine Gap Penalty)"
 description: 比对打分中极其重要的改进：将 Gap 代价拆分为开启与延长两部分，更符合生物学演化直觉。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='在简单的线性罚分模型中，每个 Gap 字符代价相同。但在生物学中，一次连续的插入或缺失（Indel）事件比多个离散事件更易发生。仿射 Gap 罚分通过区分「开启」和「延长」代价，完美解决了这一直觉问题。'
   bullets={[
     '掌握仿射罚分公式：$g(k) = g_o + k \cdot g_e$',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 是什么
 
 仿射 Gap 罚分（Affine Gap Penalty）是序列比对中 Gap 代价模型的重要改进。在简单的线性模型中，长度为 $k$ 的 Gap 代价为 $k \cdot g$，这意味着 $k$ 个连续 Gap 和 $k$ 个分散 Gap 的代价相同。仿射模型将 Gap 代价拆分为两部分——固定的开启代价和线性的延长代价——使得连续 Gap 比分散 Gap 更受偏好，更符合分子进化中插入/缺失事件的生物学现实。
@@ -304,7 +301,7 @@ Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(m
 
 这三种机制的共同特点是：**一次事件产生一个连续的 Gap**。仿射罚分模型正是对这一生物学现实的数学抽象。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Gap 开启罚分越大越好：',
     '不是。过大的 $\rho$ 会使算法倾向于用错配替代 Gap，导致比对中出现大量不合理的错配。过小的 $\rho$ 又会使 Gap 太多。合理的参数应该反映真实的进化过程——在蛋白质比对中，$\rho / \sigma$ 的比值通常在 5-11 之间。',

@@ -3,15 +3,14 @@ description: Neighbor-Joining算法：不依赖分子钟假设的距离矩阵建
 title: "Neighbor-Joining算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Neighbor-Joining（NJ）是一种不依赖分子钟假设的距离矩阵建树算法，通过最小化总树长来选择邻居对，是目前最常用的系统发育树构建方法之一。"
   bullets={[
     '核心思想是通过Q矩阵找到能最小化总树长的邻居对',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 **Neighbor-Joining系统发育重建问题**：
@@ -358,7 +355,7 @@ NJ通过分支长度的调整来处理演化速率不均匀的问题：
 - 当距离矩阵质量差时，结果可能不准确
 - 无法直接处理缺失数据
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'NJ总是比UPGMA好：',
     '不一定。当分子钟假设满足时，UPGMA可能更简单且效果相当。NJ的优势主要在演化速率不均匀时体现。',

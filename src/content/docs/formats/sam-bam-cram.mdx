@@ -3,15 +3,15 @@ title: "SAM/BAM/CRAM 格式：比对结果的标准编码"
 description: "SAM/BAM/CRAM 如何编码 reads 在参考基因组上的定位结果、CIGAR 字符串和比对质量"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="SAM/BAM/CRAM 编码的是比对结果——reads 在参考基因组坐标系中的定位。理解其核心字段（FLAG、CIGAR、MAPQ、TAGs），是解读变异证据、可视化检查和下游分析的基础。"
   bullets={[
     'SAM 是文本格式，BAM 是二进制压缩格式，CRAM 是参考感知压缩格式',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **SAM（Sequence Alignment/Map）** 格式编码的是**比对结果（alignment）**——将原始 reads 定位到参考序列坐标系中的计算产物。
@@ -245,7 +243,7 @@ $$MAPQ = -10 \log_{10}(P_{mapping\ error})$$
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '比对工具：BWA-MEM、Bowtie2、minimap2 输出 SAM，通常直接管道传输为 BAM',
     '排序与索引：samtools sort + samtools index 生成 coordinate-sorted BAM + .bai 索引',
@@ -257,7 +255,7 @@ $$MAPQ = -10 \log_{10}(P_{mapping\ error})$$
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**BAM 包含所有信息**：BAM 只保存比对结果，功能解释仍需外部注释（如 GTF）。',
     '**MAPQ = 碱基质量**：MAPQ 衡量的是比对位置置信度，不是碱基调用质量（那是 FASTQ 的 QUAL）。',

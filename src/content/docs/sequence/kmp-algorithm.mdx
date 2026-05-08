@@ -3,15 +3,13 @@ title: "KMP算法"
 description: "Knuth-Morris-Pratt算法详解：通过failure function实现线性时间字符串匹配，理解预处理如何消除重复计算"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="KMP算法通过预处理模式串构建failure function，在失配时避免无谓的重复比较，实现O(n+m)的线性时间复杂度，是字符串算法的经典范例。"
   bullets={[
     '核心思想：利用模式串自身的重复结构避免回退',
@@ -30,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 问题背景与动机
 
 Knuth-Morris-Pratt（KMP）算法解决的是经典的精确字符串匹配问题：
@@ -266,7 +262,7 @@ KMP本身在现代生物信息学工具中不常直接使用，但：
 - 基于后缀的索引（如FM-index）
 - 这些方法在预处理阶段构建复杂索引，查询时达到亚线性时间
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'KMP总是最快的：',
     '不是。在实际应用中：',

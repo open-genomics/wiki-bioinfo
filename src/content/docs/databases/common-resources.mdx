@@ -3,16 +3,13 @@ title: "常用数据库与资源"
 description: "NCBI、Ensembl、UniProt、PDB、KEGG、GEO/SRA 等核心生物信息学数据库的资源定位与查询策略"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学数据库围绕不同对象类型组织：基因/转录本、蛋白质、结构、通路、数据集。理解各资源的核心对象与组织方式，才能在分析中正确选择和使用。"
   bullets={[
     'NCBI：综合入口，承载 Gene/RefSeq、SRA、PubMed 等多个子系统',
@@ -24,8 +21,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 9.1 数据库对象的分类体系
 
 ### 9.1.1 生物信息学中的核心对象类型
@@ -233,7 +228,7 @@ KEGG 更适合把基因、蛋白或代谢对象放回通路背景中理解。
 3. **注释阶段**：将变异/差异基因映射到功能数据库
 4. **解释阶段**：通路富集、蛋白互作网络分析
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'RNA-seq、variant calling 等流程的"解释层"，最终都要把结果映射回 gene / transcript / protein / pathway 等数据库对象。',
     '注释工具（如 ANNOVAR、VEP）本质上是将坐标/ID 映射到数据库对象的自动化接口。',
@@ -243,7 +238,7 @@ KEGG 更适合把基因、蛋白或代谢对象放回通路背景中理解。
 
 ## 9.7 常见误区与注意事项
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '把 NCBI 当成单一数据库，而忽略它其实是多个资源入口的集合。',
     '只看 gene symbol，不确认稳定 ID、转录本层级或参考版本。',

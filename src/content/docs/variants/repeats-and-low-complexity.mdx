@@ -3,15 +3,13 @@ description: 重复序列与低复杂度区域（Repeats & LCRs）中的变异�
 title: "重复与低复杂度区域"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="人类基因组中超过 50% 的序列由重复元素构成。这些区域是变异检测的'重灾区'，因为它们会引发多重比对歧义和测序错误积累。理解重复序列的算法特征是准确识别复杂区域变异的基础。"
   bullets={[
     '理解重复序列的主要分类：串联重复（Tandem） 与散在重复（Interspersed）',
@@ -30,8 +28,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 基因组中的重复类型
 
 重复序列不仅是噪音，它们往往与演化、疾病和基因调控密切相关：
@@ -253,7 +249,7 @@ Region A 中有一个真实的 SNV（chr1:100500 处的 C>T），而 Region B �
 
 ## 7. 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '认为重复序列就是"垃圾 DNA"。虽然重复序列不编码蛋白质，但它们在基因调控、染色体结构和进化中扮演重要角色。例如，Alu 元件可以影响 mRNA 的可变剪接。',
     '在变异检测中忽略 MAPQ 过滤。在重复区域中保留 MAPQ = 0 的 Reads 会产生大量假阳性变异。标准的做法是过滤 MAPQ < 20 或更严格的阈值。',
@@ -265,7 +261,7 @@ Region A 中有一个真实的 SNV（chr1:100500 处的 C>T），而 Region B �
 
 ## 8. 与真实工具的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '**RepeatMasker**：重复序列标注的标准工具。将基因组序列与 Repbase 数据库比对，输出重复区域的坐标和类型。支持 soft/hard masking。',
     '**Tandem Repeats Finder (TRF)**：专门用于识别串联重复（包括微卫星）的工具。通过自相关检测和一致性评分来定位串联重复区域。',

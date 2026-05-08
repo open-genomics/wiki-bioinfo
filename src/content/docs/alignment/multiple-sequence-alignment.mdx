@@ -3,13 +3,12 @@ description: 多序列比对（MSA）的目标、难点与渐进式比对的核�
 title: "多序列比对 (MSA)"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='如果说双序列比对关注「两条序列如何对齐」，那么多序列比对（Multiple Sequence Alignment, MSA）则是在同一个框架中同时比较多条同源序列，旨在揭示保守位点和家族变异模式。'
   bullets={[
     '理解 MSA 空间复杂度的指数级增长挑战',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 是什么
 
 多序列比对（Multiple Sequence Alignment, MSA）是指将三条或更多条生物序列（DNA、RNA 或蛋白质）按照某种优化准则排列在同一坐标系中，使得同源位置彼此对齐。形式化地，给定 $k$ 条序列 $S_1, S_2, \ldots, S_k$，MSA 试图找到一个由字符集 $\Sigma \cup \{-\}$ 中的元素组成的矩阵 $A$，使得每一行对应一条原始序列（去掉 gap 后恢复原序列），且目标函数最大化。
@@ -221,7 +218,7 @@ H - L A - W G H E -
 - **T-Coffee**（Notredame et al., 2000）采用了不同思路：先计算所有两两比对，然后构建一个**一致性库**（Consistency Library），记录每对残基在不同两两比对中的对齐频率。渐进合并时，使用一致性分数替代简单的替换矩阵。这种方法能有效减少渐进式比对中的错误传播。
 - **M-Coffee** 是 T-Coffee 的元版本，它综合多个 MSA 工具的输出，通过一致性投票产生最终比对。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '指导树不等于进化树：',
     'Progressive alignment 中生成的指导树仅仅是为了确定合并顺序。它的目的是让最相似的序列先合并，但并不一定代表真实的系统发育关系。实际上，指导树的质量对比对结果的影响远大于比对方法本身的选择。',

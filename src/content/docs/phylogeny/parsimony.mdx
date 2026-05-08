@@ -3,15 +3,14 @@ description: Parsimony简约法：通过Fitch算法和Sankoff算法最小化进�
 title: "Parsimony算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Parsimony（简约法）通过寻找需要最少进化变化的系统发育树来推断物种关系，使用Fitch算法和Sankoff算法高效计算单个位点的最小变化数。"
   bullets={[
     '核心思想是在所有可能的树中选择需要最少替换事件的那一棵',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 **简约性系统发育重建问题（Small Parsimony Problem）**：
@@ -431,7 +428,7 @@ Parsimony的一个主要问题是长枝吸引：
 - 无法提供统计置信度
 - 搜索最优树是NP难问题
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Parsimony总是选择最简单的树：',
     '不是。Parsimony选择的是"需要最少替换事件"的树，这不一定是结构最简单的树。',

@@ -3,15 +3,13 @@ description: 半全局比对详解：理解如何处理序列端部的gap，适�
 title: "半全局比对"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="半全局比对允许序列端部存在gap，是理解read mapping和重叠检测等场景的关键算法，介于全局比对和局部比对之间。"
   bullets={[
     '重点理解半全局比对的边界条件如何与全局比对不同',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 半全局比对（semi-global alignment）是序列比对的一种变体，它允许序列的端部（开头或结尾）存在gap而不产生罚分。
@@ -308,7 +304,7 @@ S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 
 如果两条序列预期高度相似，可以使用带状动态规划，将复杂度降低到 $O(k \cdot \min(m,n))$，其中 $k$ 是带宽。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '半全局比对就是局部比对：',
     '不是。局部比对可以从序列的任意位置开始和结束，而半全局比对仍然要求至少覆盖一条序列的大部分。',

@@ -3,14 +3,12 @@ description: 图算法在生物信息学中的应用：从基因组组装的 de 
 title: "图算法在生物信息学中的应用"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="图算法为理解和解决生物信息学中的复杂问题提供了统一框架，从基因组组装到系统发育分析，图结构无处不在。"
   bullets={[
     '将生物学问题转化为图问题是理解的关键第一步',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么图算法重要
 
 生物信息学中的许多问题天然具备图结构：
@@ -454,7 +450,7 @@ D [ 9  10   8   0 ]
 - **igraph**：图算法库
 - **NetworkX**：Python 图分析库
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '图越大，算法越慢：',
     '不一定。算法复杂度取决于顶点数 V 与边数 E 的关系。稀疏图（E ≈ V）的算法可能比稠密图（E ≈ V²）快得多。',

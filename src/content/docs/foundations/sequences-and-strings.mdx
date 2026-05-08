@@ -3,15 +3,14 @@ title: "序列、字符串与坐标系统"
 description: 将生物序列抽象为计算机科学中的字符串，理解碱基配对、反向互补以及生物信息学中的坐标约定。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物序列（DNA, RNA, 蛋白质）在计算层面上被抽象为有限字母表上的字符串。理解这一抽象以及随之而来的坐标系统约定，是所有后续算法（如比对、组装）的物理基础。"
   bullets={[
     '掌握 DNA 的四字符字母表 {A, C, G, T} 及其双链互补特性',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 1. 从分子到字符串
 
 在计算机眼里，复杂的生物大分子被简化为线性排列的字符。这一抽象是生物信息学所有后续计算的基础——比对、组装、变异检测、Motif 搜索，归根结底都是字符串操作。
@@ -255,7 +252,7 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 - **变异检测**：通过比较样本序列与参考序列，识别单核苷酸变异（SNV）、插入缺失（Indel）和结构变异（SV）。
 - **基因注释**：在基因组序列上标注基因、外显子、调控元件等功能区域的位置。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区一：忽视反向互补链。在搜索或比对时只考虑正链，会遗漏约一半的真实匹配。测序仪可以从任何一条链上读取信息，因此分析时必须同时考虑正链和反链。',
     '误区二：混淆坐标系统。在不同工具和文件格式之间转换时，如果不注意 0-based 与 1-based 的差异，会导致提取错误的基因组区域。这是生物信息学中最常见的数据处理错误之一。',

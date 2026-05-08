@@ -3,15 +3,13 @@ description: Gene prediction 的详细实现：理解如何用 HMM 等概率模�
 title: "Gene prediction"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Gene prediction 是识别基因组序列中基因结构的经典问题：通过 HMM 等概率模型，将序列分段为 exon、intron、intergenic 等功能状态，预测完整的基因模型。"
   bullets={[
     '核心是状态建模：exon、intron、intergenic 等功能状态的转移和发射',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 Gene prediction 关注的是：给定一段基因组序列，如何识别其中哪些区段更可能对应 exon、intron、起始/终止信号或完整基因结构。它要做的不是简单寻找几个 motif，而是把原始字符序列解释成更高层的注释对象。
@@ -475,7 +471,7 @@ Gene prediction 是把序列模型、统计建模和注释生成连接起来的�
 
 因此，gene prediction 更适合理解为"候选注释结构生成与评分"，而不是一步到位得到绝对真值。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '只靠局部 motif 就能完整预测基因：',
     '通常不够。真实基因结构识别往往需要把局部信号和全局结构约束一起考虑。',

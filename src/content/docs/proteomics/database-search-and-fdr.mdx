@@ -3,14 +3,13 @@ description: 蛋白质鉴定的数据库搜索方法、PSM 评分、Target-Decoy
 title: "数据库搜索与 FDR"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="数据库搜索是目前蛋白质鉴定最常用的方法。本章介绍肽段-谱图匹配（PSM）的概念、常用评分算法、通过 Target-Decoy 策略控制错误发现率（FDR）的统计方法，以及如何处理带有修饰的肽段。"
   bullets={[
     '理解肽段-谱图匹配（PSM） 作为蛋白质鉴定的基本单位',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 是什么
 
 <figure>
@@ -251,7 +248,7 @@ $$\widehat{\text{FDR}}(t) = \frac{\#\{\text{Decoy PSMs with score} \geq t\}}{\#\
 | **Comet** | XCorr 变体 | SEQUEST 的开源替代，可集成到 TPP (Trans-Proteomic Pipeline) 流程中 |
 | **MetaMorpheus** | 非特异性搜索 | G-PTM-D 算法，适合未知修饰的发现 |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '过度信赖单一评分：',
     '不同的评分算法对同一组 PSM 可能给出不同的排序。XCorr 和 Mascot Ion Score 的数值不可直接比较。在严格的蛋白质组学研究中，推荐使用至少两种独立的方法交叉验证鉴定结果，或使用如 Percolator 等机器学习方法对多个评分特征进行整合。',

@@ -3,15 +3,15 @@ title: "基因组注释管线：从序列到功能注释的自动化流程"
 description: "基因组注释的自动化流程如何识别基因、转录本、功能域和调控元件"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="基因组注释（Genome Annotation）是将原始 DNA 序列转化为功能信息的过程：识别基因位置、外显子-内含子结构、转录本、蛋白质产物、调控元件和非编码 RNA。理解注释管线的步骤、证据来源和质量评估，是正确解读注释结果的前提。"
   bullets={[
     '注释管线分为两步：结构注释（基因在哪里）+ 功能注释（基因做什么）',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **基因组注释**是将原始 DNA 序列转化为生物学功能信息的系统化过程。它回答两个核心问题：
@@ -183,7 +181,7 @@ busco -i annotation.fa -l vertebrata_odb10 -m geno
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '注释下载：Ensembl、GENCODE、NCBI 提供 GTF/GFF 文件',
     '注释整合：gffread、agat 工具和比较不同注释',
@@ -195,7 +193,7 @@ busco -i annotation.fa -l vertebrata_odb10 -m geno
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**注释 = 绝对真理**：注释是计算预测 + 证据整合，可能存在错误或遗漏。',
     '**所有注释系统给出相同结果**：Ensembl、GENCODE、RefSeq 的基因数量和结构可能不同。',

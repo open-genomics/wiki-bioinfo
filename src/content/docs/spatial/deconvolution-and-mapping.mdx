@@ -2,13 +2,13 @@
 description: 空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略
 title: "去卷积与细胞映射"
 ---
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略"
 />
 
@@ -254,8 +254,7 @@ scRNA-seq 参考数据
 - **富集区域**：某些区域可能由单一类型主导（如淋巴滤泡）
 - **异常模式**：纯肿瘤区域内出现免疫细胞比例，可能提示浸润
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"去卷积比例就是精确细胞数"',
     '"参考 scRNA-seq 数据集越大越好"',

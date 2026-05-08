@@ -3,14 +3,13 @@ description: k-means 聚类算法在生物信息学中的应用，包括 Lloyd �
 title: "k-means 在生物信息学中的应用"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="k-means 是一种经典的划分式聚类算法，旨在将数据点分配到 k 个簇中，使每个点到其所属簇中心的平方距离之和最小。在生物信息学中，它常用于初步探索基因表达模式。"
   bullets={[
     '掌握 Lloyd 算法的"分配-更新"迭代过程',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 在生物信息学中，k-means 要解决的核心问题是：**如何在无标签的高维生物数据中自动发现具有相似行为的模式组？** 具体场景包括：
@@ -167,7 +164,7 @@ k-means 特别适合处理"扁平"的聚类任务：
 | **噪声鲁棒性** | 差 | 中等 | 较好 |
 | **时间复杂度** | $O(n \cdot k \cdot d)$ | $O(n^2)$ | $O(n^3)$ |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"k-means 适用于所有类型的生物数据"：',
     'k-means 使用欧几里得距离，这意味着它假设所有维度是等权重的且可比较的。对于基因表达数据，不同基因的表达量级可能差异巨大，如果不进行标准化，高表达基因会主导聚类结果。',

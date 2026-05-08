@@ -3,14 +3,12 @@ title: "de Bruijn graph 组装"
 description: 基于 k-mer 与 de Bruijn 图的基因组组装方法：图构建、遍历算法及与 OLC 方法的比较。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary='de Bruijn graph 组装把 read 的局部重叠信息压缩成统一的图结构，是理解短读长组装和图清理问题的最经典入口之一。'
   bullets={[
     '先理解顶点和边分别表示什么，再去看 tips、bubbles、repeats 等复杂结构。',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 de Bruijn graph 是短读长组装中的经典模型。它的核心思想不是直接比较每一对 read 是否重叠，而是先把 reads 分解成 k-mer，再把这些局部片段组织成图。
@@ -331,7 +327,7 @@ de Bruijn graph 常让人联想到欧拉路径问题，因为理想情况下我�
 
 其中 $N$ 为 read 数量，$L$ 为平均 read 长度，$m$ 为 k-mer 数量，$|S|$ 为输出序列长度。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'de Bruijn graph 就等于欧拉路径；',
     '只要把 k 调大，重复问题就会消失；',

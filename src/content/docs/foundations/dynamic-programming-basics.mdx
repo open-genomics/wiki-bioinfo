@@ -3,14 +3,12 @@ description: 动态规划基础：从曼哈顿游客问题到序列比对。理�
 title: "动态规划基础：曼哈顿游客问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="动态规划（Dynamic Programming, DP）是解决优化问题的强大技术。曼哈顿游客问题提供了一个直观的例子，展示了DP的核心思想：通过求解子问题来构建原问题的解。"
   bullets={[
     '理解动态规划的核心思想：分解问题、存储子问题解、避免重复计算',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 什么是动态规划
 
 动态规划是一种算法设计技术，用于解决具有以下特征的问题：
@@ -289,7 +285,7 @@ DPCHANGE(M, c, d)
 
 理解曼哈顿游客问题是掌握序列比对、基因预测等生物信息学核心算法的第一步。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '动态规划就是填表：',
     '填表只是实现手段。动态规划的核心是三个要素：最优子结构、重叠子问题、无后效性。很多问题可以设计出 DP 方案但不一定需要显式填表（如带记忆化的递归）。反之，盲目填表而不验证这三个前提条件，可能导致错误结果。',

@@ -3,14 +3,13 @@ description: Consensus 算法的核心原理，包括 Racon 的部分顺序图�
 title: "Consensus 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Consensus 算法通过整合多条覆盖同一区域的 reads 信息，生成高质量共识序列。它是降低长读长测序错误率、提升组装质量的关键步骤。"
   bullets={[
     '长读长原始错误率 5-15%，通过多序列共识可降至 Q20-Q30',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题引入：如何从噪声中恢复真相
 
 考虑一个简化场景：
@@ -268,7 +265,7 @@ PacBio 生态使用不同的 consensus 算法：
 - **Arrow**：基于条件随机场（CRF）的 consensus
 - **CCS**：Circular Consensus Sequencing，通过多次测序生成 HiFi reads
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Consensus 总是提高准确性 不一定。如果 reads 质量极差或覆盖度严重不均（如某些区域只有 1-2×），consensus 可能引入系统性错误而非纠正错误。',
     '覆盖度越高越好 不是。Polishing 的边际收益递减，通常 30-50× 覆盖度已足够。过高覆盖度会显著增加计算成本。',

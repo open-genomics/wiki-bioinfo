@@ -3,15 +3,14 @@ title: "NGS 流程总览"
 description: 高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
 <PageHeaderMeta section="Applications" />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。"
 />
 
@@ -127,8 +126,7 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
 
 真正使用具体工具时，最重要的不是记住某个命令，而是理解工具在流程中的位置、输入输出和它对后续步骤的影响。
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '只要工具能跑通，流程就算正确；',
     '下游结果异常时，只需要在最后一步调参数；',

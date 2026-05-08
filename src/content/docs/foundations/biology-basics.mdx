@@ -3,14 +3,13 @@ title: "生物信息学中的基础对象"
 description: 建立 DNA、RNA、蛋白质、基因组、reads 和注释等基本对象的整体认识，理解分子生物学实验技术产生的原始数据。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学并非研究抽象算法，而是处理一组互相转换、互相约束的生物学对象。理解这些对象及其背后的实验技术，是选择合适算法的前提。"
   bullets={[
     '区分 DNA、RNA 和蛋白质在信息载体、表达和功能层面的不同角色',
@@ -21,8 +20,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 1. 核心生物学对象
 
 在算法抽象之前，我们需要明确处理的是什么对象：
@@ -157,7 +154,7 @@ graph LR
 - **个体差异**：人与人之间约有 **0.1%** (300 万个碱基) 的差异。生物信息学的变异检测（Variant Calling） 目标就是识别这些微小区别。
 - **比较基因组学**：通过比对不同物种（如人与果蝇）的基因组，寻找高度保守的区域，这些区域通常对应着关键的生物学功能。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '基因组 = 遗传信息的全部：',
     '基因组只是遗传信息的载体之一。表观遗传修饰（DNA 甲基化、组蛋白修饰等）不改变基因组序列本身，但能显著影响基因表达。生物信息学处理的主要是序列层面的信息，而非全部遗传学信息。',

@@ -3,15 +3,15 @@ title: "GTF/GFF/BED 格式：基因组注释与区间表示"
 description: "GTF、GFF 和 BED 如何编码基因组注释结构和区间集合，以及它们的坐标系统差异"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="GTF/GFF 编码层级化基因组注释（gene-transcript-exon 结构），BED 编码简洁区间集合。理解它们的层级结构、坐标系统差异（1-based vs 0-based）和语义不等价性，是 RNA-seq 定量、peak 分析和功能注释的前提。"
   bullets={[
     'GTF 是 GFF2 的严格子集，强制 gene_id/transcript_id 属性',
@@ -30,8 +30,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 这三种格式都编码**基因组上的位置信息**，但抽象层次不同：
@@ -188,7 +186,7 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'RNA-seq 定量：featureCounts、HTSeq 以 BAM + GTF 为输入，输出基因/转录本计数矩阵',
     'ChIP-seq：MACS2 输出 peak 区域为 BED 格式',
@@ -200,7 +198,7 @@ chr1  1000  5000  BRCA1_peak  950  +  1000  5000  255,0,0  2  1500,1200  0,2800
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**坐标系统混淆**：直接将 GTF 的 start 当作 BED 的 start 使用，导致区间偏移 1 bp。',
     '**GTF 与 BED 功能等价**：两者虽然都表示"区间"，但 GTF 是层级注释结构，BED 是扁平区间列表，语义不等价。',

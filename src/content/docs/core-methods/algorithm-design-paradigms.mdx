@@ -3,13 +3,12 @@ title: "算法设计范式"
 description: 生物信息学六大算法设计范式：从穷举搜索到随机化算法的核心思想、复杂度特征及典型应用场景。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="面对复杂的生物学问题，如何将其转化为可计算的模型并选择最高效的策略？生物信息学算法通常遵循六种核心范式。理解这些范式是掌握工具底层逻辑、进行参数优化乃至设计新算法的关键。"
   bullets={[
     '掌握穷举、贪心、动规、分治、图论和随机化六大核心策略',
@@ -27,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 算法设计范式（Algorithm Design Paradigm）是解决计算问题时反复出现的通用策略模式。掌握这些范式，不在于记住某个具体算法的步骤，而在于建立"看到问题类型就能联想到合适策略"的直觉。
@@ -169,7 +166,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - **设计新方法时**：大多数新算法不是凭空发明的，而是将已有范式应用到新的问题或数据类型上；
 - **排查错误时**：当工具结果异常时，理解算法范式可以帮助判断问题可能出在哪个环节。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '认为"更复杂的范式一定更好"：实际上，简单的贪心或线性扫描在适用场景下可能远优于复杂的随机化方法。关键在于范式与问题的匹配。',
     '混淆"近似算法"与"启发式"：近似算法有可证明的质量保证（如"结果不超过最优解的 1.5 倍"），而启发式没有理论保证，只在实践中效果好。',

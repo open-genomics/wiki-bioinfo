@@ -3,14 +3,12 @@ description: 生物信息学中的核心算法总览：从动态规划、图算�
 title: "生物信息学算法总览"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学算法是连接生物学问题与计算实现的桥梁。本章系统梳理支撑 DNA-seq、RNA-seq、组装、变异检测等任务的核心算法范式。"
   bullets={[
     '重点理解每种算法解决什么生物学问题，以及它的适用边界',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么需要算法视角
 
 生物信息学分析任务常常面临三个根本挑战：
@@ -284,7 +280,7 @@ $$
 - **阅读源码**：理解工具中的算法实现
 - **性能分析**：用真实数据测试不同算法
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '算法越复杂越好：',
     '不是。简单算法如果足够用，往往更可靠、更易维护。复杂度应该与问题难度匹配。',

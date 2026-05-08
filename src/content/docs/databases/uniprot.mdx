@@ -3,15 +3,15 @@ title: "UniProt 蛋白质知识库：序列、功能与注释整合"
 description: "UniProt 如何组织蛋白质序列、功能注释、结构域和跨数据库映射资源"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="UniProt 是蛋白质序列与功能注释的统一入口。理解 Swiss-Prot（人工审编）与 TrEMBL（自动注释）的质量差异、Accession 体系、以及蛋白层级注释（功能、结构域、PTM、互作），是从基因走向功能解释的关键。"
   bullets={[
     'Swiss-Prot：高质量人工审编，经过实验验证的蛋白质记录',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **UniProt（Universal Protein Resource）** 是全球最全面的蛋白质序列与功能注释数据库，由 EMBL-EBI、SIB 和 PIR 联合维护。
@@ -174,7 +172,7 @@ UniProt 充当**蛋白质世界的中心枢纽**，连接其他数据库：
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '蛋白质序列获取：UniProt 下载 FASTA 序列用于序列分析或比对',
     '功能注释映射：通过 UniProt ID 批量获取 GO 注释和通路信息',
@@ -186,7 +184,7 @@ UniProt 充当**蛋白质世界的中心枢纽**，连接其他数据库：
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**Swiss-Prot = TrEMBL**：两者质量差异显著，Swiss-Prot 经过人工确认，TrEMBL 是自动注释。',
     '**蛋白质名称是稳定标识符**：应使用 Accession（如 P04637），而非蛋白质名称。',

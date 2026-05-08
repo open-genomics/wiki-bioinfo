@@ -3,14 +3,13 @@ description: 基于长读长的结构变异检测原理、证据类型与工具�
 title: "结构变异检测"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="结构变异（Structural Variation, SV）通常指基因组中大于 50 bp 的变异。长读长测序通过跨越变异断点，为解析缺失、重复、倒位和易位等复杂重排提供了前所未有的分辨率。"
   bullets={[
     '掌握 SV 的主要类型：DEL, INS, DUP, INV, TRA',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 结构变异检测要解决的核心问题是：**如何从测序数据中准确识别基因组中大于 50 bp 的序列改变？**
@@ -204,7 +201,7 @@ SV Caller 的处理：
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"SV Caller 报告的变异都是真实的"：',
     'SV Caller 的输出中通常包含一定比例的假阳性。尤其是在重复区域、低覆盖度区域和端粒附近，假阳性率会显著升高。所有候选 SV 都需要经过严格的质量过滤和（如果可能的话）实验验证。',

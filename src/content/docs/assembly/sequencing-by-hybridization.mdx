@@ -3,14 +3,12 @@ description: 测序杂交（SBH）：使用DNA芯片进行测序的替代方法�
 title: "测序杂交（Sequencing by Hybridization, SBH）"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="测序杂交是一种基于DNA芯片的测序方法，通过杂交反应确定目标DNA序列的所有l-mer组成，然后利用图论算法重构原始序列。SBH展示了如何将生物问题转化为图论问题。"
   bullets={[
     '理解SBH的生物学原理和实验流程',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 什么是测序杂交（SBH）？
 
 在 1980 年代末，生物学家提出了一种与传统桑格测序完全不同的思路：**测序杂交（Sequencing by Hybridization, SBH）**。
@@ -311,7 +307,7 @@ SBH问题提供了重要的算法设计启示：
 
 虽然SBH本身未能成为主流测序技术，但它为理解生物信息学中的图论方法提供了经典案例。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '欧拉路径建模使 SBH 变得简单，因此可以用于真实组装：',
     '欧拉路径建模虽然将计算复杂度从 NP-完全降到了多项式时间，但这是建立在"完美谱"（即已知所有 l-mer 且无错误）的假设之上的。实际杂交实验中，假阳性和假阴性使得谱不完整且含有噪声，导致欧拉路径无法直接应用。这也是 SBH 未能成为主流测序方法的核心原因之一。',

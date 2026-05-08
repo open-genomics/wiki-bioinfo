@@ -3,14 +3,13 @@ description: ChIP-seq（Chromatin Immunoprecipitation sequencing）通过免疫�
 title: "ChIP-seq 概览"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='ChIP-seq 能够以全基因组范围、单碱基分辨率定位特定蛋白质（如转录因子、修饰组蛋白）的结合位点。它将分子生物学的「免疫富集」与计算生物学的「峰调用」完美结合，是解析基因调控网络的标准方法。'
   bullets={[
     '掌握 ChIP-seq 的四大核心步骤：交联、片段化、免疫沉淀、测序',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 核心原理：锁定蛋白质的足迹
 
 ChIP-seq 的本质是**比较富集**：通过特异性抗体抓取目标蛋白，将其结合的 DNA 片段从基因组库中"打捞"出来。
@@ -107,7 +104,7 @@ ChIP-seq 的本质是**比较富集**：通过特异性抗体抓取目标蛋白�
 - **热图与信号图谱（Heatmap / Profile Plot）**：围绕转录起始位点（TSS）或峰中心绘制信号分布，揭示蛋白质结合的空间模式，比较不同样本的信号一致性。
 - **峰集合比较**：Venn 图可显示峰集合的交集，Upset plot 更适合比较多组样本的共享峰，帮助理解条件特异性与共享调控。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区一：没有 Input 对照也能可靠检测峰：',
     '基因组不同区域的本底信号差异很大——开放染色质天然易碎、重复序列有比对偏差、GC 含量影响覆盖度。没有 Input 对照，这些系统性偏差会被误判为真实的蛋白结合信号。',

@@ -3,14 +3,13 @@ title: "近似模式匹配"
 description: "编辑距离、汉明距离与近似匹配算法，理解如何处理测序错误和生物变异的字符串匹配问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="近似模式匹配允许在文本中查找与模式串有最多k个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
   bullets={[
     '问题定义：在允许k个差异的情况下查找模式出现位置',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 **近似模式匹配（Approximate Pattern Matching）** 是在文本 $T$ 中查找与模式串 $P$ 相似但不完全相同的所有出现位置的问题。与精确匹配不同，它允许一定数量的"差异"（错配、插入、删除）。
@@ -346,7 +343,7 @@ BLAST(query, database):
 - 蛋白质比对：考虑 BLOSUM/PAM 矩阵
 - DNA 比对：考虑转换/颠换偏好
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '编辑距离越小，匹配越"有意义"：',
     '编辑距离小只表示两个序列在字符层面相似，但并不自动意味着它们具有生物学相关性。例如，两个随机的低复杂度序列（如 poly-A 尾）可能编辑距离很小，但毫无生物学意义。判断匹配的生物学意义需要结合统计显著性评估（如 E-value）、功能注释和进化上下文，而非仅看距离数值。',

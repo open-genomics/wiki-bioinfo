@@ -3,14 +3,13 @@ description: 剪接比对（Spliced Alignment）是相似性基因预测的核�
 title: "剪接比对"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
   bullets={[
     '结合候选外显子生成与全局比对约束',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 **剪接比对（Spliced Alignment）** 是相似性基因预测的算法核心：给定基因组序列、候选外显子集合和**目标蛋白序列**，找到**最佳外显子链**，使其拼接后的序列与目标蛋白的比对得分最高。
@@ -212,7 +209,7 @@ It was brill + iant thril + ling morning + ...
 
 剪接比对由 **Gelfand, Mironov 和 Pevzner** 于 1996 年提出，首次系统地将相似性信息整合到基因预测算法中。该方法成为 **twinscan**、**N-SCAN** 等流行基因预测工具的基础。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '剪接比对只是在 Exon Chaining 基础上加了比对约束：',
     '虽然剪接比对确实在 Exon Chaining 上增加了全局比对约束，但这一增加从根本上改变了问题的计算结构。Exon Chaining 的路径权重可以简单分解为边权重之和，而剪接比对的路径权重依赖于蛋白序列的连续性，不能简单分解。这导致剪接比对需要三维动态规划（基因组位置 × 蛋白位置 × 当前外显子），复杂度显著高于 Exon Chaining。',

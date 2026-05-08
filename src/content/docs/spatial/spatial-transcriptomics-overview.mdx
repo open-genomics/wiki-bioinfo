@@ -2,13 +2,13 @@
 description: 空间转录组学的技术原理、数据结构与标准分析流程
 title: "空间转录组总览"
 ---
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="空间转录组学的技术原理、数据结构与标准分析流程"
 />
 
@@ -183,8 +183,7 @@ UMI 计数 → gene × spot 矩阵
 
 两者整合是空间转录组分析的标准范式。
 
-
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"有空间坐标就等于单细胞分辨率"',
     '"空间图上颜色深浅反映绝对表达量"',

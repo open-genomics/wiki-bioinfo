@@ -3,15 +3,15 @@ title: "VCF/BCF 格式：变异候选的标准编码"
 description: "VCF/BCF 如何编码基于比对证据推断的序列差异、基因型和质量指标"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="VCF（Variant Call Format）编码的是变异候选（variant calls）——基于比对证据推断的序列差异。理解其结构（REF/ALT、QUAL、INFO、FORMAT、基因型），是变异过滤、注释和解释的基础。"
   bullets={[
     'VCF 是文本格式，BCF 是二进制格式，两者语义等价',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **VCF（Variant Call Format）** 格式编码的是**变异候选（variant calls）**——基于 BAM 比对证据和统计模型产生的序列差异推断。
@@ -170,7 +168,7 @@ GT=0/1  →  携带 A 和 G
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '变异检测：GATK HaplotypeCaller、FreeBayes、samtools mpileup 输出 VCF',
     '变异过滤：VQSR（GATK）、bcftools filter 根据 QUAL/INFO 字段过滤',
@@ -181,7 +179,7 @@ GT=0/1  →  携带 A 和 G
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**VCF = 最终结论**：VCF 是统计推断，QUAL 和 FILTER 字段反映置信度，需要结合上下文解释。',
     '**VCF 包含原始证据**：VCF 只保存聚合统计信息（DP、AF），不保存产生调用的 reads（需回查 BAM）。',

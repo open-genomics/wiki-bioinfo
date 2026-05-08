@@ -3,14 +3,13 @@ title: "概率、图与动态规划预备"
 description: 生物信息学中三大核心数学模型的概览：处理不确定性的概率模型、处理结构的图模型以及寻求最优解的动态规划。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="如果把生物信息学看作计算问题，那么其核心抽象几乎可以归结为三类模型。它们不是孤立的章节分类，而是贯穿整个学科的通用语言，用于处理高噪音、大规模且具有复杂结构的生物数据。"
   bullets={[
     '概率模型：处理观测与真实状态之间的不确定性（如 HMM、PWM）',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 1. 概率模型：处理不确定性
 
 生物数据（如测序 Reads）充满了噪音和不确定性。我们看到的观测值（Observations）并不直接等于真实状态（Hidden States）。
@@ -168,7 +165,7 @@ $$P(H \mid D) = \frac{P(D \mid H) \cdot P(H)}{P(D)}$$
 
 在生物信息学中，许多看似不同的方法都可以被理解为概率图模型的特例或近似。理解这一统一视角，有助于在面对新问题时选择合适的建模策略。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区一：认为概率模型只在"有噪音"时才需要。实际上，即使数据完美，概率模型仍然提供了处理不确定性的统一框架。例如，多序列比对中的保守性评估本质上就是一个概率问题。',
     '误区二：将图模型等同于可视化工具。图模型是数学抽象，其价值在于将关系结构形式化，从而使得算法可以在其上操作（如寻路、社区检测），而非仅仅用于画图。',

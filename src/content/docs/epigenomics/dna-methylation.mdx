@@ -3,13 +3,12 @@ description: DNA 甲基化（DNA Methylation）是最核心的表观遗传修饰
 title: "DNA 甲基化"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="DNA 甲基化是在不改变 DNA 序列的前提下，通过在胞嘧啶上添加甲基来调控基因表达的机制。它是理解细胞分化、基因组印记和癌症发生的关键。"
   bullets={[
     '掌握 CpG 二核苷酸与 CpG 岛（CG-islands）的概念',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 什么是 DNA 甲基化？
 
 在哺乳动物中，甲基化主要发生在 **CpG**（C-磷酸-G）二核苷酸的胞嘧啶（C） 上。
@@ -110,7 +107,7 @@ Bulk WGBS 测量的是细胞群体的平均甲基化水平，但组织中存在�
 - **降维与聚类**：使用 PCA 或非负矩阵分解对细胞的区域甲基化谱进行降维，识别细胞亚群。
 - **与 scRNA-seq 整合**：由于单细胞甲基化数据本身太稀疏，常利用参考 bulk 甲基化图谱或与 scRNA-seq 联合分析来推断细胞类型。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区 1：甲基化数据可以脱离参考基因组版本解释。 CpG 位点坐标严格依赖参考基因组版本（hg19 vs hg38），基因组补丁和替代位点可能影响注释。分析时必须确保所有数据使用一致的参考版本。',
     '误区 2：CpG 岛总是低甲基化的。 体细胞中 CpG 岛通常保持非甲基化，但在特定情况下会发生高甲基化——如肿瘤细胞中抑癌基因启动子 CpG 岛的高甲基化、印记基因的差异化甲基化，以及 X 染色体失活相关的甲基化。',

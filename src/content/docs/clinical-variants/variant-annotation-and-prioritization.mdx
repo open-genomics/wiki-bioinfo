@@ -3,15 +3,13 @@ description: 临床基因检测中的变异注释、多维过滤与优先级排�
 title: "变异注释与优先级排序"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-
 
 <PrerequisitesBox
   items={[
@@ -21,7 +19,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   ]}
 />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="临床基因检测（WES/WGS）产生数万至数百万候选变异，核心挑战在于如何从中系统性地筛选出最可能与患者表型相关的致病变异。有效的优先级排序需要整合群体频率、功能影响、遗传模式和基因-表型匹配等多维证据，而非依赖单一分数。"
   bullets={[
     '多维证据框架优于单一分数：频率过滤、功能评估、遗传模式匹配、表型一致性需综合权衡',
@@ -31,8 +29,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 变异筛选的"漏斗"模型
 
 从数万个原始变异到最终的致病变异，是一个层层筛选的过程：
@@ -372,7 +368,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - 为遗传咨询提供排序后的解释重点；
 - 为功能实验设计提供优先级指导。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '罕见 = 致病：',
     '不对。绝大多数罕见变异仍是良性或意义不明。罕见性只是必要条件，不是充分条件。',

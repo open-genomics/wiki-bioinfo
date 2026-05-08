@@ -3,14 +3,13 @@ description: Maximum Likelihood最大似然法：在给定演化模型下寻找�
 title: "Maximum Likelihood算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Maximum Likelihood（最大似然）通过在给定演化模型下寻找最可能产生观测序列的系统发育树，使用Pruning算法高效计算似然值，是现代系统发育分析的主流方法。"
   bullets={[
     '核心思想是在给定替换模型下，找到使观测数据概率最大的树和参数',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 **最大似然系统发育重建问题**：
@@ -376,7 +373,7 @@ Maximum Likelihood是Bayesian方法的特例：
 - 可能陷入局部最优
 - 需要较多的计算资源
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Maximum Likelihood总是得到正确答案：',
     '不是。Maximum Likelihood找到的是在给定模型下最可能产生数据的树，但如果模型错误，结果也可能错误。',

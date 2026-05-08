@@ -3,15 +3,15 @@ title: "PDB 蛋白质结构数据库：实验结构与计算预测"
 description: "PDB 如何存储和组织蛋白质三维结构，以及与 AlphaFold 预测结构的关系"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="PDB（Protein Data Bank）是全球唯一的实验测定生物大分子三维结构数据库。理解结构文件的格式（PDB/mmCIF）、测定方法（X-ray、NMR、Cryo-EM）和结构质量指标（分辨率、R-factor），是从序列走向结构功能解释的基础。"
   bullets={[
     'PDB 存储实验测定的蛋白质、核酸、复合体三维结构',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **PDB（Protein Data Bank）** 是全球唯一的实验测定生物大分子三维结构存档数据库，由 wwPDB（Worldwide PDB）联盟维护。
@@ -183,7 +181,7 @@ ATOM 2 C CA MET 1 26.266 25.413 2.842
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '结构可视化：PyMOL、ChimeraX、VMD 加载 PDB/mmCIF 文件',
     '结构搜索：Foldseek 快速搜索结构相似性',
@@ -195,7 +193,7 @@ ATOM 2 C CA MET 1 26.266 25.413 2.842
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**PDB 结构 = 绝对真理**：实验结构也有误差，需检查分辨率和 R-factor。',
     '**静态结构代表所有状态**：蛋白质是动态分子，单一结构不反映所有构象。',

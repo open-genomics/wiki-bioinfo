@@ -3,14 +3,14 @@ title: "FASTQ 格式：原始测序观测的标准化编码"
 description: "FASTQ 格式如何编码原始测序 reads、Phred 质量分数，以及它在分析流程中的证据角色"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="FASTQ 是生物信息学分析流程的起点，承载测序仪输出的原始 reads 及其质量分数。理解其结构、质量编码体系和变体，是质控、比对和定量分析的前提。"
   bullets={[
     'FASTQ 四行结构：标识符、序列、分隔符、质量分数',
@@ -21,8 +21,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **FASTQ 格式**编码的是**原始测序观测（raw sequencing reads）**——测序仪直接输出的碱基序列及其对应的质量分数（quality scores）。这是分析流程的起点，承载实验观测的原始证据。
@@ -154,7 +152,7 @@ sample_R2.fastq.gz  ← read 2 序列
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '质控工具：FastQC（质量报告）、MultiQC（汇总报告）、fastp（质控+修剪）',
     '比对工具：BWA-MEM、Bowtie2、minimap2 以 FASTQ 为输入，输出 SAM/BAM',
@@ -165,7 +163,7 @@ sample_R2.fastq.gz  ← read 2 序列
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**质量编码混淆**：假设所有 FASTQ 都使用 Phred+33，而旧版 Illumina 数据可能使用 Phred+64，导致质量值解读错误。',
     '**FASTQ 包含位置信息**：FASTQ 只保存 reads 本身，比对后才获得参考坐标。',

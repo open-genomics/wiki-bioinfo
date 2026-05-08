@@ -3,15 +3,13 @@ description: 连锁不平衡的数学定义、度量指标、生物学起源及�
 title: "连锁不平衡"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Hardy–Weinberg 平衡描述了单个位点的稳定性，而连锁不平衡（Linkage Disequilibrium, LD）则描述了不同位点之间的非随机关联。LD 是理解基因组结构、单倍型块以及 GWAS 信号来源的核心概念。"
   bullets={[
     '掌握 LD 的数学度量：$D$, $D\'$ 和 $r^2$',
@@ -29,8 +27,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 从独立到关联：什么是 LD？
 
 如果两个位点是独立遗传的，那么它们同时出现某种等位基因组合的频率应该等于各自频率的乘积。
@@ -260,7 +256,7 @@ $$r^2 = \frac{D^2}{p_A p_a p_B p_b} = \frac{0.10^2}{0.50 \times 0.50 \times 0.60
 
 ## 8. 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '混淆 $D\'$ 和 $r^2$。$D\' = 1$ 不意味着两个位点信息等价；$r^2 = 1$ 才表示完全可替代。在 GWAS Tag SNP 选择中，应使用 $r^2$ 而非 $D\'$。',
     '假设 LD 只与物理距离有关。虽然物理距离是主要因素，但群体历史（瓶颈、选择、奠基者效应）同样深刻影响 LD 的模式。',
@@ -272,7 +268,7 @@ $$r^2 = \frac{D^2}{p_A p_a p_B p_b} = \frac{0.10^2}{0.50 \times 0.50 \times 0.60
 
 ## 9. 与真实工具的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '**PLINK**：`--r2` 参数可计算 SNP 对之间的 $r^2$，`--ld-window` 控制计算范围。是 LD 计算的入门工具。',
     '**Haploview**：LD 可视化的经典工具，可绘制 LD 三角矩阵图和定义单倍型块。',

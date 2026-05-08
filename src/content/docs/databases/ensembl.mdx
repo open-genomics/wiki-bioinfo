@@ -3,15 +3,15 @@ title: "Ensembl 基因组注释：基因、转录本与变异注释体系"
 description: "Ensembl 如何组织基因组注释、转录本层级对象和多物种比较基因组学资源"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Ensembl 是领先的基因组注释数据库，提供 gene/transcript/protein 层级结构、变异注释和多物种比较基因组学。理解其对象体系（Ensembl ID）、注释流程（automated annotation）和版本系统，是 RNA-seq 定量和变异解释的基础。"
   bullets={[
     'Ensembl 使用稳定的 Ensembl ID 体系（ENSG/ENST/ENSP），不依赖易变的基因符号',
@@ -23,8 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 是什么
 
 **Ensembl** 是欧洲分子生物学实验室（EMBL-EBI）维护的基因组注释数据库，提供自动化的基因注释、转录本结构、变异影响预测和多物种比较基因组学资源。
@@ -189,7 +187,7 @@ Ensembl Compara 提供跨物种比较资源：
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'RNA-seq 定量：下载 Ensembl GTF，与参考基因组 FASTA 配合使用',
     '变异注释：VEP 或 SnpEff 使用 Ensembl 注释预测变异功能影响',
@@ -200,7 +198,7 @@ Ensembl Compara 提供跨物种比较资源：
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**Ensembl = NCBI**：两者是不同的注释体系，Ensembl 使用自动化流程，NCBI 有人工审编（RefSeq）。',
     '**Gene Symbol 足够**：一个 Gene Symbol 可能对应多个转录本，需要使用 Ensembl ID 区分。',

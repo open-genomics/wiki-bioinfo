@@ -3,11 +3,9 @@ description: 层次聚类在基因表达与样本关系分析中的作用，以�
 title: "层次聚类"
 ---
 
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PageHeaderMeta
@@ -16,7 +14,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   startWith="阅读本文了解层次聚类核心算法，然后学习 UPGMA 或 Neighbor-Joining 算法"
 />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="层次聚类（Hierarchical Clustering）是基因表达数据分析的核心方法，通过迭代合并最相似的簇构建树状结构（Dendrogram）。"
   bullets={[
     '理解凝聚式（Agglomerative） 层次聚类的核心算法流程',
@@ -79,7 +77,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 - **层次聚类树**：纯粹基于数据相似性的数学组织，枝长仅代表合并时的距离。
 - **系统发育树**：试图恢复真实的演化历史，枝长通常代表演化时间或替换数。
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     'R 语言：`hclust()` 是最标准实现；`pheatmap` 常用于表达矩阵可视化。',
     'Python：`scipy.cluster.hierarchy` 提供了完整的聚类与绘图接口。',
@@ -87,7 +85,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '不要过度解读根节点：层次聚类的根节点通常只是最后合并的结果，不一定代表"祖先"。',
     '预处理至关重要：由于基于距离，数据是否经过 Log 转换或标准化会极大地改变聚类结果。',

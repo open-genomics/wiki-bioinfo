@@ -3,13 +3,12 @@ description: Gibbs Sampling 是用于 Motif Finding 的马尔可夫链蒙特卡�
 title: "Gibbs Sampling"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Gibbs Sampling 是用于 Motif Finding 的随机化算法，通过马尔可夫链蒙特卡洛方法在庞大的搜索空间中高效寻找保守序列模式。"
   bullets={[
     '马尔可夫链蒙特卡洛（MCMC）方法',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 **Gibbs Sampling** 是一种用于 Motif Finding 的随机化算法，由 Charles Lawrence 等人于 1993 年提出。它属于**马尔可夫链蒙特卡洛（MCMC）**方法家族，通过巧妙的随机采样策略在庞大的搜索空间中寻找保守的 DNA 序列模式（motif）。
@@ -374,7 +371,7 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 - 保守的结构或序列 motif
 ```
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Gibbs Sampling 运行足够多次迭代就一定能找到全局最优 motif：',
     'Gibbs Sampling 理论上在无限次迭代后能收敛到平稳分布，但这并不意味着一定能访问到全局最优解。收敛到平稳分布只是说明采样频率反映了各状态的概率，而全局最优 motif 的概率可能非常小。实践中，算法的搜索能力受初始化位置、序列保守程度和 motif 长度的强烈影响。对于高度退化的 motif（信息含量低），单次运行的 Gibbs Sampling 几乎必然错过最优解，必须依赖多次随机重启。',

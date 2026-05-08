@@ -3,14 +3,13 @@ description: 长读长组装的基本原理、OLC 策略流程、纠错方法与
 title: "长读长组装"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="长读长组装的核心优势在于其能够直接跨越复杂的重复序列。不同于短读长的 de Bruijn 图策略，长读长通常采用 OLC (Overlap-Layout-Consensus) 范式，通过构建重叠图来恢复基因组的连续性。"
   bullets={[
     '掌握 OLC 组装的三阶段：重叠检测（Overlap）、布局构建（Layout） 与共识生成（Consensus）',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 基因组组装的本质是将数以百万计的短序列片段（Reads）重新拼接成完整的基因组序列。**长读长组装**要解决的核心问题是：如何利用长读长数据的长度优势，跨越短读长无法处理的重复区域，产出连续的染色体级别组装。
@@ -185,7 +182,7 @@ Read 4: A T G C C A T G G A C T T A G C
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"只要 Read 足够长，组装就一定连续"：',
     'Read 长度是必要条件但不是充分条件。如果基因组中存在比最长 Read 更长的串联重复（Tandem Repeat），即使 Read 很长也无法区分重复的拷贝边界。此外，数据覆盖度不足也会导致部分区域完全没有 Read 覆盖。',

@@ -3,14 +3,14 @@ title: "FASTA 格式：参考序列的标准表示"
 description: "FASTA 如何编码参考基因组序列，以及它在分析流程中的坐标骨架角色"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
+
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="FASTA 编码参考序列（reference sequence）——整个生物信息学坐标系统的骨架。理解其简单结构、索引机制（.fai）和版本体系，是比对、注释和变异检测的前提。"
   bullets={[
     'FASTA 结构简单：定义行（`>` 开头）+ 序列行',
@@ -157,7 +157,7 @@ samtools faidx reference.fa.gz
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '比对工具：BWA、Bowtie2、minimap2 以 FASTA 为参考输入',
     '索引构建：samtools faidx、bwa index、bowtie2-build 基于 FASTA 构建索引',
@@ -168,7 +168,7 @@ samtools faidx reference.fa.gz
 
 ## 常见概念误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '**FASTA = FASTQ**：FASTA 不含质量分数，不能替代 FASTQ 作为原始 reads。',
     '**参考版本可混用**：GRCh37 和 GRCh38 的 FASTA 序列不同，混用会导致坐标错位。',

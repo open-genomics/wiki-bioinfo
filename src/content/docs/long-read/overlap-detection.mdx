@@ -3,14 +3,13 @@ description: 长读长组装中的重叠检测算法，包括 Minimap 的 minimi
 title: "重叠检测算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
   bullets={[
     '全对全比对对于百万级 reads 计算不可行，必须采用降维策略',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题引入：组合爆炸的困境
 
 考虑一个简单的组装场景：
@@ -280,8 +277,6 @@ r₂:  CGTACGTACGTA
 - 相似度：10/11 ≈ 90.9%
 
 如果 L_min = 10, S_min = 90%，则保留该重叠。
-
-
 ## 与真实工具或流程的连接
 
 ### Minimap2
@@ -300,7 +295,7 @@ Minimap2 是当前最流行的长读长比对工具，它扩展了原始 Minimap
 - **纠错工具**：Racon、Medaka 等依赖 Minimap 的重叠信息
 - **SV 检测**：Sniffles2 等使用 Minimap2 进行 read 比对
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Minimizer 越多越好：',
     '不是。过多的 minimizer 会增加索引大小和候选对数，反而降低效率。需要根据数据特征调整窗口大小。',

@@ -3,17 +3,14 @@ description: 生物信息学数据库与注释系统的系统性概述。理解 
 title: "数据库与注释系统一览"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DecisionMatrix from '@/components/docs/DecisionMatrix.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学数据库并非平面的资源列表，而是围绕特定生物学对象（基因、转录本、变异、蛋白、样本等）组织的信息体系。理解不同数据库的中心对象、ID 命名规则和版本背景，是正确整合与解释数据的前提。"
   bullets={[
     '数据库的本质差异在于其中心对象：注释系统围绕基因/转录本，变异数据库围绕位点/等位基因，蛋白资源围绕功能/结构，队列资源围绕样本/实验。',
@@ -23,8 +20,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Data References" />
-
-
 ## 问题背景
 
 生物信息学研究中涉及的数据库与注释资源数量庞大，从 Ensembl、RefSeq 到 ClinVar、gnomAD，再到 GEO、SRA，初学者常感无所适从。一个系统性的认知框架是：**不同类型的数据库围绕不同的中心生物学对象组织信息**。
@@ -201,7 +196,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 与真实工具或流程的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '结果注释流程的核心，不是某个数据库单独给出答案，而是多个资源族在对象和版本上能否接得起来。',
     'variant annotation、RNA-seq 结果解释、功能富集等任务，本质上都依赖数据库对象映射。',
@@ -211,7 +206,7 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 ## 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '把 gene symbol 当成稳定、唯一且跨数据库可直接互换的主键。',
     '把群体频率数据库和临床数据库混为一谈。',

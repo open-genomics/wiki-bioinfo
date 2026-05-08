@@ -3,13 +3,12 @@ description: Nanopore Basecalling 算法的核心思想，包括 HMM 模型与�
 title: "Basecalling 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
   bullets={[
     'Nanopore 测量 k-mer 穿过纳米孔时的离子电流变化，而非直接识别碱基',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题引入：如何"阅读"电流信号
 
 Nanopore 测序的物理原理与 Illumina 或 PacBio 截然不同：
@@ -178,8 +175,6 @@ DNA 穿过纳米孔的速度不均匀，导致信号时间扭曲。
 
 **修饰碱基**：
 甲基化等修饰改变电流信号，需要专门训练模型或将其作为额外输出维度。
-
-
 ## 示例
 
 ### 简化 HMM 示例
@@ -290,7 +285,7 @@ Oxford Nanopore 的官方 basecaller：
 - **GPU 优化**：高度优化的 GPU 实现
 - **修饰检测**：集成碱基修饰检测
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Basecalling 只需要一次：',
     '不是。通常需要多次迭代，特别是对于低质量数据。',

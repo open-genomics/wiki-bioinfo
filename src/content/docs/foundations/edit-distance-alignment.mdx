@@ -3,14 +3,13 @@ description: 编辑距离、序列比对的基础算法：从编辑距离到全�
 title: "编辑距离与序列比对"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="编辑距离是度量两个字符串相似度的最小编辑操作数，序列比对则通过插入空格使字符串对齐。这两种概念都通过动态规划解决，是生物信息学中最基础的序列比较方法。"
   bullets={[
     '编辑距离允许插入、删除和替换操作，适用于长度不同的字符串比较',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 什么是编辑距离
 
 编辑距离（edit distance）也称 Levenshtein 距离，是将一个字符串转换为另一个字符串所需的最少单字符编辑操作数。每种操作的成本通常为 1：
@@ -232,7 +229,7 @@ TATA-
   ]}
 />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '编辑距离越小，两条序列的生物学关系越近：',
     '编辑距离度量的是字符串层面的差异，不能直接等同于进化距离或功能相似性。不同区域的选择压力不同——编码区的同义突变不改变蛋白质，而非编码区的突变可能影响调控。需要结合替换矩阵（如 PAM、BLOSUM）和进化模型来评估生物学意义上的距离。',

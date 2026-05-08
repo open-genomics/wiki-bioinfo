@@ -3,15 +3,13 @@ description: 变异检测算法的选择取决于其尺度。本节对比 SNP/�
 title: "Small Variants 与结构变异 (SV)"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-import ToolMappingBox from '@/components/docs/ToolMappingBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="变异检测（Variant Calling）在不同尺度上采用完全不同的算法。Small Variants 依赖局部堆叠（Pileup）的统计特征，而结构变异（SV）则需要整合全基因组范围的非正常比对信号。"
   bullets={[
     '掌握 Small Variants（SNP、短 Indel）的局部统计推断模型',
@@ -30,8 +28,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 变异尺度的分界线
 
 | 类型 | 尺度 | 主要特征 |
@@ -260,7 +256,7 @@ $$\hat{L}_{\text{DEL}} = 700 - 350 = 350 \text{ bp}$$
 
 ## 10. 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   items={[
     '认为 50 bp 是 Small Variants 和 SV 的严格分界线。实际上，50--1000 bp 是一个"灰色地带"，短读长数据对这一范围内的 Indel 检测能力都很有限。这一范围通常被称为"中间尺度变异"，需要专门的工具和策略。',
     '在 SV 检测中忽略 Insert Size 分布的偏移。不同文库的 Insert Size 分布可能差异很大，使用错误的 $\mu$ 和 $\sigma$ 会导致大量假阳性或假阴性。',
@@ -272,7 +268,7 @@ $$\hat{L}_{\text{DEL}} = 700 - 350 = 350 \text{ bp}$$
 
 ## 11. 与真实工具的连接
 
-<ToolMappingBox
+<NoteCard variant="tools"
   items={[
     '**GATK HaplotypeCaller**：Small Variants 检测的工业标准。通过局部 de Bruijn 图组装实现准确的 SNP 和短 Indel 基因分型。',
     '**DeepVariant**：Google 开发的基于深度学习的变异检测工具。使用卷积神经网络从 Pileup 图像中识别变异，在多个基准测试中表现优异。',

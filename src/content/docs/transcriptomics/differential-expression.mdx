@@ -3,12 +3,10 @@ description: RNA-seq 差异表达分析的统计模型：负二项分布、离�
 title: "差异表达：统计模型与假设检验"
 ---
 
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
-
 
 <PageHeaderMeta
   section="Applications"
@@ -16,7 +14,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
   startWith="从 count 数据的统计分布特性出发，理解负二项分布模型、离散度估计与多重检验校正的算法基础。"
 />
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="差异表达分析的核心是构建统计模型来判断观察到的表达差异是否超出随机波动范围。本节介绍基于负二项分布的 count 数据建模、离散度估计方法与多重检验校正算法。"
   bullets={[
     '统计模型：为什么 RNA-seq 差异分析使用负二项分布而非正态分布',
@@ -284,7 +282,7 @@ $$\log \mu_{ij} = \log s_j + \text{condition}_j \cdot \beta_i + \text{batch}_j \
 - 样本设计存在混杂因素
 - transcript 层与 gene 层目标混用
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '混淆统计显著性与生物学重要性：',
     'p-value 小 ≠ 生物学意义大',

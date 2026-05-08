@@ -3,12 +3,12 @@ title: "长读长测序"
 description: "长读长测序技术将单条 read 长度从数百 bp 提升至数十 kb，从根本上改变了基因组组装、结构变异检测和复杂区域解析的能力。"
 ---
 
+import NoteCard from '@/components/docs/NoteCard.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import SummaryBox from '@/components/docs/SummaryBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="长读长测序（Long-read sequencing）产生数千至数百万碱基长度的连续序列，使研究者能够跨越重复区域、直接观测结构变异，并获得完整的转录本和单倍型信息。"
   bullets={[
     'PacBio 与 Oxford Nanopore 是两大主流平台，测序原理和误差特征各异',
@@ -19,8 +19,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 核心问题
 
 基因组学研究长期以来面临一个基本限制：**如何组装和解析那些超过测序 read 长度的重复区域？**

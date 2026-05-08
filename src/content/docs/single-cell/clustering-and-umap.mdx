@@ -3,14 +3,13 @@ description: 单细胞数据降维与聚类的算法原理：从 PCA 线性投�
 title: "聚类与 UMAP 降维"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary='单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的「维度灾难」。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。'
   bullets={[
     '掌握 PCA 的线性投影逻辑：寻找解释最大方差的变异轴',
@@ -328,11 +327,9 @@ sc.pp.neighbors(adata, n_neighbors=15, n_pcs=30)
 sc.tl.leiden(adata, resolution=0.8)
 sc.tl.umap(adata)
 ```
-
-
 <PageHeaderMeta section="Applications" />
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"UMAP 簇就是细胞类型"',
     'UMAP 的簇形状受参数和随机种子影响，可能出现人工连接或分离。始终以聚类标签为准，UMAP 仅作辅助可视化。',

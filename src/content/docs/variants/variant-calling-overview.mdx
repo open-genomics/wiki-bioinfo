@@ -3,13 +3,12 @@ title: "DNA-seq 变异检测总览"
 description: 从比对结果到变异调用（SNV/InDel）的完整流程，涵盖 GATK Best Practices、BAM 处理与变异过滤的核心步骤。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="这是一页把 DNA-seq variant calling 放回完整分析链路的概览：你需要同时看 BAM、VCF、参考版本、过滤逻辑和证据质量，而不是把 caller 当成黑箱。"
   bullets={[
     '如果你刚开始接触变异检测，先把 FASTQ → BAM → VCF 的层级关系理顺。',
@@ -26,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题定义
 
 DNA-seq 变异检测要解决的核心问题是：
@@ -125,7 +122,7 @@ FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annota
   <figcaption>DNA-seq 变异检测的典型流程：从原始 FASTQ，到比对得到 BAM，再到候选变异、过滤、注释与解释。</figcaption>
 </figure>
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'caller 跑完就等于得到了真实变异；',
     '只看 VCF，不看 BAM 和覆盖背景；',

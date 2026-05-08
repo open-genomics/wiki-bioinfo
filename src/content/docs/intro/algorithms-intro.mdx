@@ -3,11 +3,9 @@ description: 生物信息学算法入门：从问题到算法的思维框架，�
 title: "算法入门"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物信息学算法不是抽象的数学游戏，而是解决真实生物学问题的计算工具。这一章帮助你建立从生物学问题到算法解决方案的思维框架，理解少数几种核心算法思想如何支撑大量生物信息学应用。"
   bullets={[
     '从生物学问题出发，而非从工具出发',
@@ -323,7 +321,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - **阅读源码**：理解工具中的算法实现
 - **性能分析**：用真实数据测试不同算法
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '算法越复杂越好：',
     '不是。简单算法如果足够用，往往更可靠、更易维护。复杂度应该与问题难度匹配。',

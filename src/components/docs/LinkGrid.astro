@@ -1,0 +1,52 @@
+---
+interface LinkItem {
+  title: string;
+  to: string;
+  description: string;
+  label?: string;
+  badge?: string;
+  meta?: string;
+}
+
+interface Props {
+  items: LinkItem[];
+  variant?: 'navigation' | 'related';
+}
+
+import { Icon } from '@astrojs/starlight/components';
+import { resolveLinks } from './link-utils';
+
+const { items, variant = 'related' } = Astro.props;
+const resolvedItems = resolveLinks(items, import.meta.env.BASE_URL);
+
+const isNavigation = variant === 'navigation';
+const containerClass = isNavigation ? 'section-nav-grid' : 'related-grid';
+const cardClass = isNavigation ? 'section-nav-card' : 'related-card';
+const headerClass = isNavigation ? 'section-nav-topline' : 'related-header';
+const actionText = isNavigation ? '进入子主题' : '延伸阅读';
+const actionClass = isNavigation ? 'primary-action' : 'secondary-action';
+---
+
+<div class={containerClass}>
+  {resolvedItems.map((item) => (
+    <a
+      class={cardClass}
+      href={item.href}
+      target={item.external ? '_blank' : undefined}
+      rel={item.external ? 'noopener noreferrer' : undefined}
+    >
+      <div class={headerClass}>
+        {item.badge && <span class="card-badge">{item.badge}</span>}
+        {item.meta && <span class="section-meta">{item.meta}</span>}
+        {item.label && <span class="related-label">{item.label}</span>}
+        {item.external && <Icon name="external" size="1rem" />}
+      </div>
+      <h3>{item.title}</h3>
+      <p>{item.description}</p>
+      <span class={actionClass}>
+        {actionText}
+        <Icon name="right-arrow" size={isNavigation ? '1rem' : '0.9rem'} />
+      </span>
+    </a>
+  ))}
+</div>

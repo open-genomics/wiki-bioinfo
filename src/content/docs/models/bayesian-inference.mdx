@@ -3,16 +3,14 @@ description: 贝叶斯推断基础：理解先验、似然和后验的关系，�
 title: "贝叶斯推断基础"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="贝叶斯推断提供了一种系统化的方法来处理不确定性，通过先验、似然和后验的关系，在生物信息学中广泛应用于参数估计、模型选择和预测。"
   bullets={[
     '重点理解贝叶斯定理的核心思想和先验、似然、后验的关系',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 贝叶斯推断是一种基于贝叶斯定理的统计推断方法，它将未知参数视为随机变量，通过观测数据更新对参数的信念。
@@ -282,7 +278,7 @@ $$
 \theta \sim P(\theta | \phi), \quad \phi \sim P(\phi)
 $$
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '贝叶斯方法总是更好：',
     '不是。贝叶斯方法的优势在于：',

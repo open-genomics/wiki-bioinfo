@@ -3,8 +3,8 @@ title: 经典计算问题索引
 description: 生物信息学教材中常见的计算问题定义速查，及其在 BioInfo Wiki 中的对应页面。
 ---
 
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import SummaryBox from '@/components/docs/SummaryBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PageHeaderMeta
@@ -173,14 +173,14 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ---
 
-<SummaryBox>
+<NoteCard variant="summary">
 **使用建议：**
 
 1. **教材学习者**：通过此索引快速定位教材问题在 Wiki 中的详细解释
 2. **问题建模者**：参考类似问题的建模方式，启发新问题的算法选择
 3. **工具使用者**：理解工具底层解决的计算问题，判断适用边界
 4. **研究者**：识别哪些问题是 NP-hard，避免尝试精确解
-</SummaryBox>
+</NoteCard>
 
 ---
 

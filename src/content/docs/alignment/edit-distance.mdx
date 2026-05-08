@@ -3,15 +3,13 @@ description: 编辑距离概览，从动态规划视角理解序列相似性、�
 title: "编辑距离"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="编辑距离是理解序列比对最短路径的一页起点：它把序列相似性问题转成一个可以用动态规划系统求解的最小代价问题。"
   bullets={[
     '先掌握状态定义和递推关系，再去看全局/局部比对会更顺。',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 编辑距离（edit distance）衡量一个字符串变成另一个字符串所需的最少编辑操作数。最经典的设置允许三类操作：
@@ -165,7 +161,7 @@ $$
 
 可以把它理解成"最简单的序列比对模型"。后面的全局比对、局部比对、打分矩阵和 affine gap penalty，都是在这个模型上不断加入更真实的生物学假设。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '编辑距离越小，就一定是更好的生物学解释：',
     '不一定。编辑距离只反映最小操作数，不一定反映更真实的进化过程或测序错误模型。',

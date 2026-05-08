@@ -3,14 +3,12 @@ description: Median String问题：motif finding的另一种表述，寻找与�
 title: "Median String问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Median String问题是Motif Finding问题的等价表述。给定一组DNA序列，目标是找到一个长度为l的字符串，使其与所有序列中某个l-mer的总Hamming距离最小。"
   bullets={[
     '理解Median String问题的形式化定义',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 问题定义
 
 ### Hamming距离
@@ -191,7 +187,7 @@ Median String问题是NP-困难的，这意味着：
 - 对于大问题必须使用启发式方法
 - 近似算法是实际选择
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Median String 和 Motif Finding 是两个独立的问题：',
     '两者在数学上完全等价：$\min TotalDistance(v, DNA) = l \cdot t - \max Score(s, DNA)$。解决一个就自动解决了另一个。它们的区别仅在于搜索空间不同：Motif Finding 的搜索空间是 $(n-l+1)^t$（取决于序列条数），Median String 的搜索空间是 $4^l$（取决于 motif 长度）。当序列很多但 motif 较短时，从 Median String 入手更高效。',

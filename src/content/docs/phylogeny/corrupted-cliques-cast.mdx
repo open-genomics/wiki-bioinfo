@@ -3,14 +3,13 @@ description: Corrupted Cliques 问题的 NP-hard 性质与 CAST 启发式算法�
 title: "Corrupted Cliques 与 CAST 算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="基因表达数据常含噪声，导致距离图偏离理想的团图（Clique Graph）结构。Corrupted Cliques 问题研究如何用最少的边增删恢复团图结构，CAST 算法是一种实用的启发式解决方案。"
   bullets={[
     '理解聚类的核心质量标准：同质性（Homogeneity） 与分离性（Separation）',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 要解决什么生物信息学问题？
 
 在基因表达分析中，聚类（Clustering）的目标是将具有相似表达模式的基因归为一类。**Corrupted Cliques 问题**和 **CAST 算法**要解决的核心问题是：
@@ -203,7 +200,7 @@ $C_1 = \{g_1, g_2, g_3\}$，$S = \{g_4, g_5\}$。
 | **噪声鲁棒性** | 较好 | 差 | 中等 |
 | **时间复杂度** | $O(n^3)$ 最坏 | $O(n \cdot k \cdot d)$ | $O(n^2)$ |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"CAST 中的阈值 $\theta$ 有一个通用的最优值"：',
     '没有。$\theta$ 的最优值取决于具体的数据集和距离度量。常用的策略是尝试多个 $\theta$ 值，然后使用内部评价指标（如 Silhouette Score）或外部生物学知识来评估聚类质量。',

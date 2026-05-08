@@ -3,16 +3,14 @@ description: 图遍历算法详解：从DFS、BFS到Hamiltonian path，理解组
 title: "图遍历算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="图遍历算法是理解组装、路径查找和图清理的基础工具，从基础的DFS/BFS到复杂的Hamiltonian path问题，构成了图算法的核心。"
   bullets={[
     '重点理解DFS和BFS的差异，以及Hamiltonian path的NP难性质',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 图遍历算法是指系统地访问图中所有顶点和边的方法。在生物信息学中，特别是基因组组装中，图遍历算法用于：
@@ -350,7 +346,7 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 - **错误检测**：通过遍历识别异常结构
 - **图简化**：使用遍历策略简化复杂图结构
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Hamiltonian path是组装的唯一解：',
     '不是。由于NP难性质，实际组装器使用启发式方法，不一定找到Hamiltonian path，而是找到"足够好"的路径。',

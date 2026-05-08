@@ -3,14 +3,13 @@ description: 谱图图算法：将质谱数据转换为有向无环图，将肽�
 title: "谱图图（Spectrum Graphs）"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="谱图图（Spectrum Graph）算法将实验质谱数据转换为有向无环图（DAG），将肽段测序问题转化为在图中寻找从源点到汇点的最优路径问题。这是从头肽段测序的核心算法。"
   bullets={[
     '理解谱图图的构建原理：从质谱峰到图节点和边',
@@ -30,8 +29,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 从质谱到谱图（From Spectrum to Graph）
 
 在串联质谱（MS/MS） 中，我们的目标是根据实验测得的离子质量峰（Spectrum $S$）重建肽段序列。
@@ -343,7 +340,7 @@ $$\text{score}(P_i) = \sum_{i=1}^{l} \log\frac{p(\delta_i)}{p_R} + \sum_{i=l+1}^
             结果整合 → 蛋白质鉴定
 ```
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '| 误区 | 正确理解 | |------|---------| | 谱图图总能唯一确定肽段序列 | 实际中可能存在多条得分相近的路径，导致序列歧义 | | 完整谱图在实际中很常见 | 实验谱图通常不完备，某些离子类型可能完全缺失 | | 只需考虑 b-ions | 实际应用需要同时考虑多种离子类型（b、y、a 等） | | 最长路径总是正确答案 | 对于不完备谱图，需结合概率评分；最长边数路径不一定最优 | | De novo 测序已取代数据库搜索 | 两者各有优势：de novo 发现新序列，数据库搜索更可靠、快速 |'
   ]}

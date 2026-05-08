@@ -65,3 +65,8 @@ Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-
 ### Domain docs
 
 Single-context: `CONTEXT.md` and `docs/adr/` at repo root. See `docs/agents/domain.md`.
+
+### Architecture docs
+
+- `CONTEXT.md` — 架构术语、领域概念、架构决策记录
+- `docs/architecture/sync-points.md` — 同步点清单，记录需要手动同步的关键位置

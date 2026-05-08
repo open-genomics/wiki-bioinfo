@@ -3,14 +3,12 @@ title: "OLC：Overlap-Layout-Consensus"
 description: 经典三阶段组装范式：overlap 发现、布局排序与共识生成，适用于长读长数据。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="OLC 是经典的三阶段组装范式：先找 reads 之间的重叠关系，再构建布局确定相对位置，最后综合多条 read 的信息生成共识序列。"
   bullets={[
     'Overlap：快速筛选并精确计算 read 之间的重叠',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 OLC（Overlap-Layout-Consensus）是一类经典组装思路，它把序列重建问题拆成三个阶段：
@@ -283,7 +279,7 @@ OLC 不是单一算法，而是一整类设计范式。它的思想在很多长�
 
 其中 $N$ 为总 read 数量，$L$ 为平均 read 长度，$m$ 为局部区域 read 数量，$n$ 为对齐长度。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'OLC 已经过时，只剩 de Bruijn graph 有意义：',
     '不是。长读长时代 OLC 思路因重叠信息更丰富而重新受到重视。Canu、Flye 等现代组装器都基于 OLC 框架，而非 de Bruijn graph。两种思路各有适用场景。',

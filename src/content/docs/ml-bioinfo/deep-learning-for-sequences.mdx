@@ -3,15 +3,14 @@ description: 生物序列深度学习的基础概念、输入表示与架构对�
 title: "序列深度学习"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="生物序列本质上是离散符号的线性排列。深度学习通过将这些符号转化为连续的数值嵌入（Embeddings），利用卷积、递归和注意力机制，捕获隐藏在碱基序列背后的复杂生物学规律。"
   bullets={[
     '理解从离散字符串到连续向量空间的表示转换（One-hot, k-mer Embedding）',
@@ -30,8 +29,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 是什么
 
 序列深度学习（Deep Learning for Sequences）是将深度神经网络应用于生物序列（DNA、RNA、蛋白质）分析的方法体系。它通过将离散的碱基/氨基酸符号转化为连续的数值向量（Embeddings），利用神经网络自动提取序列特征，从而实现功能预测、结构推断和生成建模等任务。
@@ -186,7 +183,7 @@ $$
 - **蛋白质设计**：利用预训练语言模型生成具有目标属性的全新蛋白质序列；
 - **宏基因组分析**：对宏基因组 contigs 进行功能注释和分类。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"深度学习不需要生物学知识"：虽然模型能自动提取特征，但好的特征编码（如物理化学性质）、合理的任务定义和正确的评估指标都需要领域知识。领域知识也帮助判断模型结果是否合理。',
     '"预训练模型开箱即用"：预训练模型的嵌入在不同任务上的效果差异很大。某些任务（如远缘同源检测）可能需要重新训练或设计特定的微调策略。',

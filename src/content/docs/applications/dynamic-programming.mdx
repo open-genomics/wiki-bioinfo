@@ -3,14 +3,12 @@ description: 动态规划在生物信息学中的应用：从序列比对、编�
 title: "动态规划算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="动态规划是生物信息学最核心的算法范式之一，通过将复杂问题分解为重叠子问题，系统地寻找全局最优解。"
   bullets={[
     '理解动态规划的关键在于设计递推公式',
@@ -27,8 +25,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 是什么
 
 动态规划（Dynamic Programming, DP）是一种将复杂问题分解为重叠子问题进行求解的算法范式，其核心思想包括：
@@ -385,7 +381,7 @@ BWA-MEM 虽主要采用 seed-and-extend 策略，但在扩展阶段使用局部�
 
 虽然 BLAST 主要使用启发式方法，但其核心思想可以追溯到动态规划。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '动态规划总是最优：',
     '不是。动态规划只能保证在给定状态空间和递推关系下的最优。若状态定义不当，可能无法得到全局最优。',

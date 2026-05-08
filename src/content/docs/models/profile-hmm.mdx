@@ -3,15 +3,13 @@ description: Profile HMM 的详细实现：理解如何用 HMM 扩展 PWM/PSSM �
 title: "Profile HMM"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Profile HMM 是 PWM/PSSM 的强大扩展：它通过 Match、Insert、Delete 三类状态，能够显式建模序列家族中的插入和缺失，适用于蛋白家族和结构域分析。"
   bullets={[
     '核心是 M/I/D 三类状态组成的线性结构',
@@ -29,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 PWM/PSSM 很适合描述一个**固定长度**的 motif：
@@ -303,7 +299,7 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
 
 它是从"简单 motif 打分"走向"序列家族概率建模"的关键一步。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Profile HMM 只是更长的 PWM：',
     '不是。它的关键优势不是"更长"，而是显式建模插入和缺失。',

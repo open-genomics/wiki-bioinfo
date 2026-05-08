@@ -3,15 +3,13 @@ description: 哈希表：高效的数据结构，用于快速查找、去重和�
 title: "哈希表"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="哈希表是一种高效的数据结构，通过哈希函数将键映射到存储位置，实现快速查找、插入和删除操作。在生物信息学中，哈希表被广泛用于重复序列查找、k-mer统计和模式匹配。"
   bullets={[
     '理解哈希表的基本原理和哈希函数',
@@ -30,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 为什么需要哈希表
 
 ### 重复去除问题
@@ -356,7 +352,7 @@ class HashTable \{
 
 理解哈希表的原理和实现，对于设计和优化生物信息学算法至关重要。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '哈希表查找是 O(1)，所以任何哈希表操作都很快：',
     'O(1) 是平均情况下的时间复杂度，前提是哈希函数分布均匀且负载因子适当。在最坏情况下（所有键冲突到同一位置），查找退化为 O(n)。在生物信息学中，基因组序列的高重复性（如 Alu 重复）可能导致某些 k-mer 的哈希冲突率极高，实际性能远低于理论最优。此外，哈希函数本身的计算成本也需要考虑——对长字符串计算哈希并不"免费"。',

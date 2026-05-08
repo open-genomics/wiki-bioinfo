@@ -3,14 +3,12 @@ description: MACS2（Model-based Analysis of ChIP-Seq）峰调用算法的核心
 title: "MACS2 峰调用算法"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="MACS2 是 ChIP-seq 和 ATAC-seq 中最广泛使用的峰调用算法，通过泊松模型和局部背景估计识别基因组上的显著富集区域。"
   bullets={[
     '核心是使用泊松分布建模背景 read 分布',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题背景
 
 ### 核心问题：从测序信号到结合位点
@@ -259,7 +255,7 @@ MACS2 是以下工具的基础或参考：
 2. 使用 IDR（Irreproducible Discovery Rate）评估重复性
 3. 结合 motif 分析进行功能解释
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '有 Input 对照就不需要考虑局部背景：',
     '不是。Input 对照只能提供全局背景信息，基因组不同区域的背景强度差异很大，必须使用局部估计。',

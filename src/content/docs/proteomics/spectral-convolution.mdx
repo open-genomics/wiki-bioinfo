@@ -3,14 +3,13 @@ description: 谱卷积（Spectral Convolution）算法用于质谱数据中修�
 title: "谱卷积与修饰鉴定"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="谱卷积（Spectral Convolution）通过计算两个质谱间所有质量差的分布，揭示肽段间的修饰差异。与共享峰计数相比，谱卷积能够检测修饰肽段，是翻译后修饰（PTM）鉴定的核心算法工具。"
   bullets={[
     '理解谱卷积的定义：两个谱间所有质量差的多重集合',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题背景
 
 ### 修饰蛋白鉴定问题
@@ -264,7 +261,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 
 ### 常见误区
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '谱卷积高重数峰一定是修饰：',
     '高重数峰可能是随机巧合产生的。需要通过统计检验（如基于背景噪声的 p-value 计算）来验证峰的显著性，而非仅凭峰高判断。',

@@ -3,13 +3,12 @@ description: Exon Chaining 是基因预测中的经典动态规划问题，通�
 title: "Exon Chaining 问题"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="Exon Chaining 是通过动态规划解决基因预测中的候选外显子选择问题：在基因组序列中找到权重最大的互不重叠外显子集合。"
   bullets={[
     '将候选外显子建模为带权区间（l, r, w）',
@@ -28,8 +27,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 是什么
 
 **Exon Chaining** 是基因预测中的关键子问题：给定一组**候选外显子**（带权区间），选择**互不重叠**的子集使总权重最大。
@@ -210,7 +207,7 @@ Exon Chaining / Spliced Alignment（选择最佳组合）
 预测基因结构
 ```
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '外显子权重越高，就越应该被选入最优链：',
     '外显子的权重只是链优化的一个因素。一个高权重的外显子如果与链中其他外显子严重重叠，可能被排除；反之，多个权重中等但互不重叠的外显子可能组成总权重更高的链。这正是动态规划而非贪心策略的必要性所在。',

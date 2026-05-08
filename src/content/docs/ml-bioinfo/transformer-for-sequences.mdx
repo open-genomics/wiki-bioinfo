@@ -3,14 +3,12 @@ description: Transformer 和自注意力机制在生物序列中的应用，包�
 title: "Transformer 与自注意力机制"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Transformer 通过自注意力机制直接建模序列中任意两个位置之间的关系，无需递归计算，是目前最强大的序列建模架构，是现代生物语言模型的基础。"
   bullets={[
     '自注意力机制捕获长程依赖',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 为什么需要全局注意力
 
 CNN 擅长局部模式检测，RNN 擅长建模顺序依赖，但生物序列中还存在**长程相互作用**问题：
@@ -428,7 +424,7 @@ Transformer 在生物信息学中的代表性应用：
 | 参数量 | 少 | 中 | 多 |
 | 可解释性 | 强 | 中 | 弱 |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Transformer 总是优于 RNN 和 CNN：',
     '不是。对于短序列和局部模式检测任务，CNN 可能更高效。对于中等长度序列，RNN 可能足够。Transformer 的优势在长序列和复杂依赖时才明显。',

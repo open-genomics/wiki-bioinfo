@@ -3,15 +3,14 @@ title: "测序 Reads、覆盖度与错误模型"
 description: 理解测序读段（Reads）的观测特性、深度（Coverage）的统计分布以及 Lander-Waterman 公式背后的直觉。
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="在生物信息学中，我们处理的不是完整的基因组，而是由测序仪随机产生的碎片化读段（Reads）。覆盖度（Coverage）不仅是数据量的衡量指标，更是后续统计推断（如变异检测、组装）的信心来源。"
   bullets={[
     '掌握 Reads 的基本属性：长度、质量值（Phred Score）与方向',
@@ -29,8 +28,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 1. Reads：基因组的局部观测
 
 <figure>
@@ -208,7 +205,7 @@ $$Q = -10 \log_{10} P_{error}$$
 - **基因组组装**：需要足够高的覆盖度来保证 k-mer 的连通性。对于杂合基因组，有效覆盖度减半，需要更高的原始测序深度。
 - **RNA-seq**：覆盖度分布与基因表达水平直接相关。高表达基因的覆盖度可达数千倍，而低表达基因可能只有几条 Read。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区一：将"覆盖度"等同于"数据质量"。覆盖度是数据量的指标，不直接反映数据质量。100 倍覆盖度的低质量数据可能不如 30 倍覆盖度的高质量数据有用。',
     '误区二：忽视覆盖度的分布不均匀性。Lander-Waterman 公式假设覆盖度服从泊松分布，但实际数据由于 GC 偏好性和其他偏差，分布远不如理论均匀。某些基因组区域可能存在"覆盖盲区"。',

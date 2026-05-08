@@ -3,12 +3,11 @@ description: 表观基因组学板块入口，从 DNA 甲基化到 ChIP-seq、AT
 title: "表观基因组学"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="表观基因组学研究不改变 DNA 序列的可遗传调控机制，包括 DNA 甲基化、组蛋白修饰、染色质可及性等。它是理解基因表达调控、细胞命运决定和疾病发生的关键层面。"
   bullets={[
     '核心问题：DNA 序列之外的遗传信息如何存储和传递？',
@@ -18,8 +17,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 问题背景
 
 ### 核心问题：DNA 序列之外的遗传信息
@@ -283,7 +280,7 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 - 统计检验结果（p-value、FDR、效应量）
 - 功能注释结果（富集分析）
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '误区 1：甲基化 = 基因沉默：',
     '误解：DNA 甲基化总是抑制基因表达。',

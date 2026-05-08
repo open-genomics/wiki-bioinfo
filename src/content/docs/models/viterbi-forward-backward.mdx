@@ -3,14 +3,12 @@ description: HMM 中 forward、backward、Viterbi 三类核心算法的详细实
 title: "Viterbi、Forward 与 Backward"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="Viterbi、Forward 和 Backward 是 HMM 中三个核心推断算法：Viterbi 找最可能状态路径，Forward 计算观测概率，Backward 提供后向信息用于 posterior 推断。"
   bullets={[
     'Viterbi 用 max 操作找最优路径，Forward 用 sum 操作计算总概率',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Core Methods" />
-
-
 ## 1. 为什么需要 Viterbi？
 
 在 HMM 的"公平赌场"模型中，如果你看到一系列掷硬币结果，你最想知道的是：**在那一时刻，荷官到底用了哪枚硬币？**
@@ -298,7 +294,7 @@ G C G A
 - **一般 HMM 分析**：
   - 需要根据任务目标选择"整体路径"还是"位点后验"。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     'Viterbi 等于 HMM 的全部：',
     '不是。它只是 decoding 问题的经典解法之一；Forward 和 Backward 处理的是不同问题。',

@@ -3,14 +3,14 @@ description: PacBio 与 Oxford Nanopore 两大长读长测序平台的物理原�
 title: "PacBio 与 Nanopore"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
+
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
-<SummaryBox
+<NoteCard variant="summary"
   summary="PacBio SMRT 测序与 Oxford Nanopore 测序代表了两种截然不同的长读长技术路线。它们打破了短读长的长度限制，为解析基因组复杂区域、结构变异和单倍型组装提供了关键数据。"
   bullets={[
     '掌握 PacBio HiFi 的环形共识测序（CCS）原理及其高精度特性',
@@ -28,8 +28,6 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 />
 
 <PageHeaderMeta section="Applications" />
-
-
 ## 1. 长读长的革命
 
 **传统二代测序（NGS）** 的核心限制是 Read 长度（通常 < 300 bp）。这导致：
@@ -118,7 +116,7 @@ Nanopore 的主要误差来源是**同聚物（Homopolymer） 区域**——即�
 
 长读长 RNA 测序（如 PacBio Iso-Seq 和 Nanopore 直接 RNA 测序）能够直接获得完整的转录本序列，而不需要像短读长那样通过拼接来推断。这极大地提升了可变剪接（Alternative Splicing） 的检测精度，并能直接鉴定融合转录本（Fusion Transcript）。
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '"长读长一定会取代短读长"：',
     '并非如此。短读长在单位数据成本上仍有巨大优势（约为长读长的 1/10 到 1/50），适合需要极高覆盖度的场景（如大型队列变异检测、ChIP-seq 等表观遗传学实验）。在实际项目中，短读长和长读长往往是互补的关系，而非替代关系。',

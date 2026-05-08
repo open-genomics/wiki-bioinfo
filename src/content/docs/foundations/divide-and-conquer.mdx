@@ -3,15 +3,13 @@ description: 分治算法基础：归并排序、快速排序、最近点对，�
 title: "分治算法基础"
 ---
 
-import SummaryBox from '@/components/docs/SummaryBox.astro';
+import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 
-
-<SummaryBox
+<NoteCard variant="summary"
   summary="分治算法是处理大规模数据的核心范式：把大问题分解成小问题，分别解决后再合并。这一页从经典排序算法出发，建立分治的直觉。"
   bullets={[
     '先理解归并排序的分治思想，再看快速排序的随机化策略会更顺。',
@@ -28,8 +26,6 @@ import PitfallsBox from '@/components/docs/PitfallsBox.astro';
 />
 
 <PageHeaderMeta section="Foundations" />
-
-
 ## 是什么
 
 分治（divide and conquer）是一种算法设计范式：
@@ -397,7 +393,7 @@ KD-tree 用于高维空间查询：
 | 最近点对（分治） | $O(n \log n)$ | $O(n)$ | - | 几何计算、结构分析 |
 | 最近点对（朴素） | $O(n^2)$ | $O(1)$ | - | 小规模数据、简单实现 |
 
-<PitfallsBox
+<NoteCard variant="pitfalls"
   pitfalls={[
     '分治总是比朴素算法快：',
     '不一定。分治算法：',

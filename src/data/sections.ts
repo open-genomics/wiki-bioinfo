@@ -435,6 +435,54 @@ export function findSectionByLabelOrKey(labelOrKey: string): SectionMeta | undef
 }
 
 /**
+ * 路径前缀 → section ID 映射
+ * 用于从文件路径自动推断所属板块
+ */
+export const pathToSection: Record<string, string> = {
+  // 直接对应
+  foundations: 'foundations',
+  'core-methods': 'core-methods',
+  applications: 'applications',
+  'data-references': 'data-references',
+  appendix: 'appendix',
+  // core-methods 子目录
+  sequence: 'core-methods',
+  alignment: 'core-methods',
+  assembly: 'core-methods',
+  models: 'core-methods',
+  // applications 子目录
+  variants: 'applications',
+  transcriptomics: 'applications',
+  'single-cell': 'applications',
+  epigenomics: 'applications',
+  population: 'applications',
+  'long-read': 'applications',
+  spatial: 'applications',
+  proteomics: 'applications',
+  'clinical-variants': 'applications',
+  'structure-bioinfo': 'applications',
+  'multi-omics': 'applications',
+  phylogeny: 'applications',
+  'ml-bioinfo': 'applications',
+  workflows: 'applications',
+  // data-references 子目录
+  databases: 'data-references',
+  formats: 'data-references',
+  // intro 不映射（全局入口，不属于特定板块）
+};
+
+/**
+ * 从 slug 路径推断所属板块
+ * @param slug 页面路径（不含 base URL，如 "alignment/edit-distance"）
+ * @returns section ID 或 undefined（intro 页面等）
+ */
+export function getSectionFromSlug(slug: string): string | undefined {
+  const firstSegment = slug.split('/')[0];
+  if (!firstSegment) return undefined;
+  return pathToSection[firstSegment];
+}
+
+/**
  * 生成 Starlight sidebar 配置
  */
 export function getSidebarConfig() {

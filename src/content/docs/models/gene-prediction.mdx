@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Gene prediction 是识别基因组序列中基因结构的经典问题：通过 HMM 等概率模型，将序列分段为 exon、intron、intergenic 等功能状态，预测完整的基因模型。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 Gene prediction 关注的是：给定一段基因组序列，如何识别其中哪些区段更可能对应 exon、intron、起始/终止信号或完整基因结构。它要做的不是简单寻找几个 motif，而是把原始字符序列解释成更高层的注释对象。

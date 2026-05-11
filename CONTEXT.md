@@ -171,6 +171,21 @@
 - 减少组件数量：从 12 个文档组件减至 11 个
 - 消除重复的类型定义（`ComparisonRow` / `MatrixRow`）
 
+### 2026-05-11: PageHeaderMeta 自动推断 section
+
+**背景**：`PageHeaderMeta` 支持 10 个 props，但 95% 的调用只传递 `section` prop。这导致接口复杂度与实际使用不匹配。同时，section 成员关系在两处定义：文件路径（隐式）和组件调用（显式），存在同步 seam。
+
+**决策**：
+1. 在 `sections.ts` 中添加 `pathToSection` 映射表，从文件路径自动推断所属板块
+2. 修改 `PageHeaderMeta` 组件：从 URL 路径自动推断 section，无需显式传入
+3. 迁移内容文件：182 个简单调用删除整个组件调用和 import，8 个 rich 调用只删除 `section` prop
+
+**收益**：
+- Leverage：自动推断消除了 182 个显式 `section` 声明
+- Locality：section 成员关系由路径唯一确定，消除同步 seam
+- Testability：路径映射是确定性的，无需运行时模糊匹配
+- 简化接口：组件 interface 从 10 个 props 减至 5 个（audience, startWith, prereqs, estimatedTime, difficulty）
+
 ---
 
 ## 参考文档

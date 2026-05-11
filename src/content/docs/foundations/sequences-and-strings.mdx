@@ -8,7 +8,6 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="生物序列（DNA, RNA, 蛋白质）在计算层面上被抽象为有限字母表上的字符串。理解这一抽象以及随之而来的坐标系统约定，是所有后续算法（如比对、组装）的物理基础。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Foundations" />
 ## 1. 从分子到字符串
 
 在计算机眼里，复杂的生物大分子被简化为线性排列的字符。这一抽象是生物信息学所有后续计算的基础——比对、组装、变异检测、Motif 搜索，归根结底都是字符串操作。

@@ -6,7 +6,6 @@ description: 基因组组装中重复序列导致的图拓扑问题（tips、bub
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="组装图的真正困难在于建图之后：如何区分真实分叉与错误噪声、清理异常结构、保留真实信息，并尽可能为后续分析提供稳定的图结构。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 在组装图中，真正困难的地方往往不只是"怎么建图"，而是：图建好之后如何理解分叉、识别错误、清理噪声，并尽可能保留真实结构。重复序列、测序错误和 coverage 波动，都会让图结构偏离理想情况。

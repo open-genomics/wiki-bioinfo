@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="SNF 通过为每组学构建样本相似性网络，然后迭代融合这些网络，实现多组学数据的整合，不依赖于数据分布假设。"
@@ -561,8 +560,6 @@ W <- SNF(list(W1, W2), K = 20, t = 20)
 # 谱聚类
 labels <- spectralClustering(W, K = 3)
 ```
-<PageHeaderMeta section="Applications" />
-
 <NoteCard variant="pitfalls"
   pitfalls={[
     '相似性网络越密越好：',

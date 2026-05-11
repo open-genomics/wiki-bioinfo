@@ -6,7 +6,6 @@ description: 系统介绍生物序列索引的主要类型，理解哈希表、�
 import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="在处理人类基因组等大规模数据时，逐位扫描的时间复杂度 $O(nm)$ 是不可接受的。索引（Index）通过预处理文本 T，构建辅助数据结构，使得后续查询可以在亚线性时间内完成。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 为什么索引至关重要？
 
 在生物信息学中，我们通常面临"一个大文本 $T$（参考基因组）对大量小模式 $P$（测序 Reads）"的场景。

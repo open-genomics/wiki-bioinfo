@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="编辑距离是度量两个字符串相似度的最小编辑操作数，序列比对则通过插入空格使字符串对齐。这两种概念都通过动态规划解决，是生物信息学中最基础的序列比较方法。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Foundations" />
 ## 什么是编辑距离
 
 编辑距离（edit distance）也称 Levenshtein 距离，是将一个字符串转换为另一个字符串所需的最少单字符编辑操作数。每种操作的成本通常为 1：

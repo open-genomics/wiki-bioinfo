@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='在简单的线性罚分模型中，每个 Gap 字符代价相同。但在生物学中，一次连续的插入或缺失（Indel）事件比多个离散事件更易发生。仿射 Gap 罚分通过区分「开启」和「延长」代价，完美解决了这一直觉问题。'
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 是什么
 
 仿射 Gap 罚分（Affine Gap Penalty）是序列比对中 Gap 代价模型的重要改进。在简单的线性模型中，长度为 $k$ 的 Gap 代价为 $k \cdot g$，这意味着 $k$ 个连续 Gap 和 $k$ 个分散 Gap 的代价相同。仿射模型将 Gap 代价拆分为两部分——固定的开启代价和线性的延长代价——使得连续 Gap 比分散 Gap 更受偏好，更符合分子进化中插入/缺失事件的生物学现实。

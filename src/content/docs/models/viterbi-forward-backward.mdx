@@ -6,7 +6,6 @@ title: "Viterbi、Forward 与 Backward"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Viterbi、Forward 和 Backward 是 HMM 中三个核心推断算法：Viterbi 找最可能状态路径，Forward 计算观测概率，Backward 提供后向信息用于 posterior 推断。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 为什么需要 Viterbi？
 
 在 HMM 的"公平赌场"模型中，如果你看到一系列掷硬币结果，你最想知道的是：**在那一时刻，荷官到底用了哪枚硬币？**

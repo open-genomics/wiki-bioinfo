@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 **剪接比对（Spliced Alignment）** 是相似性基因预测的算法核心：给定基因组序列、候选外显子集合和**目标蛋白序列**，找到**最佳外显子链**，使其拼接后的序列与目标蛋白的比对得分最高。

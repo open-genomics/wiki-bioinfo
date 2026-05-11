@@ -6,13 +6,11 @@ title: "去卷积与细胞映射"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略"
 />
 
-<PageHeaderMeta section="Applications" />
 ## 是什么
 
 **空间去卷积（Spatial Deconvolution）** 是一类将空间转录组 spot 的混合表达信号分解为各细胞类型贡献比例的计算方法。由于大多数空间平台（如 10x Visium）的一个 spot 包含多个细胞，直接读取的表达值是这些细胞表达谱的加权平均。去卷积的目标是利用单细胞 RNA-seq（scRNA-seq）提供的参考图谱，反推每个 spot 中各细胞类型的组成比例。

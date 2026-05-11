@@ -8,7 +8,6 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Gotoh 算法是处理 affine gap penalty 的标准动态规划算法：它通过引入三个状态矩阵，正确区分 gap 开启和 gap 延长，使比对模型更符合生物学直觉。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 Gotoh 算法是 1982 年提出的用于处理 affine gap penalty 的动态规划算法。它解决了简单线性 gap 模型的问题：

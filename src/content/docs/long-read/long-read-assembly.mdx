@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="长读长组装的核心优势在于其能够直接跨越复杂的重复序列。不同于短读长的 de Bruijn 图策略，长读长通常采用 OLC (Overlap-Layout-Consensus) 范式，通过构建重叠图来恢复基因组的连续性。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 1. 要解决什么生物信息学问题？
 
 基因组组装的本质是将数以百万计的短序列片段（Reads）重新拼接成完整的基因组序列。**长读长组装**要解决的核心问题是：如何利用长读长数据的长度优势，跨越短读长无法处理的重复区域，产出连续的染色体级别组装。

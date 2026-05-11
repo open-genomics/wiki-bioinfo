@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="半全局比对允许序列端部存在gap，是理解read mapping和重叠检测等场景的关键算法，介于全局比对和局部比对之间。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 半全局比对（semi-global alignment）是序列比对的一种变体，它允许序列的端部（开头或结尾）存在gap而不产生罚分。

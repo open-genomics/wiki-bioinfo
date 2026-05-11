@@ -6,7 +6,6 @@ title: "Four Russians 加速技术"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Four Russians 加速技术通过预计算小块的比对得分，将全局序列比对的时间复杂度从 O(n²) 优化到 O(n²/log n)，是动态规划加速的经典方法。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 **Four Russians 加速技术**（得名于其四位发明者 Arlazarov, Dinic, Kronrod, Faradzev）是一种将序列比对时间复杂度从 $O(n^2)$ 降低到 $O(n^2 / \log n)$ 的算法优化技巧。

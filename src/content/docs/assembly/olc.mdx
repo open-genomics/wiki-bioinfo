@@ -6,7 +6,6 @@ description: 经典三阶段组装范式：overlap 发现、布局排序与共�
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="OLC 是经典的三阶段组装范式：先找 reads 之间的重叠关系，再构建布局确定相对位置，最后综合多条 read 的信息生成共识序列。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 OLC（Overlap-Layout-Consensus）是一类经典组装思路，它把序列重建问题拆成三个阶段：

@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的「平均值」迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。'
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 1. 任务目标
 
 scRNA-seq 分析流程的核心目标是：**将原始测序数据转化为可解释的细胞图谱**。具体包括：

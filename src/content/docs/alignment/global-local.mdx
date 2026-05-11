@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='序列比对并不只有一种「对齐方式」。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。'
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 是什么
 
 全局比对（Global Alignment）和局部比对（Local Alignment）是序列比对的两大基本范式。全局比对要求两条序列从第一个字符到最后一个字符完全对齐，任何未对齐的端点都必须以 Gap 填充。局部比对则允许比对从序列的任意位置开始、在任意位置结束，只提取得分最高的局部相似片段。

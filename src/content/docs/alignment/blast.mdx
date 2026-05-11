@@ -6,7 +6,6 @@ title: "BLAST：基于 seed-and-extend 的局部搜索"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="BLAST (Basic Local Alignment Search Tool) 是生物信息学中使用最广泛的工具之一。它通过牺牲一定的敏感性，利用启发式算法在巨大的数据库中极速寻找局部相似片段。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 是什么
 
 BLAST（Basic Local Alignment Search Tool）是由 Altschul 等人于 1990 年开发的序列相似性搜索工具。它不追求找到数学上最优的局部比对，而是通过一套启发式策略（Heuristic），在极短的时间内找到数据库中与查询序列（Query Sequence）高度相似的片段。

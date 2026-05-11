@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="如果把生物信息学看作计算问题，那么其核心抽象几乎可以归结为三类模型。它们不是孤立的章节分类，而是贯穿整个学科的通用语言，用于处理高噪音、大规模且具有复杂结构的生物数据。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Foundations" />
 ## 1. 概率模型：处理不确定性
 
 生物数据（如测序 Reads）充满了噪音和不确定性。我们看到的观测值（Observations）并不直接等于真实状态（Hidden States）。

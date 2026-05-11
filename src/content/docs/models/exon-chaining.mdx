@@ -6,7 +6,6 @@ title: "Exon Chaining 问题"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Exon Chaining 是通过动态规划解决基因预测中的候选外显子选择问题：在基因组序列中找到权重最大的互不重叠外显子集合。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 **Exon Chaining** 是基因预测中的关键子问题：给定一组**候选外显子**（带权区间），选择**互不重叠**的子集使总权重最大。

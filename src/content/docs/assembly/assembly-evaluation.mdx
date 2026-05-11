@@ -6,7 +6,6 @@ description: 基因组组装质量的评估指标：contiguity（N50/L50）、�
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="组装评估不是追求单一分数，而是同时判断连续性、完整性和正确性——即组装结果是否值得相信、能否用于下游分析。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 组装评估关注的是：得到 contig 或 scaffold 之后，怎样判断结果是否足够连续、完整、正确，以及这些指标是否真的符合你的分析目标。它不是在问"能不能拼出来"，而是在问"拼出来的结果值不值得相信、能不能用于下游分析"。

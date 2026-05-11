@@ -1,90 +1,79 @@
 ---
+/**
+ * PageHeaderMeta - 页面头部元信息组件
+ *
+ * 自动从页面路径推断所属板块（section），无需显式传入。
+ * 保留 audience / startWith / prereqs / estimatedTime / difficulty
+ * 供板块入口页等需要丰富阅读引导的页面使用。
+ */
 interface Props {
-  section?: string;
   audience?: string;
   startWith?: string;
-  title?: string;
-  description?: string;
-  subject?: string;
-  topic?: string;
   prereqs?: string[];
   estimatedTime?: string;
   difficulty?: string;
 }
 
 import { Icon } from '@astrojs/starlight/components';
-import { findSectionByLabelOrKey } from '@/data/sections';
+import { getSectionFromSlug, getSectionMeta } from '@/data/sections';
 
 const {
-  section,
   audience,
   startWith,
-  title,
-  description,
-  subject,
-  topic,
   prereqs = [],
   estimatedTime,
   difficulty,
 } = Astro.props;
 
-const sectionMeta = section ? findSectionByLabelOrKey(section) : undefined;
+// 从路径自动推断 section
+const slug = Astro.url.pathname
+  .replace(import.meta.env.BASE_URL, '')
+  .replace(/\/$/, '')
+  .replace(/^\//, '');
+const sectionId = getSectionFromSlug(slug);
+const sectionMeta = sectionId ? getSectionMeta(sectionId) : undefined;
 
-const primaryValue = sectionMeta?.label ?? section ?? subject ?? title ?? 'BioInfo Wiki';
+const primaryValue = sectionMeta?.label ?? 'BioInfo Wiki';
 const primaryDetail = sectionMeta?.description
-  ?? (section
-    ? '帮助你快速判断本页所属知识层级与在全站中的位置。'
-    : '帮助你快速判断当前主题与全站知识图谱的连接方式。');
+  ?? '帮助你快速判断当前主题与全站知识图谱的连接方式。';
 
 const hasAudience = Boolean(audience);
-const hasTopic = Boolean(topic);
-const hasDescription = Boolean(description);
 const hasReadingMeta = Boolean(estimatedTime || difficulty);
 const hasPathInfo = Boolean(startWith || prereqs.length > 0);
 
+// 卡片 2：阅读引导或板块描述
 const secondaryLabel = hasAudience
   ? '适合谁读'
-  : hasTopic
-    ? '核心主题'
-    : hasDescription
-      ? '这一页讲什么'
-      : hasReadingMeta
-        ? '阅读信息'
-        : '阅读目标';
+  : hasReadingMeta
+    ? '阅读信息'
+    : '阅读目标';
 
 const secondaryValue = hasAudience
   ? '建议在以下阶段阅读'
-  : hasTopic
-    ? topic!
-    : hasDescription
-      ? '快速建立问题边界'
-      : difficulty
-        ? `难度：${difficulty}`
-        : estimatedTime
-          ? '阅读时长'
-          : '帮助建立阅读上下文';
+  : difficulty
+    ? `难度：${difficulty}`
+    : estimatedTime
+      ? '阅读时长'
+      : '帮助建立阅读上下文';
 
 const secondaryDetail = hasAudience
   ? audience!
-  : hasDescription
-    ? description!
-    : hasTopic
-      ? (description ?? '帮助你快速抓住本页的核心问题。')
-      : estimatedTime && difficulty
-        ? `预计阅读：${estimatedTime}`
-        : estimatedTime
-          ? `预计阅读：${estimatedTime}`
-          : difficulty
-            ? `内容难度：${difficulty}`
-            : '先判断这页与你当前问题的关系，再决定是否深入展开。';
+  : estimatedTime && difficulty
+    ? `预计阅读：${estimatedTime}`
+    : estimatedTime
+      ? `预计阅读：${estimatedTime}`
+      : difficulty
+        ? `内容难度：${difficulty}`
+        : '先判断这页与你当前问题的关系，再决定是否深入展开。';
 
+// 卡片 3：路径信息或阅读元信息
 const pathDetail = startWith
   ? (prereqs.length > 0 ? `${startWith}；相关前置：${prereqs.join('、')}` : startWith)
   : (prereqs.length > 0 ? `相关前置：${prereqs.join('、')}` : '');
 
 const tertiaryLabel = hasPathInfo
   ? (startWith ? '建议起点' : '建议前置')
-  : hasReadingMeta && (hasAudience || hasTopic || hasDescription)
+  : hasReadingMeta && hasAudience
     ? '阅读信息'
     : '建议前置';
 
@@ -107,7 +96,7 @@ const tertiaryDetail = hasPathInfo
 const cards = [
   {
     icon: 'list-format',
-    label: section ? '所属板块' : '当前主题',
+    label: sectionMeta ? '所属板块' : '当前主题',
     value: primaryValue,
     detail: primaryDetail,
   },

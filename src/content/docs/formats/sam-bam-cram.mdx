@@ -9,7 +9,6 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="SAM/BAM/CRAM 编码的是比对结果——reads 在参考基因组坐标系中的定位。理解其核心字段（FLAG、CIGAR、MAPQ、TAGs），是解读变异证据、可视化检查和下游分析的基础。"
@@ -22,7 +21,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Data References" />
 ## 是什么
 
 **SAM（Sequence Alignment/Map）** 格式编码的是**比对结果（alignment）**——将原始 reads 定位到参考序列坐标系中的计算产物。

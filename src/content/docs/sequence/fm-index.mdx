@@ -6,7 +6,6 @@ description: "基于BWT的压缩全文索引，理解backward search算法和Occ
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="FM-index 是基于 BWT 的压缩全文索引，通过 backward search 和 Occ/C 数组实现高效的精确匹配查询，是 BWA、Bowtie 等现代比对工具的核心。"
@@ -18,7 +17,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 FM-index 是建立在 BWT 之上的压缩全文索引。它的重要特点是：在保存较少空间的同时，仍然能支持快速 exact matching。

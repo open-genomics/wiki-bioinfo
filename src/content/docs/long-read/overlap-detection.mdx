@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 问题引入：组合爆炸的困境
 
 考虑一个简单的组装场景：

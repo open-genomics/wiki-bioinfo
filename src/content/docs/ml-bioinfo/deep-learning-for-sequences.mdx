@@ -8,7 +8,6 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="生物序列本质上是离散符号的线性排列。深度学习通过将这些符号转化为连续的数值嵌入（Embeddings），利用卷积、递归和注意力机制，捕获隐藏在碱基序列背后的复杂生物学规律。"
@@ -28,7 +27,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 是什么
 
 序列深度学习（Deep Learning for Sequences）是将深度神经网络应用于生物序列（DNA、RNA、蛋白质）分析的方法体系。它通过将离散的碱基/氨基酸符号转化为连续的数值向量（Embeddings），利用神经网络自动提取序列特征，从而实现功能预测、结构推断和生成建模等任务。

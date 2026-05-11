@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="基因表达数据常含噪声，导致距离图偏离理想的团图（Clique Graph）结构。Corrupted Cliques 问题研究如何用最少的边增删恢复团图结构，CAST 算法是一种实用的启发式解决方案。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 1. 要解决什么生物信息学问题？
 
 在基因表达分析中，聚类（Clustering）的目标是将具有相似表达模式的基因归为一类。**Corrupted Cliques 问题**和 **CAST 算法**要解决的核心问题是：

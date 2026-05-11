@@ -9,7 +9,6 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
@@ -22,7 +21,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Data References" />
 ## 是什么
 
 **参考基因组版本**是人类基因组的标准化表示，定义了整个基因组的序列内容和坐标系统。所有比对、注释和变异检测都相对于特定版本进行。

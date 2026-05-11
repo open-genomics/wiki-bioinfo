@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类「多对一」匹配提供了理想的骨架。'
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 为什么需要多模式匹配？
 
 标准的字符串匹配算法（如 KMP 或 Boyer-Moore）通常针对**一个**模式串优化。但在现实场景中：

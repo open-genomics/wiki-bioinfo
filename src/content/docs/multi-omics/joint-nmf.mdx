@@ -6,7 +6,6 @@ title: "联合非负矩阵分解（Joint NMF）"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Joint NMF 通过在多个组学矩阵间共享基矩阵，强制它们在低维空间对齐，是多组学整合中最直观的矩阵分解方法。"
@@ -438,8 +437,6 @@ def joint_nmf(X_list, r, max_iter=200, tol=1e-6):
 ### R 实现
 
 使用 `NMF` 包或 `MultiAssayExperiment` 生态系统。
-<PageHeaderMeta section="Applications" />
-
 <NoteCard variant="pitfalls"
   pitfalls={[
     'Joint NMF 总能得到生物学有意义的因子：',

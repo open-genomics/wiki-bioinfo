@@ -8,7 +8,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PageHeaderMeta
-  section="Appendix"
   estimatedTime="15 分钟"
   difficulty="参考"
 />

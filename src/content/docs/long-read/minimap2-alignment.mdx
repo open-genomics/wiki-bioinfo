@@ -6,7 +6,6 @@ title: "Minimap2 比对算法"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Minimap2 是当前最广泛使用的长读长比对工具。其核心 seed-chain-align 框架通过粗定位-链式筛选-精细比对的三阶段策略，将长读长比对从 O(m×n) 降低到近线性复杂度。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 问题引入：长序列比对的计算挑战
 
 考虑长读长比对的典型场景：

@@ -8,7 +8,6 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（如 GRCh37、GRCh38）是所有基因组坐标的空间背景。理解版本差异的本质、掌握坐标转换（liftover）的原理与局限，是确保数据整合准确性的基础。"
@@ -19,7 +18,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Data References" />
 ## 问题背景
 
 基因组分析中的所有坐标——reads 的比对位置、变异位点、基因区间——都依赖于一个隐含的参照系：**参考基因组**。当我们说"chr1:1234567"时，完整的语义应包括：参考版本（如 GRCh38）、坐标系统（1-based 或 0-based）、染色体命名规范（chr1 或 1）。

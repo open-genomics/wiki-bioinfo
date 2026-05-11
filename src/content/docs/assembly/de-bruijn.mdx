@@ -6,7 +6,6 @@ description: 基于 k-mer 与 de Bruijn 图的基因组组装方法：图构建�
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='de Bruijn graph 组装把 read 的局部重叠信息压缩成统一的图结构，是理解短读长组装和图清理问题的最经典入口之一。'
@@ -24,7 +23,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 de Bruijn graph 是短读长组装中的经典模型。它的核心思想不是直接比较每一对 read 是否重叠，而是先把 reads 分解成 k-mer，再把这些局部片段组织成图。

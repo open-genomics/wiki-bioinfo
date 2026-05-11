@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="KMP算法通过预处理模式串构建failure function，在失配时避免无谓的重复比较，实现O(n+m)的线性时间复杂度，是字符串算法的经典范例。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 问题背景与动机
 
 Knuth-Morris-Pratt（KMP）算法解决的是经典的精确字符串匹配问题：

@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="很多生物信息学问题是 NP-hard 的，无法在多项式时间内精确求解。近似算法提供了一种实用策略：在可接受的时间内找到足够好的解。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Foundations" />
 ## 是什么
 
 近似算法（approximation algorithm）用于解决优化问题，特别是 NP-hard 问题。它不追求最优解，而是在多项式时间内找到一个"足够好"的解。

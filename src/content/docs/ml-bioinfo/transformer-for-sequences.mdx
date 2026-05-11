@@ -6,7 +6,6 @@ title: "Transformer 与自注意力机制"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Transformer 通过自注意力机制直接建模序列中任意两个位置之间的关系，无需递归计算，是目前最强大的序列建模架构，是现代生物语言模型的基础。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 为什么需要全局注意力
 
 CNN 擅长局部模式检测，RNN 擅长建模顺序依赖，但生物序列中还存在**长程相互作用**问题：

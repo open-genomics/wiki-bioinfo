@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="近似模式匹配允许在文本中查找与模式串有最多k个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
@@ -27,7 +26,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 **近似模式匹配（Approximate Pattern Matching）** 是在文本 $T$ 中查找与模式串 $P$ 相似但不完全相同的所有出现位置的问题。与精确匹配不同，它允许一定数量的"差异"（错配、插入、删除）。

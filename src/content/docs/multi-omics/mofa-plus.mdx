@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="MOFA+ 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，可处理缺失数据并提供不确定性估计。"
@@ -567,7 +566,6 @@ for factor_idx in range(n_factors):
 **方差解释**：
 - 展示每个因子解释的方差比例
 - 评估因子重要性
-<PageHeaderMeta section="Applications" />
 
 <NoteCard variant="pitfalls"
   pitfalls={[

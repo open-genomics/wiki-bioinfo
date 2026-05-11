@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='真实序列比对不能假设「所有错误代价相同」。打分矩阵通过量化氨基酸替换的可能性，Gap 罚分通过区分开启与延长代价，共同构建了模拟进化过程的评价体系。'
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 是什么
 
 打分矩阵（Substitution Matrix / Scoring Matrix）和 Gap 罚分（Gap Penalty）共同构成了序列比对的评价体系。打分矩阵为每一对字符（碱基或氨基酸）的对齐指定一个得分，Gap 罚分则定义了插入或缺失（Insertion/Deletion, Indel）的代价。

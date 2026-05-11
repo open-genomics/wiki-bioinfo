@@ -8,7 +8,6 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学分析中，数据在多个层级间流动与转化。理解每种格式所处的层级——从参考序列、原始观测、定位结果，到注释对象、变异结果和派生指标——是正确使用这些数据的前提。"
@@ -19,7 +18,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Data References" />
 ## 问题背景
 
 在基因组或转录组分析中，从原始测序数据到最终生物学结论，信息需要经过多个层级的转化与提炼。每一层都使用特定的文件格式来承载该层级的信息。一个核心问题是：**如何理解这些格式之间的关系，以及它们各自能够（和不能）回答什么问题？**

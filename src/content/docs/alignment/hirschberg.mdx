@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Hirschberg 算法是 Needleman-Wunsch 的线性空间优化版本：它使用分治策略将空间复杂度从 O(mn) 降低到 O(min(m,n))，同时仍能得到最优全局比对。"
@@ -25,7 +24,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 Hirschberg 算法是 1975 年提出的用于全局序列比对的动态规划算法。它解决了 Needleman-Wunsch 算法的空间瓶颈问题：

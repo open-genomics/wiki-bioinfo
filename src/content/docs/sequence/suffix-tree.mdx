@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='如果说 Trie 是为了「找一批模式」而设计的，那么 Suffix Tree 就是为了「在一个文本中找任何子串」而设计的。它通过压缩所有后缀的共享前缀，将 $O(n^2)$ 的 Suffix Trie 降至 $O(n)$ 空间。'
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 1. 算法历史
 
 Suffix Tree的概念由 Weiner 于1973年首次提出，其构建算法可以在 $O(n)$ 时间内完成。1976年，McCreight 提出了一个更易于理解的线性时间构建算法。1995年，Ukkonen 提出了一个在线的线性时间构建算法，进一步简化了实现。

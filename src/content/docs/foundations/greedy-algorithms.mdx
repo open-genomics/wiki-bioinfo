@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="贪心算法在每一步选择中都采取当前状态下最优的选择，希望通过局部最优达到全局最优。它简单、高效，但在处理复杂生物学问题时常因陷入局部最优而失效。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Foundations" />
 ## 1. 贪心策略的核心
 
 贪心算法（Greedy Algorithm）遵循一个简单的准则：**每一步都做当前看起来最好的选择**。它不回头、不反悔，一旦做出选择就不再改变。

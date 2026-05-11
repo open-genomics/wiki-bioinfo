@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='生物语言模型的核心思想是「自监督预训练」：通过在海量无标注序列上运行填空或预测任务，模型能够自发地学习到蛋白质折叠、碱基规律和进化保守性。这些学到的特征（Embeddings）可以极大地提升下游低样本任务的精度。'
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 1. 是什么？
 
 生物语言模型（Biological Language Model） 是一种将自然语言处理中的预训练语言模型范式应用于生物序列的深度学习方法。其核心思想是：**生物序列（蛋白质、DNA、RNA）可以像自然语言一样被"阅读"和理解**——蛋白质的氨基酸序列就是由 20 个"字母"组成的"句子"，DNA 的核苷酸序列就是由 4 个"字母"组成的"文本"。

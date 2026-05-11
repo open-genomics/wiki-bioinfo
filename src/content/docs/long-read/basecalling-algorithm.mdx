@@ -6,7 +6,6 @@ title: "Basecalling 算法"
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 问题引入：如何"阅读"电流信号
 
 Nanopore 测序的物理原理与 Illumina 或 PacBio 截然不同：

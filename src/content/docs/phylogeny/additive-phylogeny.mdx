@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary='加法系统发育探讨如何从距离矩阵精确恢复树结构。如果矩阵满足「可加性」，我们就能通过递归算法找回那棵唯一的潜在树。'
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Applications" />
 ## 1. 要解决什么生物信息学问题？
 
 在基于距离的方法构建系统发育树时，我们假设物种间的进化差异可以由一棵带权树完全解释。给定一组物种之间的成对距离，**ADDITIVEPHYLOGENY** 算法要解决的问题是：如果这些距离确实来源于一棵树，我们能否精确地重建这棵树？

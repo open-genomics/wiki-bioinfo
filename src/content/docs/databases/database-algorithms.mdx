@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DataTable from '@/components/docs/DataTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="序列数据库搜索面临的核心挑战：如何在数十亿碱基的数据库中快速找到与查询序列相似的记录。本章介绍 k-mer 索引、Seed-and-Extend 策略、BWT/FM-index 等核心算法，以及 BLAST 等工具的实现原理。"
@@ -19,7 +18,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Data References" />
 ## 9.10 为什么需要专门的数据库搜索算法
 
 ### 9.10.1 性能瓶颈分析

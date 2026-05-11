@@ -7,7 +7,6 @@ import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 
 <NoteCard variant="summary"
   summary="当参考序列达到 3 Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
@@ -26,7 +25,6 @@ import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
   ]}
 />
 
-<PageHeaderMeta section="Core Methods" />
 ## 是什么
 
 Suffix Array（后缀数组）、Burrows-Wheeler Transform（BWT，Burrows-Wheeler 变换）和 FM-index 是现代序列索引技术的三大基石。它们共同解决了一个核心问题：如何在极小的内存开销下，对大规模参考序列（如人类基因组的 3 Gb 序列）实现极速的子串查询。

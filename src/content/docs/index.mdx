@@ -22,6 +22,7 @@ hero:
 ---
 
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
+import PathCard from '../../components/docs/PathCard.astro';
 
 <div class="home-intro">
   <p>
@@ -69,33 +70,18 @@ import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
 ## 三条阅读路径
 
 <div class="home-path-grid">
-  <div class="home-path-card">
-    <h3>初学者路径</h3>
-    <ol>
-      <li>导论</li>
-      <li>基础与数学</li>
-      <li>数据与资源</li>
-      <li>分析方向</li>
-    </ol>
-  </div>
-  <div class="home-path-card">
-    <h3>算法路径</h3>
-    <ol>
-      <li>导论中的算法入口</li>
-      <li>基础与数学</li>
-      <li>核心方法</li>
-      <li>回到分析方向验证方法位置</li>
-    </ol>
-  </div>
-  <div class="home-path-card">
-    <h3>任务驱动路径</h3>
-    <ol>
-      <li>选择一个分析方向</li>
-      <li>回看相关数据与资源</li>
-      <li>追溯到核心方法</li>
-      <li>再补基础与模型</li>
-    </ol>
-  </div>
+  <PathCard
+    title="初学者路径"
+    steps={['导论', '基础与数学', '数据与资源', '分析方向']}
+  />
+  <PathCard
+    title="算法路径"
+    steps={['导论中的算法入口', '基础与数学', '核心方法', '回到分析方向验证方法位置']}
+  />
+  <PathCard
+    title="任务驱动路径"
+    steps={['选择一个分析方向', '回看相关数据与资源', '追溯到核心方法', '再补基础与模型']}
+  />
 </div>
 
 ## 从哪里开始

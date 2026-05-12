@@ -241,7 +241,14 @@
   margin: 2rem 0;
 }
 
+.home-path-grid > .home-path-card {
+  margin: 0;
+}
+
 .home-path-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
   padding: 1.2rem;
   border: 1px solid var(--bioinfo-card-border);
   border-radius: var(--bioinfo-radius);
@@ -254,7 +261,8 @@
 }
 
 .home-path-card ol {
-  margin: 0.75rem 0;
+  flex: 1;
+  margin: 0.75rem 0 0;
 }
 
 @media (max-width: 72rem) {

@@ -5,7 +5,7 @@ description: "生物信息学数据格式的层次结构与语义边界——从
 
 import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 数据格式是生物信息学中连接生物学问题与计算方法的**核心抽象层**。它们不仅仅是文件存储的容器，更是**特定层次生物学概念的标准化编码**：
 
@@ -77,7 +77,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 核心内容导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '数据格式总论：从存储结构到语义层次',
@@ -110,6 +110,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
       description: '变异候选的标准编码。理解基因型、INFO 字段和变异过滤。',
     },
   ]}
+  variant="navigation"
 />
 
 ---

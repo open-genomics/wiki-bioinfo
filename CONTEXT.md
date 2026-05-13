@@ -90,7 +90,7 @@
 - **Concept Page**：概念页，围绕"是什么 → 为什么重要 → 核心概念 → 相关页面"展开
 - **Algorithm Page**：算法页，围绕"问题定义 → 数学模型 → 递推/伪代码 → Worked example → 相关页面"展开
 - **Workflow Page**：流程页，围绕"任务目标 → 步骤总览 → 每步说明 → 相关页面"展开
-- **Landing Page**：板块入口页，使用 PageHeaderMeta、SectionNavigator、RelatedLinks 等结构
+- **Landing Page**：板块入口页，使用 PageHeaderMeta、LinkGrid（variant="navigation"）、RelatedLinks 等结构
 
 ### 文档组件
 
@@ -100,7 +100,6 @@
 |------|------|------|
 | `LinkGrid` | 统一的链接网格（navigation/related） | Deep Module |
 | `RelatedLinks` | 兼容层，委托给 LinkGrid | 兼容层 |
-| `SectionNavigator` | 兼容层，委托给 LinkGrid | 兼容层 |
 | `NoteCard` | 统一的笔记卡片（summary/pitfalls/tools） | Deep Module |
 | `DataTable` | 统一的数据表格（comparison/decision-matrix） | Deep Module |
 | `ComparisonTable` | 兼容层，委托给 DataTable | 兼容层 |
@@ -112,6 +111,17 @@
 ---
 
 ## 架构决策记录
+
+### 2026-05-13: 删除 SectionNavigator 浅层模块
+
+**背景**：`SectionNavigator` 是 `LinkGrid` 的纯转发 wrapper，没有任何逻辑或转换。整个组件只有一行：`<LinkGrid items={items} variant="navigation" />`。删除测试通过——删除后复杂性集中到 LinkGrid，不会分散。
+
+**决策**：删除 `SectionNavigator.astro`，25 个板块入口页直接使用 `<LinkGrid variant="navigation">`。
+
+**收益**：
+- Locality：减少间接层，维护者少跳一层
+- 减少组件数量：从 12 个文档组件减至 11 个
+- 消除混淆：新贡献者不会困惑"SectionNavigator 和 LinkGrid 有什么区别"
 
 ### 2026-05-08: 合并 RelatedLinks 与 SectionNavigator 为 LinkGrid
 

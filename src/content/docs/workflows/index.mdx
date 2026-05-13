@@ -3,7 +3,7 @@ title: "工作流与案例"
 description: NGS 数据分析实战流程：从质控、比对、定量到差异分析的端到端工作流。
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -26,7 +26,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'NGS 流程总览',
@@ -54,6 +54,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '根据研究问题决定应该先走哪条方法路线。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

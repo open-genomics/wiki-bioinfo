@@ -5,7 +5,7 @@ title: "群体遗传学"
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="群体遗传学研究等位基因频率在群体中如何分布、变化，以及如何被进化力量（自然选择、遗传漂变、迁移、重组）塑造。它为理解变异在人群中的意义、GWAS 的统计框架和进化机制提供理论基础。"
@@ -180,7 +180,7 @@ LD 对生物信息学实践的影响深远：
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'Hardy–Weinberg 平衡',
@@ -203,6 +203,7 @@ LD 对生物信息学实践的影响深远：
       description: 'PCA、ADMIXTURE 与群体分层校正。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

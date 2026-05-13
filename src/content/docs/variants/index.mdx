@@ -5,7 +5,7 @@ title: "变异检测"
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 
 <PageHeaderMeta
@@ -54,7 +54,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'DNA-seq 变异检测总览',
@@ -92,6 +92,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
       description: '从研究设计、caller 选择和解释角度区分 germline 与 somatic 分析思路。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

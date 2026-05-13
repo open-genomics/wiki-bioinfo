@@ -3,7 +3,7 @@ title: "空间转录组"
 description: 空间转录组学的核心概念、技术原理与分析方法
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 空间转录组学（Spatial Transcriptomics）试图同时回答两个基本问题：**细胞或组织区域中表达了什么基因**，以及**这些表达发生在组织的什么空间位置**。
 
@@ -45,7 +45,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '空间转录组总览',
@@ -63,6 +63,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
       description: '利用单细胞参考把空间 spot 分解成细胞类型组成。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

@@ -4,7 +4,7 @@ description: 从序列或特征差异重建进化关系的算法方法，包括�
 ---
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <PageHeaderMeta
   audience="已经理解比对与距离概念，希望进一步理解树结构与进化关系解释的读者"
@@ -74,7 +74,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '层次聚类',
@@ -119,6 +119,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
       description: '在演化模型下，寻找最可能产生当前观测序列的树。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与表达数据分析的连接

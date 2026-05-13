@@ -5,7 +5,7 @@ title: "分析方向与案例"
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 
 <PageHeaderMeta
@@ -52,7 +52,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '工作流与案例',
@@ -188,6 +188,7 @@ import SectionNavigator from '@/components/docs/SectionNavigator.astro';
       description: '从序列深度学习到生物语言模型，理解新一代表示学习方法。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

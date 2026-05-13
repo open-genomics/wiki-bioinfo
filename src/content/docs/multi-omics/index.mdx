@@ -3,7 +3,7 @@ title: "多组学整合"
 description: 多组学数据整合的策略、算法与应用，涵盖早期/中期/后期整合、批次校正、矩阵分解与深度学习方法。
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 多组学整合（Multi-Omics Integration）旨在联合分析来自不同生物学层次的数据（基因组、转录组、蛋白质组、表观组等），建立比单一组学更完整的生物学解释。
@@ -69,7 +69,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '整合策略',
@@ -92,6 +92,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '矩阵分解、图方法与深度学习等多组学整合核心算法。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 详细算法

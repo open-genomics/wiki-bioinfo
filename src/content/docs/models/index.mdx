@@ -3,7 +3,7 @@ title: "概率模型与模式识别"
 description: 从 Motif 发现到隐马尔可夫模型（HMM），介绍生物序列中模式识别的概率建模方法与核心算法。
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -28,7 +28,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'Motif 寻找',
@@ -94,6 +94,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '把序列分段、概率模型和注释生成联系起来。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

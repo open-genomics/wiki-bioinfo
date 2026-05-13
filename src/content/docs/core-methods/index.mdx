@@ -3,7 +3,7 @@ description: 核心方法板块入口。生物信息学算法的核心范式有�
 title: "核心方法"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -33,7 +33,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '序列表示与索引',
@@ -64,6 +64,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '用 HMM、PWM/PSSM 等模型理解隐藏结构、motif 和 gene prediction。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

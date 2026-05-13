@@ -4,7 +4,7 @@ description: "长读长测序技术将单条 read 长度从数百 bp 提升至�
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
@@ -75,7 +75,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'PacBio 与 Nanopore',
@@ -113,4 +113,5 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
       description: '利用 split-read、coverage 和断点证据检测大型插入、缺失和重排。',
     },
   ]}
+  variant="navigation"
 />

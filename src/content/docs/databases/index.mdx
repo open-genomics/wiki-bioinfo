@@ -3,7 +3,7 @@ title: "数据库与资源"
 description: "生物信息学核心数据库的资源定位、对象类型体系与查询策略"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -48,7 +48,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '常用数据库与资源总览',
@@ -81,6 +81,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '理解 BLAST、BWA 等工具背后的 k-mer 索引、seed-and-extend、FM-index 等核心算法原理。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

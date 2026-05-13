@@ -3,7 +3,7 @@ title: "结构生物信息学"
 description: 蛋白质、RNA 与复合体三维结构的预测、比较与解释
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 结构生物信息学（Structural Bioinformatics）是研究生物大分子三维结构的计算学科。它回答的核心问题是：**给定分子序列，如何预测其结构？如何比较不同结构？结构如何解释功能？**
@@ -106,7 +106,7 @@ AlphaFold 使计算结构预测从**专家工具**变成**常规资源**：
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '蛋白结构基础',
@@ -134,6 +134,7 @@ AlphaFold 使计算结构预测从**专家工具**变成**常规资源**：
       description: '从分子对接到网络推断，理解蛋白质-蛋白质相互作用的计算方法',
     },
   ]}
+  variant="navigation"
 />
 
 ## 参考资源

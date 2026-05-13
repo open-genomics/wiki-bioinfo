@@ -3,7 +3,7 @@ title: "生物信息学中的机器学习"
 description: 从表示学习到深度学习架构，探索机器学习如何解决生物序列建模的核心问题。
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
@@ -58,7 +58,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 建议按以下顺序阅读，形成从概念到具体、从基础到前沿的完整认知：
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '1. 序列深度学习',
@@ -86,6 +86,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: 'ESM、DNABERT 等 foundation models；表示迁移与下游应用。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 前置知识

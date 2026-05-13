@@ -4,7 +4,7 @@ title: "单细胞组学"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="单细胞测序技术把'整体'打散成'个体'——让我们能在细胞分辨率下看到转录组、表观组甚至基因组的异质性。它揭示的是 bulk 平均无法呈现的细胞类型、发育轨迹和稀有亚群。"
@@ -246,7 +246,7 @@ $$
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'scRNA-seq 总览',
@@ -269,6 +269,7 @@ $$
       description: '伪时间、RNA velocity 与细胞分化路径分析。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

@@ -3,7 +3,7 @@ description: 序列比对板块入口，串联编辑距离、全局/局部比对
 title: "序列比对"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -35,7 +35,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '编辑距离',
@@ -106,6 +106,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '理解为什么多条序列不能简单重复 pairwise DP，以及 progressive alignment 的核心思路。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 视觉化：alignment 方法与 mapper 技术栈

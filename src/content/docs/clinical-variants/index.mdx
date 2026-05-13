@@ -3,7 +3,7 @@ description: 临床变异解释板块入口。如何从数万候选变异中筛�
 title: "临床变异解释"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -38,7 +38,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '变异注释与优先级排序',
@@ -61,4 +61,5 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '从优先级排序、ACMG 分类到致病性预测与 CNV 检测的核心算法。',
     },
   ]}
+  variant="navigation"
 />

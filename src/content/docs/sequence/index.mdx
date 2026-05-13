@@ -3,7 +3,7 @@ title: "序列表示与索引"
 description: "从字符串算法基础到现代压缩索引，建立生物序列高效查询的理论体系"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 生物信息学的核心任务之一是**在海量序列数据中快速找到目标片段**。给定一条长达 30 亿碱基的人类参考基因组，如何在毫秒级时间内定位一条 100 bp 的测序 read？这是现代测序数据分析每天都要面对的问题。
@@ -12,7 +12,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: 'k-mer 与序列表示',
@@ -70,6 +70,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '把 BWT 与 backward search 连接起来，理解高效 exact matching。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

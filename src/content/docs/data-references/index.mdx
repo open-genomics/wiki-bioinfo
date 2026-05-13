@@ -3,7 +3,7 @@ description: 数据、注释与资源板块入口。参考基因组版本如何�
 title: "数据、注释与资源"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -35,7 +35,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '参考基因组、坐标系统与注释',
@@ -58,6 +58,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '从 FASTA/FASTQ 到 BAM/GTF/VCF，把不同层级的数据格式放回具体流程理解。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

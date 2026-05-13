@@ -3,7 +3,7 @@ title: "蛋白质组学"
 description: "基于质谱的蛋白质组学分析：从肽段测序到蛋白质鉴定与定量"
 ---
 
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 
@@ -78,7 +78,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '质谱基础',
@@ -111,6 +111,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
       description: 'Label-free、TMT/iTRAQ 定量策略与数据分析',
     },
   ]}
+  variant="navigation"
 />
 
 ## 参考文献

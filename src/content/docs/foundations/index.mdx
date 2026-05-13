@@ -4,7 +4,7 @@ title: "基础与数学"
 ---
 
 import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
-import SectionNavigator from '@/components/docs/SectionNavigator.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 
@@ -54,7 +54,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 子主题导航
 
-<SectionNavigator
+<LinkGrid
   items={[
     {
       title: '生物信息学中的基础对象',
@@ -169,6 +169,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
       description: '从基因组序列中识别基因的方法，包括统计和相似性搜索方法。',
     },
   ]}
+  variant="navigation"
 />
 
 ## 与其他板块的连接

@@ -4,12 +4,11 @@ import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
 import { getSidebarConfig } from './src/data/sections.js';
-
-const siteBase = '/wiki-bioinfo/';
+import { siteConfig } from './src/data/site-config.js';
 
 export default defineConfig({
-  site: 'https://lessup.github.io',
-  base: siteBase,
+  site: siteConfig.site,
+  base: siteConfig.base,
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],
@@ -23,13 +22,13 @@ export default defineConfig({
 
   integrations: [
     starlight({
-      title: 'BioInfo Wiki',
-      description: '面向中文社区的生物信息学体系化知识库',
+      title: siteConfig.title,
+      description: siteConfig.description,
       defaultLocale: 'root',
       locales: {
         root: {
           label: '简体中文',
-          lang: 'zh-CN',
+          lang: siteConfig.locale,
         },
       },
       logo: {

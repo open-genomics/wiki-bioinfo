@@ -181,6 +181,17 @@
 - 减少组件数量：从 12 个文档组件减至 11 个
 - 消除重复的类型定义（`ComparisonRow` / `MatrixRow`）
 
+### 2026-05-13: 提取站点配置 Seam，消除 Head.astro ↔ astro.config.mjs 硬编码耦合
+
+**背景**：站点标题、URL、base 路径、locale、OG 图片等常量在 `Head.astro` 和 `astro.config.mjs` 中重复定义。修改部署目标时必须同步两处，否则 SEO 元数据会漂移。这是配置层面的浅层重复——没有单一 Seam。
+
+**决策**：创建 `src/data/site-config.ts` 作为站点级配置的单一真相源。`astro.config.mjs` 和 `Head.astro` 均从此 Seam 读取。同时导出派生值 `siteUrl` 和 `ogImageUrl`，避免模板中重复拼接。
+
+**收益**：
+- Locality：部署信息变更只需改一处
+- Leverage：一处定义服务构建配置和运行时 SEO
+- Testability：纯配置对象可以直接断言
+
 ### 2026-05-11: PageHeaderMeta 自动推断 section
 
 **背景**：`PageHeaderMeta` 支持 10 个 props，但 95% 的调用只传递 `section` prop。这导致接口复杂度与实际使用不匹配。同时，section 成员关系在两处定义：文件路径（隐式）和组件调用（显式），存在同步 seam。

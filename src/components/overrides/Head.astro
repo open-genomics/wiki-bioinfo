@@ -1,23 +1,19 @@
 ---
 import StarlightHead from '@astrojs/starlight/components/Head.astro';
+import { siteConfig, siteUrl, ogImageUrl } from '@/data/site-config';
 
 const { title, description } = Astro.props;
-const siteTitle = 'BioInfo Wiki';
-const siteUrl = 'https://lessup.github.io/wiki-bioinfo/';
-const pageTitle = title ? `${title} | ${siteTitle}` : siteTitle;
-const pageDescription =
-  description ||
-  '面向中文社区的生物信息学体系化知识库，围绕对象、模型、算法、流程与资源组织内容。';
+const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
+const pageDescription = description || siteConfig.description;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
-const ogImageUrl = `${siteUrl}img/bioinfo-logo.svg`;
 
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
-  name: siteTitle,
+  name: siteConfig.title,
   url: siteUrl,
   description: pageDescription,
-  inLanguage: 'zh-CN',
+  inLanguage: siteConfig.locale,
 };
 ---
 
@@ -27,25 +23,25 @@ const structuredData = {
 
 <link rel="canonical" href={canonicalUrl} />
 
-<meta property="og:site_name" content={siteTitle} />
+<meta property="og:site_name" content={siteConfig.title} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
 <meta property="og:url" content={canonicalUrl} />
 <meta property="og:type" content="website" />
-<meta property="og:locale" content="zh_CN" />
+<meta property="og:locale" content={siteConfig.locale.replace('-', '_')} />
 <meta property="og:image" content={ogImageUrl} />
-<meta property="og:image:alt" content="BioInfo Wiki" />
+<meta property="og:image:alt" content={siteConfig.title} />
 
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={pageDescription} />
 <meta name="twitter:image" content={ogImageUrl} />
 
-<meta name="author" content="BioInfo Wiki" />
+<meta name="author" content={siteConfig.title} />
 <meta
   name="keywords"
-  content="bioinformatics, 生物信息学, sequence analysis, genomics, algorithms, RNA-seq"
+  content={siteConfig.keywords}
 />
-<meta name="theme-color" content="#4f46e5" />
+<meta name="theme-color" content={siteConfig.themeColor} />
 
 <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />

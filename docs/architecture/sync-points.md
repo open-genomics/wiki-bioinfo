@@ -15,7 +15,7 @@
 
 **同步流程**：
 
-1. 在 `sections.ts` 中添加/修改板块条目
+1. 在 `sections.ts` 中添加/修改板块条目（路径前缀 → section ID 映射自动从 `sections[].items` 推导，无需手动维护）
 2. 在 `src/content/docs/` 中创建对应的目录和页面
 3. `astro.config.mjs` 和 `PageHeaderMeta` 会自动从 `sections.ts` 获取信息
 

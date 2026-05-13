@@ -33,86 +33,121 @@ const slug = Astro.url.pathname
 const sectionId = getSectionFromSlug(slug);
 const sectionMeta = sectionId ? getSectionMeta(sectionId) : undefined;
 
-const primaryValue = sectionMeta?.label ?? 'BioInfo Wiki';
-const primaryDetail = sectionMeta?.description
-  ?? '帮助你快速判断当前主题与全站知识图谱的连接方式。';
+type HeaderMetaIcon = 'list-format' | 'random' | 'document' | 'right-arrow';
 
-const hasAudience = Boolean(audience);
-const hasReadingMeta = Boolean(estimatedTime || difficulty);
-const hasPathInfo = Boolean(startWith || prereqs.length > 0);
+const cards = buildPageHeaderCards({
+  ...(sectionMeta
+    ? { sectionMeta: { label: sectionMeta.label, description: sectionMeta.description } }
+    : {}),
+  audience,
+  startWith,
+  prereqs,
+  estimatedTime,
+  difficulty,
+});
 
-// 卡片 2：阅读引导或板块描述
-const secondaryLabel = hasAudience
-  ? '适合谁读'
-  : hasReadingMeta
-    ? '阅读信息'
-    : '阅读目标';
+function buildPageHeaderCards(input: {
+  sectionMeta?: { label: string; description: string } | undefined;
+  audience?: string | undefined;
+  startWith?: string | undefined;
+  prereqs?: string[] | undefined;
+  estimatedTime?: string | undefined;
+  difficulty?: string | undefined;
+}): { icon: HeaderMetaIcon; label: string; value: string; detail: string }[] {
+  const hasAudience = Boolean(input.audience);
+  const hasReadingMeta = Boolean(input.estimatedTime || input.difficulty);
+  const prereqs = input.prereqs ?? [];
+  const hasPathInfo = Boolean(input.startWith || prereqs.length > 0);
 
-const secondaryValue = hasAudience
-  ? '建议在以下阶段阅读'
-  : difficulty
-    ? `难度：${difficulty}`
-    : estimatedTime
-      ? '阅读时长'
-      : '帮助建立阅读上下文';
+  // 卡片 1：板块信息
+  const primaryValue = input.sectionMeta?.label ?? 'BioInfo Wiki';
+  const primaryDetail =
+    input.sectionMeta?.description ??
+    '帮助你快速判断当前主题与全站知识图谱的连接方式。';
 
-const secondaryDetail = hasAudience
-  ? audience!
-  : estimatedTime && difficulty
-    ? `预计阅读：${estimatedTime}`
-    : estimatedTime
-      ? `预计阅读：${estimatedTime}`
-      : difficulty
-        ? `内容难度：${difficulty}`
-        : '先判断这页与你当前问题的关系，再决定是否深入展开。';
+  // 卡片 2：阅读引导或板块描述
+  const secondaryLabel = hasAudience
+    ? '适合谁读'
+    : hasReadingMeta
+      ? '阅读信息'
+      : '阅读目标';
 
-// 卡片 3：路径信息或阅读元信息
-const pathDetail = startWith
-  ? (prereqs.length > 0 ? `${startWith}；相关前置：${prereqs.join('、')}` : startWith)
-  : (prereqs.length > 0 ? `相关前置：${prereqs.join('、')}` : '');
+  const secondaryValue = hasAudience
+    ? '建议在以下阶段阅读'
+    : input.difficulty
+      ? `难度：${input.difficulty}`
+      : input.estimatedTime
+        ? '阅读时长'
+        : '帮助建立阅读上下文';
 
-const tertiaryLabel = hasPathInfo
-  ? (startWith ? '建议起点' : '建议前置')
-  : hasReadingMeta && hasAudience
-    ? '阅读信息'
-    : '建议前置';
+  const secondaryDetail = hasAudience
+    ? input.audience!
+    : input.estimatedTime && input.difficulty
+      ? `预计阅读：${input.estimatedTime}`
+      : input.estimatedTime
+        ? `预计阅读：${input.estimatedTime}`
+        : input.difficulty
+          ? `内容难度：${input.difficulty}`
+          : '先判断这页与你当前问题的关系，再决定是否深入展开。';
 
-const tertiaryValue = hasPathInfo
-  ? (startWith ? '推荐阅读路径' : '建议先准备相关前置')
-  : hasReadingMeta
-    ? (difficulty ? `难度：${difficulty}` : '阅读时长')
-    : '先建立相关基础对象与方法直觉';
+  // 卡片 3：路径信息或阅读元信息
+  const pathDetail = input.startWith
+    ? prereqs.length > 0
+      ? `${input.startWith}；相关前置：${prereqs.join('、')}`
+      : input.startWith
+    : prereqs.length > 0
+      ? `相关前置：${prereqs.join('、')}`
+      : '';
 
-const tertiaryDetail = hasPathInfo
-  ? pathDetail
-  : estimatedTime && difficulty
-    ? `预计阅读：${estimatedTime}`
-    : estimatedTime
-      ? `预计阅读：${estimatedTime}`
-      : difficulty
-        ? `内容难度：${difficulty}`
-        : '建议先建立相关基础对象与方法直觉，再进入本页。';
+  const tertiaryLabel = hasPathInfo
+    ? input.startWith
+      ? '建议起点'
+      : '建议前置'
+    : hasReadingMeta && hasAudience
+      ? '阅读信息'
+      : '建议前置';
 
-const cards = [
-  {
-    icon: 'list-format',
-    label: sectionMeta ? '所属板块' : '当前主题',
-    value: primaryValue,
-    detail: primaryDetail,
-  },
-  {
-    icon: hasAudience ? 'random' : 'document',
-    label: secondaryLabel,
-    value: secondaryValue,
-    detail: secondaryDetail,
-  },
-  {
-    icon: hasPathInfo ? 'right-arrow' : 'document',
-    label: tertiaryLabel,
-    value: tertiaryValue,
-    detail: tertiaryDetail,
-  },
-] as const;
+  const tertiaryValue = hasPathInfo
+    ? input.startWith
+      ? '推荐阅读路径'
+      : '建议先准备相关前置'
+    : hasReadingMeta
+      ? input.difficulty
+        ? `难度：${input.difficulty}`
+        : '阅读时长'
+      : '先建立相关基础对象与方法直觉';
+
+  const tertiaryDetail = hasPathInfo
+    ? pathDetail
+    : input.estimatedTime && input.difficulty
+      ? `预计阅读：${input.estimatedTime}`
+      : input.estimatedTime
+        ? `预计阅读：${input.estimatedTime}`
+        : input.difficulty
+          ? `内容难度：${input.difficulty}`
+          : '建议先建立相关基础对象与方法直觉，再进入本页。';
+
+  return [
+    {
+      icon: 'list-format',
+      label: input.sectionMeta ? '所属板块' : '当前主题',
+      value: primaryValue,
+      detail: primaryDetail,
+    },
+    {
+      icon: hasAudience ? 'random' : 'document',
+      label: secondaryLabel,
+      value: secondaryValue,
+      detail: secondaryDetail,
+    },
+    {
+      icon: hasPathInfo ? 'right-arrow' : 'document',
+      label: tertiaryLabel,
+      value: tertiaryValue,
+      detail: tertiaryDetail,
+    },
+  ];
+}
 
 ---
 

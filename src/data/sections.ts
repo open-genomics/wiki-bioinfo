@@ -435,41 +435,39 @@ export function findSectionByLabelOrKey(labelOrKey: string): SectionMeta | undef
 }
 
 /**
- * 路径前缀 → section ID 映射
- * 用于从文件路径自动推断所属板块
+ * 从 SidebarItem 树中递归提取所有 slug
  */
-export const pathToSection: Record<string, string> = {
-  // 直接对应
-  foundations: 'foundations',
-  'core-methods': 'core-methods',
-  applications: 'applications',
-  'data-references': 'data-references',
-  appendix: 'appendix',
-  // core-methods 子目录
-  sequence: 'core-methods',
-  alignment: 'core-methods',
-  assembly: 'core-methods',
-  models: 'core-methods',
-  // applications 子目录
-  variants: 'applications',
-  transcriptomics: 'applications',
-  'single-cell': 'applications',
-  epigenomics: 'applications',
-  population: 'applications',
-  'long-read': 'applications',
-  spatial: 'applications',
-  proteomics: 'applications',
-  'clinical-variants': 'applications',
-  'structure-bioinfo': 'applications',
-  'multi-omics': 'applications',
-  phylogeny: 'applications',
-  'ml-bioinfo': 'applications',
-  workflows: 'applications',
-  // data-references 子目录
-  databases: 'data-references',
-  formats: 'data-references',
-  // intro 不映射（全局入口，不属于特定板块）
-};
+function flattenSlugs(items: SidebarItem[]): string[] {
+  const slugs: string[] = [];
+  for (const item of items) {
+    if (item.slug) slugs.push(item.slug);
+    if (item.items) slugs.push(...flattenSlugs(item.items));
+  }
+  return slugs;
+}
+
+/**
+ * 自动从 sections 配置推导路径前缀 → section ID 映射
+ * 消除手动维护的同步 seam
+ */
+function derivePathToSection(): Record<string, string> {
+  const map: Record<string, string> = {};
+  for (const [sectionId, section] of Object.entries(sections)) {
+    if (sectionId === 'intro') continue; // intro 页面不属于特定板块
+    for (const slug of flattenSlugs(section.items)) {
+      const firstSegment = slug.split('/')[0];
+      if (firstSegment && !map[firstSegment]) {
+        map[firstSegment] = sectionId;
+      }
+    }
+  }
+  return map;
+}
+
+/**
+ * 路径前缀 → section ID 映射（自动推导，非手动维护）
+ */
+const pathToSection: Record<string, string> = derivePathToSection();
 
 /**
  * 从 slug 路径推断所属板块

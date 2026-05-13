@@ -1,14 +1,7 @@
 ---
 interface Props {
   title?: string;
-  items?: Array<string | {
-    name?: string;
-    title?: string;
-    label?: string;
-    text?: string;
-    href?: string;
-    to?: string;
-  }>;
+  items?: Array<string | { label: string; href?: string }>;
 }
 
 import { Icon } from '@astrojs/starlight/components';

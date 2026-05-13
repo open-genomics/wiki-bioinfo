@@ -65,21 +65,11 @@ export function resolveLinks<T extends { to: string }>(
 }
 
 /**
- * 解析灵活的前置知识项，支持字符串和多种对象格式
+ * 解析前置知识项，支持纯文本字符串和带链接的对象
  * 为 PrerequisitesBox 提供统一的链接解析 Seam
  */
 export function resolvePrereqItems(
-  items: Array<
-    | string
-    | {
-        name?: string;
-        title?: string;
-        label?: string;
-        text?: string;
-        href?: string;
-        to?: string;
-      }
-  >,
+  items: Array<string | { label: string; href?: string }>,
   baseUrl: string
 ): Array<{ label: string; href: string | undefined; external: boolean }> {
   return items.map((item) => {
@@ -91,11 +81,10 @@ export function resolvePrereqItems(
       };
     }
 
-    const target = item.href ?? item.to;
-    const href = target ? buildHref(target, baseUrl) : undefined;
+    const href = item.href ? buildHref(item.href, baseUrl) : undefined;
 
     return {
-      label: item.label ?? item.name ?? item.title ?? item.text ?? target ?? '',
+      label: item.label,
       href,
       external: href ? isExternalHref(href) : false,
     };

@@ -152,14 +152,6 @@
   color: var(--sl-color-text-accent);
 }
 
-.pitfalls-card {
-  border-color: rgba(220, 38, 38, 0.18);
-}
-
-.tool-mapping-card {
-  border-color: color-mix(in srgb, var(--sl-color-accent) 18%, transparent);
-}
-
 .definition-list {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

@@ -207,6 +207,68 @@
 - Testability：路径映射是确定性的，无需运行时模糊匹配
 - 简化接口：组件 interface 从 10 个 props 减至 5 个（audience, startWith, prereqs, estimatedTime, difficulty）
 
+### 2026-05-14: 自动推导 pathToSection，消除手动映射表
+
+**背景**：`pathToSection` 是 `sections.ts` 中手动维护的查找表，将 25 个路径前缀映射到 section ID。新增子目录（如 `spatial`）时，需同时更新 `sections[].items`（sidebar）和 `pathToSection`（`PageHeaderMeta` 推断）。这是同步 seam——映射表本质上是 `sections` 中 slug 树结构的重复表达。
+
+**决策**：
+1. 添加 `flattenSlugs()` 辅助函数，从 `SidebarItem` 树中递归提取所有 slug
+2. 添加 `derivePathToSection()` 函数，自动从 `sections[].items` 推导路径前缀映射
+3. 将 `pathToSection` 从手动 `export const` 替换为自动推导的模块级常量
+4. `intro` 板块被排除（全局入口，不属于特定板块）
+
+**收益**：
+- Locality：板块成员关系只在 `sections` 树中定义一次
+- Leverage：一处结构定义服务 sidebar、PageHeaderMeta 和路径推断
+- Testability：`derivePathToSection` 输出可独立断言
+- 删除 30 行手动映射代码，`sync-points.md` 中对应同步条目消除
+
+### 2026-05-14: PageHeaderMeta 提取卡片构建逻辑为纯函数
+
+**背景**：`PageHeaderMeta` 组件有约 60 行条件逻辑，将 `audience`/`startWith`/`prereqs`/`estimatedTime`/`difficulty` 映射到 3 张卡片的 label/value/detail/icon。这些规则散布在 `hasAudience`/`secondaryLabel`/`secondaryValue` 等临时变量中，与 Astro 运行时（`Astro.props`、`Astro.url`）混在一起，缺乏 locality。
+
+**决策**：
+1. 将卡片构建逻辑提取为 `buildPageHeaderCards()` 纯函数，接受精简输入对象，返回 `Card[]`
+2. 组件 frontmatter 负责：路径推断、调用纯函数、渲染 JSX
+3. 纯函数负责：所有条件分支和卡片构建规则
+4. 引入 `HeaderMetaIcon` 字面量联合类型，保持 `<Icon>` 组件的类型安全
+
+**收益**：
+- Locality：卡片构建规则集中在纯函数内，修改阅读引导场景只需改一处
+- Testability：`buildPageHeaderCards` 是确定性的纯函数，可直接断言每种 props 组合
+- Depth：组件获得内部 seam——渲染与决策分离
+- 新增阅读引导场景时，无需在组件中新增临时变量
+
+### 2026-05-14: 统一 PrerequisitesBox 接口，删除 resolvePrereqItems 冗余 fallback
+
+**背景**：`resolvePrereqItems` 接受 `string | {name? title? label? text? href? to?}`，interface 几乎与 implementation 一样复杂。调用者必须知道 6 个 key 中哪些可用，维护者需维护 5 层 fallback（`label ?? name ?? title ?? text ?? target ?? ''`）。全站 143 个内容文件使用 `name`+`href`、`name`+`to`、`label`+`to` 等多种组合，形成接口层面的浅层重复。
+
+**决策**：
+1. 将接口统一为 `Array<string | { label: string; href?: string }>`
+2. 删除 `resolvePrereqItems` 中所有 fallback 逻辑
+3. 用脚本批量迁移 143 个内容文件：所有 `name:` → `label:`、`to:` → `href:`（精确限定在 PrerequisitesBox 的 items 数组内部，避免误伤 LinkGrid）
+4. 删除迁移脚本
+
+**收益**：
+- Locality：前置知识项的形状定义在一处，调用者只需知道 `label` 和 `href`
+- Leverage：统一接口降低认知负担，新贡献者无需理解 6 个 key 的优先级
+- Testability：`resolvePrereqItems` 从 5 层 fallback 缩减为确定性映射
+- 删除约 20 行冗余 fallback 代码
+
+### 2026-05-14: 将 NoteCard variant-specific 样式迁入组件 scoped style
+
+**背景**：`.pitfalls-card` 和 `.tool-mapping-card` 的 `border-color` 规则放在全局 `custom.css` 中，而组件的 variant 逻辑和 class 分配在 `NoteCard.astro` 中。新增 variant 时需同时修改组件和全局 CSS，样式 seam 与语义 seam 跨文件耦合。
+
+**决策**：
+1. 在 `NoteCard.astro` 底部添加 `<style>` 块，包含 `.pitfalls-card` 和 `.tool-mapping-card` 的 border-color 规则
+2. 从 `custom.css` 中删除对应规则
+3. 保留 `.note-card`、`.summary-card` 等通用样式在全局 CSS 中（被多个组件共享）
+
+**收益**：
+- Locality：组件外观与组件逻辑共处一室
+- Leverage：新增 variant 不需要触碰全局样式文件
+- 减少 `custom.css` 行数，降低全局样式的认知负荷
+
 ---
 
 ## 参考文档

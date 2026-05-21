@@ -26,6 +26,7 @@ yarn-error.log*
 .claude/worktrees/
 .claude/statsig/
 .claude/telemetry/
+~/.claude/plans/
 
 # Font files (copyright protected, users should download and convert themselves)
 /public/fonts/*.woff

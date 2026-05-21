@@ -35,8 +35,3 @@ MD035:
 
 MD046:
   style: fenced  # 代码块使用围栏式
-
-# 文档前元数据规则
-MD041:
-  level: 1
-  front_matter_title: "^\s*title\s*:\s*"  # 从 frontmatter 读取标题

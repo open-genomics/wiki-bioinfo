@@ -26,7 +26,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 |---------|---------|---------|-----------|
 | **Partial Digest Problem (PDP)** | 给定所有点对距离的多重集，重构点的位置 | 穷举 + 分支定界 | [限制图谱](../foundations/restriction-mapping/) |
 | **Motif Finding Problem** | 在 t 个序列中找到 l-mer，使最小汉明距离最小 | 穷举所有位置组合 | [Motif 发现](../models/motif-finding/) |
-| **Median String Problem** | 找到与所有序列最接近的模式串 | 穷举 4^l 空间 | [Median String](../models/median-string/) |
+| **Median String Problem** | 找到与所有序列最接近的模式串 | 穷举 4^l 空间 | [Motif discovery 的算法路线](../models/motif-discovery-algorithms/) |
 | **Turnpike Problem** | PDP 的等价表述，求一维点集 | 分支定界 | [限制图谱](../foundations/restriction-mapping/) |
 
 **关键概念**：
@@ -82,9 +82,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 | **Shortest Path Problem** | 图中两点间最短路径 | Dijkstra, Bellman-Ford | [图算法基础](../foundations/graph-algorithms/) |
 | **Longest Path in DAG** | DAG 中最长路径 | 拓扑序 + DP | [图算法基础](../foundations/graph-algorithms/) |
 | **Eulerian Cycle Problem** | 图中经过每条边一次的回路 | 欧拉路径理论 | [de Bruijn 图](../assembly/de-bruijn/) |
-| **Hamiltonian Cycle Problem** | 图中经过每个顶点一次的回路 | NP-hard | [测序杂交](../assembly/sequencing-by-hybridization/) |
+| **Hamiltonian Cycle Problem** | 图中经过每个顶点一次的回路 | NP-hard | [图遍历算法](../assembly/graph-traversal-algorithms/) |
 | **Shortest Superstring Problem** | 包含所有输入字符串的最短超串 | Overlap 图 | [最短超串](../assembly/shortest-superstring/) |
-| **Sequencing by Hybridization (SBH)** | 从杂交数据重构序列 | de Bruijn 图 | [测序杂交](../assembly/sequencing-by-hybridization/) |
+| **Sequencing by Hybridization (SBH)** | 从杂交数据重构序列 | de Bruijn 图 | [图遍历算法](../assembly/graph-traversal-algorithms/) |
 | **Peptide Sequencing Problem** | 从质谱数据推导肽段序列 | 谱图 | [蛋白质组学](../proteomics/) |
 | **Spectral Alignment** | 实验谱与理论谱的对齐 | 谱图比对 | [蛋白质组学](../proteomics/) |
 

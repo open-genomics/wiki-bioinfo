@@ -21,7 +21,6 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
   items={[
     { label: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
     { label: 'de Bruijn graph 组装', href: '/wiki-bioinfo/assembly/de-bruijn' },
-    { label: '测序杂交（SBH）', href: '/wiki-bioinfo/assembly/sequencing-by-hybridization' },
   ]}
 />
 
@@ -355,6 +354,27 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
   ]}
 />
 
+## 欧拉路径应用：测序杂交（SBH）
+
+**测序杂交（Sequencing by Hybridization, SBH）** 是 1980 年代末提出的基于 DNA 芯片的测序方法，是欧拉路径在生物信息学中的经典应用案例，展示了同一问题的不同建模如何把 NP 完全问题转化为线性时间问题。
+
+### 问题与两种建模
+
+SBH 用包含所有可能 $l$-mer 的 DNA 芯片杂交待测 DNA，获得其 $l$-mer 谱（spectrum），目标是反推原始序列。给定谱 $S$，有两种图论建模：
+
+- **哈密顿路径建模**：顶点为 $l$-mer，两 $l$-mer 有 $l-1$ 字符重叠时连边，求经过每个顶点恰好一次的路径——NP 完全
+- **欧拉路径建模**：顶点为 $(l-1)$-mer，每个 $l$-mer 作为连接其前缀与后缀的边，求经过每条边恰好一次的路径——线性时间 $O(E)$
+
+### 欧拉路径算法要点
+
+- 顶点 $v$ **平衡**：$\text{indegree}(v) = \text{outdegree}(v)$；连通图存在欧拉回路当且仅当所有顶点平衡
+- 顶点 $v$ **半平衡**：$|\text{indegree}(v) - \text{outdegree}(v)| = 1$；连通图存在欧拉路径当且仅当最多两个半平衡顶点且其余平衡
+- 算法：若有两个半平衡顶点，先在它们之间加边使所有顶点平衡，找欧拉回路，再移除所加边得欧拉路径
+
+### 算法启示与局限
+
+SBH 揭示了"问题转化的重要性"：同一生物问题，哈密顿建模 NP 完全，欧拉建模线性可解，顶点与边的选择至关重要。但 SBH 未能成为主流测序方法，核心原因是杂交信号的不确定性（假阳性/假阴性使谱不完整），短探针特异性差、长探针成本高，且二代测序快速崛起。其欧拉路径思想在现代 de Bruijn 图组装中延续，但两者有本质区别：SBH 的 $k$-mer 来自探针杂交（实验），de Bruijn 图的 $k$-mer 来自读段分解（计算），容错策略截然不同。
+
 ## 参考资料
 
 - Cormen, T. H., et al. *Introduction to Algorithms*, Chapters 22-23
@@ -374,6 +394,5 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
     { title: 'OLC：Overlap-Layout-Consensus', to: '/wiki-bioinfo/assembly/olc', description: '基于重叠关系的经典组装范式' },
     { title: '重复序列、分叉与图清理', to: '/wiki-bioinfo/assembly/repeats-and-graph-cleaning', description: '图清理策略在组装中的应用' },
     { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '图论基础概念与算法预备知识' },
-    { title: '测序杂交（SBH）', to: '/wiki-bioinfo/assembly/sequencing-by-hybridization', description: '欧拉路径问题在测序中的经典应用' },
   ]}
 />

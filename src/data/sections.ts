@@ -117,7 +117,6 @@ export const sections: Record<string, SectionMeta> = {
         items: [
           { slug: 'alignment' },
           { slug: 'alignment/edit-distance' },
-          { slug: 'alignment/longest-common-subsequence' },
           { slug: 'alignment/global-local' },
           { slug: 'alignment/needleman-wunsch' },
           { slug: 'alignment/smith-waterman' },
@@ -138,7 +137,6 @@ export const sections: Record<string, SectionMeta> = {
         items: [
           { slug: 'assembly' },
           { slug: 'assembly/shortest-superstring' },
-          { slug: 'assembly/sequencing-by-hybridization' },
           { slug: 'assembly/olc' },
           { slug: 'assembly/de-bruijn' },
           { slug: 'assembly/graph-traversal-algorithms' },
@@ -153,7 +151,6 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'models' },
           { slug: 'models/motif-finding' },
           { slug: 'models/motif-discovery-algorithms' },
-          { slug: 'models/median-string' },
           { slug: 'models/pwm-pssm' },
           { slug: 'models/hmm' },
           { slug: 'models/viterbi-forward-backward' },
@@ -344,7 +341,6 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'phylogeny/neighbor-joining' },
           { slug: 'phylogeny/parsimony' },
           { slug: 'phylogeny/maximum-likelihood' },
-          { slug: 'phylogeny/corrupted-cliques-cast' },
         ],
       },
       {

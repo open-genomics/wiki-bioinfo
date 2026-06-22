@@ -19,7 +19,6 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 <PrerequisitesBox
   items={[
     { label: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics', description: 'DP 的核心思想与最优子结构' },
-    { label: '最长公共子序列', href: '/wiki-bioinfo/alignment/longest-common-subsequence', description: '与编辑距离有直接数学关系' },
     { label: '曼哈顿游客问题', href: '/wiki-bioinfo/foundations/manhattan-tourist', description: '理解 DP 网格路径的几何直观' },
   ]}
 />
@@ -170,6 +169,42 @@ $$
   ]}
 />
 
+## 最长公共子序列（LCS）
+
+**最长公共子序列（Longest Common Subsequence, LCS）** 是编辑距离的一个特例：只允许插入和删除（不允许替换），目标是找两个字符串共有的最长子序列。子序列（subsequence）不要求连续，区别于子串（substring）。
+
+### 与编辑距离的数学关系
+
+如果编辑距离只允许插入和删除操作，则它与 LCS 长度有直接关系：
+
+$$
+d(v, w) = n + m - 2 \cdot s(v, w)
+$$
+
+其中 $s(v, w)$ 是 LCS 长度，$n$、$m$ 是两串长度。直观含义：最小编辑操作数等于把两个字符串都删减到 LCS 所需的总删除次数。
+
+### 递推关系
+
+定义 `s[i][j]` 为 v 的前 i 个字符与 w 的前 j 个字符的 LCS 长度：
+
+$$
+s[i,j] = \max \begin{cases}
+s[i-1, j] & \text{if } v_i \notin \text{LCS} \\
+s[i, j-1] & \text{if } w_j \notin \text{LCS} \\
+s[i-1, j-1] + 1 & \text{if } v_i = w_j
+\end{cases}
+$$
+
+边界条件 `s[i, 0] = s[0, j] = 0`。这与编辑距离的递推同构，对应一个**编辑图**上的最长路径问题：水平/垂直边权重 0（插入/删除），对角边在匹配时权重 +1。
+
+### 示例
+
+v = ATCTGAT，w = TGCATA，最终 `s[7,6] = 4`。一个 LCS 是 TCTA（或 TGAT、GCAT 等，可能有多个最优解）。
+
+### 局限与扩展
+
+LCS 只考虑匹配，不考虑错配代价，因此不足以反映生物学相似性。在蛋白质序列中某些替换更"保守"，这些细节在 LCS 中被忽略。LCS 的常见应用是 diff 算法、版本控制和序列初步筛选；要更精确的生物学分析，需推广为全局比对（Needleman-Wunsch）、局部比对（Smith-Waterman）和仿射间隙罚分。
+
 ## 参考资料
 
 - An Introduction to Bioinformatics Algorithms
@@ -186,7 +221,6 @@ $$
 <RelatedLinks
   links={[
     { title: 'Needleman-Wunsch 算法', to: '/wiki-bioinfo/alignment/needleman-wunsch', description: '在编辑距离基础上引入打分矩阵的全局比对算法' },
-    { title: '最长公共子序列', to: '/wiki-bioinfo/alignment/longest-common-subsequence', description: '与编辑距离有直接数学关系的序列相似性度量' },
     { title: 'Smith-Waterman 算法', to: '/wiki-bioinfo/alignment/smith-waterman', description: '从编辑距离扩展而来的局部比对算法' },
     { title: '全局比对与局部比对', to: '/wiki-bioinfo/alignment/global-local', description: '比对策略的选择与适用场景' },
     { title: '打分矩阵与 gap 罚分', to: '/wiki-bioinfo/alignment/scoring-matrices', description: '编辑距离的简化假设如何被更真实的打分模型替代' },

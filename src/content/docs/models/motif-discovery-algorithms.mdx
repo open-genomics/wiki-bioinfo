@@ -364,12 +364,39 @@ motif discovery 的输出常常不是一句"找到了字符串 TATAAA"，而是�
   ]}
 />
 
+## 中位字符串（Median String）等价表述
+
+**中位字符串（Median String）问题**是 motif finding 的等价表述：给定一组 DNA 序列，找一个长度为 l 的字符串 v，使其与所有序列中某个 l-mer 的总 Hamming 距离最小。
+
+### 与 Motif Finding 的等价性
+
+设 s 是一组起始位置，w 是对应的 consensus string，则有：
+
+$$
+d_H(w, s) = l \cdot t - \text{Score}(s, \text{DNA})
+$$
+
+因此：
+
+$$
+\min_v \text{TotalDistance}(v, \text{DNA}) = l \cdot t - \max_s \text{Score}(s, \text{DNA})
+$$
+
+左边是 Median String 问题，右边是 Motif Finding 问题。解决其一即解决另一个。区别在于搜索空间：Motif Finding 搜索 $(n-l+1)^t$ 个位置组合，Median String 搜索 $4^l$ 个字符串。当序列多但 motif 短时，从 Median String 入手更高效。
+
+### 求解方法
+
+- **穷举**：枚举所有 $4^l$ 个字符串，对 l=15 需检查 $10^9$ 个，不实用
+- **分支定界**：在 4 叉搜索树上剪枝，用部分前缀的下界估计（可将 l-mer 分割为两段，利用 `TotalDistance(w) ≥ TotalDistance(u) + TotalDistance(v)` 得更紧下界）
+- **启发式**：随机搜索、贪心、Gibbs sampling（见上文各节）
+
+Median String 问题是 NP 困难的，实际中常与 Gibbs sampling 等启发式方法配合使用。Median String 的解不一定出现在输入序列中，它是所有 l-mer 在"平均意义"下的最优代表，类似多序列比对的 consensus 序列。
+
 <RelatedLinks
   links={[
     { title: 'Motif 寻找', to: '/wiki-bioinfo/models/motif-finding', description: '从 motif 的定义和理解出发，再看 discovery 算法会更清晰。' },
     { title: 'PWM 与 PSSM', to: '/wiki-bioinfo/models/pwm-pssm', description: 'Motif discovery 的输出通常是 PWM/PSSM 形式的 motif 模型。' },
     { title: '随机化算法', to: '/wiki-bioinfo/foundations/randomized-algorithms', description: 'Gibbs Sampling 和随机化搜索是 motif discovery 的核心随机化方法。' },
-    { title: 'Median String 问题', to: '/wiki-bioinfo/models/median-string', description: 'Median String 是 motif finding 的等价表述，提供了不同的搜索视角。' },
     { title: '穷举搜索与分支定界', to: '/wiki-bioinfo/foundations/exhaustive-search', description: '穷举是 motif discovery 的概念基线，分支定界是其精确求解策略。' },
   ]}
 />

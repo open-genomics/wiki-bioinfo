@@ -192,12 +192,41 @@ k-means 特别适合处理"扁平"的聚类任务：
   ]}
 />
 
+## 噪声聚类：CAST
+
+**CAST（聚类亲和力搜索技术, Cluster Affinity Search Technique）** 是针对含噪声基因表达数据设计的聚类算法，弥补 k-means 在噪声鲁棒性上的不足。它基于图论框架：把基因视作顶点，距离小于阈值 $\theta$ 的基因对连边，理想聚类结果对应**团图**（每个连通分量是完全图，分量间无边）。噪声会破坏团图结构（缺失边或错误边），**Corrupted Cliques 问题**即用最少边增删恢复团图，已被证明 NP 完全，因此需启发式求解。
+
+### 亲和力与算法逻辑
+
+基因 $i$ 对簇 $C$ 的亲和力定义为它与簇中所有成员的平均距离：
+
+$$\text{Affinity}(i, C) = \frac{1}{|C|} \sum_{j \in C} d(i, j)$$
+
+若 $\text{Affinity}(i, C) \leq \theta$ 则 $i$ 与 $C$ **Close**，否则 **Distant**。CAST 采用"边建边修"：
+
+1. **选种**：从剩余基因中度数最高的作为新簇种子
+2. **拉人**：把所有与当前簇 Close 的基因加入
+3. **踢人**：新成员可能改变簇重心，重新检查并把变 Distant 的成员踢出
+4. **收敛**：簇成员不再变化则完成一个簇，从总集移除后构建下一个
+
+"踢人"步骤是 CAST 区别于简单贪心聚类的关键，保证簇内成员的亲和力始终满足阈值。最坏时间复杂度 $O(n^3)$，实际通常远快于此。
+
+### 与 k-means 的对比
+
+| 特性 | k-means | CAST |
+| :--- | :--- | :--- |
+| 需要预设 k | 是 | 否 |
+| 距离度量 | 欧几里得 | 任意 |
+| 噪声鲁棒性 | 差 | 较好 |
+| 时间复杂度 | $O(n \cdot k \cdot d)$ | $O(n^3)$ 最坏 |
+
+CAST 无需预设 k、对噪声更稳健，但对阈值 $\theta$ 敏感、不保证最优、且无法处理重叠聚类。它最初为微阵列基因表达数据设计，假设数据存在相对清晰的分组结构；对连续渐变数据可能强制分割为离散簇。典型实现见 Eisen Lab 的 CLUSTER 软件包，WGCNA 的网络模块检测思想与 CAST 的图论框架高度一致。
+
 ## 相关页面
 
 <RelatedLinks
   links={[
     { title: '层次聚类', to: '/wiki-bioinfo/phylogeny/hierarchical-clustering', description: '另一种不需要预设 k 的聚类方法' },
-    { title: 'Corrupted Cliques', to: '/wiki-bioinfo/phylogeny/corrupted-cliques-cast', description: '处理噪声数据的聚类进阶' },
     { title: '主成分分析（PCA）', to: '/wiki-bioinfo/ml-bioinfo', description: '聚类前的降维预处理' }
   ]}
 />

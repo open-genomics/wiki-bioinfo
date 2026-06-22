@@ -1,6 +1,6 @@
 ---
-title: "常用数据库与资源"
-description: "NCBI、Ensembl、UniProt、PDB、KEGG、GEO/SRA 等核心生物信息学数据库的资源定位与查询策略"
+title: "数据库 ID 映射与查询入口"
+description: "NCBI、Ensembl、UniProt、PDB、KEGG、GEO/SRA 的 ID 体系、跨库映射规则与查询入口。对象分类与资源族角色见数据库与注释系统一览。"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -8,256 +8,175 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import DataTable from '@/components/docs/DataTable.astro';
 import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
+> 数据库按对象类型（注释系统、变异数据库、蛋白与功能资源、公共数据与队列）的分类框架，见 [数据库与注释系统一览](../data-references/databases-and-annotations/)。本页聚焦于**每个数据库用什么 ID、跨库如何映射、查询从哪里进入**。
+
 <NoteCard variant="summary"
-  summary="生物信息学数据库围绕不同对象类型组织：基因/转录本、蛋白质、结构、通路、数据集。理解各资源的核心对象与组织方式，才能在分析中正确选择和使用。"
+  summary="本页是主流生物信息学数据库的 ID 体系与查询入口参考：每个数据库的中心 ID、跨库映射规则、查询路径与常见 ID 陷阱。"
   bullets={[
-    'NCBI：综合入口，承载 Gene/RefSeq、SRA、PubMed 等多个子系统',
-    'Ensembl：聚焦基因组注释与转录本层级对象',
-    'UniProt：蛋白质序列与功能注释的统一入口',
-    'PDB：三维结构对象的专业数据库',
-    'GEO/SRA：实验数据存档的两个互补维度',
+    '不同数据库用不同 ID 体系（Entrez Gene ID、Ensembl Gene ID、RefSeq NM_、UniProt AC），跨库整合必须显式映射',
+    'Gene Symbol 不是稳定主键，同基因有多个转录本，按 symbol 查询可能遗漏变体',
+    '查询前先确认对象层级（gene/transcript/protein）和参考版本（assembly/release）',
   ]}
 />
-
-## 9.1 数据库对象的分类体系
-
-### 9.1.1 生物信息学中的核心对象类型
-
-生物信息学数据库按**对象类型**（Object Type）组织。常见对象类型包括：
-
-| 对象类型 | 描述 | 典型数据库 |
-|---------|------|-----------|
-| **Gene** | 基因遗传单位，包含调控区、外显子、内含子 | NCBI Gene、Ensembl |
-| **Transcript** | 转录本，mRNA 及其变体 | Ensembl、RefSeq |
-| **Protein** | 蛋白质序列与功能单元 | UniProt、PDB |
-| **Structure** | 三维结构数据 | PDB、AlphaFold DB |
-| **Pathway** | 代谢与信号通路网络 | KEGG、Reactome |
-| **Dataset** | 实验数据集与原始测序数据 | GEO、SRA、ArrayExpress |
-
-### 9.1.2 资源定位问题的形式化描述
-
-**问题 9.1.1（数据库资源定位）**
-
-*输入*：分析目标 $O$（对象类型）、查询关键词 $Q$（基因符号、ID 或坐标）
-
-*输出*：最适合查询的数据库资源集合 $R = \{r_1, r_2, ..., r_k\}$，其中每个 $r_i$ 包含目标对象的相关记录
-
-*约束条件*：
-- 资源 $r_i$ 必须支持对象类型 $O$ 的查询
-- 资源版本应与分析流程的参考版本兼容
-
-## 9.2 为什么数据库对象区分至关重要
-
-### 9.2.1 分析流程中的资源查询瓶颈
-
-真实分析中，解释阶段的时间消耗往往超过计算阶段：
-
-| 判断类型 | 典型问题 | 错误后果 |
-|---------|---------|---------|
-| 对象层级 | 结果对应 gene、transcript 还是 protein？ | 功能注释错位，误导下游解释 |
-| 资源选择 | 应去哪个数据库确认注释？ | 重复查询，信息不完整 |
-| ID 映射 | 不同数据库的 ID 能否直接对应？ | 记录关联错误，数据污染 |
-| 数据类型 | 需要原始 reads 还是处理后的矩阵？ | 重新分析或数据不可用 |
-
-### 9.2.2 对象混淆的典型错误模式
-
-**错误模式 1：Gene Symbol 歧义**
-如 "TP53" 可能指代不同转录本（NM_000546、NM_001126112），直接按 symbol 查询可能遗漏重要变体。
-
-**错误模式 2：参考版本不匹配**
-使用 hg19 坐标查询基于 hg38 的数据库，导致坐标偏移或记录不存在。
-
-**错误模式 3：门户与子数据库混淆**
-将 NCBI 视为单一数据库，而实际查询可能落在 Gene、RefSeq、SRA 等不同子系统。
 
 <PrerequisitesBox
   items={[
-    '分子生物学中心法则：DNA → RNA → 蛋白质，各层级对象有明确对应关系',
-    '参考基因组版本体系（GRCh38/hg38 vs GRCh37/hg19）',
-    '基本 ID 系统：Entrez Gene ID、Ensembl Gene ID、RefSeq、UniProt AC',
+    { label: '数据库与注释系统一览', href: '/wiki-bioinfo/data-references/databases-and-annotations', description: '先建立对象分类与资源族角色的概念框架' },
+    { label: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation', description: '理解参考版本与坐标系统的约束' },
   ]}
 />
 
-## 先按问题选资源
+## 各数据库的 ID 体系
 
-<DataTable variant="decision-matrix"
-  rows={[
-    {
-      scenario: '想确认某个基因或转录本的坐标、注释与版本',
-      recommendation: 'Ensembl / NCBI Gene / RefSeq',
-      rationale: '这些资源更直接围绕 gene、transcript、assembly 与注释记录组织信息。',
-    },
-    {
-      scenario: '想看蛋白功能、名称统一和功能注释',
-      recommendation: 'UniProt',
-      rationale: '它更适合作为 protein 层对象的统一入口。',
-    },
-    {
-      scenario: '想看已有三维结构或结构证据',
-      recommendation: 'PDB',
-      rationale: '这里关注的是 structure 对象，而不是基因注释本身。',
-    },
-    {
-      scenario: '想把结果放到通路或功能模块里解释',
-      recommendation: 'KEGG',
-      rationale: '它更适合回答"这个分子处在什么过程或网络里"。',
-    },
-    {
-      scenario: '想找公开实验的原始测序数据',
-      recommendation: 'SRA',
-      rationale: 'SRA 更偏原始 reads 与测序存档。',
-    },
-    {
-      scenario: '想找公共表达数据集、实验设计与项目说明',
-      recommendation: 'GEO',
-      rationale: 'GEO 更常作为表达研究和数据集元信息的入口。',
-    },
-  ]}
-/>
+| 数据库 | 中心 ID 格式 | 示例 | 对象层级 |
+|--------|-------------|------|---------|
+| NCBI Gene | Entrez Gene ID（纯数字） | `7157` | gene |
+| NCBI RefSeq | `NM_`/`NR_`/`NP_` + 数字 | `NM_000546` | transcript / protein |
+| Ensembl | `ENSG`/`ENST`/`ENSP` + 数字 | `ENSG00000141510` | gene / transcript / protein |
+| UniProt | AC（6 字符） | `P04637` | protein |
+| PDB | 4 字符 ID | `1TUP` | structure |
+| dbSNP | rsID | `rs1042522` | variant |
+| ClinVar | `VCV` + 数字 | `VCV000009999` | variant |
+| gnomAD | 无独立 ID，按坐标/rsID 查询 | — | variant |
+| GEO | `GSE`/`GSM`/`GPL` | `GSE12345` | study / sample / platform |
+| SRA | `SRR`/`SRP`/`SRX` | `SRR123456` | run / project / experiment |
 
-## 核心资源怎么看
+**关键约束**：ID 体系与参考版本（assembly）和注释版本（release）绑定。同一基因在 GRCh37 与 GRCh38 下的 Ensembl ID 可能不同；同一基因在 Ensembl 不同 release 下的转录本集合也会变化。
+
+## 跨库 ID 映射
+
+### 常见映射路径
+
+| 起点 | 终点 | 映射方式 | 注意点 |
+|------|------|---------|--------|
+| Gene Symbol（如 `TP53`） | Entrez Gene ID | NCBI Gene 查询 | Symbol 有歧义，同物种内可能撞名 |
+| Entrez Gene ID | Ensembl Gene ID | Ensembl BioMart / ID 映射文件 | 同基因在两库都有记录，但 ID 完全不同 |
+| Ensembl Gene ID | UniProt AC | UniProt 查询 / Ensembl 交叉引用 | 一个基因可能对应多个蛋白条目（异构体） |
+| Ensembl Transcript ID | RefSeq NM_ | MANE 项目（NCBI + Ensembl 协作） | MANE Select 是两库共同推荐的标准转录本 |
+| UniProt AC | PDB ID | UniProt 条目内的结构交叉引用 | 不是所有蛋白都有实验结构 |
+| rsID | ClinVar / gnomAD | 直接查询 | ClinVar 记录可能不存在；gnomAD 频率按种群细分 |
+
+### ID 映射的常见陷阱
+
+- **Gene Symbol 歧义**：`TP53` 可能指代不同转录本（`NM_000546`、`NM_001126112`），直接按 symbol 查询可能遗漏重要变体
+- **参考版本不匹配**：用 hg19 坐标查询基于 hg38 的数据库，导致坐标偏移或记录不存在
+- **层级混淆**：Ensembl Gene ID（`ENSG`）与 Transcript ID（`ENST`）不能互换，前者对应基因座，后者对应具体转录本
+- **物种未指定**：Ensembl ID 前缀区分物种（`ENSG` 人、`ENSMUSG` 小鼠），跨物种比较时必须确认前缀
+- **Swiss-Prot vs TrEMBL**：UniProt 中 Swiss-Prot 是人工审阅（curated），TrEMBL 是自动注释，质量差异显著，不能等同使用
+
+## 各数据库的查询入口
 
 ### NCBI
 
-NCBI 更像一个综合入口，而不是单一类型数据库。它下面常见的对象包括：
+NCBI 是综合门户，查询时需明确进入哪个子系统：
 
-- **NCBI Gene / RefSeq**：基因、转录本与参考序列；
-- **SRA**：原始测序 reads；
-- **PubMed**：文献；
-- 以及其他多种知识库与交叉链接。
+| 子系统 | 查询入口 | 适合回答 |
+|--------|---------|---------|
+| NCBI Gene | `eutils.ncbi.nlm.nih.gov/entrez/eutils/` 或网页搜索 | 基因在 NCBI 体系里的表示 |
+| RefSeq | NCBI Nucleotide / Protein 数据库 | 参考序列与转录本 |
+| SRA | `ncbi.nlm.nih.gov/sra` | 原始测序 reads |
+| PubMed | `pubmed.ncbi.nlm.nih.gov` | 文献 |
+| dbSNP | `ncbi.nlm.nih.gov/snp` | 已知变异记录 |
 
-更适合回答的问题：
-
-- 某个基因或转录本在 NCBI 体系里如何表示；
-- 某项研究是否有对应的原始测序数据；
-- 某个对象在文献、序列和存档层面如何串起来。
-
-容易混淆的点：看到的是 NCBI 门户页面，并不代表你正在使用同一种数据库对象。
+**易混淆点**：看到的是 NCBI 门户页面，并不代表你正在使用同一种数据库对象。
 
 ### Ensembl
 
-Ensembl 更适合作为基因组注释与转录本层对象的入口。它常见的强项包括：
+查询入口：
 
-- gene / transcript / protein 的结构化注释；
-- 参考基因组版本和 assembly 背景；
-- 在多物种场景下保持相对统一的浏览方式。
+- **BioMart**：批量 ID 映射与注释导出
+- **REST API**：`rest.ensembl.org`，程序化查询 gene/transcript/sequence
+- **Genome Browser**：可视化基因结构与坐标
 
-更适合回答的问题：
-
-- 某个基因有哪些转录本；
-- 某个转录本在参考基因组上的位置与结构如何；
-- 当前分析使用的注释体系和转录本对象该如何理解。
+**适合回答**：某基因有哪些转录本、某转录本在参考基因组上的位置与结构、当前注释体系如何理解。
 
 ### UniProt
 
-UniProt 更偏 protein 对象本身。它适合用来补充：
+查询入口：
 
-- 蛋白名称统一与功能描述；
-- 域、功能注释和蛋白层级信息；
-- 从基因/转录本进一步走向蛋白解释。
+- **网页搜索**：`uniprot.org`，按 AC、基因符号或蛋白名查询
+- **REST API**：`rest.uniprot.org`，程序化批量查询
+- **ID 映射工具**：`uniprot.org/id-mapping`，跨库 ID 转换
 
-更适合回答的问题：
-
-- 一个基因对应的蛋白通常做什么；
-- 不同蛋白名称或条目之间如何对应；
-- 某个结果如何从 transcript 层走到 protein 层解释。
+**适合回答**：蛋白功能、名称统一、域注释、从 transcript 层走到 protein 层解释。
 
 ### PDB
 
-PDB 关注的是结构对象，而不是一般的注释对象。
+查询入口：
 
-更适合回答的问题：
+- **RCSB PDB**：`rcsb.org`，按 PDB ID、UniProt AC 或序列查询
+- **结构浏览**：可视化蛋白三维结构
 
-- 某个蛋白或复合体是否已有三维结构；
-- 一个变化位点是否落在已知结构区域或功能位点附近；
-- 结构证据能否帮助解释功能变化。
+**适合回答**：某蛋白是否已有三维结构、变异位点是否落在已知结构区域或功能位点附近。
 
 ### KEGG
 
-KEGG 更适合把基因、蛋白或代谢对象放回通路背景中理解。
+查询入口：
 
-更适合回答的问题：
+- **KEGG Orthology**：`kegg.jp/orthology`，按 KO 号查询
+- **Pathway 查询**：按基因符号或 KO 映射到通路
 
-- 某个分子参与哪些代谢或信号通路；
-- 一组结果是否集中在同一功能模块；
-- 下游解释应落在哪个过程或网络层面。
+**适合回答**：某分子参与哪些代谢或信号通路、一组结果是否集中在同一功能模块。
 
 ### GEO / SRA
 
-这两个资源经常一起出现，但用途不完全相同：
+| 资源 | 查询入口 | 对象层 |
+|------|---------|--------|
+| GEO | `ncbi.nlm.nih.gov/geo` | 表达研究、实验设计、数据集说明 |
+| SRA | `ncbi.nlm.nih.gov/sra` | 原始测序 reads、测序存档 |
 
-- **GEO** 更常作为表达研究、实验设计和数据集说明的入口；
-- **SRA** 更偏原始测序读段和测序存档。
+**关键区分**：GEO 更常作为项目元信息入口，SRA 更偏原始 reads。复用公开数据时先判断需要元信息还是原始数据。
 
-更适合回答的问题：
+## 工作示例：候选基因的多层 ID 映射
 
-- 我能否找到某类公开实验作为对照；
-- 我需要的是项目元信息，还是原始 reads；
-- 这个公开研究更适合复用元数据，还是重新下载原始数据自己分析。
-
-## 9.5 工作示例：候选基因的多层信息查询
-
-**问题 9.5.1（候选基因全面注释）**
-
-*输入*：RNA-seq 或变异检测流程输出的候选基因符号 $G$（如 "BRCA1"）、参考版本 $V$（如 GRCh38）
-
-*输出*：该基因在多个层次上的注释信息集合
+**输入**：RNA-seq 或变异检测流程输出的候选基因符号 `BRCA1`，参考版本 GRCh38
 
 **查询路径**：
 
-| 问题 | 目标对象 | 首选数据库 | 查询方式 |
-|-----|---------|-----------|---------|
-| 有哪些转录本？ | Transcript | Ensembl | Gene 页面 → Transcript 列表 |
-| 蛋白功能是什么？ | Protein | UniProt | Gene Symbol → Entry |
-| 是否有三维结构？ | Structure | PDB | UniProt ID → PDB 交叉引用 |
-| 参与哪些通路？ | Pathway | KEGG | Gene Symbol → Pathway 映射 |
-| 有无可复用数据？ | Dataset | GEO/SRA | Gene Symbol → 表达数据集 |
+| 问题 | 目标对象 | 首选数据库 | 查询方式 | 获得 ID |
+|------|---------|-----------|---------|--------|
+| 有哪些转录本？ | Transcript | Ensembl | Gene Symbol → Gene 页面 | `ENSG00000012048` → 多个 `ENST` |
+| 蛋白功能是什么？ | Protein | UniProt | Gene Symbol → Entry | `P38398` |
+| 是否有三维结构？ | Structure | PDB | UniProt AC → PDB 交叉引用 | 多个 PDB ID |
+| 参与哪些通路？ | Pathway | KEGG | Gene Symbol → Pathway 映射 | KO 号 + 通路 ID |
+| 有无可复用数据？ | Dataset | GEO/SRA | Gene Symbol → 表达数据集 | `GSE`/`SRR` 号 |
 
-**关键原则**：数据库之间是**互补关系**而非替代关系。每个数据库回答特定层次的问题，跨库查询才能建立完整注释。
+**关键原则**：数据库之间是互补关系而非替代关系。每个数据库回答特定层级的问题，跨库查询才能建立完整注释链条。
 
-## 9.6 与生物信息学流程的连接
+## 外部资源
 
-### 9.6.1 流程中的数据库映射节点
-
-典型分析流程在以下阶段需要数据库资源：
-
-1. **比对阶段**：使用参考基因组（Ensembl、NCBI 提供）
-2. **定量阶段**：依据注释文件 GTF/GFF（Ensembl、GENCODE）
-3. **注释阶段**：将变异/差异基因映射到功能数据库
-4. **解释阶段**：通路富集、蛋白互作网络分析
-
-<NoteCard variant="tools"
-  items={[
-    'RNA-seq、variant calling 等流程的"解释层"，最终都要把结果映射回 gene / transcript / protein / pathway 等数据库对象。',
-    '注释工具（如 ANNOVAR、VEP）本质上是将坐标/ID 映射到数据库对象的自动化接口。',
-    '复用公开数据时，需先明确需要数据集说明、处理结果还是原始 reads。',
-  ]}
-/>
-
-## 9.7 常见误区与注意事项
+| 资源 | 链接 | 说明 |
+|-----|------|------|
+| NCBI | https://www.ncbi.nlm.nih.gov | 综合生物信息学门户 |
+| Ensembl | https://www.ensembl.org | 基因组注释数据库 |
+| UniProt | https://www.uniprot.org | 蛋白质知识库 |
+| PDB | https://www.rcsb.org | 蛋白质结构数据库 |
+| KEGG | https://www.kegg.jp | 通路数据库 |
+| GEO | https://www.ncbi.nlm.nih.gov/geo | 基因表达数据存档 |
+| SRA | https://www.ncbi.nlm.nih.gov/sra | 序列读取存档 |
 
 <NoteCard variant="pitfalls"
-  items={[
-    '把 NCBI 当成单一数据库，而忽略它其实是多个资源入口的集合。',
-    '只看 gene symbol，不确认稳定 ID、转录本层级或参考版本。',
-    '把 GEO 和 SRA 当成完全相同的资源，结果在"项目说明"和"原始数据"之间来回混淆。',
-    '找到一个数据库记录后，就默认它能和当前分析里的参考版本或注释体系直接对应。',
-    '忽视 Swiss-Prot 与 TrEMBL 的质量差异，将自动注释等同于人工审 curate 记录。',
-    '跨物种比较时未确认 Ensembl 等数据库的 assembly 版本一致性。',
+  pitfalls={[
+    '把 Gene Symbol 当成稳定、唯一且跨数据库可直接互换的主键：',
+    'Symbol 有歧义，同基因有多个转录本，按 symbol 查询可能遗漏重要变体。应优先使用稳定 ID（Entrez Gene ID、Ensembl Gene ID）。',
+    '把 NCBI 当成单一数据库：',
+    'NCBI 是多个资源入口的集合（Gene、RefSeq、SRA、PubMed、dbSNP），查询时需明确进入哪个子系统。',
+    '把 GEO 和 SRA 当成完全相同的资源：',
+    'GEO 更偏项目元信息与处理结果，SRA 更偏原始 reads，两者对象层不同。',
+    '忽视 Swiss-Prot 与 TrEMBL 的质量差异：',
+    'Swiss-Prot 是人工审阅，TrEMBL 是自动注释，将自动注释等同于人工 curated 记录会导致解释偏差。',
+    '跨物种比较时未确认 Ensembl ID 前缀：',
+    'Ensembl ID 前缀区分物种（ENSG 人、ENSMUSG 小鼠），跨物种比较必须确认前缀与 assembly 版本一致。',
   ]}
 />
-
-## 9.8 扩展阅读与相关资源
-
-### 9.8.1 本章相关页面
 
 <RelatedLinks
   links={[
     {
       title: '数据库与注释系统一览',
       to: '/wiki-bioinfo/data-references/databases-and-annotations',
-      label: '上层地图',
-      description: '从更高层理解数据库分类、ID 体系和版本意识。',
+      label: '分类框架',
+      description: '数据库按对象类型的分类体系与资源族角色。',
     },
     {
       title: '参考基因组、坐标系统与注释',
@@ -279,15 +198,3 @@ KEGG 更适合把基因、蛋白或代谢对象放回通路背景中理解。
     },
   ]}
 />
-
-### 9.8.2 外部资源
-
-| 资源 | 链接 | 说明 |
-|-----|------|------|
-| NCBI | https/www.ncbi.nlm.nih.gov | 综合生物信息学门户 |
-| Ensembl | https/www.ensembl.org | 基因组注释数据库 |
-| UniProt | https/www.uniprot.org | 蛋白质知识库 |
-| PDB | https/www.rcsb.org | 蛋白质结构数据库 |
-| KEGG | https/www.kegg.jp | 通路数据库 |
-| GEO | https/www.ncbi.nlm.nih.gov/geo | 基因表达数据存档 |
-| SRA | https/www.ncbi.nlm.nih.gov/sra | 序列读取存档 |

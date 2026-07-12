@@ -3,8 +3,8 @@ import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
-import { getSidebarConfig } from './src/data/sections.js';
-import { siteConfig } from './src/data/site-config.js';
+import { getSidebarConfig } from './src/data/sections';
+import { siteConfig } from './src/data/site-config';
 
 export default defineConfig({
   site: siteConfig.site,
@@ -65,7 +65,7 @@ export default defineConfig({
           tag: 'link',
           attrs: {
             rel: 'stylesheet',
-            href: 'https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css',
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.16.45/dist/katex.min.css',
           },
         },
       ],

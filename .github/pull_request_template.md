@@ -10,8 +10,8 @@
 
 - [ ] 已运行 `npm run check`
 - [ ] 已同步更新相关导航或交叉链接（如适用）
-- [ ] 已说明是否涉及 OpenSpec、组件、workflow 或站点配置
+- [ ] 已说明是否涉及组件、workflow 或站点配置
 
-## 相关 Issue / OpenSpec change
+## 相关 Issue
 
-<!-- 例如：Fixes #123 / project-closeout -->
+<!-- 例如：Fixes #123 -->

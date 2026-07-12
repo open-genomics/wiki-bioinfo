@@ -19,5 +19,3 @@
 *.gif binary
 *.webp binary
 *.pdf binary
-
-static/img/figures/*.png filter=lfs diff=lfs merge=lfs -text

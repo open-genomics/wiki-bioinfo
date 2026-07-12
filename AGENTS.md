@@ -4,7 +4,6 @@
 
 ## 1. Source of truth
 
-- **长期规范存档**：`openspec/specs/`（只读，不再走 propose/apply/archive 流程）
 - **运行时摘要**：本文件、`CONTEXT.md`
 - 发生冲突时，以本文件为准
 

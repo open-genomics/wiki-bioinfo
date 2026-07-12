@@ -20,7 +20,6 @@ yarn-error.log*
 
 # Local Claude Code metadata
 # Includes transient agent worktrees under .claude/worktrees/
-# Note: .claude/commands/ and .claude/skills/ are kept for OpenSpec integration
 .claude/settings.json
 .claude/settings.local.json
 .claude/worktrees/
@@ -28,10 +27,8 @@ yarn-error.log*
 .claude/telemetry/
 ~/.claude/plans/
 
-# Font files (copyright protected, users should download and convert themselves)
-/public/fonts/*.woff
-/public/fonts/*.woff2
-!/public/fonts/README.md
+# Font files (not bundled; site uses system font stack)
+/public/fonts/*
 
 # AI agent work files
 .kimi/

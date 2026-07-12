@@ -44,4 +44,3 @@
 ## 参考文档
 
 - [AGENTS.md](./AGENTS.md)
-- [OpenSpec specs 存档](./openspec/specs/)

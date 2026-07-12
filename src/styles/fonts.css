@@ -1,0 +1,21 @@
+/* 自定义字体加载 */
+/* CodeNewRoman Nerd Font Mono：英文、代码、数字 */
+/* Resource Han Rounded CN：中文正文、标题 */
+
+@font-face {
+  font-family: 'CodeNewRoman Nerd Font Mono';
+  src: url('/wiki-bioinfo/fonts/CodeNewRomanNerdFontMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-007F, U+00A0-00FF, U+2000-206F, U+2070-209F, U+20A0-20CF, U+2100-214F, U+2190-21FF, U+2200-22FF, U+2300-23FF, U+2460-24FF, U+25A0-25FF, U+2600-26FF, U+2700-27BF, U+E000-F8FF, U+FB00-FB4F;
+}
+
+@font-face {
+  font-family: 'Resource Han Rounded CN';
+  src: url('/wiki-bioinfo/fonts/ResourceHanRoundedCN-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+3000-303F, U+3040-309F, U+30A0-30FF, U+3100-312F, U+3130-318F, U+3400-4DBF, U+4E00-9FFF, U+F900-FAFF, U+FF00-FFEF, U+20000-2A6DF, U+2A700-2B73F, U+2B740-2B81F, U+2B820-2CEAF;
+}

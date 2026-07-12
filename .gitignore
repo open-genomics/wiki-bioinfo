@@ -27,8 +27,10 @@ yarn-error.log*
 .claude/telemetry/
 ~/.claude/plans/
 
-# Font files (not bundled; site uses system font stack)
-/public/fonts/*
+# Font source files (only woff2 web fonts are tracked)
+/public/fonts/*.otf
+/public/fonts/*.ttf
+/public/fonts/*.woff
 
 # AI agent work files
 .kimi/

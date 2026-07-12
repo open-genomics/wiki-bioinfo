@@ -57,6 +57,7 @@ export default defineConfig({
         },
       },
       customCss: [
+        './src/styles/fonts.css',
         './src/styles/custom.css',
         './src/styles/katex.css',
       ],

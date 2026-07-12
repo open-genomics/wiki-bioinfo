@@ -49,6 +49,6 @@ npm run check
 
 - 贡献入口：[`CONTRIBUTING.md`](./CONTRIBUTING.md)
 - 写作规范：[`src/content/docs/intro/style-guide.md`](./src/content/docs/intro/style-guide.md)
-- OpenSpec 规范：`openspec/specs/`
+- Agent 指令：[`AGENTS.md`](./AGENTS.md)
 
 欢迎提交内容修订、结构改进、链接修复和高质量的新页面建议。

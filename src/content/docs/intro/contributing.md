@@ -1,6 +1,6 @@
 ---
 title: "如何贡献"
-description: BioInfo Wiki 的贡献方式、开发流程与 OpenSpec 驱动协作入口
+description: BioInfo Wiki 的贡献方式与开发流程
 ---
 
 BioInfo Wiki 欢迎内容修订、结构优化、链接修复和高质量的新页面建议。
@@ -26,11 +26,11 @@ BioInfo Wiki 欢迎内容修订、结构优化、链接修复和高质量的新�
 
 ### 结构性改动
 
-适用于目录调整、板块入口重构、组件规则修改、workflow 收敛、AI 协作规则修改等。
+适用于目录调整、板块入口重构、组件规则修改、workflow 收敛等。
 
 1. 先通过 Issue 或讨论说明问题
-2. 使用 OpenSpec 提案（`/opsx:propose`）
-3. 提案就绪后实施（`/opsx:apply`）
+2. 达成共识后再实施
+3. 运行 `npm run check` 验证
 
 ## 本地验证
 

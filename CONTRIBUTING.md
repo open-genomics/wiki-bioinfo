@@ -31,13 +31,13 @@
 
 ### 2. 结构性改动
 
-适用于目录调整、首页/导论重构、workflow 设计、组件规则修改、AI 协作规则修改等。
+适用于目录调整、首页/导论重构、workflow 设计、组件规则修改等。
 
 流程：
 
 1. 先开 Issue 或讨论
-2. 使用 OpenSpec 提案（`/opsx:propose`）
-3. 提案就绪后再实施（`/opsx:apply`）
+2. 达成共识后再实施
+3. 运行 `npm run check` 验证
 
 ## 内容规则
 
@@ -72,5 +72,6 @@ npm run check
 ## 相关文档
 
 - 项目概览：[`README.md`](./README.md)
-- OpenSpec 规范：`openspec/specs/`
+- Agent 指令：[`AGENTS.md`](./AGENTS.md)
+- 架构上下文：[`CONTEXT.md`](./CONTEXT.md)
 - 写作规范：[`src/content/docs/intro/style-guide.md`](./src/content/docs/intro/style-guide.md)

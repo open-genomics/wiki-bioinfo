@@ -4,9 +4,9 @@
 
 ## 1. Source of truth
 
-- **长期规范**：`openspec/specs/`
-- **运行时摘要**：本文件、`CLAUDE.md`、`.github/copilot-instructions.md`
-- 发生冲突时，以 **OpenSpec** 为准
+- **长期规范存档**：`openspec/specs/`（只读，不再走 propose/apply/archive 流程）
+- **运行时摘要**：本文件、`CONTEXT.md`
+- 发生冲突时，以本文件为准
 
 ## 2. Project snapshot
 
@@ -20,15 +20,15 @@
 - 优先做**减法和收敛**，不是继续堆叠工程化设计
 - 优先修复真实不一致：规范漂移、过时文档、低价值 workflow、目录混乱、无意义增强
 - 允许删除、合并、下线低价值或误导性资产
-- 不在面向读者的文档中强调“项目即将归档”，但内部治理按低维护目标设计
+- 不在面向读者的文档中强调"项目即将归档"，但内部治理按低维护目标设计
 
 ## 4. Content rules
 
-- 中文优先，术语首次出现使用“中文（English, 缩写）”
+- 中文优先，术语首次出现使用"中文（English, 缩写）"
 - 先讲问题和动机，不写成工具操作手册
 - docs 目录治理采用：**保留 / 重写 / 合并 / 下线 / 延后不动**
 - 首页和 `intro/` 是优先治理入口
-- 英文内容如果未维护，就不要保留“名义关闭、实际启用”的状态
+- 英文内容如果未维护，就不要保留"名义关闭、实际启用"的状态
 
 ## 5. Engineering rules
 
@@ -39,34 +39,24 @@
 
 ## 6. AI workflow
 
-- 结构性改动先走 OpenSpec：`/opsx:propose` → `/opsx:apply` → `/opsx:archive`
-- 关键里程碑使用 `/review`
+- 回复默认使用中文
 - subagent 用于批量审计和高噪音检查
-- 默认不常态化使用 `/fleet`
-- Copilot 回复默认使用中文；项目级规则见 `.github/copilot-instructions.md`
-
-## 7. Closeout Status
-
-- 项目已进入收尾阶段，核心功能稳定
-- 维护原则：closeout-first（收敛优先）
-- 后续维护：低频更新，以内容修正为主
-- BMAD skills 已移除，仅保留 4 个 OpenSpec skills
+- 关键里程碑可使用 `/review`
 
 ## Agent skills
 
 ### Issue tracker
 
-GitHub Issues (`gh` CLI). See `docs/agents/issue-tracker.md`.
+GitHub Issues (`gh` CLI)。
 
 ### Triage labels
 
-Default vocabulary: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. See `docs/agents/triage-labels.md`.
+默认词汇：`needs-triage`、`needs-info`、`ready-for-agent`、`ready-for-human`、`wontfix`。
 
 ### Domain docs
 
-Single-context: `CONTEXT.md` and `docs/adr/` at repo root. See `docs/agents/domain.md`.
+`CONTEXT.md` 在仓库根目录，记录领域概念与组件表。
 
 ### Architecture docs
 
-- `CONTEXT.md` — 架构术语、领域概念、架构决策记录
-- `docs/architecture/sync-points.md` — 同步点清单，记录需要手动同步的关键位置
+- `CONTEXT.md` — 领域概念、页面类型、文档组件表

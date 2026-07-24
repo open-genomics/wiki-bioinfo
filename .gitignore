@@ -25,12 +25,6 @@ yarn-error.log*
 .claude/worktrees/
 .claude/statsig/
 .claude/telemetry/
-~/.claude/plans/
-
-# Font source files (only woff2 web fonts are tracked)
-/public/fonts/*.otf
-/public/fonts/*.ttf
-/public/fonts/*.woff
 
 # Devin CLI local config
 .devin/config.local.json

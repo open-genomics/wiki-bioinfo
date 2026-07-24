@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学并非研究抽象算法，而是处理一组互相转换、互相约束的生物学对象。理解这些对象及其背后的实验技术，是选择合适算法的前提。"
-  bullets={[
+  items={[
     '区分 DNA、RNA 和蛋白质在信息载体、表达和功能层面的不同角色',
     '理解中心法则（Central Dogma）定义的生物信息流动',
     '掌握 PCR、克隆、电泳等产生原始测序数据的实验技术原理',
@@ -153,7 +153,7 @@ graph LR
 - **比较基因组学**：通过比对不同物种（如人与果蝇）的基因组，寻找高度保守的区域，这些区域通常对应着关键的生物学功能。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '基因组 = 遗传信息的全部：',
     '基因组只是遗传信息的载体之一。表观遗传修饰（DNA 甲基化、组蛋白修饰等）不改变基因组序列本身，但能显著影响基因表达。生物信息学处理的主要是序列层面的信息，而非全部遗传学信息。',
     '中心法则意味着信息只能单向流动：',

@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="面对数十亿碱基的基因组，直接处理长字符串往往效率低下。k-mer（长度为 k 的连续子串）是生物信息学中最基础的离散化表示方法，它是统计序列特征、构建索引和组装图的基石。"
-  bullets={[
+  items={[
     '掌握 k-mer 的形式化定义及其在长序列中的分布特性',
     '理解 k 值选择在敏感性与特异性之间的权衡',
     '了解基于哈希表的 k-mer 计数与位置索引方法',
@@ -194,7 +194,7 @@ k-mer 是现代组装算法的核心抽象。
 | **Minimap2** | Read Mapping | Minimizers（一种稀疏 k-mer 采样） |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'k-mer 越长越好：',
     '不一定。过长的 $k$ 值会导致：测序错误产生的错误 k-mer 大量占据存储空间；图中出现过多孤立节点（Dead Ends），使得欧拉路径难以找到。实践中通常通过分析 k-mer 频谱来选择合适的 $k$。',
     'k-mer 计数结果可以直接当作基因组大小：',

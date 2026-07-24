@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="字符串模式匹配是序列比对、motif 搜索和数据库检索的算法基础。这一页从朴素匹配出发，介绍 KMP、Boyer-Moore 等经典算法的核心思想。"
-  bullets={[
+  items={[
     '先理解朴素匹配为什么慢，再看 KMP 和 Boyer-Moore 如何优化会更顺。',
     '这些算法的思想也体现在现代 BLAST 等工具的 seed-and-extend 策略中。',
   ]}
@@ -327,7 +327,7 @@ BLAST 并不直接使用上述算法，但借鉴了思想：
 - **k-mer hash table**：类似 Rabin-Karp 的哈希思想
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'KMP 总是最优的：',
     '不是。在实际应用中：',
     'Boyer-Moore 在长模式和自然文本中往往更快',

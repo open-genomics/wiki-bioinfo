@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Minimap2 是当前最广泛使用的长读长比对工具。其核心 seed-chain-align 框架通过粗定位-链式筛选-精细比对的三阶段策略，将长读长比对从 O(m×n) 降低到近线性复杂度。"
-  bullets={[
+  items={[
     'Seeding：通过 minimizer 索引快速定位候选区域，避免全对全扫描',
     'Chaining：使用动态规划将 seeds 聚类为共线性链，过滤假阳性匹配',
     'Alignment：在链约束区域内使用带状动态规划进行精确比对',
@@ -346,7 +346,7 @@ Minimap2 支持多种模式：
 - `-B`：gap 延伸罚分
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Minimap2 只用于长读长：',
     '不是。Minimap2 也支持短读长比对，虽然 BWA-MEM2 在短读长上可能更快。',
     'Seeding 阶段可以省略：',

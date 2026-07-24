@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="动态规划（Dynamic Programming, DP）是解决优化问题的强大技术。曼哈顿游客问题提供了一个直观的例子，展示了DP的核心思想：通过求解子问题来构建原问题的解。"
-  bullets={[
+  items={[
     '理解动态规划的核心思想：分解问题、存储子问题解、避免重复计算',
     '掌握曼哈顿游客问题的递推关系和算法实现',
     '理解DP与序列比对的联系'
@@ -284,7 +284,7 @@ DPCHANGE(M, c, d)
 理解曼哈顿游客问题是掌握序列比对、基因预测等生物信息学核心算法的第一步。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '动态规划就是填表：',
     '填表只是实现手段。动态规划的核心是三个要素：最优子结构、重叠子问题、无后效性。很多问题可以设计出 DP 方案但不一定需要显式填表（如带记忆化的递归）。反之，盲目填表而不验证这三个前提条件，可能导致错误结果。',
     '所有递归问题都能用动态规划优化：',

@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="这是一页把 DNA-seq variant calling 放回完整分析链路的概览：你需要同时看 BAM、VCF、参考版本、过滤逻辑和证据质量，而不是把 caller 当成黑箱。"
-  bullets={[
+  items={[
     '如果你刚开始接触变异检测，先把 FASTQ → BAM → VCF 的层级关系理顺。',
     '这页重点是流程和判断逻辑，不是具体软件命令。',
   ]}
@@ -121,7 +121,7 @@ FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annota
 </figure>
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'caller 跑完就等于得到了真实变异；',
     '只看 VCF，不看 BAM 和覆盖背景；',
     '参考版本和注释版本不一致也无所谓；',

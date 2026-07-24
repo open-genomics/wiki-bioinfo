@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="数据库搜索是目前蛋白质鉴定最常用的方法。本章介绍肽段-谱图匹配（PSM）的概念、常用评分算法、通过 Target-Decoy 策略控制错误发现率（FDR）的统计方法，以及如何处理带有修饰的肽段。"
-  bullets={[
+  items={[
     '理解肽段-谱图匹配（PSM） 作为蛋白质鉴定的基本单位',
     '掌握共享峰计数、相关系数（XCorr） 与概率评分的原理',
     '掌握 Target-Decoy 策略在估计假阳性率中的应用',
@@ -247,7 +247,7 @@ $$\widehat{\text{FDR}}(t) = \frac{\#\{\text{Decoy PSMs with score} \geq t\}}{\#\
 | **MetaMorpheus** | 非特异性搜索 | G-PTM-D 算法，适合未知修饰的发现 |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '过度信赖单一评分：',
     '不同的评分算法对同一组 PSM 可能给出不同的排序。XCorr 和 Mascot Ion Score 的数值不可直接比较。在严格的蛋白质组学研究中，推荐使用至少两种独立的方法交叉验证鉴定结果，或使用如 Percolator 等机器学习方法对多个评分特征进行整合。',
     '忽略蛋白推断问题：',

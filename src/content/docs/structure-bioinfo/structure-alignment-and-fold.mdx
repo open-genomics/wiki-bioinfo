@@ -12,7 +12,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 
 <NoteCard variant="summary"
   summary="结构比对回答的核心问题是：两个蛋白质的三维形状有多相似？与序列比对不同，结构比对关注空间几何而非字符匹配。通过 RMSD、TM-score 等指标，我们可以量化结构相似性；而 fold 概念则帮助我们理解结构相似性背后的拓扑组织规律。"
-  bullets={[
+  items={[
     '结构比对与序列比对的根本区别：几何 vs 字符',
     'RMSD 和 TM-score 是两类互补的结构相似性度量',
     'fold 是理解蛋白结构分类的拓扑概念'
@@ -205,7 +205,7 @@ Holm 和 Sander 于 1993 年开发的 DALI 基于残基间距离矩阵的比较�
 - **选择性预测**：区分相似结构的细微差异
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '**RMSD 小就一定同源**：需结合 TM-score、比对覆盖范围综合判断；小片段的 RMSD 可能低但全局不同源',
     '**结构相似一定来自共同祖先**：功能趋同（convergent evolution）可能导致不同序列收敛到相似 fold',
     '**只看全局分数**：许多功能依赖局部 pocket 或 interface，全局相似性可能掩盖局部关键差异',

@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="穷举搜索是解决组合优化问题的最直接方法，但搜索空间往往呈指数级增长。分支定界通过剪枝策略大幅减少需要探索的搜索空间，是许多生物信息学算法的基础。"
-  bullets={[
+  items={[
     '理解穷举搜索作为理论基线的价值',
     '掌握分支定界的剪枝思想和下界估计',
     '学习在 Motif Finding、限制性图谱等问题中的应用'
@@ -367,7 +367,7 @@ BRANCHANDBOUNDMOTIFSEARCH(DNA, t, n, l)
 - **组合优化**：许多生物信息学中的组合优化问题使用分支定界变种
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '分支定界总是比穷举快：',
     '不一定。如果：',
     '下界太松，剪枝效果差',

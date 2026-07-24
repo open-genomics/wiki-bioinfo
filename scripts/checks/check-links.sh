@@ -2,6 +2,9 @@
 # Check all internal markdown links in docs for broken references.
 # Usage: bash scripts/checks/check-links.sh
 # Exit code 0 = no broken links, 1 = broken links found
+#
+# Requires GNU grep (-P flag) and GNU realpath (-m flag).
+# Runs on Linux and macOS with GNU coreutils (brew install grep coreutils).
 
 # Get the project root directory (parent of scripts/)
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"

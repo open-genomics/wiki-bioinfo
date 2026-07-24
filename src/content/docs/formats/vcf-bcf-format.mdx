@@ -12,7 +12,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="VCF（Variant Call Format）编码的是变异候选（variant calls）——基于比对证据推断的序列差异。理解其结构（REF/ALT、QUAL、INFO、FORMAT、基因型），是变异过滤、注释和解释的基础。"
-  bullets={[
+  items={[
     'VCF 是文本格式，BCF 是二进制格式，两者语义等价',
     '核心字段：CHROM/POS/REF/ALT 定义变异位置，QUAL 评估置信度',
     'INFO 字段保存变异级属性（深度、等位基因频率、功能影响）',

@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学算法是连接生物学问题与计算实现的桥梁。本章系统梳理支撑 DNA-seq、RNA-seq、组装、变异检测等任务的核心算法范式。"
-  bullets={[
+  items={[
     '重点理解每种算法解决什么生物学问题，以及它的适用边界',
     '算法不是抽象理论，而是理解工具行为和设计新方法的基础',
   ]}
@@ -279,7 +279,7 @@ $$
 - **性能分析**：用真实数据测试不同算法
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '算法越复杂越好：',
     '不是。简单算法如果足够用，往往更可靠、更易维护。复杂度应该与问题难度匹配。',
     '最优解总是必需的：',

@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="编辑距离是理解序列比对最短路径的一页起点：它把序列相似性问题转成一个可以用动态规划系统求解的最小代价问题。"
-  bullets={[
+  items={[
     '先掌握状态定义和递推关系，再去看全局/局部比对会更顺。',
     '它不是现代比对工具的完整算法，但几乎是所有后续打分模型的起点。',
   ]}
@@ -159,7 +159,7 @@ $$
 可以把它理解成"最简单的序列比对模型"。后面的全局比对、局部比对、打分矩阵和 affine gap penalty，都是在这个模型上不断加入更真实的生物学假设。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '编辑距离越小，就一定是更好的生物学解释：',
     '不一定。编辑距离只反映最小操作数，不一定反映更真实的进化过程或测序错误模型。',
     '替换和插入/删除应该永远同价：',

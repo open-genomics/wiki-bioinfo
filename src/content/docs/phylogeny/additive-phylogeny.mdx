@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='加法系统发育探讨如何从距离矩阵精确恢复树结构。如果矩阵满足「可加性」，我们就能通过递归算法找回那棵唯一的潜在树。'
-  bullets={[
+  items={[
     '理解可加矩阵（Additive Matrix）的定义与生物学意义',
     '掌握判定准则：四点条件（Four-Point Condition）',
     '学习悬挂边长度（Limb Length）的稳健计算方法',
@@ -175,7 +175,7 @@ $$LimbLength(4) = \min \left\{ \frac{7+7-2}{2}, \frac{7+6-3}{2}, \frac{7+6-3}{2}
 - **Nearest Neighbor Interchange (NNI)** 是一种树拓扑搜索方法，可以在 ADDITIVEPHYLOGENY 产出的初始树基础上进行局部优化。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"ADDITIVEPHYLOGENY 可以直接用于真实数据"：',
     '由于真实的距离矩阵几乎从不严格满足可加性，直接使用 ADDITIVEPHYLOGENY 可能导致错误的结果——算法可能在某个步骤中找不到退化三元组，或者找到的插入位置产生不一致的边权。在实际应用中，应使用 Neighbor-Joining 等对非可加矩阵更鲁棒的方法。',
     '"四点条件可以通过检查所有四物种组合来完全验证"：',

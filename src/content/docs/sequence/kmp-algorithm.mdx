@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="KMP算法通过预处理模式串构建failure function，在失配时避免无谓的重复比较，实现O(n+m)的线性时间复杂度，是字符串算法的经典范例。"
-  bullets={[
+  items={[
     '核心思想：利用模式串自身的重复结构避免回退',
     'failure function π[i]：最长真前缀同时也是后缀的长度',
     '时间复杂度：预处理O(m)，匹配O(n+m)，最坏情况保证',
@@ -261,7 +261,7 @@ KMP本身在现代生物信息学工具中不常直接使用，但：
 - 这些方法在预处理阶段构建复杂索引，查询时达到亚线性时间
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'KMP总是最快的：',
     '不是。在实际应用中：',
     'Boyer-Moore在大多数情况下更快',

@@ -12,7 +12,7 @@ import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
 
 <NoteCard variant="summary"
   summary='ATAC-seq 是目前研究染色质可及性（Chromatin Accessibility）最主流的技术。它利用 Tn5 转座酶能够「特异性切割开放区域」的特性，仅需少量细胞即可在全基因组范围绘制调控地图。'
-  bullets={[
+  items={[
     '掌握 Tn5 转座酶的"切割即连接"原理',
     '理解插入片段长度分布（Insert Size Distribution）如何反映核小体排布',
     '掌握 Tn5 插入位点的偏移校正逻辑（+4 bp / -5 bp）',
@@ -141,7 +141,7 @@ Bulk ATAC-seq 测量的是细胞群体的平均信号，但生物样本通常是
     - **多组学整合**：与 scRNA-seq 联合分析，关联染色质开放性与基因表达，构建基因调控网络。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '开放染色质 ≠ 基因一定在表达：',
     '开放染色质是转录的必要条件而非充分条件。一个区域可以开放但不被使用——转录因子可能未结合、必需的协同因子可能缺失、或染色质需要额外的修饰才能激活。解释 ATAC-seq 结果时，需结合基因表达数据（如 RNA-seq）才能确认调控是否转化为转录输出。',
     '峰附近的基因不一定是靶基因：',

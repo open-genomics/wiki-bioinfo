@@ -15,7 +15,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="差异表达分析的核心是构建统计模型来判断观察到的表达差异是否超出随机波动范围。本节介绍基于负二项分布的 count 数据建模、离散度估计方法与多重检验校正算法。"
-  bullets={[
+  items={[
     '统计模型：为什么 RNA-seq 差异分析使用负二项分布而非正态分布',
     '离散度估计：技术噪声与生物学变异的分离',
     '多重检验：FDR 控制的算法原理（Benjamini-Hochberg 方法）',
@@ -282,7 +282,7 @@ $$\log \mu_{ij} = \log s_j + \text{condition}_j \cdot \beta_i + \text{batch}_j \
 - transcript 层与 gene 层目标混用
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '混淆统计显著性与生物学重要性：',
     'p-value 小 ≠ 生物学意义大',
     '小 fold change（LFC < 0.5）即使统计显著，可能无生物学功能',

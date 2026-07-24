@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
-  bullets={[
+  items={[
     '结合候选外显子生成与全局比对约束',
     '三维动态规划同时考虑基因组位置、蛋白位置和当前外显子',
     '避免 Exon Chaining 的"链不匹配"问题',
@@ -208,7 +208,7 @@ It was brill + iant thril + ling morning + ...
 剪接比对由 **Gelfand, Mironov 和 Pevzner** 于 1996 年提出，首次系统地将相似性信息整合到基因预测算法中。该方法成为 **twinscan**、**N-SCAN** 等流行基因预测工具的基础。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '剪接比对只是在 Exon Chaining 基础上加了比对约束：',
     '虽然剪接比对确实在 Exon Chaining 上增加了全局比对约束，但这一增加从根本上改变了问题的计算结构。Exon Chaining 的路径权重可以简单分解为边权重之和，而剪接比对的路径权重依赖于蛋白序列的连续性，不能简单分解。这导致剪接比对需要三维动态规划（基因组位置 × 蛋白位置 × 当前外显子），复杂度显著高于 Exon Chaining。',
     '候选外显子集合可以直接由 GT-AG 规则生成：',

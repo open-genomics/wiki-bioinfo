@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='在生物信息学中，我们经常需要在一大段基因组序列中同时寻找成百上千个模式（如 Motif、引物、Barcode）。Trie 结构通过显式共享模式前缀，为这类「多对一」匹配提供了理想的骨架。'
-  bullets={[
+  items={[
     '理解 Keyword Trees (Trie) 如何通过前缀共享减少重复计算',
     '掌握 Aho–Corasick 算法中失败链接（Failure Links） 的核心直觉',
     '对比单模式匹配（KMP）与多模式匹配在处理海量 Motif 时的效率差异'
@@ -195,7 +195,7 @@ Trie 与多模式匹配在字符串算法谱系中处于一个关键位置：
 - **与哈希索引的关系**：哈希索引也支持多模式匹配，但不支持在线扫描（需要一次性提取所有 k-mer），且无法利用已匹配的前缀信息。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Trie 和 Suffix Tree 是同一个东西：',
     '不是。Trie（Keyword Tree）是对模式集建树，每个模式是一条从根到叶（或标记节点）的路径。Suffix Tree 是对文本的所有后缀建树。两者的建树对象、使用场景和复杂度特征完全不同。',
     '失败链接就等于 KMP 的 failure function：',

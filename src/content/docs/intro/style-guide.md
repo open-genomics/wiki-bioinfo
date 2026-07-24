@@ -17,8 +17,6 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 ### 1.1 中英文之间需要增加空格
 
-<!-- markdownlint-disable no-inline-html -->
-
 > **推荐**：使用 BWA 进行比对时，需要先构建索引。
 >
 > **不推荐**：使用BWA进行比对时，需要先构建索引。
@@ -184,7 +182,7 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 ### 4.7 链接
 
-- 站内链接使用相对路径。
+- 站内链接使用相对路径（如 `../alignment/edit-distance`）或以 `/wiki-bioinfo/` 开头的绝对路径（如 `/wiki-bioinfo/alignment/edit-distance`）。两者等价，`link-utils.ts` 会统一处理 base 前缀。
 - 链接文字应该是有描述性的名词，不要使用"点击这里"。
 - 外链优先指向论文主页、官方文档或可信数据库。
 

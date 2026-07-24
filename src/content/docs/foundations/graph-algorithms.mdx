@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="图算法是理解组装、系统发育树和许多序列分析问题的基础工具。这一页从最基础的遍历和路径问题出发，建立图算法的直觉。"
-  bullets={[
+  items={[
     '先理解 BFS/DFS 的差异，再看最短路径和连通性问题会更顺。',
     '很多生物信息学问题都可以抽象成图问题，理解图算法能帮你看到不同任务之间的共性。',
   ]}
@@ -355,7 +355,7 @@ Dijkstra 算法用于在带权图中找到单源最短路径。
 - **进化树构建**：某些距离法构建树的变种
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'BFS 和 DFS 只是理论工具：',
     '不是。在实际工具中：',
     'BWA 的 seed 搜索类似 BFS 思想',

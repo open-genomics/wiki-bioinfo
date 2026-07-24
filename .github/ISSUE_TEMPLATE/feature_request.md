@@ -2,7 +2,7 @@
 name: 建议新内容
 about: 建议新增页面、主题入口或知识主干补充
 title: '[FEATURE] '
-labels: enhancement
+labels: needs-triage
 ---
 
 ## 建议内容

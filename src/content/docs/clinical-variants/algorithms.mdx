@@ -19,7 +19,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="算法在临床变异解释中扮演证据整合与决策支持的角色。从变异优先级排序、ACMG 自动化分类、致病性预测到 de novo 检测和家系分离分析，算法帮助处理海量数据、整合多维证据、量化不确定性，但最终临床判断仍需人工审核。"
-  bullets={[
+  items={[
     '变异优先级排序算法通过频率过滤、功能评估和表型匹配，从数万候选中聚焦高置信度变异',
     'ACMG 算法化将证据规则转化为可计算的决策流程，但需处理证据冲突和基因特异性调整',
     '致病性预测算法（SIFT、PolyPhen、CADD、AlphaMissense）提供支持性证据，但不能单独决定分类',
@@ -312,7 +312,7 @@ De novo 检测工具通常输出质量分数（如 Q-score），反映：
 - **患者和医生沟通**：算法分数需要转化为临床语言。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '算法分数越高越可靠：分数只是优先级排序，不等于临床确定性；',
     'ACMG 自动分类可以直接报告：仍需人工审核证据冲突和上下文；',
     '致病性预测可以替代其他证据：它只是 supporting 证据的一种；',

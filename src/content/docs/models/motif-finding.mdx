@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="Motif 寻找是在多条序列中发现反复出现且具有生物学意义的统计模式：这些模式不是完全一致的字符串，而是带有位置偏好的概率模型。"
-  bullets={[
+  items={[
     '核心是从观测数据中提取位置相关的统计偏好',
     'PFM、PWM 和共识序列是三种经典的表示方法',
     '穷举搜索、贪心搜索和期望最大化（EM）是常用的算法策略',
@@ -372,7 +372,7 @@ motif 寻找与以下场景高度相关：
 共同解释。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'motif 一定是完全一致的短串：',
     '不是。很多 motif 的本质恰恰是"位置上有统计偏好，但允许变化"。',
     '找到高分 motif 就等于找到真实调控位点：',

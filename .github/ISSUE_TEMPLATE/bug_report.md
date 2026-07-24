@@ -2,7 +2,7 @@
 name: 报告问题
 about: 报告内容错误、链接失效、构建问题或站点异常
 title: '[BUG] '
-labels: bug
+labels: needs-triage
 ---
 
 ## 问题描述

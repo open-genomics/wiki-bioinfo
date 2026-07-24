@@ -57,11 +57,17 @@ export default defineConfig({
         },
       },
       customCss: [
-        './src/styles/fonts.css',
         './src/styles/custom.css',
         './src/styles/katex.css',
       ],
       head: [
+        {
+          tag: 'link',
+          attrs: {
+            rel: 'stylesheet',
+            href: `${siteConfig.base}fonts.css`,
+          },
+        },
         {
           tag: 'link',
           attrs: {

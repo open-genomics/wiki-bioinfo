@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="EM算法（Expectation-Maximization）是处理含隐变量概率模型参数估计的通用框架，在motif discovery、聚类和HMM训练中有广泛应用。"
-  bullets={[
+  items={[
     '重点理解E步和M步的交替迭代过程',
     'EM算法不保证全局最优，但保证单调改进似然',
   ]}
@@ -249,7 +249,7 @@ EM算法在生物信息学中的核心应用：
 | Variational inference | 确定性近似，可用于加速E步 | 大规模模型的近似推断 |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'EM总能找到全局最优：',
     '不能。EM保证单调改进似然，但可能收敛到局部最优。需要多次随机初始化。',
     'EM总是收敛：',

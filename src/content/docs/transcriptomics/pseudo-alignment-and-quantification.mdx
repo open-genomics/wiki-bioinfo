@@ -11,7 +11,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="当 RNA-seq 的分析目标是表达定量时，算法策略从精确比对转向兼容性判断与概率丰度估计。本节介绍基于 k-mer 索引的 lightweight mapping 算法及其复杂度优势。"
-  bullets={[
+  items={[
     '问题核心：read 归属的不确定性（multi-mapping）与计算效率的权衡',
     '算法策略：k-mer 索引 + 等价类（equivalence class）+ EM 推断',
     '复杂度分析：从 O(reads × transcript_length) 降至 O(reads × k-mer_matches)',
@@ -204,7 +204,7 @@ Pseudo-alignment 算法**假设参考转录组注释是完备的**。如果：
 此时需要额外的生物学假设或过滤策略。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Pseudo-alignment 精度不如传统比对，因此结果不可靠：',
     'Pseudo-alignment 在表达定量任务上的精度并不低于传统比对，甚至在某些场景下更优。因为传统比对在面对多映射 read 时也需要做出任意选择或丢弃，而 pseudo-alignment 的 EM 算法通过概率模型更合理地处理了归属不确定性。精度差异主要取决于参考注释的完备性，而非比对方法本身。',
     'Kallisto/Salmon 的速度优势来自"跳过了比对"：',

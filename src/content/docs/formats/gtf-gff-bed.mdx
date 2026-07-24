@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="GTF/GFF 编码层级化基因组注释（gene-transcript-exon 结构），BED 编码简洁区间集合。理解它们的层级结构、坐标系统差异（1-based vs 0-based）和语义不等价性，是 RNA-seq 定量、peak 分析和功能注释的前提。"
-  bullets={[
+  items={[
     'GTF 是 GFF2 的严格子集，强制 gene_id/transcript_id 属性',
     'GFF3 支持更灵活的层级结构和任意属性',
     'BED 是扁平区间列表，不强制层级关系',

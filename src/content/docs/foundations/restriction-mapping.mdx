@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="限制性图谱（restriction mapping）是通过限制性酶切实验确定 DNA 分子上酶切位点位置的技术。核心计算问题是根据片段长度数据推断酶切位点的顺序和位置。"
-  bullets={[
+  items={[
     '理解部分消化问题（Partial Digest Problem, PDP）的数学形式',
     '掌握穷举算法和分支定界策略（Branch-and-Bound）',
     '了解双消化问题（Double Digest Problem, DDP）和探针部分消化问题（PPDP）'
@@ -251,7 +251,7 @@ PPDP 可以分解为两个独立的 PDP：
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '部分消化问题（PDP）的解总是唯一的：',
     'PDP 可能存在多个解——不同的位点集合可能产生相同的距离多重集。即使分支定界找到了一个解，也不能保证它是唯一的。在实验中，测量误差会进一步增加解的不唯一性。实际应用中通常需要结合其他实验证据来消歧。',
     '凝胶电泳可以精确测量所有片段长度：',

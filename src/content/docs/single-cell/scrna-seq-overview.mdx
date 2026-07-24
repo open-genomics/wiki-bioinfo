@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='scRNA-seq 是在单细胞分辨率下研究基因表达的技术。它打破了传统 Bulk 测序的「平均值」迷思，允许我们识别稀有细胞群、追踪发育轨迹并解析组织异质性。'
-  bullets={[
+  items={[
     '理解 scRNA-seq 与 Bulk RNA-seq 的本质差异：从"果昔"到"水果切盘"',
     '掌握主流平台（10x Genomics, Smart-seq2）的捕获原理与优劣',
     '掌握 scRNA-seq 标准分析管线：质控、归一化、降维、聚类',
@@ -309,7 +309,7 @@ scRNA-seq 分析流程中涉及的核心算法模块及其对应页面：
 - **大规模整合分析**：如 Human Cell Atlas、Tabula Muris 等图谱级项目。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '更多细胞数一定带来更好的结果：',
     '不是。细胞数增加会提高检测稀有细胞群的能力，但也同时增加 Doublet（双联体）率、计算成本和批次效应的复杂性。如果细胞捕获质量差或样本本身异质性低，盲目追求细胞数反而可能引入更多噪声。关键是在细胞数和数据质量之间取得平衡，并做好 Doublet 检测与去除。',
     '聚类数量由算法自动决定：',

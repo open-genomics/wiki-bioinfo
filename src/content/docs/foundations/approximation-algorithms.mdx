@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="很多生物信息学问题是 NP-hard 的，无法在多项式时间内精确求解。近似算法提供了一种实用策略：在可接受的时间内找到足够好的解。"
-  bullets={[
+  items={[
     '先理解什么是 NP-hard 问题，再看近似比的概念会更顺。',
     '生物信息学中的很多现实工具本质上都是近似算法或启发式算法。',
   ]}
@@ -344,7 +344,7 @@ Gibbs Sampling 没有理论保证的近似比，但通过多次运行可以提�
 - 适用：Motif 发现、树搜索等
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '近似算法总是比精确算法慢：',
     '不一定。近似算法：',
     '时间复杂度是多项式的',

@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学分析中，数据在多个层级间流动与转化。理解每种格式所处的层级——从参考序列、原始观测、定位结果，到注释对象、变异结果和派生指标——是正确使用这些数据的前提。"
-  bullets={[
+  items={[
     '每种格式回答不同层级的问题：FASTA 定义参考框架，FASTQ 承载原始观测，BAM 记录定位结果，VCF 表示变异候选。',
     '层级混淆是常见错误根源：将原始观测误认为定位结果，或将定位证据直接等同于生物学结论，都会导致误判。',
     '理解层级关系有助于正确解释结果，并识别分析流程中的潜在问题。',

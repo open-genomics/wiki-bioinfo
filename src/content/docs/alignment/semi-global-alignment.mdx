@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="半全局比对允许序列端部存在gap，是理解read mapping和重叠检测等场景的关键算法，介于全局比对和局部比对之间。"
-  bullets={[
+  items={[
     '重点理解半全局比对的边界条件如何与全局比对不同',
     '半全局比对在很多实际工具中是比全局比对更实用的选择',
   ]}
@@ -303,7 +303,7 @@ S1开头的'A'和S2末尾的'G'形成端部gap，不产生罚分。
 如果两条序列预期高度相似，可以使用带状动态规划，将复杂度降低到 $O(k \cdot \min(m,n))$，其中 $k$ 是带宽。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '半全局比对就是局部比对：',
     '不是。局部比对可以从序列的任意位置开始和结束，而半全局比对仍然要求至少覆盖一条序列的大部分。',
     '半全局比对总是比全局比对好：',

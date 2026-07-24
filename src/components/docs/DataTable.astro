@@ -8,11 +8,23 @@
  *
  * 提升了 Depth（Leverage + Locality），减少组件数量
  */
+interface ComparisonRow {
+  aspect: string;
+  left: string;
+  right: string;
+}
+
+interface DecisionMatrixRow {
+  scenario: string;
+  recommendation: string;
+  rationale: string;
+}
+
 interface Props {
   variant: 'comparison' | 'decision-matrix';
   leftTitle?: string;
   rightTitle?: string;
-  rows: { [key: string]: string }[];
+  rows: ComparisonRow[] | DecisionMatrixRow[];
 }
 
 import { Icon } from '@astrojs/starlight/components';
@@ -22,17 +34,19 @@ const { variant, leftTitle, rightTitle, rows } = Astro.props;
 const config = {
   comparison: {
     headers: ['维度', leftTitle ?? '', rightTitle ?? ''],
-    rowKeys: ['aspect', 'left', 'right'],
+    rowKeys: ['aspect', 'left', 'right'] as const,
     icon: 'list-format' as const,
   },
   'decision-matrix': {
     headers: ['场景', '推荐选择', '原因'],
-    rowKeys: ['scenario', 'recommendation', 'rationale'],
+    rowKeys: ['scenario', 'recommendation', 'rationale'] as const,
     icon: 'puzzle' as const,
   },
 } as const;
 
 const { headers, rowKeys, icon } = config[variant];
+// 内部按字符串键访问；调用方类型已约束键名
+const cellRows = rows as unknown as Record<string, string>[];
 ---
 
 <div class="table-wrapper table-scroll">
@@ -45,7 +59,7 @@ const { headers, rowKeys, icon } = config[variant];
       </tr>
     </thead>
     <tbody>
-      {rows.map((row) => (
+      {cellRows.map((row) => (
         <tr>
           <th scope="row">{row[rowKeys[0]]}</th>
           <td>{row[rowKeys[1]]}</td>

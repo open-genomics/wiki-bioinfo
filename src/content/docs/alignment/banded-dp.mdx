@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="带状动态规划是序列比对的加速优化技术：它限制搜索在主对角线附近的带状区域内进行，将时间复杂度从 O(mn) 降低到 O(b·min(m,n))。"
-  bullets={[
+  items={[
     '核心假设是两条序列的相似度较高，最优路径不会偏离主对角线太远',
     '它是 seed-and-extend 策略中扩展阶段常用的优化方法',
   ]}
@@ -238,7 +238,7 @@ $$
 现代 read mapper 通常结合带状 DP 和其他优化技术（如 SIMD 指令、硬件加速）来进一步提升性能。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '带宽越大越好：',
     '不是。带宽过大会失去带状 DP 的优势，退化为完整 DP。带宽过小可能错过最优路径。',
     '带状 DP 总能得到最优比对：',

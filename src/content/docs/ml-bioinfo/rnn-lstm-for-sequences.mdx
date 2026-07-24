@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="循环神经网络通过隐状态传递信息，能够建模序列中的长程依赖关系；LSTM 通过门控机制解决了标准 RNN 的梯度消失问题，是序列建模的经典架构。"
-  bullets={[
+  items={[
     '隐状态捕获序列上下文信息',
     'LSTM 的门控机制实现选择性记忆和遗忘',
     '适合处理变长序列和时序依赖',
@@ -355,7 +355,7 @@ RNN/LSTM 在生物信息学中的代表性应用：
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'RNN 总是优于 CNN：',
     '不是。CNN 在检测局部 motif 时更高效，RNN 在建模长程依赖时更有优势。选择取决于任务特点。',
     'LSTM 能解决所有序列问题：',

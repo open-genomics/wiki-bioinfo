@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="CCA 通过寻找两组变量的线性组合使它们之间的相关性最大化，是分析两组数据关联的经典统计方法，也是多组学整合的重要基础。"
-  bullets={[
+  items={[
     '核心是最大化跨组学相关性，而非重构误差',
     '可扩展到多组学（Group CCA）和非线性场景（Kernel CCA、Deep CCA）',
     '是理解现代深度多模态学习对比损失的思想源头',
@@ -598,7 +598,7 @@ $$
 非参数方法，通过置换标签计算零分布。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '典型相关系数高意味着因果关系：',
     '不是。CCA 只能发现关联，不能推断因果方向。',
     'CCA 可以处理缺失数据：',

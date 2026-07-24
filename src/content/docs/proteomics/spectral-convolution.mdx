@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="谱卷积（Spectral Convolution）通过计算两个质谱间所有质量差的分布，揭示肽段间的修饰差异。与共享峰计数相比，谱卷积能够检测修饰肽段，是翻译后修饰（PTM）鉴定的核心算法工具。"
-  bullets={[
+  items={[
     '理解谱卷积的定义：两个谱间所有质量差的多重集合',
     '掌握谱卷积揭示修饰的原理：非零峰指示质量偏移',
     '了解谱卷积与共享峰计数的关系（卷积在零点的高度）',
@@ -260,7 +260,7 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 ### 常见误区
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '谱卷积高重数峰一定是修饰：',
     '高重数峰可能是随机巧合产生的。需要通过统计检验（如基于背景噪声的 p-value 计算）来验证峰的显著性，而非仅凭峰高判断。',
     '谱卷积可直接确定修饰位置：',

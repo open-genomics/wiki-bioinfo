@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='如果说双序列比对关注「两条序列如何对齐」，那么多序列比对（Multiple Sequence Alignment, MSA）则是在同一个框架中同时比较多条同源序列，旨在揭示保守位点和家族变异模式。'
-  bullets={[
+  items={[
     '理解 MSA 空间复杂度的指数级增长挑战',
     '掌握 Sum-of-Pairs (SP) 得分作为优化目标的逻辑',
     '学习渐进式比对（Progressive Alignment）与指导树（Guide Tree）的原理',
@@ -217,7 +217,7 @@ H - L A - W G H E -
 - **M-Coffee** 是 T-Coffee 的元版本，它综合多个 MSA 工具的输出，通过一致性投票产生最终比对。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '指导树不等于进化树：',
     'Progressive alignment 中生成的指导树仅仅是为了确定合并顺序。它的目的是让最相似的序列先合并，但并不一定代表真实的系统发育关系。实际上，指导树的质量对比对结果的影响远大于比对方法本身的选择。',
     '"Once a gap, always a gap"：',

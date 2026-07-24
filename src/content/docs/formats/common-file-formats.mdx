@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="本页是生物信息学主流格式的字段级参考：FASTA、FASTQ、SAM/BAM/CRAM、GTF/GFF、BED、VCF/BCF 各自的字段定义、编码规则与常见陷阱。"
-  bullets={[
+  items={[
     '每种格式编码不同层次的计算对象，字段语义不可互换',
     '坐标系统差异（0-based half-open vs 1-based closed）是最常见错误源',
     '质量分数编码（Phred+33 / Phred+64）和 CIGAR 字符串是读懂数据的关键',
@@ -260,7 +260,7 @@ project/
 - 只有 reference.fa + genes.gtf：只有背景框架，没有样本的实验证据
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'FASTA 和 FASTQ 都是"序列文件"可以互相替换：',
     '两者编码完全不同的对象层：FASTA 是参考序列骨架（无质量），FASTQ 是带质量分数的实验观测。',
     'BAM 文件包含"所有信息"，不再需要参考序列和注释：',

@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="序列数据库搜索面临的核心挑战：如何在数十亿碱基的数据库中快速找到与查询序列相似的记录。本章介绍 k-mer 索引、Seed-and-Extend 策略、BWT/FM-index 等核心算法，以及 BLAST 等工具的实现原理。"
-  bullets={[
+  items={[
     '核心矛盾：搜索敏感性（Sensitivity）vs 计算速度（Speed）',
     '索引结构将线性扫描转化为亚线性查询，是解决矛盾的关键',
     'Seed-and-Extend 策略是现代比对工具的通用范式',

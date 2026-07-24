@@ -20,7 +20,7 @@ import DataTable from '@/components/docs/DataTable.astro';
 
 <NoteCard variant="summary"
   summary="临床基因检测（WES/WGS）产生数万至数百万候选变异，核心挑战在于如何从中系统性地筛选出最可能与患者表型相关的致病变异。有效的优先级排序需要整合群体频率、功能影响、遗传模式和基因-表型匹配等多维证据，而非依赖单一分数。"
-  bullets={[
+  items={[
     '多维证据框架优于单一分数：频率过滤、功能评估、遗传模式匹配、表型一致性需综合权衡',
     '罕见性是必要条件而非充分条件：绝大多数罕见变异仍是良性或意义不明',
     '优先级排序是连接原始数据与临床解释的桥梁，为 ACMG 分类提供高质量候选集',
@@ -367,7 +367,7 @@ import DataTable from '@/components/docs/DataTable.astro';
 - 为功能实验设计提供优先级指导。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '罕见 = 致病：',
     '不对。绝大多数罕见变异仍是良性或意义不明。罕见性只是必要条件，不是充分条件。',
     '预测软件说有害就够了：',

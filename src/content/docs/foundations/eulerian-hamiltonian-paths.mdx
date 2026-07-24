@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="欧拉路径和哈密顿路径是图论中的两个经典问题，在计算复杂度和生物信息学应用上有本质区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全问题。"
-  bullets={[
+  items={[
     '欧拉路径：经过每条边恰好一次（SBH 测序）',
     '哈密顿路径：经过每个顶点恰好一次（片段组装）',
     '欧拉路径可在线性时间求解，哈密顿路径难解',
@@ -280,7 +280,7 @@ def eulerian_path(graph):
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '欧拉路径和哈密顿路径只是"边 vs 顶点"的文字游戏：',
     '虽然定义上确实一个是遍历所有边、一个是遍历所有顶点，但这一差异导致了根本性的计算复杂度区别：欧拉路径有多项式时间算法，而哈密顿路径是 NP-完全的。在基因组组装中，Pevzner 提出的关键洞察正是通过 de Bruijn 图将哈密顿问题转化为欧拉问题，从而使大规模组装成为可能。',
     'de Bruijn 图方法解决了所有组装难题：',

@@ -1,18 +1,14 @@
 ---
 /**
- * ComparisonTable - 兼容层，委托给 DataTable
- * 保留以避免修改 55 个使用此组件的 .mdx 文件
+ * ComparisonTable - 对比表主接口，委托给 DataTable
+ * 内容中广泛使用，保留为命名更直观的入口
  */
 import DataTable from './DataTable.astro';
-
-interface ComparisonRow {
-  [key: string]: string;
-}
 
 interface Props {
   leftTitle: string;
   rightTitle: string;
-  rows: ComparisonRow[];
+  rows: { aspect: string; left: string; right: string }[];
 }
 ---
 

@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="重叠检测是长读长组装的核心步骤：从海量 reads 中高效识别可能拼接的 read 对。其核心挑战是将 O(n²) 的全对全比较降维到近线性复杂度。"
-  bullets={[
+  items={[
     '全对全比对对于百万级 reads 计算不可行，必须采用降维策略',
     'Minimap 的 minimizer 采样通过选取代表性 k-mer 构建索引',
     'MHAP 的 MinHash 通过概率估计快速筛选候选',
@@ -294,7 +294,7 @@ Minimap2 是当前最流行的长读长比对工具，它扩展了原始 Minimap
 - **SV 检测**：Sniffles2 等使用 Minimap2 进行 read 比对
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Minimizer 越多越好：',
     '不是。过多的 minimizer 会增加索引大小和候选对数，反而降低效率。需要根据数据特征调整窗口大小。',
     '相似度阈值越高越好：',

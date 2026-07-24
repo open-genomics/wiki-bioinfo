@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="概率算法是处理生物数据中噪声与不确定性的核心工具，它们不给出确定性答案，而是量化不同解释的可能性。"
-  bullets={[
+  items={[
     '理解概率模型如何表示生物学知识的先验',
     '掌握从观测数据推断隐状态的统计方法',
   ]}
@@ -591,7 +591,7 @@ $$
 - **预处理**：缓存中间结果
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'p < 0.05 就显著：',
     '不一定。需要考虑多重检验、效应大小、先验知识等因素。',
     '贝叶斯方法总是更好：',

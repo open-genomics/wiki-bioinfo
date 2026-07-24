@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="动态规划是生物信息学最核心的算法范式之一，通过将复杂问题分解为重叠子问题，系统地寻找全局最优解。"
-  bullets={[
+  items={[
     '理解动态规划的关键在于设计递推公式',
     '状态定义和边界条件比具体算法更重要',
   ]}
@@ -380,7 +380,7 @@ BWA-MEM 虽主要采用 seed-and-extend 策略，但在扩展阶段使用局部�
 虽然 BLAST 主要使用启发式方法，但其核心思想可以追溯到动态规划。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '动态规划总是最优：',
     '不是。动态规划只能保证在给定状态空间和递推关系下的最优。若状态定义不当，可能无法得到全局最优。',
     '空间优化不影响时间：',

@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="组装评估不是追求单一分数，而是同时判断连续性、完整性和正确性——即组装结果是否值得相信、能否用于下游分析。"
-  bullets={[
+  items={[
     '连续性：contig/scaffold 是否过度碎片化',
     '完整性：目标基因组中应有的内容是否被恢复',
     '正确性：组装路径是否真实反映原始序列',
@@ -366,7 +366,7 @@ N50 很容易被误用。它能反映片段长度分布，但不能保证：
 - 功能注释：$w_{contig} = 0.3$, $w_{comp} = 0.5$, $w_{corr} = 0.2$
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'N50 越大，组装一定越好：',
     '不对。更大的 N50 可能来自错误拼接，尤其在重复区域或 coverage 不稳定时。',
     '只要能出 contig，就说明组装已经成功：',

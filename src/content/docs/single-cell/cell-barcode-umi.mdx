@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="在单细胞测序中，我们面临两个核心挑战：如何识别 Read 来自哪个细胞？以及如何区分真实的分子与 PCR 重复？细胞 Barcode 与 UMI (Unique Molecular Identifier) 正是为此设计的分子标签。"
-  bullets={[
+  items={[
     '掌握细胞 Barcode 的作用：细胞身份的"身份证"',
     '理解 UMI 的统计原理：将 Read 计数转化为原始分子计数',
     '掌握 UMI 去重算法如何校正 PCR 扩增偏差',
@@ -169,7 +169,7 @@ UMI 去重与计数（cellranger count / UMI-tools）
 - **多样本整合**：通过基因型或样本特异性 Barcode 实现多样本混池测序（如 Demuxlet、CellHashing）。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"UMI 完全消除了 PCR 偏差"',
     'UMI 去重能校正 PCR 扩增的不均匀性，但无法解决捕获效率差异、转录本长度偏差等问题。UMI 计数仍然需要归一化才能进行跨细胞比较。',
     '"UMI 越长越好"',

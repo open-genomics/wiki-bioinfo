@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Basecalling 是将 Nanopore 原始离子电流信号解码为 DNA/RNA 碱基序列的核心算法。它通过建模信号与 k-mer 的对应关系，实现纳米孔测序的「读出」功能。"
-  bullets={[
+  items={[
     'Nanopore 测量 k-mer 穿过纳米孔时的离子电流变化，而非直接识别碱基',
     'HMM 通过状态转移和发射概率建模信号生成过程',
     '神经网络（CNN/RNN/Transformer）直接学习信号到碱基的端到端映射',
@@ -284,7 +284,7 @@ Oxford Nanopore 的官方 basecaller：
 - **修饰检测**：集成碱基修饰检测
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Basecalling 只需要一次：',
     '不是。通常需要多次迭代，特别是对于低质量数据。',
     '信号归一化不重要：',

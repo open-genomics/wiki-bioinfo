@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="组装图的真正困难在于建图之后：如何区分真实分叉与错误噪声、清理异常结构、保留真实信息，并尽可能为后续分析提供稳定的图结构。"
-  bullets={[
+  items={[
     '重复序列制造真实分叉，需要长距离信息辅助解析',
     '测序错误制造假分叉（tips、bubbles），需要根据 coverage 和长度识别清理',
     '图清理是做结构判断而非机械删边，需权衡任务目标与数据特征',
@@ -361,7 +361,7 @@ Bubble 是指从同一点分出、稍后又重新汇合的两条短路径。
 **收敛判断**：当连续两轮清理后，图的边数变化小于阈值（如 1%）时认为收敛。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '图中所有分叉都代表真实变异：',
     '不一定。很多分叉只是错误或低 coverage 造成的噪声。',
     '只要把低频边全部删掉就行：',

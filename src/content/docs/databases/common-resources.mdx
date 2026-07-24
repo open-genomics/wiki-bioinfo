@@ -12,7 +12,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="本页是主流生物信息学数据库的 ID 体系与查询入口参考：每个数据库的中心 ID、跨库映射规则、查询路径与常见 ID 陷阱。"
-  bullets={[
+  items={[
     '不同数据库用不同 ID 体系（Entrez Gene ID、Ensembl Gene ID、RefSeq NM_、UniProt AC），跨库整合必须显式映射',
     'Gene Symbol 不是稳定主键，同基因有多个转录本，按 symbol 查询可能遗漏变体',
     '查询前先确认对象层级（gene/transcript/protein）和参考版本（assembly/release）',
@@ -156,7 +156,7 @@ NCBI 是综合门户，查询时需明确进入哪个子系统：
 | SRA | https://www.ncbi.nlm.nih.gov/sra | 序列读取存档 |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '把 Gene Symbol 当成稳定、唯一且跨数据库可直接互换的主键：',
     'Symbol 有歧义，同基因有多个转录本，按 symbol 查询可能遗漏重要变体。应优先使用稳定 ID（Entrez Gene ID、Ensembl Gene ID）。',
     '把 NCBI 当成单一数据库：',

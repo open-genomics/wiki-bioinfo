@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Boyer-Moore算法通过从右向左匹配和智能跳跃规则，在实际应用中往往是最快的字符串匹配算法，平均时间复杂度接近O(n/m)。"
-  bullets={[
+  items={[
     '核心思想：从右向左匹配，利用失配信息实现大跨度跳跃',
     'Bad Character Rule：根据失配字符决定跳跃距离',
     'Good Suffix Rule：利用已匹配后缀信息优化跳跃',
@@ -317,7 +317,7 @@ Boyer-Moore本身在现代生物信息学工具中不常直接使用，但：
 - 这些方法通过预处理建立索引，查询时达到亚线性时间
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Boyer-Moore总是比KMP快：',
     '不一定。Boyer-Moore在最坏情况下可能比KMP慢，但在实际应用中往往更快。选择哪种算法取决于具体场景。',
     'Boyer-Moore需要两个规则都实现：',

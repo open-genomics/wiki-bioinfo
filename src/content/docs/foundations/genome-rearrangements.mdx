@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="基因组重排研究物种进化过程中基因组结构的变化，特别是通过反转（inversion）事件改变基因顺序。反转排序问题是要找到将一个基因组排列转换为目标排列所需的最少反转次数。"
-  bullets={[
+  items={[
     '理解同源区块（synteny blocks）和基因组重排的生物学背景',
     '掌握反转排序问题的形式化定义和贪心算法',
     '了解断点（breakpoints）概念和改进的贪心策略',
@@ -245,7 +245,7 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 某些遗传疾病与特定的基因组重排相关，理解这些重排有助于诊断和治疗。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '反转距离就是两个基因组间的"进化距离"：',
     '反转距离度量的是将一个排列转换为另一个所需的最少反转次数，它是结构差异的一种度量，但不直接等同于进化距离。实际进化中可能同时发生反转、易位、转座等多种事件，且同一位置可能经历多次重排。将反转距离直接解释为"进化步骤数"会低估真实的进化历史。',
     '贪心反转排序（前缀固定法）在实际中够用了：',

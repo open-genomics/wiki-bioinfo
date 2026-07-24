@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Profile HMM 是 PWM/PSSM 的强大扩展：它通过 Match、Insert、Delete 三类状态，能够显式建模序列家族中的插入和缺失，适用于蛋白家族和结构域分析。"
-  bullets={[
+  items={[
     '核心是 M/I/D 三类状态组成的线性结构',
     '用 Viterbi 算法找最优比对路径，用 Forward 算法评估匹配程度',
     '它是蛋白家族数据库（如 Pfam）的核心建模方法'
@@ -298,7 +298,7 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
 它是从"简单 motif 打分"走向"序列家族概率建模"的关键一步。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Profile HMM 只是更长的 PWM：',
     '不是。它的关键优势不是"更长"，而是显式建模插入和缺失。',
     '有了 PWM 就没必要用 Profile HMM：',

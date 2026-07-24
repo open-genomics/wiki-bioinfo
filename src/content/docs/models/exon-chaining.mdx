@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Exon Chaining 是通过动态规划解决基因预测中的候选外显子选择问题：在基因组序列中找到权重最大的互不重叠外显子集合。"
-  bullets={[
+  items={[
     '将候选外显子建模为带权区间（l, r, w）',
     '构建有向无环图，边代表区间兼容关系',
     '用动态规划在 O(n log n) 时间内找到最大链',
@@ -206,7 +206,7 @@ Exon Chaining / Spliced Alignment（选择最佳组合）
 ```
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '外显子权重越高，就越应该被选入最优链：',
     '外显子的权重只是链优化的一个因素。一个高权重的外显子如果与链中其他外显子严重重叠，可能被排除；反之，多个权重中等但互不重叠的外显子可能组成总权重更高的链。这正是动态规划而非贪心策略的必要性所在。',
     'Exon Chaining 的结果就是最终的基因预测：',

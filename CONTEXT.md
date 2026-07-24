@@ -34,7 +34,7 @@
 | `RelatedLinks` | 兼容层，委托给 LinkGrid | 兼容层 |
 | `NoteCard` | 统一的笔记卡片（summary/pitfalls/tools） | Deep Module |
 | `DataTable` | 统一的数据表格（comparison/decision-matrix） | Deep Module |
-| `ComparisonTable` | 兼容层，委托给 DataTable | 兼容层 |
+| `ComparisonTable` | 对比表主接口（内容中广泛使用），委托给 DataTable | 主接口 |
 | `PageHeaderMeta` | 页面头部元信息 | 页面元信息 |
 | `PrerequisitesBox` | 前置知识提示框 | 学习路径 |
 | `DefinitionList` | 定义列表 | 数据展示 |

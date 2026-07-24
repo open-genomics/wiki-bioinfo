@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='生物语言模型的核心思想是「自监督预训练」：通过在海量无标注序列上运行填空或预测任务，模型能够自发地学习到蛋白质折叠、碱基规律和进化保守性。这些学到的特征（Embeddings）可以极大地提升下游低样本任务的精度。'
-  bullets={[
+  items={[
     '理解自监督学习的本质：利用序列自身的结构作为监督信号',
     '掌握预训练-微调（Pre-train & Fine-tune）的两阶段范式',
     '了解代表性模型：ESM（蛋白）、DNABERT（DNA）的设计初衷',
@@ -156,7 +156,7 @@ Embedding 将每个残基映射到一个低维连续空间（如 1280 维），�
 - **优势**：即使你只有几百个实验样本，也能获得极高的预测性能。这在小样本生物信息学任务中具有巨大的实用价值。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"语言模型会取代序列比对"：',
     '不会。序列比对（如 BLAST、HMMER）仍然是检测同源关系和构建多序列比对的基础工具。语言模型的优势在于提供高质量的序列表示和捕获隐含的结构信息，但它并不直接提供位点的同源对应关系。',
     '"预训练模型越大越好"：',

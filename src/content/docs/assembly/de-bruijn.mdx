@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary='de Bruijn graph 组装把 read 的局部重叠信息压缩成统一的图结构，是理解短读长组装和图清理问题的最经典入口之一。'
-  bullets={[
+  items={[
     '先理解顶点和边分别表示什么，再去看 tips、bubbles、repeats 等复杂结构。',
     '它不是单纯的欧拉路径题，而是一整套"建图 + 清理 + 路径恢复"的思路。',
   ]}
@@ -326,7 +326,7 @@ de Bruijn graph 常让人联想到欧拉路径问题，因为理想情况下我�
 其中 $N$ 为 read 数量，$L$ 为平均 read 长度，$m$ 为 k-mer 数量，$|S|$ 为输出序列长度。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'de Bruijn graph 就等于欧拉路径；',
     '只要把 k 调大，重复问题就会消失；',
     '图上的每个分叉都说明真实生物学变异；',

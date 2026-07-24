@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="图算法为理解和解决生物信息学中的复杂问题提供了统一框架，从基因组组装到系统发育分析，图结构无处不在。"
-  bullets={[
+  items={[
     '将生物学问题转化为图问题是理解的关键第一步',
     '图的类型（有向/无向、加权/无权）决定适用的算法',
   ]}
@@ -449,7 +449,7 @@ D [ 9  10   8   0 ]
 - **NetworkX**：Python 图分析库
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '图越大，算法越慢：',
     '不一定。算法复杂度取决于顶点数 V 与边数 E 的关系。稀疏图（E ≈ V）的算法可能比稠密图（E ≈ V²）快得多。',
     '最短路径总是唯一的：',

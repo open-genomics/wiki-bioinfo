@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Gene prediction 是识别基因组序列中基因结构的经典问题：通过 HMM 等概率模型，将序列分段为 exon、intron、intergenic 等功能状态，预测完整的基因模型。"
-  bullets={[
+  items={[
     '核心是状态建模：exon、intron、intergenic 等功能状态的转移和发射',
     'Viterbi 算法用于寻找最优状态路径，即最可能的基因结构',
     '结合 RNA-seq、同源信息等多证据源可提高预测准确性'
@@ -470,7 +470,7 @@ Gene prediction 是把序列模型、统计建模和注释生成连接起来的�
 因此，gene prediction 更适合理解为"候选注释结构生成与评分"，而不是一步到位得到绝对真值。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '只靠局部 motif 就能完整预测基因：',
     '通常不够。真实基因结构识别往往需要把局部信号和全局结构约束一起考虑。',
     '预测结果就是"真注释"：',

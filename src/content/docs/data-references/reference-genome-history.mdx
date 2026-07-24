@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
-  bullets={[
+  items={[
     'GRCh37（hg19）和 GRCh38（hg38）是两个主要人类参考版本',
     'GRCh38 修复了 GRCh37 中的错误，新增 alternate loci 和 decoy 序列',
     '补丁更新（如 GRCh38.p12 → p14）修复局部错误，不改变整体坐标',

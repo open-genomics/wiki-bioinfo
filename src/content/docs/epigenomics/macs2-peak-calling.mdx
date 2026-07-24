@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="MACS2 是 ChIP-seq 和 ATAC-seq 中最广泛使用的峰调用算法，通过泊松模型和局部背景估计识别基因组上的显著富集区域。"
-  bullets={[
+  items={[
     '核心是使用泊松分布建模背景 read 分布',
     '关键创新是动态估计局部背景参数 λ',
     '通过正负链偏移对齐精确定位蛋白结合中心'
@@ -254,7 +254,7 @@ MACS2 是以下工具的基础或参考：
 3. 结合 motif 分析进行功能解释
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '有 Input 对照就不需要考虑局部背景：',
     '不是。Input 对照只能提供全局背景信息，基因组不同区域的背景强度差异很大，必须使用局部估计。',
     'p-value 越小，生物学意义越强：',

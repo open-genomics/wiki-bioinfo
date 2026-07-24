@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Maximum Likelihood（最大似然）通过在给定演化模型下寻找最可能产生观测序列的系统发育树，使用Pruning算法高效计算似然值，是现代系统发育分析的主流方法。"
-  bullets={[
+  items={[
     '核心思想是在给定替换模型下，找到使观测数据概率最大的树和参数',
     'Pruning算法（Felsenstein的pruning algorithm）通过动态规划高效计算似然值',
     '是理解模型化系统发育推断的关键，连接了概率论和进化生物学',
@@ -372,7 +372,7 @@ Maximum Likelihood是Bayesian方法的特例：
 - 需要较多的计算资源
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Maximum Likelihood总是得到正确答案：',
     '不是。Maximum Likelihood找到的是在给定模型下最可能产生数据的树，但如果模型错误，结果也可能错误。',
     'Maximum Likelihood不需要任何假设：',

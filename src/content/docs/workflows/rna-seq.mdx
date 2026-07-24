@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="这是一页把 RNA-seq 从原始 reads 一路串到定量、归一化、差异分析与功能解释的总览页面，重点是建立流程地图而不是记命令。"
-  bullets={[
+  items={[
     '如果你刚开始接触 RNA-seq，先把流程中的输入输出、注释依赖和定量目标区分清楚。',
     '如果你已经做过一些分析，这页更适合你回头定位每一步依赖的算法与统计前提。',
   ]}
@@ -162,7 +162,7 @@ FASTQ -> QC -> spliced alignment / pseudo-alignment -> quantification -> normali
 - 参考和注释版本是否完全匹配。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'gene-level 和 transcript-level 分析可以混为一谈；',
     'pseudo-alignment 更快，所以对所有 RNA-seq 问题都更好；',
     '差异分析只要调 p 值阈值，不需要回头看质控和注释背景；',

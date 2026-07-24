@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="OLC 是经典的三阶段组装范式：先找 reads 之间的重叠关系，再构建布局确定相对位置，最后综合多条 read 的信息生成共识序列。"
-  bullets={[
+  items={[
     'Overlap：快速筛选并精确计算 read 之间的重叠',
     'Layout：将重叠关系组织成图或路径，推断顺序和方向',
     'Consensus：利用冗余覆盖纠正错误，输出稳定序列',
@@ -278,7 +278,7 @@ OLC 不是单一算法，而是一整类设计范式。它的思想在很多长�
 其中 $N$ 为总 read 数量，$L$ 为平均 read 长度，$m$ 为局部区域 read 数量，$n$ 为对齐长度。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'OLC 已经过时，只剩 de Bruijn graph 有意义：',
     '不是。长读长时代 OLC 思路因重叠信息更丰富而重新受到重视。Canu、Flye 等现代组装器都基于 OLC 框架，而非 de Bruijn graph。两种思路各有适用场景。',
     'overlap 找到了，就等于组装完成：',

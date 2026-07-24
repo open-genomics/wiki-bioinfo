@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='序列比对并不只有一种「对齐方式」。根据研究目标的不同，我们需要区分试图对齐全长的全局比对，以及只寻找高分片段的局部比对。这两者的核心区别在于边界条件的设定。'
-  bullets={[
+  items={[
     '掌握 Needleman-Wunsch 算法的全局比对逻辑：从头到尾的强制解释',
     '掌握 Smith-Waterman 算法的局部比对逻辑：允许在得分低于 0 时「推倒重来」',
     '理解为什么局部比对在寻找保守结构域和 Motif 时更具优势',
@@ -260,7 +260,7 @@ T A C G T
 - **短序列比对器**（如 BWA-SW、Bowtie2 的局部模式）：针对下一代测序数据的局部比对工具，核心思想源自 Smith-Waterman，但通过 BWT 索引大幅加速。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '全局比对总能给出更好的生物学结果：',
     '不是。全局比对强制对齐全部字符，如果两条序列只有局部相似（如共享一个功能结构域但其余部分完全不同），全局比对会因为强制对齐不相关区域而给出误导性结果。',
     '局部比对只能找到一个相似片段：',

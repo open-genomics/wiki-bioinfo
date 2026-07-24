@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='在简单的线性罚分模型中，每个 Gap 字符代价相同。但在生物学中，一次连续的插入或缺失（Indel）事件比多个离散事件更易发生。仿射 Gap 罚分通过区分「开启」和「延长」代价，完美解决了这一直觉问题。'
-  bullets={[
+  items={[
     '掌握仿射罚分公式：$g(k) = g_o + k \cdot g_e$',
     '理解为什么开启罚分（Gap Open）通常远大于延长罚分（Gap Extend）',
     '掌握三矩阵动态规划（M, I, D）的状态转移逻辑',
@@ -300,7 +300,7 @@ Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(m
 这三种机制的共同特点是：**一次事件产生一个连续的 Gap**。仿射罚分模型正是对这一生物学现实的数学抽象。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Gap 开启罚分越大越好：',
     '不是。过大的 $\rho$ 会使算法倾向于用错配替代 Gap，导致比对中出现大量不合理的错配。过小的 $\rho$ 又会使 Gap 太多。合理的参数应该反映真实的进化过程——在蛋白质比对中，$\rho / \sigma$ 的比值通常在 5-11 之间。',
     '仿射罚分总是优于线性罚分：',

@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='单细胞数据分析的核心挑战在于处理 20,000 维基因表达空间的「维度灾难」。我们通过线性与非线性降维技术提取生物学信号，并利用图论中的社区检测算法识别细胞群。'
-  bullets={[
+  items={[
     '掌握 PCA 的线性投影逻辑：寻找解释最大方差的变异轴',
     '理解聚类的核心标准：同质性（Homogeneity） 与分离性（Separation）',
     '掌握 Leiden/Louvain 算法：基于模块度优化的图社区检测',
@@ -327,7 +327,7 @@ sc.tl.leiden(adata, resolution=0.8)
 sc.tl.umap(adata)
 ```
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"UMAP 簇就是细胞类型"',
     'UMAP 的簇形状受参数和随机种子影响，可能出现人工连接或分离。始终以聚类标签为准，UMAP 仅作辅助可视化。',
     '"聚类的分辨率越高越好"',

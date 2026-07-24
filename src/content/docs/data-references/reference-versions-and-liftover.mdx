@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（如 GRCh37、GRCh38）是所有基因组坐标的空间背景。理解版本差异的本质、掌握坐标转换（liftover）的原理与局限，是确保数据整合准确性的基础。"
-  bullets={[
+  items={[
     '参考版本差异不仅是命名问题：同一坐标字符串在不同版本下可能指向完全不同的基因组位置甚至不同碱基。',
     'liftover 基于版本间全基因组比对生成 chain files，实现坐标映射，但其成功依赖于区域间的明确对应关系。',
     '坐标转换后需同步更新注释版本、数据库资源和命名规范，仅转换坐标不足以保证语义一致性。',

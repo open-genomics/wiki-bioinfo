@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="基因预测是从基因组序列中识别基因位置和结构的计算过程。真核生物基因常被内含子分割成外显子，需要专门的算法来识别基因边界和剪接位点。"
-  bullets={[
+  items={[
     '统计方法基于基因组中编码区和非编码区的统计差异',
     '相似性方法利用已知基因的蛋白产物作为模板',
     'ORF、剪接位点和密码子偏好是关键特征',
@@ -150,7 +150,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '长的 ORF 一定是真实基因：',
     'ORF（开放阅读框）只是基因存在的必要条件，远非充分条件。随机 DNA 中也会出现较长的偶然 ORF；反之，真实基因可能因为测序或组装错误而不形成完整 ORF。特别是在真核生物中，基因被内含子分割，简单的 ORF 扫描几乎无法工作。',
     '统计方法和相似性方法选一个就够了：',

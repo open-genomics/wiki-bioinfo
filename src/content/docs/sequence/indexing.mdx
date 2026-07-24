@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="在处理人类基因组等大规模数据时，逐位扫描的时间复杂度 $O(nm)$ 是不可接受的。索引（Index）通过预处理文本 T，构建辅助数据结构，使得后续查询可以在亚线性时间内完成。"
-  bullets={[
+  items={[
     '理解哈希索引与后缀索引两大技术谱系',
     '掌握哈希表在处理短 Seed 匹配中的优势',
     '了解 Suffix Tree 与 Suffix Array 如何组织所有后缀',
@@ -179,7 +179,7 @@ FM-index 的查询能力来自**后向搜索（Backward Search）**。其核心�
 | **Kraken2** | 最小完美哈希 | 物种分类，精确 k-mer 匹配 |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '索引越大越好：',
     '不是。索引过大会导致无法装入内存，需要频繁磁盘 I/O，反而比直接扫描更慢。FM-index 之所以成功，正是因为它在极小的空间内提供了足够的查询能力。',
     '一种索引可以适用所有场景：',

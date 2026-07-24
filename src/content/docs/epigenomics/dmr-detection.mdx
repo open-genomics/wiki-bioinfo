@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="DMR（Differentially Methylated Region）检测算法识别不同条件间甲基化状态显著差异的基因组区域，是表观遗传学研究的核心统计问题。"
-  bullets={[
+  items={[
     '核心是使用 beta-binomial 模型建模甲基化比例的有界性和过离散性',
     '关键挑战是区域边界的推断与覆盖深度不均的处理',
     '常用方法包括滑动窗口、连续 CpG 平滑和贝叶斯分段'
@@ -257,7 +257,7 @@ C++ 工具，特点：
 - 适用于大规模数据
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'DMR 一定对应基因表达变化：',
     '不一定。甲基化和表达的关系复杂：',
     '启动子高甲基化通常与沉默相关',

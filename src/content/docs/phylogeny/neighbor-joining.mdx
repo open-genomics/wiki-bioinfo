@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Neighbor-Joining（NJ）是一种不依赖分子钟假设的距离矩阵建树算法，通过最小化总树长来选择邻居对，是目前最常用的系统发育树构建方法之一。"
-  bullets={[
+  items={[
     '核心思想是通过Q矩阵找到能最小化总树长的邻居对',
     '不要求分子钟假设，适用于演化速率不均匀的数据',
     '产生无根树，是理解现代系统发育分析的关键算法',
@@ -354,7 +354,7 @@ NJ通过分支长度的调整来处理演化速率不均匀的问题：
 - 无法直接处理缺失数据
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'NJ总是比UPGMA好：',
     '不一定。当分子钟假设满足时，UPGMA可能更简单且效果相当。NJ的优势主要在演化速率不均匀时体现。',
     'NJ产生的树可以直接解释分化时间：',

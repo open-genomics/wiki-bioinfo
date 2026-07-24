@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="MOFA+ 是基于贝叶斯因子分析的多组学整合方法，通过假设多组学数据由共享潜在因子驱动，可处理缺失数据并提供不确定性估计。"
-  bullets={[
+  items={[
     '核心是贝叶斯因子分析框架，每组学对共享因子有不同敏感度',
     '可自然处理缺失数据，这是相比 NMF 和 CCA 的关键优势',
     '提供不确定性估计，适合小样本或噪声大的场景',
@@ -568,7 +568,7 @@ for factor_idx in range(n_factors):
 - 评估因子重要性
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'MOFA+ 总是比 NMF 好：',
     '不一定。如果：',
     '数据完整无缺失',

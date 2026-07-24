@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="这页讨论的是 variant calling 之后的那一步：在一堆候选位点里区分出更可信的变异，而不是简单把 caller 输出的所有记录都当成'真变异'。"
-  bullets={[
+  items={[
     '理解 QUAL、DP、AF、FILTER 等 VCF 字段的大致含义，比死记具体软件参数更重要。',
     '过滤逻辑高度依赖 caller、样本类型和设计，下面只提供通用直觉，不是固定阈值菜单。',
   ]}
@@ -152,7 +152,7 @@ $$\text{Keep}(v) = \begin{cases} \text{True} & \text{if } DP(v) \geq DP_{\min} \
 因此，它是连接 caller 输出与结果解释的一层关键桥梁。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '仅凭单个字段（例如 QUAL）做一刀切过滤；',
     '把某套阈值原封不动复制到不同平台和 caller；',
     '忽略重复或低复杂度区域的特殊性；',

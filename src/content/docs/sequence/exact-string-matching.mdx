@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="精确字符串匹配是序列分析中最基础的问题：给定一个模式串 P 和一个长文本 T，找出 P 在 T 中出现的所有位置。它是索引构建、引物设计和快速数据库搜索的底层逻辑。"
-  bullets={[
+  items={[
     '掌握朴素匹配算法（Naive Matching）的时间复杂度 bottleneck',
     '理解"预处理" (Preprocessing) 思想：利用已匹配信息减少重复比较',
     '了解生物学背景下海量数据对算法 $O(nm)$ 复杂度的严苛挑战',
@@ -185,7 +185,7 @@ DNA 序列的字母表仅有 4 个字符（$|\Sigma|=4$），这对算法设计�
 蛋白质序列（$|\Sigma|=20$）的情况则完全不同，Boyer-Moore 的优势更加明显。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'KMP 总是最快的精确匹配算法：',
     '不是。KMP 的优势在于最坏情况的 $O(n+m)$ 保证，但在实际生物序列中，Boyer-Moore 的平均性能往往更好（尤其在蛋白质序列上，因为 $|\Sigma|=20$ 使得 Bad Character Rule 更有效）。当需要处理大量查询时，基于索引的方法（如 FM-index）远优于任何单模式匹配算法。',
     '朴素算法在实际中毫无用处：',

@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='单细胞测序捕捉的是细胞发育过程中的「瞬间快照」。轨迹推断旨在通过数学建模（如图路径、流形学习）将这些离散的点连接起来，重建细胞状态随时间连续变化的轨迹。'
-  bullets={[
+  items={[
     '理解伪时间（Pseudotime） 的概念：基于转录组距离而非物理时间',
     '掌握轨迹建模的拓扑结构：线性、分支（Bifurcation）、循环与树状',
     '理解 RNA Velocity 及其在推断细胞"演化方向"中的前瞻性作用',
@@ -260,7 +260,7 @@ RNA Velocity（scVelo）验证方向
 ```
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"UMAP 形状就是轨迹"',
     '错误。轨迹应在高维或 PCA 空间计算，UMAP 只是为了方便人类观看。UMAP 的全局拓扑不可靠。',
     '"伪时间等于真实时间"',

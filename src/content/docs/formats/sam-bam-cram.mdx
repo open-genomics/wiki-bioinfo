@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="SAM/BAM/CRAM 编码的是比对结果——reads 在参考基因组坐标系中的定位。理解其核心字段（FLAG、CIGAR、MAPQ、TAGs），是解读变异证据、可视化检查和下游分析的基础。"
-  bullets={[
+  items={[
     'SAM 是文本格式，BAM 是二进制压缩格式，CRAM 是参考感知压缩格式',
     '11 个必需字段定义比对的核心信息：位置、方向、质量、CIGAR',
     'CIGAR 字符串编码 read 与参考之间的序列差异（匹配/错配/插入/缺失）',

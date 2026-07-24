@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="FASTA 编码参考序列（reference sequence）——整个生物信息学坐标系统的骨架。理解其简单结构、索引机制（.fai）和版本体系，是比对、注释和变异检测的前提。"
-  bullets={[
+  items={[
     'FASTA 结构简单：定义行（`>` 开头）+ 序列行',
     '只包含序列字符，不包含质量分数、比对位置或功能注释',
     '参考基因组 FASTA 通常经过索引（samtools faidx）以支持快速随机访问',

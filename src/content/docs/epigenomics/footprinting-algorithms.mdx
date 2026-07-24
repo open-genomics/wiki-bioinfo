@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Footprinting 算法通过分析 ATAC-seq 数据中 motif 区域的 Tn5 插入信号凹陷，推断转录因子的实际结合位点与活性状态。"
-  bullets={[
+  items={[
     '核心原理：转录因子结合物理阻碍 Tn5 插入，形成"足迹"信号',
     '关键挑战：校正 Tn5 序列偏好、区分蛋白保护与其他信号凹陷',
     '方法演进：从基于统计检验的 Wellington 到深度学习方法'
@@ -310,7 +310,7 @@ Footprinting 通常作为 ATAC-seq 分析的下游步骤：
    - 结合 scATAC-seq：细胞类型特异性调控
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Footprint 存在就证明转录因子结合：',
     '不一定。Footprint 是间接证据，可能由其他 DNA 结合蛋白或结构因素引起。需要其他证据（如 ChIP-seq）验证。',
     '没有 footprint 就没有转录因子结合：',

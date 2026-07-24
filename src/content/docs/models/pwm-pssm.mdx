@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="PWM（位置权重矩阵）和 PSSM（位置特异打分矩阵）是 motif 的核心表示方法：它们通过位置相关的统计权重，使得我们可以对任意候选片段计算'像不像这个 motif'的得分。"
-  bullets={[
+  items={[
     'PWM 是基于对数比值的打分矩阵，PSSM 是其应用形式',
     '核心思想是用背景概率归一化，突出 motif 的统计特征',
     '它是 motif 扫描和序列 logo 可视化的基础'
@@ -264,7 +264,7 @@ $$
 - 再结合进化保守性、表达数据和实验验证进行过滤。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'motif 一定对应一个固定的 consensus 串：',
     '不对。很多 motif 的本质正是"位置相关的偏好"，不是单个固定字符串。',
     '高分 motif 就等于真实结合位点：',

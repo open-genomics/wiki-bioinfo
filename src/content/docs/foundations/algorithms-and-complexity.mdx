@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="算法是解决精确定义问题的指令序列。在生物信息学中，算法不仅是处理数据的工具，更是理解生物过程（如 DNA 复制）的逻辑框架。"
-  bullets={[
+  items={[
     '通过"石头游戏"理解算法设计与序列比对的内在联系',
     '掌握伪代码描述算法的基本约定',
     '理解时间与空间复杂度（Big-O）在处理大规模生物数据时的重要性',
@@ -158,7 +158,7 @@ graph LR
 5.  **随机化算法（Randomized Algorithms）**：如 Gibbs Sampling，在巨大的搜索空间中"碰运气"。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'O(n²) 的算法一定比 O(n log n) 慢：',
     'Big-O 记号描述的是增长趋势的渐近行为，对于小规模输入，常数因子可能使 O(n²) 算法比 O(n log n) 算法更快。例如，对于 n < 50 的数组，插入排序（O(n²)）通常比归并排序（O(n log n)）更快，因为前者的常数因子极小。选择算法时要同时考虑数据规模和实际运行环境。',
     'NP-hard 意味着"完全不可能解决"：',

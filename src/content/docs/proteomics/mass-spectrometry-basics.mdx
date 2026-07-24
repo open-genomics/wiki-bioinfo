@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="基于质谱的蛋白质组学通过测量肽段的质荷比（m/z）来推断蛋白质身份。核心流程包括：离子化、MS1 全扫描、MS2 碎裂谱获取，以及通过谱图重建或数据库搜索鉴定肽段序列。"
-  bullets={[
+  items={[
     '理解 MS1（一级质谱）和 MS2（二级质谱）在蛋白质鉴定中的不同作用',
     '掌握肽段碎裂产生的 b-ion 与 y-ion 的质量互补逻辑',
     '了解肽段测序（Peptide Sequencing）作为路径搜索问题的数学定义',
@@ -163,7 +163,7 @@ $$P^* = \arg\max_{P} \text{Score}(T(P), S)$$
 - **临床生物标志物发现**：从体液（如血液、尿液）中筛选疾病特异性蛋白标志物。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '混淆质量与质荷比：',
     '质谱仪测量的是 $m/z$ 而非纯质量。一个质量为 1000 Da 的肽段，如果携带 2 个电荷，其 $m/z = 501$。在解读谱图时，必须先确定离子的电荷态（Charge State），才能还原真实质量。大多数现代质谱软件可以自动识别电荷态，但在处理低质量精度数据或重叠同位素分布时，电荷态判定可能出错。',
     '忽视同位素分布：',

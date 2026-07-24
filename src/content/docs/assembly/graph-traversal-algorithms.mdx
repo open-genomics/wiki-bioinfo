@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="图遍历算法是理解组装、路径查找和图清理的基础工具，从基础的DFS/BFS到复杂的Hamiltonian path问题，构成了图算法的核心。"
-  bullets={[
+  items={[
     '重点理解DFS和BFS的差异，以及Hamiltonian path的NP难性质',
     '图遍历算法在组装中用于路径恢复、错误检测和图简化',
   ]}
@@ -344,7 +344,7 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 - **图简化**：使用遍历策略简化复杂图结构
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Hamiltonian path是组装的唯一解：',
     '不是。由于NP难性质，实际组装器使用启发式方法，不一定找到Hamiltonian path，而是找到"足够好"的路径。',
     'DFS总是比BFS好：',

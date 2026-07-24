@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="煎饼翻转问题是基因组重排的简化模型，研究用最少的前缀反转将排列排序。它是排序 by 反转问题的特例，也是著名的算法谜题。"
-  bullets={[
+  items={[
     '只允许前缀反转（从位置 1 到 i 的反转）',
     '贪心算法可在 2(n-1) 步内完成排序',
     'Gates-Papadimitriou 上界: 5(n+1)/3',
@@ -253,7 +253,7 @@ BREAKPOINTPANCAKESORT(π):
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '煎饼翻转和一般反转排序只是操作范围的区别：',
     '虽然煎饼翻转只允许前缀反转，但这一限制从根本上改变了问题的计算性质。一般反转排序在有符号排列下有多项式时间精确算法，而煎饼翻转即使是无符号版本也是 NP-难的。限制操作集可以将一个"可解"的问题变为"难解"的问题——这一洞察在算法设计中具有普遍意义。',
     'Gates 的上界 5(n+1)/3 已经是最优的：',

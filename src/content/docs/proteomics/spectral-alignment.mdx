@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="谱对齐（Spectral Alignment）通过动态规划找到两个质谱之间的最优k-相似性，允许最多k次质量偏移变换。与谱卷积相比，谱对齐能够精确定位修饰发生的具体位点，是修饰肽段鉴定的核心算法。"
-  bullets={[
+  items={[
     '理解k-相似性（k-similarity）D(k)的定义',
     '掌握谱积矩阵（Spectral Product）的构建与含义',
     '了解谱对齐的动态规划算法与递推关系',
@@ -286,7 +286,7 @@ SPECTRAL-ALIGNMENT(A, B, k):
 - 实现了修饰位点的精确定位
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '谱对齐可以直接替代数据库搜索：',
     '谱对齐精确定位修饰位点的能力建立在已知"理论谱"的前提下——即需要先用数据库搜索获得候选肽段及其理论谱，再用谱对齐验证修饰位置。谱对齐本身不能从零开始鉴定肽段，它是一种"精修"工具而非"发现"工具。将其与谱卷积和数据库搜索联合使用才能发挥最大价值。',
     'k 值设大一些可以检测更多修饰：',

@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="字符串算法与索引结构是生物信息学的基础设施，使得在人类基因组（3 Gb）甚至更大参考序列上进行快速搜索成为可能。"
-  bullets={[
+  items={[
     '理解索引结构的设计权衡：查询速度、索引大小与构建时间',
     '掌握从朴素搜索到高级索引的演进逻辑',
   ]}
@@ -508,7 +508,7 @@ FindRepeats(SA, LCP, min_length):
 - **质量控制**：过滤低质量 reads
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '索引越大越好：',
     '不是。索引应在查询速度与内存使用之间取得平衡。FM-index 通过压缩实现了良好的权衡。',
     'Suffix Array 总是比 Suffix Tree 好：',

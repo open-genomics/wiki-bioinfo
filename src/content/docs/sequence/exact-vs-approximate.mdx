@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="在理想的数学世界中，我们寻找精确匹配。但在充满变异和错误的生物学现实中，近似匹配（Approximate Matching）才是常态。这两者的区别决定了算法的设计是从简单的索引查询走向复杂的动态规划。"
-  bullets={[
+  items={[
     '区分精确匹配的确定性与近似匹配的容错性',
     '理解生物学中的三种基本"编辑操作"：替换、插入、删除',
     '掌握"种子-延伸" (Seed-and-Extend) 架构如何兼顾效率与敏感性',
@@ -202,7 +202,7 @@ $$
 - **种子-延伸**是两者的最佳折中，但种子长度和数量需要根据错误率 $e$ 和允许的错误数 $k$ 进行调优。当 $k$ 很大时（如跨物种搜索），可能需要更短的种子或更多的种子来保证敏感性。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '编辑距离越小，两个序列越同源：',
     '不一定。编辑距离没有考虑不同位置突变的生物学权重。在蛋白质比对中，某些氨基酸替换（如 I→V）比其他替换（如 G→W）更常见，因此需要使用打分矩阵（如 BLOSUM62）而非简单的编辑距离。',
     'Hamming 距离可以替代编辑距离：',

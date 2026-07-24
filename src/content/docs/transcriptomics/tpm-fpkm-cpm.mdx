@@ -12,7 +12,7 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <NoteCard variant="summary"
   summary="RNA-seq 表达量归一化是消除测序深度和基因长度偏差、实现跨样本可比性的关键步骤。本节对比 CPM、FPKM、TPM 的归一化逻辑，并引入有效长度的概念。"
-  bullets={[
+  items={[
     '掌握 counts 到 CPM/FPKM/TPM 的公式转换与数学本质',
     '理解为什么 TPM 在跨样本比较中具有更好的统计性质',
     '掌握有效长度（Effective Length） 的定义及其对定量的修正作用',
@@ -256,7 +256,7 @@ $$\text{Salmon/Kallisto} \xrightarrow{\text{tximport}} \text{DESeq2}$$
 其中 `tximport` 负责将转录本级的 TPM 和有效计数聚合为基因级的长度校正计数，DESeq2 使用原始计数性质的数据进行统计建模。TPM 仅用于可视化和样本间趋势比较。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '用 TPM/FPKM 做差异表达分析：',
     'DESeq2、edgeR、limma-voom 等差异表达分析工具的统计模型（如负二项分布）依赖于原始计数的离散性质。TPM 和 FPKM 是经过归一化的比例值，丢失了原始计数中的方差信息（如测序深度信息被"烧掉"了），直接用于这些工具会导致：',
     '统计检验的 P-value 不准确。',

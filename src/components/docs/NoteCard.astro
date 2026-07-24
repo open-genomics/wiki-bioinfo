@@ -13,14 +13,12 @@ interface Props {
   variant: 'summary' | 'pitfalls' | 'tools';
   title?: string;
   summary?: string;
-  bullets?: string[];
   items?: string[];
-  pitfalls?: string[];
 }
 
 import { Icon } from '@astrojs/starlight/components';
 
-const { variant, title, summary, bullets = [], items = [], pitfalls = [] } = Astro.props;
+const { variant, title, summary, items = [] } = Astro.props;
 
 // 根据 variant 选择配置
 const config = {
@@ -44,12 +42,8 @@ const config = {
 const { defaultTitle, icon, class: cardClass } = config[variant];
 const resolvedTitle = title ?? defaultTitle;
 
-// 处理不同的列表数据源
-const resolvedItems = variant === 'summary'
-  ? bullets
-  : variant === 'pitfalls'
-    ? (items.length > 0 ? items : pitfalls)
-    : items;
+// 统一使用 items 作为列表数据源
+const resolvedItems = items;
 ---
 
 {variant === 'summary' ? (

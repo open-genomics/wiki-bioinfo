@@ -11,7 +11,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Gotoh 算法是处理 affine gap penalty 的标准动态规划算法：它通过引入三个状态矩阵，正确区分 gap 开启和 gap 延长，使比对模型更符合生物学直觉。"
-  bullets={[
+  items={[
     '核心是维护三个独立的 DP 矩阵：匹配状态、X 方向 gap、Y 方向 gap',
     '它是所有现代比对工具中 affine gap 模型的理论基础',
   ]}
@@ -332,7 +332,7 @@ Gotoh 算法是：
 现代工具如 BWA、minimap2、BLAST 等都使用 affine gap penalty，其核心思想来自 Gotoh 算法。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Affine gap 只是参数调整：',
     '不是。它改变了动态规划的状态设计和递推关系，是算法结构的根本变化。',
     'Gotoh 算法总是优于线性 gap：',

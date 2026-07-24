@@ -1,11 +1,6 @@
 # Global owners
 * @LessUp
 
-# Documentation content
-/src/content/docs/intro/ @LessUp
-/src/content/docs/foundations/ @LessUp
-/src/content/docs/core-methods/ @LessUp
-
 # Infrastructure and configuration
 /.github/ @LessUp
 /astro.config.mjs @LessUp

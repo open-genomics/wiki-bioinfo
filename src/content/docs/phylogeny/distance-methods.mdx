@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='与基于位点建模的算法不同，距离法首先将复杂的序列比对结果压缩为一个简洁的 $n \times n$ 距离矩阵，然后再寻找一棵最能「解释」这些距离的树。'
-  bullets={[
+  items={[
     '理解从多序列比对到距离矩阵的压缩过程',
     '掌握常见的演化距离度量（如 Hamming、Jukes-Cantor）',
     '了解距离法在处理大规模数据时的计算优势',
@@ -179,7 +179,7 @@ $$d_{AB} = -\frac{3}{4}\ln\left(1 - \frac{4}{3} \cdot \frac{1}{6}\right) = -\fra
 - 距离矩阵中不应存在过多的缺失值。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"p-distance 和 Jukes-Cantor 距离差别不大"：',
     '对于高度分化的序列，两者的差别可以非常大。当 $p$ 接近 $75\%$（Jukes-Cantor 模型的上限）时，Jukes-Cantor 距离趋向无穷大，而 p-distance 仍然只是一个有限的分数。',
     '"距离法已经过时，应该总是用最大似然法"：',

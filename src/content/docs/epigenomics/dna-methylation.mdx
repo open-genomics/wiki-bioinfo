@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="DNA 甲基化是在不改变 DNA 序列的前提下，通过在胞嘧啶上添加甲基来调控基因表达的机制。它是理解细胞分化、基因组印记和癌症发生的关键。"
-  bullets={[
+  items={[
     '掌握 CpG 二核苷酸与 CpG 岛（CG-islands）的概念',
     '理解识别 CG 岛的 HMM 建模直觉：公平赌场模型的应用',
     '掌握亚硫酸氢盐测序（Bisulfite Sequencing）将甲基化信号转化为序列差异的原理',
@@ -106,7 +106,7 @@ Bulk WGBS 测量的是细胞群体的平均甲基化水平，但组织中存在�
 - **与 scRNA-seq 整合**：由于单细胞甲基化数据本身太稀疏，常利用参考 bulk 甲基化图谱或与 scRNA-seq 联合分析来推断细胞类型。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '误区 1：甲基化数据可以脱离参考基因组版本解释。 CpG 位点坐标严格依赖参考基因组版本（hg19 vs hg38），基因组补丁和替代位点可能影响注释。分析时必须确保所有数据使用一致的参考版本。',
     '误区 2：CpG 岛总是低甲基化的。 体细胞中 CpG 岛通常保持非甲基化，但在特定情况下会发生高甲基化——如肿瘤细胞中抑癌基因启动子 CpG 岛的高甲基化、印记基因的差异化甲基化，以及 X 染色体失活相关的甲基化。',
     '误区 3：单个显著位点足以说明调控变化。 单个位点差异可能是技术噪声，生物学上有意义的调控通常涉及区域层面的甲基化变化，应优先报告 DMR 而非单个位点。',

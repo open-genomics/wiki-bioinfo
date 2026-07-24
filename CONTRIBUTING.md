@@ -1,51 +1,15 @@
 # 贡献指南
 
-感谢你考虑为 BioInfo Wiki 贡献内容。
+感谢你考虑为 BioInfo Wiki 贡献内容。完整的贡献方式、写作规范与项目设计理念在站点内维护，避免与仓库文档双源漂移。
 
-## 贡献什么最有价值
+## 从哪里开始
 
-- 文档错误修复
-- 过时内容更新
-- 缺失交叉链接补充
-- 低质量页面重写或合并建议
-- 与知识主干紧密相关的新页面建议
-
-不鼓励：
-
-- 纯装饰性 UI 改动
-- 与现有结构关系很弱的内容扩张
-- 没有明确收益的工程化堆叠
-
-## 提交前先判断类型
-
-### 1. 小改动
-
-适用于错别字、链接修复、表述澄清、小范围内容补充。
-
-流程：
-
-1. Fork 仓库并创建分支
-2. 修改内容
-3. 运行 `npm run check`
-4. 提交 PR
-
-### 2. 结构性改动
-
-适用于目录调整、首页/导论重构、workflow 设计、组件规则修改等。
-
-流程：
-
-1. 先开 Issue 或讨论
-2. 达成共识后再实施
-3. 运行 `npm run check` 验证
-
-## 内容规则
-
-- 中文优先
-- 术语首次出现使用“中文（English, 缩写）”
-- 先解释问题与动机，再进入方法
-- 保持与现有知识主干的连接
-- 页面修改后同步检查相关导航和交叉链接
+- **项目概览**：[`README.md`](./README.md)
+- **项目设计与内容边界**：[关于本项目](https://lessup.github.io/wiki-bioinfo/intro/about/)
+- **贡献方式与流程**：[如何贡献](https://lessup.github.io/wiki-bioinfo/intro/contributing/)
+- **写作规范**：[写作规范](https://lessup.github.io/wiki-bioinfo/intro/style-guide/)
+- **Agent 指令**：[`AGENTS.md`](./AGENTS.md)
+- **架构上下文**：[`CONTEXT.md`](./CONTEXT.md)
 
 ## 本地开发
 
@@ -57,10 +21,10 @@ npm run check
 
 常用命令：
 
-- `npm run dev`
-- `npm run build`
-- `npm run check`
-- `npm run check:links`
+- `npm run dev`：本地开发
+- `npm run build`：生产构建
+- `npm run check`：类型检查 + 构建
+- `npm run check:links`：内部链接检查
 
 ## PR 建议包含的信息
 
@@ -68,10 +32,3 @@ npm run check
 - 影响了哪些页面或配置
 - 是否修改了导航、组件或 workflow
 - 本地如何验证
-
-## 相关文档
-
-- 项目概览：[`README.md`](./README.md)
-- Agent 指令：[`AGENTS.md`](./AGENTS.md)
-- 架构上下文：[`CONTEXT.md`](./CONTEXT.md)
-- 写作规范：[`src/content/docs/intro/style-guide.md`](./src/content/docs/intro/style-guide.md)

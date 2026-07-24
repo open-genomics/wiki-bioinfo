@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="卷积神经网络通过局部卷积核在序列上滑动，自动识别局部 motif 和模式，是生物序列建模中最基础且有效的深度学习架构。"
-  bullets={[
+  items={[
     '卷积核可以学习到位置无关的 motif',
     '池化层实现位置不变性',
     '计算效率高，适合大规模数据',
@@ -266,7 +266,7 @@ CNN 在生物信息学中的代表性应用：
 - 输出层设计根据具体任务调整
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'CNN 只能检测局部模式：',
     '不是。通过多层堆叠，CNN 可以学习到层次化的特征，从局部 motif 到组合模式。',
     '卷积核越大越好：',

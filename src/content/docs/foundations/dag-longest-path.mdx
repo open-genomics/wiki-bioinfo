@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="DAG 最长路径问题是曼哈顿游客问题的推广形式，用于在任意有向无环图中寻找权重最大的路径，广泛应用于基因预测、序列组装和进化分析。"
-  bullets={[
+  items={[
     '曼哈顿游客问题是 DAG 最长路径的特例',
     '拓扑排序确保正确的 DP 计算顺序',
     '时间复杂度 O(|V| + |E|)',
@@ -311,7 +311,7 @@ DAG 最长路径算法可以处理负权重边：
 - **方法 2**：对每个源点分别运行算法，取最大值
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'DAG 最长路径算法可以用于一般图：',
     '不能。一般图（含环）的最长路径问题是 NP-hard 的。DAG 最长路径算法的核心依赖——拓扑排序——在有环图上无法执行。如果图中有正权环，"最长路径"的概念本身就不存在（可以无限绕环增加权重）。',
     '拓扑排序结果唯一：',

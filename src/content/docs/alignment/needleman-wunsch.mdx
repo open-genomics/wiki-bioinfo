@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Needleman-Wunsch 算法是全局比对的标准动态规划算法：它通过系统地枚举所有可能的比对路径，找到两条序列之间得分最高的全局比对。"
-  bullets={[
+  items={[
     '掌握递推公式和回溯算法是理解的关键',
     '它是所有全局比对算法的起点，后续优化都基于此框架',
   ]}
@@ -228,7 +228,7 @@ Needleman-Wunsch 算法本身很少直接用于大规模数据分析，主要因
 现代工具如 BLAST、BWA 等虽不直接使用 Needleman-Wunsch，但其扩展阶段的精确比对仍然基于类似的动态规划原理。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '全局比对总是优于局部比对：',
     '不是。全局比对强制两条序列从头到尾对齐，如果两条序列只有局部相似，全局比对可能产生误导性结果。',
     'Needleman-Wunsch 是唯一的比对算法：',

@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="UPGMA（Unweighted Pair Group Method with Arithmetic Mean）是一种层次聚类算法，通过不断合并最近的类群来构建系统发育树，适用于满足分子钟假设的数据。"
-  bullets={[
+  items={[
     '核心思想是每次合并距离最近的两个类群，用算术平均更新距离',
     '依赖分子钟假设：所有分支以相同速率演化',
     '是理解层次聚类和系统发育树构建的经典入门算法',
@@ -329,7 +329,7 @@ UPGMA的一个关键假设是分子钟假设：所有分支以相同的速率演
 - 对距离矩阵的质量和准确性高度依赖
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'UPGMA总是能得到正确的树：',
     '不是。UPGMA只有在满足分子钟假设时才能保证正确性。当演化速率不均匀时，结果可能不准确。',
     'UPGMA的距离矩阵必须是additive：',

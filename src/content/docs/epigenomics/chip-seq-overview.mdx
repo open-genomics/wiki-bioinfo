@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary='ChIP-seq 能够以全基因组范围、单碱基分辨率定位特定蛋白质（如转录因子、修饰组蛋白）的结合位点。它将分子生物学的「免疫富集」与计算生物学的「峰调用」完美结合，是解析基因调控网络的标准方法。'
-  bullets={[
+  items={[
     '掌握 ChIP-seq 的四大核心步骤：交联、片段化、免疫沉淀、测序',
     '辨析窄峰（Narrow Peaks）与宽峰（Broad Peaks）的生物学含义',
     '理解 Input 对照在排除基因组背景偏差中的决定性作用',
@@ -103,7 +103,7 @@ ChIP-seq 的本质是**比较富集**：通过特异性抗体抓取目标蛋白�
 - **峰集合比较**：Venn 图可显示峰集合的交集，Upset plot 更适合比较多组样本的共享峰，帮助理解条件特异性与共享调控。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '误区一：没有 Input 对照也能可靠检测峰：',
     '基因组不同区域的本底信号差异很大——开放染色质天然易碎、重复序列有比对偏差、GC 含量影响覆盖度。没有 Input 对照，这些系统性偏差会被误判为真实的蛋白结合信号。',
     '误区二：峰越高，调控作用越强：',

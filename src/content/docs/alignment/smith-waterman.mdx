@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Smith-Waterman 算法是局部比对的标准动态规划算法：它在两条序列中寻找得分最高的局部相似片段，而不要求全局对齐。"
-  bullets={[
+  items={[
     '关键区别在于允许从任意位置开始和结束比对',
     '它是 BLAST 等数据库搜索工具的理论基础',
   ]}
@@ -262,7 +262,7 @@ Smith-Waterman 算法是：
 - **索引技术**：结合 FM-index 等索引结构缩小搜索空间
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '局部比对一定比全局比对更先进：',
     '不是。局部和全局比对解决的是不同的问题，选择哪种取决于具体任务。',
     'Smith-Waterman 只能找到一个局部比对：',

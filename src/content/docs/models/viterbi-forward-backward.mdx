@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Viterbi、Forward 和 Backward 是 HMM 中三个核心推断算法：Viterbi 找最可能状态路径，Forward 计算观测概率，Backward 提供后向信息用于 posterior 推断。"
-  bullets={[
+  items={[
     'Viterbi 用 max 操作找最优路径，Forward 用 sum 操作计算总概率',
     'Forward-backward 结合可以计算每个位点的 posterior 概率',
     '它们是 HMM 在基因预测、序列分段等应用中的基础算法'
@@ -293,7 +293,7 @@ G C G A
   - 需要根据任务目标选择"整体路径"还是"位点后验"。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'Viterbi 等于 HMM 的全部：',
     '不是。它只是 decoding 问题的经典解法之一；Forward 和 Backward 处理的是不同问题。',
     '每个位点最可能状态拼起来，就是最可能路径：',

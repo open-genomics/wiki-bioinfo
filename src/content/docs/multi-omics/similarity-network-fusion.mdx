@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="SNF 通过为每组学构建样本相似性网络，然后迭代融合这些网络，实现多组学数据的整合，不依赖于数据分布假设。"
-  bullets={[
+  items={[
     '核心是将数据转化为网络表示，通过消息传递实现融合',
     '不假设数据分布，适合不同类型的数据',
     '算法简单直观，是理解图方法多组学整合的入门算法',
@@ -561,7 +561,7 @@ W <- SNF(list(W1, W2), K = 20, t = 20)
 labels <- spectralClustering(W, K = 3)
 ```
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '相似性网络越密越好：',
     '不是。过于密集的网络会：',
     '增加计算开销',

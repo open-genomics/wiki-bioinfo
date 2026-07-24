@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="长读长组装的核心优势在于其能够直接跨越复杂的重复序列。不同于短读长的 de Bruijn 图策略，长读长通常采用 OLC (Overlap-Layout-Consensus) 范式，通过构建重叠图来恢复基因组的连续性。"
-  bullets={[
+  items={[
     '掌握 OLC 组装的三阶段：重叠检测（Overlap）、布局构建（Layout） 与共识生成（Consensus）',
     '理解 String Graph（字符串图）如何通过约简技术简化重叠关系',
     '了解 Polishing（磨光/校正）步骤在提升碱基准确性中的必要性',
@@ -181,7 +181,7 @@ Read 4: A T G C C A T G G A C T T A G C
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"只要 Read 足够长，组装就一定连续"：',
     'Read 长度是必要条件但不是充分条件。如果基因组中存在比最长 Read 更长的串联重复（Tandem Repeat），即使 Read 很长也无法区分重复的拷贝边界。此外，数据覆盖度不足也会导致部分区域完全没有 Read 覆盖。',
     '"N50 高就代表组装质量好"：',

@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="结构变异（Structural Variation, SV）通常指基因组中大于 50 bp 的变异。长读长测序通过跨越变异断点，为解析缺失、重复、倒位和易位等复杂重排提供了前所未有的分辨率。"
-  bullets={[
+  items={[
     '掌握 SV 的主要类型：DEL, INS, DUP, INV, TRA',
     '理解长读长检测 SV 的核心证据：Split-read (分割比对) 与覆盖度波动',
     '了解 SV 与基因组重排（Rearrangements）在进化尺度上的统一性',
@@ -200,7 +200,7 @@ SV Caller 的处理：
 />
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '"SV Caller 报告的变异都是真实的"：',
     'SV Caller 的输出中通常包含一定比例的假阳性。尤其是在重复区域、低覆盖度区域和端粒附近，假阳性率会显著升高。所有候选 SV 都需要经过严格的质量过滤和（如果可能的话）实验验证。',
     '"VCF 文件中的 SV 断点坐标是精确的"：',

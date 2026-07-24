@@ -10,7 +10,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="近似模式匹配允许在文本中查找与模式串有最多k个差异的匹配，是处理测序错误、基因变异和进化分歧的核心算法工具。"
-  bullets={[
+  items={[
     '问题定义：在允许k个差异的情况下查找模式出现位置',
     '距离度量：汉明距离（仅替换）vs 编辑距离（替换/插入/删除）',
     '算法方法：动态规划O(nm)、q-gram过滤、后缀树搜索',
@@ -342,7 +342,7 @@ BLAST(query, database):
 - DNA 比对：考虑转换/颠换偏好
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '编辑距离越小，匹配越"有意义"：',
     '编辑距离小只表示两个序列在字符层面相似，但并不自动意味着它们具有生物学相关性。例如，两个随机的低复杂度序列（如 poly-A 尾）可能编辑距离很小，但毫无生物学意义。判断匹配的生物学意义需要结合统计显著性评估（如 E-value）、功能注释和进化上下文，而非仅看距离数值。',
     'BLAST 的 E-value 越小，同源性越强：',

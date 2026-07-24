@@ -2,7 +2,7 @@
 name: 改进建议
 about: 提出结构、流程、导航、workflow 或文档治理改进建议
 title: '[IMPROVEMENT] '
-labels: improvement
+labels: needs-triage
 ---
 
 ## 当前问题

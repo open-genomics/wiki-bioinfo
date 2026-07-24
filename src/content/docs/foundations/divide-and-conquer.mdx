@@ -10,7 +10,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
   summary="分治算法是处理大规模数据的核心范式：把大问题分解成小问题，分别解决后再合并。这一页从经典排序算法出发，建立分治的直觉。"
-  bullets={[
+  items={[
     '先理解归并排序的分治思想，再看快速排序的随机化策略会更顺。',
     '分治思想也体现在系统发育树构建、多重序列比对等生物信息学任务中。',
   ]}
@@ -392,7 +392,7 @@ KD-tree 用于高维空间查询：
 | 最近点对（朴素） | $O(n^2)$ | $O(1)$ | - | 小规模数据、简单实现 |
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     '分治总是比朴素算法快：',
     '不一定。分治算法：',
     '有额外的递归开销',

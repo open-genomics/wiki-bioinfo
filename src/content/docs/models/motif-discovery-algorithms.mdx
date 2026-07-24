@@ -9,7 +9,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <NoteCard variant="summary"
   summary="Motif discovery 算法解决的是在未知 motif 模式和位置的情况下，从一组序列中找出统计显著的局部模式。主要算法包括穷举、贪心、随机化搜索和 Gibbs sampling。"
-  bullets={[
+  items={[
     '核心挑战是搜索空间指数增长，需要启发式方法',
     'Gibbs sampling 是最实用的方法之一，通过概率采样避免局部最优',
     'EM 算法（如 MEME）是另一种常用方法，用期望最大化估计参数'
@@ -354,7 +354,7 @@ motif discovery 的输出常常不是一句"找到了字符串 TATAAA"，而是�
 否则，高分 motif 可能只是统计上看起来"像"，但并不一定有真实生物学作用。
 
 <NoteCard variant="pitfalls"
-  pitfalls={[
+  items={[
     'motif discovery 一定能给出唯一正确答案：',
     '不一定。不同初始化、不同背景模型、不同参数都可能导致不同结果。',
     '找到高分 motif 就说明发现了真实调控元件：',

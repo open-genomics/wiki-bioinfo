@@ -89,7 +89,7 @@ CCA 寻找线性组合：
 对于两个标量变量 $x$ 和 $y$，Pearson 相关系数为：
 
 $$
-\rho = \frac\{\text\{Cov\}(x, y)\}\{\sqrt\{\text\{Var\}(x) \text\{Var\}(y)\}\}
+\rho = \frac{\text{Cov}(x, y)}{\sqrt{\text{Var}(x) \text{Var}(y)}}
 $$
 
 ### CCA 的扩展
@@ -97,7 +97,7 @@ $$
 对于两组变量，CCA 寻找投影方向 $w_x$ 和 $w_y$，使得：
 
 $$
-\max_\{w_x, w_y\} \frac\{w_x^T \Sigma_\{xy\} w_y\}\{\sqrt\{w_x^T \Sigma_\{xx\} w_x \cdot w_y^T \Sigma_\{yy\} w_y\}\}
+\max_{w_x, w_y} \frac{w_x^T \Sigma_{xy} w_y}{\sqrt{w_x^T \Sigma_{xx} w_x \cdot w_y^T \Sigma_{yy} w_y}}
 $$
 
 其中：
@@ -118,12 +118,12 @@ $$
 CCA 的优化问题可以等价地写成：
 
 $$
-\max_\{w_x, w_y\} w_x^T \Sigma_\{xy\} w_y
+\max_{w_x, w_y} w_x^T \Sigma_{xy} w_y
 $$
 
 约束条件：
 $$
-w_x^T \Sigma_\{xx\} w_x = 1, \quad w_y^T \Sigma_\{yy\} w_y = 1
+w_x^T \Sigma_{xx} w_x = 1, \quad w_y^T \Sigma_{yy} w_y = 1
 $$
 
 这个约束确保典型变量的方差为 1，避免平凡解。
@@ -195,23 +195,23 @@ CCA 可以找到多对典型变量 $(u_1, v_1), (u_2, v_2), ..., (u_r, v_r)$，�
 CCA 的求解可以转化为广义特征值问题：
 
 $$
-\begin\{bmatrix\}
-0 & \Sigma_\{xy\} \\
-\Sigma_\{yx\} & 0
-\end\{bmatrix\}
-\begin\{bmatrix\}
+\begin{bmatrix}
+0 & \Sigma_{xy} \\
+\Sigma_{yx} & 0
+\end{bmatrix}
+\begin{bmatrix}
 w_x \\
 w_y
-\end\{bmatrix\}
+\end{bmatrix}
 = \rho
-\begin\{bmatrix\}
-\Sigma_\{xx\} & 0 \\
-0 & \Sigma_\{yy\}
-\end\{bmatrix\}
-\begin\{bmatrix\}
+\begin{bmatrix}
+\Sigma_{xx} & 0 \\
+0 & \Sigma_{yy}
+\end{bmatrix}
+\begin{bmatrix}
 w_x \\
 w_y
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 **算法3：求解 CCA**
@@ -264,16 +264,16 @@ $$
 - 甲基化：3 个样本，2 个位点
 
 $$
-X = \begin\{bmatrix\}
+X = \begin{bmatrix}
 1 & 2 \\
 2 & 3 \\
 3 & 1
-\end\{bmatrix\}, \quad
-Y = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+Y = \begin{bmatrix}
 2 & 1 \\
 3 & 2 \\
 1 & 3
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 1：标准化
@@ -281,53 +281,53 @@ $$
 假设已标准化（均值为 0，方差为 1）：
 
 $$
-X' = \begin\{bmatrix\}
+X' = \begin{bmatrix}
 -1 & 0 \\
 0 & 1 \\
 1 & -1
-\end\{bmatrix\}, \quad
-Y' = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+Y' = \begin{bmatrix}
 0 & -1 \\
 1 & 0 \\
 -1 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 2：计算协方差矩阵
 
 $$
-\Sigma_\{xx\} = \frac\{1\}\{2\} \begin\{bmatrix\}
+\Sigma_{xx} = \frac{1}{2} \begin{bmatrix}
 2 & -1 \\
 -1 & 2
-\end\{bmatrix\} = \begin\{bmatrix\}
+\end{bmatrix} = \begin{bmatrix}
 1 & -0.5 \\
 -0.5 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 $$
-\Sigma_\{yy\} = \frac\{1\}\{2\} \begin\{bmatrix\}
+\Sigma_{yy} = \frac{1}{2} \begin{bmatrix}
 2 & -1 \\
 -1 & 2
-\end\{bmatrix\} = \begin\{bmatrix\}
+\end{bmatrix} = \begin{bmatrix}
 1 & -0.5 \\
 -0.5 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 $$
-\Sigma_\{xy\} = \frac\{1\}\{2\} \begin\{bmatrix\}
+\Sigma_{xy} = \frac{1}{2} \begin{bmatrix}
 -1 & 1 \\
 1 & -1 \\
 0 & 0
-\end\{bmatrix\}^T \begin\{bmatrix\}
+\end{bmatrix}^T \begin{bmatrix}
 0 & -1 \\
 1 & 0 \\
 -1 & 1
-\end\{bmatrix\} = \begin\{bmatrix\}
+\end{bmatrix} = \begin{bmatrix}
 -0.5 & 0.5 \\
 0.5 & -0.5
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 3：求解 CCA
@@ -335,13 +335,13 @@ $$
 计算 $\Sigma_{xx}^{-1}$：
 
 $$
-\Sigma_\{xx\}^\{-1\} = \frac\{1\}\{1 - 0.25\} \begin\{bmatrix\}
+\Sigma_{xx}^{-1} = \frac{1}{1 - 0.25} \begin{bmatrix}
 1 & 0.5 \\
 0.5 & 1
-\end\{bmatrix\} = \begin\{bmatrix\}
+\end{bmatrix} = \begin{bmatrix}
 1.33 & 0.67 \\
 0.67 & 1.33
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 计算 $M = \Sigma_{xx}^{-1} \Sigma_{xy} \Sigma_{yy}^{-1} \Sigma_{yx}$：
@@ -349,22 +349,22 @@ $$
 由于 $\Sigma_{yy}^{-1} = \Sigma_{xx}^{-1}$，$\Sigma_{yx} = \Sigma_{xy}^T$：
 
 $$
-M = \begin\{bmatrix\}
+M = \begin{bmatrix}
 1.33 & 0.67 \\
 0.67 & 1.33
-\end\{bmatrix\}
-\begin\{bmatrix\}
+\end{bmatrix}
+\begin{bmatrix}
 -0.5 & 0.5 \\
 0.5 & -0.5
-\end\{bmatrix\}
-\begin\{bmatrix\}
+\end{bmatrix}
+\begin{bmatrix}
 1.33 & 0.67 \\
 0.67 & 1.33
-\end\{bmatrix\}
-\begin\{bmatrix\}
+\end{bmatrix}
+\begin{bmatrix}
 -0.5 & 0.5 \\
 0.5 & -0.5
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 简化计算（省略中间步骤），得到特征值 $\lambda_1$ 和 $\lambda_2$。
@@ -402,7 +402,7 @@ $$
 在目标函数中加入 L1 正则项：
 
 $$
-\max_\{w_x, w_y\} w_x^T \Sigma_\{xy\} w_y - \lambda_x \|w_x\|_1 - \lambda_y \|w_y\|_1
+\max_{w_x, w_y} w_x^T \Sigma_{xy} w_y - \lambda_x \|w_x\|_1 - \lambda_y \|w_y\|_1
 $$
 
 **优点**：
@@ -419,7 +419,7 @@ $$
 通过核函数处理非线性关系：
 
 $$
-\max_\{\alpha, \beta\} \alpha^T K_x K_y \beta
+\max_{\alpha, \beta} \alpha^T K_x K_y \beta
 $$
 
 约束：$\alpha^T K_x^2 \alpha = 1$，$\beta^T K_y^2 \beta = 1$
@@ -439,7 +439,7 @@ $$
 扩展到多组学（>2 组）：
 
 $$
-\max_\{w_1, ..., w_K\} \sum_\{i < j\} w_i^T \Sigma_\{ij\} w_j
+\max_{w_1, ..., w_K} \sum_{i < j} w_i^T \Sigma_{ij} w_j
 $$
 
 ### Deep CCA
@@ -447,7 +447,7 @@ $$
 使用深度神经网络学习非线性映射：
 
 $$
-\max_\{f, g\} \text\{Corr\}(f(X), g(Y))
+\max_{f, g} \text{Corr}(f(X), g(Y))
 $$
 
 其中 $f$ 和 $g$ 是深度网络。
@@ -584,7 +584,7 @@ canonical_vars_Y <- result$scores$yscores
 **Wilks' Lambda**：
 
 $$
-\Lambda = \prod_\{i=1\}^\{r\} (1 - \rho_i^2)
+\Lambda = \prod_{i=1}^{r} (1 - \rho_i^2)
 $$
 
 转换为 F 统计量进行检验。

@@ -89,12 +89,12 @@ SNF 通过迭代融合，让每个网络"吸收"其他网络的信息，最终�
 
 **欧氏距离**：
 $$
-d_\{ij\} = \|x_i - x_j\|_2
+d_{ij} = \|x_i - x_j\|_2
 $$
 
 **热核相似度**：
 $$
-W_\{ij\} = \exp(-d_\{ij\}^2 / \mu \epsilon_i)
+W_{ij} = \exp(-d_{ij}^2 / \mu \epsilon_i)
 $$
 
 其中：
@@ -107,7 +107,7 @@ $$
 
 **行归一化**：
 $$
-P_\{ij\} = \frac\{W_\{ij\}\}\{\sum_\{l=1\}^\{n\} W_\{il\}\}
+P_{ij} = \frac{W_{ij}}{\sum_{l=1}^{n} W_{il}}
 $$
 
 这使每行和为 1，形成随机矩阵。
@@ -119,12 +119,12 @@ $$
 融合迭代：
 
 $$
-P^\{(k)\} \leftarrow S^\{(k)\} \times \left(\frac\{\sum_\{l \neq k\} P^\{(l)\}\}\{K-1\}\right) \times (S^\{(k)\})^T
+P^{(k)} \leftarrow S^{(k)} \times \left(\frac{\sum_{l \neq k} P^{(l)}}{K-1}\right) \times (S^{(k)})^T
 $$
 
 其中 $S^{(k)}$ 是 $P^{(k)}$ 的对称版本：
 $$
-S^\{(k)\} = \frac\{(P^\{(k)\})^T + P^\{(k)\}\}\{2\}
+S^{(k)} = \frac{(P^{(k)})^T + P^{(k)}}{2}
 $$
 
 <DefinitionList
@@ -250,16 +250,16 @@ $$
 - 甲基化：3 个样本，3 个位点
 
 $$
-X^\{(1)\} = \begin\{bmatrix\}
+X^{(1)} = \begin{bmatrix}
 5 & 3 & 0 & 0 \\
 4 & 2 & 0 & 0 \\
 0 & 0 & 4 & 5
-\end\{bmatrix\}, \quad
-X^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+X^{(2)} = \begin{bmatrix}
 3 & 0 & 0 \\
 2 & 0 & 0 \\
 0 & 4 & 3
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 1：构建相似性网络
@@ -268,57 +268,57 @@ $$
 
 计算欧氏距离矩阵：
 $$
-D^\{(1)\} = \begin\{bmatrix\}
+D^{(1)} = \begin{bmatrix}
 0 & 2.24 & 9.22 \\
 2.24 & 0 & 8.06 \\
 9.22 & 8.06 & 0
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 假设 $\mu = 0.5$，$K = 1$，$\epsilon = [2.24, 2.24, 8.06]$。
 
 计算相似性矩阵（简化）：
 $$
-W^\{(1)\} = \begin\{bmatrix\}
+W^{(1)} = \begin{bmatrix}
 1 & 0.37 & 0 \\
 0.37 & 1 & 0.01 \\
 0 & 0.01 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 归一化后：
 $$
-P^\{(1)\} = \begin\{bmatrix\}
+P^{(1)} = \begin{bmatrix}
 0.73 & 0.27 & 0 \\
 0.27 & 0.72 & 0.01 \\
 0 & 0.01 & 0.99
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 **组学 2（甲基化）**：
 
 类似计算得到：
 $$
-P^\{(2)\} = \begin\{bmatrix\}
+P^{(2)} = \begin{bmatrix}
 0.75 & 0.25 & 0 \\
 0.25 & 0.75 & 0 \\
 0 & 0 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 2：对称化网络
 
 $$
-S^\{(1)\} = \begin\{bmatrix\}
+S^{(1)} = \begin{bmatrix}
 0.73 & 0.27 & 0 \\
 0.27 & 0.72 & 0.005 \\
 0 & 0.005 & 0.99
-\end\{bmatrix\}, \quad
-S^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+S^{(2)} = \begin{bmatrix}
 0.75 & 0.25 & 0 \\
 0.25 & 0.75 & 0 \\
 0 & 0 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 3：迭代融合（第一次迭代）
@@ -327,16 +327,16 @@ $$
 
 计算其他网络平均：
 $$
-P_\{avg\} = P^\{(2)\} = \begin\{bmatrix\}
+P_{avg} = P^{(2)} = \begin{bmatrix}
 0.75 & 0.25 & 0 \\
 0.25 & 0.75 & 0 \\
 0 & 0 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 更新：
 $$
-P^\{(1)\}_1 = S^\{(1)\} \times P_\{avg\} \times (S^\{(1)\})^T
+P^{(1)}_1 = S^{(1)} \times P_{avg} \times (S^{(1)})^T
 $$
 
 （具体矩阵乘法省略）
@@ -350,11 +350,11 @@ $$
 经过多次迭代后，假设收敛到：
 
 $$
-P_\{fused\} = \begin\{bmatrix\}
+P_{fused} = \begin{bmatrix}
 0.70 & 0.30 & 0 \\
 0.30 & 0.70 & 0 \\
 0 & 0 & 1
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 解释：
@@ -405,7 +405,7 @@ $$
 对不同组学赋予不同权重：
 
 $$
-P_\{avg\} = \frac\{\sum_\{l \neq k\} w_l P^\{(l)\}\}\{\sum_\{l \neq k\} w_l\}
+P_{avg} = \frac{\sum_{l \neq k} w_l P^{(l)}}{\sum_{l \neq k} w_l}
 $$
 
 ### 在线 SNF

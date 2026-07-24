@@ -45,7 +45,7 @@ npm run check
 - 这页是否解释了“为什么值得讲”
 - 是否和现有知识主干建立了联系
 - 是否补充了相关页面链接
-- 是否需要同步更新 `astro.config.mjs` 导航
+- 是否需要同步更新 `src/data/sections.ts` 中的 sidebar 配置（站点导航的单一真相源）
 
 ## 相关页面
 

@@ -3,8 +3,7 @@
  * PageHeaderMeta - 页面头部元信息组件
  *
  * 自动从页面路径推断所属板块（section），无需显式传入。
- * 保留 audience / startWith / prereqs / estimatedTime / difficulty
- * 供板块入口页等需要丰富阅读引导的页面使用。
+ * 只渲染有真实元信息的卡片；无内容的卡片不显示，避免占位废话。
  */
 interface Props {
   audience?: string;
@@ -35,6 +34,78 @@ const sectionMeta = sectionId ? getSectionMeta(sectionId) : undefined;
 
 type HeaderMetaIcon = 'list-format' | 'random' | 'document' | 'right-arrow';
 
+interface HeaderMetaCard {
+  icon: HeaderMetaIcon;
+  label: string;
+  value: string;
+  detail: string;
+}
+
+/**
+ * 构建头部元信息卡片。只返回有真实内容的卡片，无内容则省略。
+ * 卡片顺序：板块 → 适合谁读 → 阅读信息 → 阅读路径。
+ */
+function buildPageHeaderCards(input: {
+  sectionMeta?: { label: string; description: string };
+  audience?: string | undefined;
+  startWith?: string | undefined;
+  prereqs: string[];
+  estimatedTime?: string | undefined;
+  difficulty?: string | undefined;
+}): HeaderMetaCard[] {
+  const cards: HeaderMetaCard[] = [];
+
+  // 卡片 1：板块信息（仅当能推断出 section 时）
+  if (input.sectionMeta) {
+    cards.push({
+      icon: 'list-format',
+      label: '所属板块',
+      value: input.sectionMeta.label,
+      detail: input.sectionMeta.description,
+    });
+  }
+
+  // 卡片 2：适合谁读（仅当提供 audience）
+  if (input.audience) {
+    cards.push({
+      icon: 'random',
+      label: '适合谁读',
+      value: '建议在以下阶段阅读',
+      detail: input.audience,
+    });
+  }
+
+  // 卡片 3：阅读信息（仅当提供 estimatedTime 或 difficulty）
+  if (input.estimatedTime || input.difficulty) {
+    const parts: string[] = [];
+    if (input.estimatedTime) parts.push(`预计阅读：${input.estimatedTime}`);
+    if (input.difficulty) parts.push(`难度：${input.difficulty}`);
+    cards.push({
+      icon: 'document',
+      label: '阅读信息',
+      value: input.difficulty ? `难度：${input.difficulty}` : '阅读时长',
+      detail: parts.join('；'),
+    });
+  }
+
+  // 卡片 4：阅读路径（仅当提供 startWith 或 prereqs）
+  if (input.startWith || input.prereqs.length > 0) {
+    const detailParts: string[] = [];
+    if (input.startWith) detailParts.push(input.startWith);
+    if (input.prereqs.length > 0) {
+      detailParts.push(`相关前置：${input.prereqs.join('、')}`);
+    }
+    cards.push({
+      icon: 'right-arrow',
+      label: input.startWith ? '建议起点' : '建议前置',
+      value: input.startWith ? '推荐阅读路径' : '建议先准备相关前置',
+      detail: detailParts.join('；'),
+    });
+  }
+
+  return cards;
+}
+
 const cards = buildPageHeaderCards({
   ...(sectionMeta
     ? { sectionMeta: { label: sectionMeta.label, description: sectionMeta.description } }
@@ -45,118 +116,16 @@ const cards = buildPageHeaderCards({
   estimatedTime,
   difficulty,
 });
-
-function buildPageHeaderCards(input: {
-  sectionMeta?: { label: string; description: string } | undefined;
-  audience?: string | undefined;
-  startWith?: string | undefined;
-  prereqs?: string[] | undefined;
-  estimatedTime?: string | undefined;
-  difficulty?: string | undefined;
-}): { icon: HeaderMetaIcon; label: string; value: string; detail: string }[] {
-  const hasAudience = Boolean(input.audience);
-  const hasReadingMeta = Boolean(input.estimatedTime || input.difficulty);
-  const prereqs = input.prereqs ?? [];
-  const hasPathInfo = Boolean(input.startWith || prereqs.length > 0);
-
-  // 卡片 1：板块信息
-  const primaryValue = input.sectionMeta?.label ?? 'BioInfo Wiki';
-  const primaryDetail =
-    input.sectionMeta?.description ??
-    '帮助你快速判断当前主题与全站知识图谱的连接方式。';
-
-  // 卡片 2：阅读引导或板块描述
-  const secondaryLabel = hasAudience
-    ? '适合谁读'
-    : hasReadingMeta
-      ? '阅读信息'
-      : '阅读目标';
-
-  const secondaryValue = hasAudience
-    ? '建议在以下阶段阅读'
-    : input.difficulty
-      ? `难度：${input.difficulty}`
-      : input.estimatedTime
-        ? '阅读时长'
-        : '帮助建立阅读上下文';
-
-  const secondaryDetail = hasAudience
-    ? input.audience!
-    : input.estimatedTime && input.difficulty
-      ? `预计阅读：${input.estimatedTime}`
-      : input.estimatedTime
-        ? `预计阅读：${input.estimatedTime}`
-        : input.difficulty
-          ? `内容难度：${input.difficulty}`
-          : '先判断这页与你当前问题的关系，再决定是否深入展开。';
-
-  // 卡片 3：路径信息或阅读元信息
-  const pathDetail = input.startWith
-    ? prereqs.length > 0
-      ? `${input.startWith}；相关前置：${prereqs.join('、')}`
-      : input.startWith
-    : prereqs.length > 0
-      ? `相关前置：${prereqs.join('、')}`
-      : '';
-
-  const tertiaryLabel = hasPathInfo
-    ? input.startWith
-      ? '建议起点'
-      : '建议前置'
-    : hasReadingMeta && hasAudience
-      ? '阅读信息'
-      : '建议前置';
-
-  const tertiaryValue = hasPathInfo
-    ? input.startWith
-      ? '推荐阅读路径'
-      : '建议先准备相关前置'
-    : hasReadingMeta
-      ? input.difficulty
-        ? `难度：${input.difficulty}`
-        : '阅读时长'
-      : '先建立相关基础对象与方法直觉';
-
-  const tertiaryDetail = hasPathInfo
-    ? pathDetail
-    : input.estimatedTime && input.difficulty
-      ? `预计阅读：${input.estimatedTime}`
-      : input.estimatedTime
-        ? `预计阅读：${input.estimatedTime}`
-        : input.difficulty
-          ? `内容难度：${input.difficulty}`
-          : '建议先建立相关基础对象与方法直觉，再进入本页。';
-
-  return [
-    {
-      icon: 'list-format',
-      label: input.sectionMeta ? '所属板块' : '当前主题',
-      value: primaryValue,
-      detail: primaryDetail,
-    },
-    {
-      icon: hasAudience ? 'random' : 'document',
-      label: secondaryLabel,
-      value: secondaryValue,
-      detail: secondaryDetail,
-    },
-    {
-      icon: hasPathInfo ? 'right-arrow' : 'document',
-      label: tertiaryLabel,
-      value: tertiaryValue,
-      detail: tertiaryDetail,
-    },
-  ];
-}
-
 ---
 
-<div class="header-meta-grid not-content">
-  {cards.map((card) => (
-    <section class="header-meta-card">
-      <span class="meta-label"><Icon name={card.icon} size="1rem" /> {card.label}</span>
-      <strong class="meta-value">{card.value}</strong>
-      <p class="meta-detail">{card.detail}</p>
-    </section>
-  ))}
-</div>
+{cards.length > 0 && (
+  <div class="header-meta-grid not-content">
+    {cards.map((card) => (
+      <section class="header-meta-card">
+        <span class="meta-label"><Icon name={card.icon} size="1rem" /> {card.label}</span>
+        <strong class="meta-value">{card.value}</strong>
+        <p class="meta-detail">{card.detail}</p>
+      </section>
+    ))}
+  </div>
+)}

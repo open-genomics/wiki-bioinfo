@@ -94,13 +94,13 @@ UPGMA的构建过程可以想象为：
 给定n个样本，距离矩阵D是一个n×n的对称矩阵：
 
 $$
-D = \begin\{bmatrix\}
-0 & d_\{12\} & d_\{13\} & \cdots & d_\{1n\} \\
-d_\{21\} & 0 & d_\{23\} & \cdots & d_\{2n\} \\
-d_\{31\} & d_\{32\} & 0 & \cdots & d_\{3n\} \\
+D = \begin{bmatrix}
+0 & d_{12} & d_{13} & \cdots & d_{1n} \\
+d_{21} & 0 & d_{23} & \cdots & d_{2n} \\
+d_{31} & d_{32} & 0 & \cdots & d_{3n} \\
 \vdots & \vdots & \vdots & \ddots & \vdots \\
-d_\{n1\} & d_\{n2\} & d_\{n3\} & \cdots & 0
-\end\{bmatrix\}
+d_{n1} & d_{n2} & d_{n3} & \cdots & 0
+\end{bmatrix}
 $$
 
 其中 $d_{ij} = d_{ji}$ 表示样本i和样本j之间的距离，$d_{ii} = 0$。
@@ -110,7 +110,7 @@ $$
 当类群A包含 $n_A$ 个成员，类群B包含 $n_B$ 个成员时，它们之间的距离定义为：
 
 $$
-d_\{AB\} = \frac\{1\}\{n_A \cdot n_B\} \sum_\{i \in A\} \sum_\{j \in B\} d_\{ij\}
+d_{AB} = \frac{1}{n_A \cdot n_B} \sum_{i \in A} \sum_{j \in B} d_{ij}
 $$
 
 即：A中所有成员与B中所有成员距离的算术平均值。
@@ -120,7 +120,7 @@ $$
 当合并类群A和类群B形成新类群C后，新类群C与其他类群D的距离为：
 
 $$
-d_\{CD\} = \frac\{n_A \cdot d_\{AD\} + n_B \cdot d_\{BD\}\}\{n_A + n_B\}
+d_{CD} = \frac{n_A \cdot d_{AD} + n_B \cdot d_{BD}}{n_A + n_B}
 $$
 
 这是加权平均，权重是原类群的成员数量。

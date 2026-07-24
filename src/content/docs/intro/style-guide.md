@@ -196,7 +196,7 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 - 文件名使用小写英文，以连字符 `-` 分隔单词，如 `needleman-wunsch.mdx`。
 - 普通知识页优先使用 `.md` 格式。
-- 需要导入组件（如 `SummaryBox`、`PrerequisitesBox`）时使用 `.mdx`。
+- 需要导入组件（如 `NoteCard`、`PrerequisitesBox`）时使用 `.mdx`。
 - 每个文件必须包含 frontmatter，至少有 `title` 和 `description`。
 
 ```yaml
@@ -283,11 +283,10 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 
 普通页面优先使用 `.md`。满足以下条件时使用 `.mdx`：
 
-- 需要 `SummaryBox`（页面摘要）
+- 需要 `NoteCard`（`variant="summary"` 摘要 / `variant="pitfalls"` 误区 / `variant="tools"` 工具映射）
 - 需要 `PrerequisitesBox`（前置知识）
-- 需要 `ComparisonTable`（结构化对比）
-- 需要 `PitfallsBox`（常见误区）
-- 需要 `RelatedLinks`（相关页面卡片）
+- 需要 `DataTable`（`variant="comparison"` 对比 / `variant="decision-matrix"` 决策矩阵）
+- 需要 `LinkGrid`（导航网格 / 相关页面卡片，`RelatedLinks` 是其 related 变体的兼容包装）
 
 新增 MDX 页面时，优先复用 `src/components/docs/` 中已有组件。不要为单个页面发明一次性的样式方案。
 

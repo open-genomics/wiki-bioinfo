@@ -281,7 +281,7 @@ V[t][i] = 在时刻 t 处于状态 i 的最大概率路径得分
 
 **递推公式**：
 $$
-V[t][i] = \max_j \\{V[t-1][j] \cdot a_\{j,i\}\\} \cdot b_i(o_t)
+V[t][i] = \max_j \{V[t-1][j] \cdot a_{j,i}\} \cdot b_i(o_t)
 $$
 
 其中：

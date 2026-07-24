@@ -104,7 +104,7 @@ $$
 注意力权重计算：
 
 $$
-\text\{Attention\}(Q, K, V) = \text\{softmax\}\left(\frac\{QK^T\}\{\sqrt\{d_k\}\}\right)V
+\text{Attention}(Q, K, V) = \text{softmax}\left(\frac{QK^T}{\sqrt{d_k}}\right)V
 $$
 
 其中：
@@ -118,13 +118,13 @@ $$
 使用多组 Q、K、V 捕获不同类型的关系：
 
 $$
-\text\{MultiHead\}(Q, K, V) = \text\{Concat\}(\text\{head\}_1, ..., \text\{head\}_h)W^O
+\text{MultiHead}(Q, K, V) = \text{Concat}(\text{head}_1, ..., \text{head}_h)W^O
 $$
 
 其中每个 head 的计算：
 
 $$
-\text\{head\}_i = \text\{Attention\}(QW_i^Q, KW_i^K, VW_i^V)
+\text{head}_i = \text{Attention}(QW_i^Q, KW_i^K, VW_i^V)
 $$
 
 ### 位置编码
@@ -132,11 +132,11 @@ $$
 由于自注意力本身不包含位置信息，需要添加位置编码：
 
 $$
-PE_\{(pos, 2i)\} = \sin\left(\frac\{pos\}\{10000^\{2i/d\}\}\right)
+PE_{(pos, 2i)} = \sin\left(\frac{pos}{10000^{2i/d}}\right)
 $$
 
 $$
-PE_\{(pos, 2i+1)\} = \cos\left(\frac\{pos\}\{10000^\{2i/d\}\}\right)
+PE_{(pos, 2i+1)} = \cos\left(\frac{pos}{10000^{2i/d}}\right)
 $$
 
 最终输入：
@@ -150,29 +150,29 @@ $$
 每个位置独立应用前馈网络：
 
 $$
-\text\{FFN\}(x) = \max(0, xW_1 + b_1)W_2 + b_2
+\text{FFN}(x) = \max(0, xW_1 + b_1)W_2 + b_2
 $$
 
 ### 层归一化（Layer Norm）
 
 $$
-\text\{LayerNorm\}(x) = \frac\{x - \mu\}\{\sigma\} \odot \gamma + \beta
+\text{LayerNorm}(x) = \frac{x - \mu}{\sigma} \odot \gamma + \beta
 $$
 
 ### 残差连接
 
 $$
-\text\{Output\} = \text\{LayerNorm\}(x + \text\{Sublayer\}(x))
+\text{Output} = \text{LayerNorm}(x + \text{Sublayer}(x))
 $$
 
 ### 完整 Transformer 层
 
 $$
-X' = \text\{LayerNorm\}(X + \text\{MultiHeadAttention\}(X))
+X' = \text{LayerNorm}(X + \text{MultiHeadAttention}(X))
 $$
 
 $$
-X'' = \text\{LayerNorm\}(X' + \text\{FFN\}(X'))
+X'' = \text{LayerNorm}(X' + \text{FFN}(X'))
 $$
 
 ## 算法步骤
@@ -333,11 +333,11 @@ Scaled = QK^T / 1.41 = [
 Softmax 归一化（以第一行为例）：
 
 $$
-\text\{softmax\}([0.54, 0.38, 0.52, 0.46]) = \frac\{e^\{[0.54, 0.38, 0.52, 0.46]\}\}\{\sum e^\{[0.54, 0.38, 0.52, 0.46]\}\}
+\text{softmax}([0.54, 0.38, 0.52, 0.46]) = \frac{e^{[0.54, 0.38, 0.52, 0.46]}}{\sum e^{[0.54, 0.38, 0.52, 0.46]}}
 $$
 
 $$
-= \frac\{[1.72, 1.46, 1.68, 1.58]\}\{1.72+1.46+1.68+1.58\} = \frac\{[1.72, 1.46, 1.68, 1.58]\}\{6.44\} = [0.27, 0.23, 0.26, 0.24]
+= \frac{[1.72, 1.46, 1.68, 1.58]}{1.72+1.46+1.68+1.58} = \frac{[1.72, 1.46, 1.68, 1.58]}{6.44} = [0.27, 0.23, 0.26, 0.24]
 $$
 
 完整注意力权重矩阵：
@@ -440,7 +440,7 @@ Transformer 在生物信息学中的代表性应用：
 降低复杂度到 O(L × d)：
 
 $$
-\text\{Attention\}(Q, K, V) = \phi(Q) (\phi(K)^T V)
+\text{Attention}(Q, K, V) = \phi(Q) (\phi(K)^T V)
 $$
 
 其中 φ 是核函数。
@@ -450,7 +450,7 @@ $$
 限制每个位置只关注局部窗口：
 
 $$
-\text\{Attention\}_i = \sum_\{j=i-w\}^\{i+w\} \alpha_\{ij\} V_j
+\text{Attention}_i = \sum_{j=i-w}^{i+w} \alpha_{ij} V_j
 $$
 
 其中 w 是窗口大小。
@@ -468,7 +468,7 @@ $$
 使用相对位置而非绝对位置：
 
 $$
-e_\{ij\} = \frac\{(x_i W_Q)(x_j W_K + r_\{i-j\})^T\}\{\sqrt\{d_k\}\}
+e_{ij} = \frac{(x_i W_Q)(x_j W_K + r_{i-j})^T}{\sqrt{d_k}}
 $$
 
 其中 `$r_{i-j}$` 是相对位置嵌入。
@@ -478,7 +478,7 @@ $$
 通过旋转操作编码相对位置：
 
 $$
-f(x, m) = R_\{\Theta,m\} x
+f(x, m) = R_{\Theta,m} x
 $$
 
 其中 $R_{\Theta,m}$ 是旋转矩阵。
@@ -535,7 +535,7 @@ $$
 初始阶段使用较小的学习率，逐步增加到目标值：
 
 $$
-\eta_t = \eta_\{\max\} \cdot \min\left(\frac\{t\}\{T_\{warmup\}\}, 1\right)
+\eta_t = \eta_{\max} \cdot \min\left(\frac{t}{T_{warmup}}, 1\right)
 $$
 
 ### 学习率衰减
@@ -543,7 +543,7 @@ $$
 使用余弦衰减或线性衰减：
 
 $$
-\eta_t = \eta_\{\min\} + \frac\{1\}\{2\}(\eta_\{\max\} - \eta_\{\min\})\left(1 + \cos\left(\frac\{\pi t\}\{T_\{total\}\}\right)\right)
+\eta_t = \eta_{\min} + \frac{1}{2}(\eta_{\max} - \eta_{\min})\left(1 + \cos\left(\frac{\pi t}{T_{total}}\right)\right)
 $$
 
 ### 梯度裁剪
@@ -551,10 +551,10 @@ $$
 防止梯度爆炸：
 
 $$
-g \leftarrow \begin\{cases\}
+g \leftarrow \begin{cases}
 g & \|g\| \leq \theta \\
-\theta \cdot \frac\{g\}\{\|g\|\} & \|g\| > \theta
-\end\{cases\}
+\theta \cdot \frac{g}{\|g\|} & \|g\| > \theta
+\end{cases}
 $$
 
 ### 混合精度训练

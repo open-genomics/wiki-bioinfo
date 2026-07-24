@@ -49,7 +49,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 给定 $K$ 个组学数据矩阵，Joint NMF 将它们分解为：
 
 $$
-X^\{(k)\} \approx W H^\{(k)\}, \quad k = 1, 2, ..., K
+X^{(k)} \approx W H^{(k)}, \quad k = 1, 2, ..., K
 $$
 
 ## 为什么重要
@@ -70,7 +70,7 @@ $$
 对于单个矩阵 $X \in \mathbb{R}^{n \times p}$，NMF 求解：
 
 $$
-\min_\{W \geq 0, H \geq 0\} \|X - WH\|_F^2
+\min_{W \geq 0, H \geq 0} \|X - WH\|_F^2
 $$
 
 其中 $\|\cdot\|_F$ 是 Frobenius 范数。
@@ -88,10 +88,10 @@ Joint NMF 的关键创新是：假设不同组学共享某些基向量。
 Joint NMF 假设它们都由同一组 $r$ 个潜在因子驱动，但每个因子在两组学中的表现不同：
 
 $$
-\begin\{aligned\}
-X^\{(1)\} &\approx W H^\{(1)\} \\
-X^\{(2)\} &\approx W H^\{(2)\}
-\end\{aligned\}
+\begin{aligned}
+X^{(1)} &\approx W H^{(1)} \\
+X^{(2)} &\approx W H^{(2)}
+\end{aligned}
 $$
 
 其中 $W$ 的列可以解释为：
@@ -108,7 +108,7 @@ $$
 Joint NMF 求解以下优化问题：
 
 $$
-\min_\{W \geq 0, H^\{(1)\} \geq 0, ..., H^\{(K)\} \geq 0\} \sum_\{k=1\}^\{K\} \|X^\{(k)\} - W H^\{(k)\}\|_F^2 + \lambda \mathcal\{R\}(W, H)
+\min_{W \geq 0, H^{(1)} \geq 0, ..., H^{(K)} \geq 0} \sum_{k=1}^{K} \|X^{(k)} - W H^{(k)}\|_F^2 + \lambda \mathcal{R}(W, H)
 $$
 
 其中：
@@ -121,7 +121,7 @@ $$
 ### Frobenius 范数展开
 
 $$
-\|X^\{(k)\} - W H^\{(k)\}\|_F^2 = \sum_\{i=1\}^\{n\} \sum_\{j=1\}^\{p_k\} (X^\{(k)\}_\{ij\} - [W H^\{(k)\}]_\{ij\})^2
+\|X^{(k)} - W H^{(k)}\|_F^2 = \sum_{i=1}^{n} \sum_{j=1}^{p_k} (X^{(k)}_{ij} - [W H^{(k)}]_{ij})^2
 $$
 
 ### 优化性质
@@ -199,16 +199,16 @@ $$
 - 甲基化：3 个样本，3 个位点
 
 $$
-X^\{(1)\} = \begin\{bmatrix\}
+X^{(1)} = \begin{bmatrix}
 5 & 3 & 0 & 0 \\
 4 & 2 & 0 & 0 \\
 0 & 0 & 4 & 5
-\end\{bmatrix\}, \quad
-X^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+X^{(2)} = \begin{bmatrix}
 3 & 0 & 0 \\
 2 & 0 & 0 \\
 0 & 4 & 3
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 选择潜在维度 $r = 2$。
@@ -218,19 +218,19 @@ $$
 假设初始化得到：
 
 $$
-W = \begin\{bmatrix\}
+W = \begin{bmatrix}
 0.8 & 0.1 \\
 0.7 & 0.2 \\
 0.1 & 0.9
-\end\{bmatrix\}, \quad
-H^\{(1)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+H^{(1)} = \begin{bmatrix}
 4 & 3 & 0 & 0 \\
 0 & 0 & 3 & 4
-\end\{bmatrix\}, \quad
-H^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+H^{(2)} = \begin{bmatrix}
 3 & 0 & 0 \\
 0 & 3 & 2
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 第一次迭代（简化演示）
@@ -240,16 +240,16 @@ $$
 计算 $W H^{(1)}$ 和 $W H^{(2)}$：
 
 $$
-W H^\{(1)\} = \begin\{bmatrix\}
+W H^{(1)} = \begin{bmatrix}
 3.2 & 2.4 & 0.3 & 0.4 \\
 2.8 & 2.1 & 0.6 & 0.8 \\
 0.4 & 0.3 & 2.7 & 3.6
-\end\{bmatrix\}, \quad
-W H^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+W H^{(2)} = \begin{bmatrix}
 2.4 & 0.3 & 0.2 \\
 2.1 & 0.6 & 0.4 \\
 0.3 & 2.7 & 1.8
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 使用乘法更新规则更新 $W$（具体数值省略）。
@@ -263,11 +263,11 @@ $$
 假设收敛后得到：
 
 $$
-W = \begin\{bmatrix\}
+W = \begin{bmatrix}
 0.85 & 0.12 \\
 0.72 & 0.18 \\
 0.08 & 0.88
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 解释：
@@ -311,7 +311,7 @@ $$
 
 加入组学权重：
 $$
-\min \sum_\{k=1\}^\{K\} w_k \|X^\{(k)\} - W H^\{(k)\}\|_F^2
+\min \sum_{k=1}^{K} w_k \|X^{(k)} - W H^{(k)}\|_F^2
 $$
 
 其中 $w_k$ 是组学 $k$ 的权重，可自动学习。

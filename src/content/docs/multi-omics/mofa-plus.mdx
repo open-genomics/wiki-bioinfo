@@ -52,7 +52,7 @@ MOFA+ 的核心假设是：观测到的多组学数据由一组共享的潜在�
 **生成模型**：
 
 $$
-X^\{(k)\} = W^\{(k)\} Z + \epsilon^\{(k)\}, \quad \epsilon^\{(k)\} \sim \mathcal\{N\}(0, \tau^\{(k)\})
+X^{(k)} = W^{(k)} Z + \epsilon^{(k)}, \quad \epsilon^{(k)} \sim \mathcal{N}(0, \tau^{(k)})
 $$
 
 其中：
@@ -108,30 +108,30 @@ MOFA+ 使用贝叶斯推断：
 
 1. 从先验采样潜在因子：
    $$
-   Z_r \sim \mathcal\{N\}(0, 1), \quad r = 1, ..., R
+   Z_r \sim \mathcal{N}(0, 1), \quad r = 1, ..., R
    $$
 
 2. 从先验采样载荷矩阵：
    $$
-   W^\{(k)\}_\{pr\} \sim \mathcal\{N\}(0, \theta_\{kr\}^\{-1\})
+   W^{(k)}_{pr} \sim \mathcal{N}(0, \theta_{kr}^{-1})
    $$
    其中 $\theta_{kr}$ 是 ARD 先验的精度参数。
 
 3. 生成观测数据：
    $$
-   X^\{(k)\}_\{ij\} \sim \mathcal\{N\}(\sum_\{r=1\}^\{R\} W^\{(k)\}_\{jr\} Z_\{ri\}, \tau_\{kj\}^\{-1\})
+   X^{(k)}_{ij} \sim \mathcal{N}(\sum_{r=1}^{R} W^{(k)}_{jr} Z_{ri}, \tau_{kj}^{-1})
    $$
 
 ### 先验分布
 
 **潜在因子先验**：
 $$
-Z \sim \mathcal\{N\}(0, I_R)
+Z \sim \mathcal{N}(0, I_R)
 $$
 
 **载荷矩阵先验（ARD）**：
 $$
-W^\{(k)\}_\{jr\} \sim \mathcal\{N\}(0, \alpha_\{kr\}^\{-1\})
+W^{(k)}_{jr} \sim \mathcal{N}(0, \alpha_{kr}^{-1})
 $$
 
 其中 $\alpha_{kr}$ 控制因子 $r$ 在组学 $k$ 中的重要性：
@@ -140,7 +140,7 @@ $$
 
 **噪声先验**：
 $$
-\tau_\{kj\} \sim \text\{Gamma\}(a, b)
+\tau_{kj} \sim \text{Gamma}(a, b)
 $$
 
 ### 变分推断
@@ -149,12 +149,12 @@ $$
 
 假设后验的近似形式：
 $$
-q(Z, W) = q(Z) \prod_\{k=1\}^\{K\} q(W^\{(k)\})
+q(Z, W) = q(Z) \prod_{k=1}^{K} q(W^{(k)})
 $$
 
 通过优化 ELBO（Evidence Lower BOund）：
 $$
-\mathcal\{L\} = \mathbb\{E\}_q[\log p(X, Z, W)] - \mathbb\{E\}_q[\log q(Z, W)]
+\mathcal{L} = \mathbb{E}_q[\log p(X, Z, W)] - \mathbb{E}_q[\log q(Z, W)]
 $$
 
 <DefinitionList
@@ -297,16 +297,16 @@ return 分析结果
 - 甲基化：3 个样本，3 个位点
 
 $$
-X^\{(1)\} = \begin\{bmatrix\}
+X^{(1)} = \begin{bmatrix}
 5 & 3 & 0 & 0 \\
 4 & 2 & 0 & 0 \\
 0 & 0 & 4 & 5
-\end\{bmatrix\}, \quad
-X^\{(2)\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+X^{(2)} = \begin{bmatrix}
 3 & 0 & 0 \\
 2 & 0 & 0 \\
 0 & 4 & 3
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 选择潜在因子数 $R = 2$。
@@ -316,16 +316,16 @@ $$
 标准化后（假设）：
 
 $$
-X^\{(1)'\} = \begin\{bmatrix\}
+X^{(1)'} = \begin{bmatrix}
 1.2 & 0.8 & -1.0 & -1.0 \\
 0.8 & 0.2 & -1.0 & -1.0 \\
 -1.0 & -1.0 & 0.8 & 1.2
-\end\{bmatrix\}, \quad
-X^\{(2)'\} = \begin\{bmatrix\}
+\end{bmatrix}, \quad
+X^{(2)'} = \begin{bmatrix}
 1.0 & -0.8 & -0.8 \\
 0.4 & -0.8 & -0.8 \\
 -1.0 & 1.0 & 1.0
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 2：模型初始化
@@ -334,11 +334,11 @@ $$
 
 假设 PCA 得到：
 $$
-Z_\{init\} = \begin\{bmatrix\}
+Z_{init} = \begin{bmatrix}
 1.1 & -0.3 \\
 0.9 & -0.2 \\
 -1.0 & 0.5
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 3：变分推断（简化）
@@ -347,30 +347,30 @@ $$
 
 **因子均值**：
 $$
-Z_\{mean\} = \begin\{bmatrix\}
+Z_{mean} = \begin{bmatrix}
 1.05 & -0.28 \\
 0.92 & -0.22 \\
 -0.97 & 0.50
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 **载荷矩阵（基因表达）**：
 $$
-W^\{(1)\}_\{mean\} = \begin\{bmatrix\}
+W^{(1)}_{mean} = \begin{bmatrix}
 0.85 & 0.10 \\
 0.72 & 0.15 \\
 0.05 & 0.80 \\
 0.02 & 0.88
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 **载荷矩阵（甲基化）**：
 $$
-W^\{(2)\}_\{mean\} = \begin\{bmatrix\}
+W^{(2)}_{mean} = \begin{bmatrix}
 0.78 & 0.05 \\
 0.65 & 0.08 \\
 0.03 & 0.75
-\end\{bmatrix\}
+\end{bmatrix}
 $$
 
 ### 步骤 4：结果解释

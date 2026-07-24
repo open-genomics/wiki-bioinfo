@@ -54,6 +54,6 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 
 ## 相关页面
 
-- [关于本项目](./about/)
+- [导论](./)
 - [如何贡献](./contributing/)
 - [写作规范](./style-guide/)

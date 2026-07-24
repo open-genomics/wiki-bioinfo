@@ -39,7 +39,6 @@ export const sections: Record<string, SectionMeta> = {
     description: '帮助你快速判断本页所属知识层级与在全站中的位置。',
     items: [
       { slug: 'intro' },
-      { slug: 'intro/about' },
       { slug: 'intro/roadmap' },
       { slug: 'intro/algorithms-intro' },
       { slug: 'intro/contributing' },
@@ -69,8 +68,6 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'foundations/exhaustive-search' },
           { slug: 'foundations/greedy-algorithms' },
           { slug: 'foundations/change-problem' },
-          { slug: 'foundations/manhattan-tourist' },
-          { slug: 'foundations/edit-distance-alignment' },
           { slug: 'foundations/approximation-algorithms' },
           { slug: 'foundations/randomized-algorithms' },
           { slug: 'foundations/restriction-mapping' },
@@ -175,7 +172,6 @@ export const sections: Record<string, SectionMeta> = {
         label: '算法应用专题',
         collapsed: true,
         items: [
-          { slug: 'applications/algorithms-overview' },
           { slug: 'applications/dynamic-programming' },
           { slug: 'applications/graph-algorithms' },
           { slug: 'applications/string-algorithms' },

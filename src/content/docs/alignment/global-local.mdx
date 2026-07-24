@@ -22,7 +22,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     { label: '编辑距离', href: '/wiki-bioinfo/alignment/edit-distance' },
     { label: '打分矩阵与罚分', href: '/wiki-bioinfo/alignment/scoring-matrices' },
-    { label: '曼哈顿旅游问题', href: '/wiki-bioinfo/foundations/manhattan-tourist' }
+    { label: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
   ]}
 />
 
@@ -93,13 +93,7 @@ $$
 
 - **回溯终点**：强制从右下角 $(n, m)$ 开始，直到左上角 $(0, 0)$。
 
-### 递推的三个来源
-
-每个单元格 $F(i,j)$ 的值来自三个方向：
-
-1.  **对角线** $F(i-1,j-1) + s(x_i, y_j)$：$x_i$ 与 $y_j$ 对齐（匹配或替换）。
-2.  **上方** $F(i-1,j) + g$：$x_i$ 与 Gap 对齐（即 $x_i$ 被删除）。
-3.  **左方** $F(i,j-1) + g$：Gap 与 $y_j$ 对齐（即在 $x$ 中插入 $y_j$）。
+完整递推推导、三个来源的逐项解释与独立 worked example 见 [Needleman-Wunsch 算法](./needleman-wunsch/)。
 
 ## 4. 局部比对（Local Alignment）
 
@@ -135,6 +129,8 @@ $$H_{\max} = \max_{0 \leq i \leq m, \, 0 \leq j \leq n} H(i,j)$$
 
 - **直觉**：如果当前的对齐得分变成了负数（说明当前匹配非常糟糕），算法允许在这里直接放弃之前的对齐，将得分设为 0，从当前点重新开始寻找新的高分片段。
 - **回溯终点**：从整个矩阵中的**最高得分点**开始回溯，直到遇到第一个得分为 0 的单元格。
+
+完整递推推导与独立 worked example 见 [Smith-Waterman 算法](./smith-waterman/)。
 
 ## 5. Worked Example：全局比对 vs 局部比对
 

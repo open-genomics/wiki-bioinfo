@@ -51,7 +51,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### 关键成果
 
-- **蛋白质结构预测**：Meta AI Research 的 ESM-2 模型仅通过序列预训练，就能在没有 MSA 输入的情况下预测蛋白质接触图，进而推断 3D 结构。这证明了语言模型确实从序列中学到了关于蛋白质折叠的深层知识。
+- **蛋白质结构预测**：Meta AI Research 的 ESM-2 模型仅通过序列预训练，就能不输入 MSA 预测蛋白质接触图，进而推断 3D 结构。这证明了语言模型确实从序列中学到了关于蛋白质折叠的深层知识。
 - **蛋白质功能预测**：ESM 和 ProtBert 的 Embedding 在酶分类（EC number）、基因本体（GO） 注释等任务上超越了传统的基于序列比对的方法。
 - **变异效应预测**：语言模型可以预测单个氨基酸替换对蛋白质功能的影响，为遗传病研究提供参考。
 
@@ -59,7 +59,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### 自监督预训练任务
 
-为了让模型在没有标签的情况下学习，我们设计了以下"游戏"：
+为了让模型在无标签时学习，我们设计了以下"游戏"：
 
 <DefinitionList
   items={[

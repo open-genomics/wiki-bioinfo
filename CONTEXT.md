@@ -17,6 +17,37 @@
 | `data-references` | 数据、注释与资源 | 参考版本、注释体系、数据格式与数据库 |
 | `appendix` | 附录 | 术语、索引与参考资料 |
 
+### 子板块（Subsection）
+
+板块内部按主题分组，在 sidebar 中以折叠组形式呈现。子板块的配置在 `src/data/sections.ts` 中通过嵌套 `items` 定义，是 sidebar 层级的单一真相源。
+
+| 所属板块 | 子板块 | 包含的目录 |
+|----------|--------|-----------|
+| `foundations` | 算法专题 | `graph-algorithms`、`dynamic-programming-basics`、`divide-and-conquer` 等 |
+| `core-methods` | 序列表示与索引 | `sequence/` |
+| `core-methods` | 序列比对 | `alignment/` |
+| `core-methods` | 组装与图算法 | `assembly/` |
+| `core-methods` | 概率模型与模式识别 | `models/` |
+| `applications` | 算法应用专题 | `applications/dynamic-programming` 等 |
+| `applications` | 工作流与案例 | `workflows/` |
+| `applications` | 变异检测 | `variants/` |
+| `applications` | 转录组 | `transcriptomics/` |
+| `applications` | 单细胞组学 | `single-cell/` |
+| `applications` | 表观基因组学 | `epigenomics/` |
+| `applications` | 群体遗传学 | `population/` |
+| `applications` | 长读长测序 | `long-read/` |
+| `applications` | 空间转录组 | `spatial/` |
+| `applications` | 蛋白质组学 | `proteomics/` |
+| `applications` | 临床变异解释 | `clinical-variants/` |
+| `applications` | 结构生物信息学 | `structure-bioinfo/` |
+| `applications` | 多组学整合 | `multi-omics/` |
+| `applications` | 系统发育与进化 | `phylogeny/` |
+| `applications` | 机器学习与基础模型 | `ml-bioinfo/` |
+| `data-references` | 数据库与资源 | `databases/` |
+| `data-references` | 常见数据格式 | `formats/` |
+
+子板块目录通常有自己的 `index.mdx` 入口页，同时作为 sidebar 分组的第一项。`getSectionFromSlug()` 通过路径首段自动推导所属板块，无需手动维护映射。
+
 ### 页面类型
 
 - **Concept Page**：概念页，围绕"是什么 → 为什么重要 → 核心概念 → 相关页面"展开

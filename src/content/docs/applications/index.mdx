@@ -15,23 +15,12 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 这一部分承接前面的基础与方法层，将其重新放回具体分析任务中：DNA-seq、RNA-seq、单细胞、表观组、群体遗传学、长读长、空间组学、蛋白质组学与结构生物信息学等问题，最终都需要通过工作流和案例来理解。
 
-## 这一部分在全站中的位置
-
-它是整站 6 个主入口之一，用来回答"前面学的那些方法最后到底用在什么地方"。这里不是再讲一遍算法，而是把索引、比对、组装、概率模型、数据格式与参考资源重新放回真实任务边界中。
-
-## 为什么重要
-
-若只有方法页而无应用层，读者容易陷入"知道术语，但不了解任务边界"的知识碎片化问题。真正的分析工作通常还要求同时理解：
-
-- 任务的输入输出对象是什么；
-- 哪些方法在该场景下是关键依赖；
-- 数据、注释和参考版本将如何影响解释；
-- 不同应用方向为何提出不同的证据标准与流程设计。
+这里不是再讲一遍算法，而是把索引、比对、组装、概率模型、数据格式与参考资源重新放回真实任务边界中。若只有方法页而无应用层，读者容易陷入"知道术语，但不了解任务边界"的碎片化问题——真正的分析工作还要求理解任务的输入输出对象、哪些方法是关键依赖、数据版本如何影响解释，以及不同方向为何提出不同的证据标准与流程设计。
 
 ## 推荐阅读顺序
 
 1. [工作流与案例](../workflows/index/)
-2. [算法总览](./algorithms-overview/)
+2. [算法设计范式](../core-methods/algorithm-design-paradigms/)
 3. [动态规划算法](./dynamic-programming/)
 4. [图算法](./graph-algorithms/)
 5. [字符串算法与索引](./string-algorithms/)
@@ -60,13 +49,6 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
       badge: '起点',
       meta: 'workflow overview',
       description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法重新放回真实分析流程。',
-    },
-    {
-      title: '算法总览',
-      to: '/wiki-bioinfo/applications/algorithms-overview',
-      badge: '算法',
-      meta: 'algorithms overview',
-      description: '系统梳理生物信息学中的核心算法范式：动态规划、图算法、字符串索引与概率模型。',
     },
     {
       title: '动态规划算法',

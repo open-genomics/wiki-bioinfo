@@ -37,7 +37,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 - 比较次数：N × (N-1) / 2 ≈ **3.12 亿次**
 - 每次比对（Smith-Waterman）：O(L²)，L = 10 kb
 
-这在计算上是不可行的。因此，我们需要一种方法，在不进行显式比对的情况下，**快速识别可能重叠的 read 对**。
+这在计算上是不可行的。因此，我们需要一种方法，不进行显式比对也能**快速识别可能重叠的 read 对**。
 
 ## 核心思想：从特征共享到候选筛选
 

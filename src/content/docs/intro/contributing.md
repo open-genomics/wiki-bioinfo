@@ -49,6 +49,6 @@ npm run check
 
 ## 相关页面
 
-- [关于本项目](./about/)
+- [导论](./)
 - [学习路线](./roadmap/)
 - [写作规范](./style-guide/)

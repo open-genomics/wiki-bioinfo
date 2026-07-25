@@ -1,0 +1,616 @@
+---
+title: "数据库搜索与索引算法"
+description: "序列数据库搜索的核心算法：k-mer 索引、Seed-and-Extend、BWT/FM-index 与 BLAST 算法原理"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import DataTable from '@/components/docs/DataTable.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="序列数据库搜索面临的核心挑战：如何在数十亿碱基的数据库中快速找到与查询序列相似的记录。本章介绍 k-mer 索引、Seed-and-Extend 策略、BWT/FM-index 等核心算法，以及 BLAST 等工具的实现原理。"
+  items={[
+    '核心矛盾：搜索敏感性（Sensitivity）vs 计算速度（Speed）',
+    '索引结构将线性扫描转化为亚线性查询，是解决矛盾的关键',
+    'Seed-and-Extend 策略是现代比对工具的通用范式',
+    '理解算法原理是合理调参和解释结果的基础',
+  ]}
+/>
+
+## 9.10 为什么需要专门的数据库搜索算法
+
+### 9.10.1 性能瓶颈分析
+
+| 场景 | 数据规模 | 穷举搜索复杂度 | 实际耗时（使用索引算法） |
+|------|----------|---------------|------------------------|
+| 蛋白质序列 vs NCBI nr | ~$10^8$ 条序列，数百 GB | $O(10^{10})$ 操作，数周 | 秒级（BLAST） |
+| 短读长比对 vs 人类基因组 | 3 Gb 参考 | 每 read $O(3 \times 10^9)$，不可行 | 分钟级（BWA） |
+| 长读长比对 vs 人类基因组 | 3 Gb 参考 | 不可行 | 小时级（minimap2） |
+
+### 9.10.2 与理解算法的实际价值
+
+| 应用场景 | 需要理解的算法概念 |
+|---------|------------------|
+| **参数调优** | Word size（k-mer 长度）设为 3 vs 11 对敏感性的影响 |
+| **结果解释** | E-value = 0.001 时，假阳性概率约 0.1%（假设搜索 1000 次） |
+| **工具选择** | RNA-seq 用 STAR（suffix array），变异检测用 BWA-MEM（FM-index） |
+
+### 9.10.3 生物序列搜索的特殊约束
+
+与一般字符串匹配不同，生物序列搜索需考虑：
+
+| 约束类型 | 具体表现 | 算法影响 |
+|---------|---------|---------|
+| **数据规模** | 人类基因组 3 Gb，NCBI nr 数百 GB | 必须建立索引，避免线性扫描 |
+| **序列变异** | SNP、Indel、保守区段 | 需支持近似匹配 |
+| **生物学信号** | 功能域、保守序列 | 评分矩阵（BLOSUM/PAM）而非简单匹配 |
+| **计算资源** | 内存、I/O、并行环境 | 索引压缩、分块处理 |
+
+<PrerequisitesBox
+  items={[
+    {label: '全局比对与局部比对', href: '/core-methods/alignment/global-local'},
+    {label: '序列与字符串', href: '/foundations/sequences-and-strings'},
+    {label: '算法与复杂度', href: '/foundations/algorithms-and-complexity'},
+  ]}
+/>
+
+## 9.11 核心算法范式
+
+### 9.11.1 穷举搜索：理论基线
+
+**问题 9.11.1（穷举数据库搜索）**
+
+*输入*：查询序列 $Q$（长度 $m$），数据库 $D$（总长度 $L$），评分矩阵 $M$
+
+*输出*：与 $Q$ 相似度最高的数据库记录
+
+**伪代码**：
+```text
+EXHAUSTIVE-SEARCH(Q, D, M)
+1  best-score ← -∞
+2  best-match ← NULL
+3  for each sequence S in D
+4      score ← GLOBAL-ALIGNMENT(Q, S, M)
+5      if score > best-score
+6          best-score ← score
+7          best-match ← S
+8  return best-match, best-score
+```
+
+**复杂度分析**：
+- 时间：$O(N \cdot m \cdot L_{avg})$，其中 $N$ 为序列数
+- 空间：$O(1)$（除输入外）
+
+对于人类基因组比对（$L = 3 \times 10^9$，$m = 150$），单次查询约需 $4.5 \times 10^{11}$ 次操作——**实际上完全不可行**。
+
+**意义**：穷举搜索作为理论基线，凸显索引结构带来的加速效果。
+
+### 9.11.2 k-mer 索引：从线性到亚线性
+
+**核心观察**：如果两条序列相似，它们必然共享若干长度为 $k$ 的精确匹配子串（k-mer）。
+
+#### 索引构建算法
+
+```text
+BUILD-KMER-INDEX(D, k)
+1  index ← empty hash table
+2  for each sequence S in D
+3      for i ← 1 to |S| - k + 1
+4          kmer ← S[i..i+k-1]
+5          if kmer not in index
+6              index[kmer] ← empty list
+7          index[kmer].append((seq-id, i))
+8  return index
+```
+
+**空间复杂度**：$O(N)$，需存储所有 k-mer 及其位置
+
+#### 搜索算法
+
+```text
+KMER-SEARCH(Q, index, k, threshold)
+1  candidates ← empty set
+2  for i ← 1 to |Q| - k + 1
+3      kmer ← Q[i..i+k-1]
+4      if kmer in index
+5          for each (seq-id, pos) in index[kmer]
+6              candidates.add(seq-id)
+7  for each seq-id in candidates
+8      score ← VERIFY(Q, D[seq-id])  // 详细比对
+9      if score ≥ threshold
+10         output (seq-id, score)
+```
+
+**时间复杂度**：$O(m + C \cdot L)$，其中 $C$ 为候选数，通常 $C \ll N$
+
+#### k 值选择的权衡
+
+| k 值 | k-mer 频率 | 候选数量 | 敏感性 | 适用场景 |
+|------|-----------|---------|--------|----------|
+| 小（k=5） | 高 | 多 | 高 | 远缘同源搜索 |
+| 中（k=11-15） | 中 | 中等 | 中 | 一般数据库搜索 |
+| 大（k=21-31） | 低 | 少 | 低 | 精确匹配、重复检测 |
+
+### 9.11.3 Seed-and-Extend：两阶段启发式搜索
+
+**问题 9.11.2（启发式相似性搜索）**
+
+*输入*：查询序列 $Q$，数据库 $D$，seed 长度 $k$，扩展阈值 $X$，最终得分阈值 $T$
+
+*输出*：高得分比对（High-Scoring Segment Pairs, HSPs）列表
+
+**核心矛盾**：k-mer 索引只找到精确匹配，但生物学序列存在变异。如何在找到 seed 后评估真实相似性？
+
+#### 算法框架
+
+```text
+SEED-AND-EXTEND(Q, D, k, X, T)
+// Q: query, D: database, k: seed length
+// X: extension threshold, T: final score threshold
+
+1  seeds ← FIND-SEEDS(Q, D, k)     // 用 k-mer 索引找精确匹配
+2  high-scoring-pairs ← empty list
+3
+4  for each (q-pos, d-seq, d-pos) in seeds
+5      score ← EXTEND(q-pos, d-pos, Q, D[d-seq], X)
+6      if score ≥ T
+7          high-scoring-pairs.append((d-seq, score, alignment))
+8
+9  return SORT-BY-SCORE(high-scoring-pairs)
+```
+
+#### Seed 查找阶段
+
+**策略选择**：
+- **精确 k-mer**：快速，但漏掉含变异的同源序列
+- **间隔种子（Spaced seeds）**：允许特定位置错配，如 `111*11*1`
+- **多个种子组合**：提高敏感性，如 PatternHunter
+
+#### Extend 扩展阶段
+
+**无 gap 扩展**：从 seed 向两侧延伸，仅允许错配
+- 停止条件：连续 $X$ 个位置得分下降
+- 复杂度：$O(L)$ 每 seed
+
+**带 gap 验证**：对高得分区域运行 Smith-Waterman
+- 仅处理通过无 gap 扩展的候选
+- 保证最终比对的准确性
+
+#### 敏感性-速度权衡
+
+| 参数设置 | 敏感性 | 速度 | 适用场景 |
+|---------|--------|------|----------|
+| 短 seed (k=3), 低阈值 | 高 | 慢 | 远缘蛋白搜索 |
+| 长 seed (k=11), 高阈值 | 低 | 快 | 近缘核酸搜索 |
+| 默认参数（BLASTN k=11, BLASTP k=3） | 中 | 中 | 一般搜索 |
+
+### 9.11.4 Burrows-Wheeler Transform 与 FM-index
+
+**问题 9.11.3（压缩索引的精确匹配）**
+
+*输入*：文本 $T$（如人类基因组），模式 $P$（如 read）
+
+*输出*：$P$ 在 $T$ 中的所有出现位置
+
+*约束*：索引大小应远小于 $T$（压缩存储），查询时间应与 $|T|$ 无关
+
+**背景**：人类基因组 3 Gb，构建 k-mer 索引需存储数十亿个 k-mer，内存开销巨大。BWT/FM-index 提供压缩存储同时支持快速搜索的解决方案。
+
+#### BWT 变换
+
+**定义**：对序列 $S$ 的所有循环移位按字典序排序，取最后一列。
+
+**示例**：$S = \text{banana}$
+
+| 循环移位 | 排序后 |
+|---------|--------|
+| banana | anana**b** |
+| ananab | anab**n** |
+| nanaba | ana**b**a |
+| anaban | banana |
+| nabana | ba**n**ana |
+| abanan | n**a**bana |
+
+BWT(S) = **bnnbaaa**
+
+**关键性质**：
+1. **可逆性**：可从 BWT 完全恢复原始序列
+2. **局部性**：相似序列产生相似的后缀，BWT 输出字符聚类（利于压缩）
+3. **Last-First 映射**：第 $i$ 个出现的字符 $c$ 在最后一列，对应第一列中第 $i$ 个 $c$
+
+#### FM-index 结构
+
+FM-index = BWT + 两个辅助数组：
+- $C[c]$：字典中小于 $c$ 的字符总数
+- $Occ(c, i)$：字符 $c$ 在 BWT[1..i] 中出现次数
+
+**精确匹配算法**：
+
+```text
+EXACT-MATCH(P, T)  // P: pattern, T: text
+1  (top, bottom) ← (1, |T|)
+2  for i ← |P| down to 1
+3      c ← P[i]
+4      top ← C[c] + Occ(c, top-1) + 1
+5      bottom ← C[c] + Occ(c, bottom)
+6      if top > bottom
+7          return "not found"
+8  return (top, bottom)  // 匹配区间
+```
+
+**时间复杂度**：$O(|P|)$ —— 与文本长度无关！
+
+**空间复杂度**：约 0.5-1 倍原始文本（使用压缩）
+
+#### 近似匹配扩展
+
+通过"向后搜索"（backward search）的变体支持错配：
+- 允许最多 $k$ 个错配：$O(|P| \cdot \Sigma^k)$
+- BWA-MEM 使用"最大可扩展匹配"（MEM）策略处理 indel
+
+### 9.11.5 统计显著性评估
+
+**问题 9.11.4（比对得分的显著性检验）**
+
+*输入*：比对原始得分 $S$，查询长度 $m$，数据库总长度 $n$，评分矩阵参数 $\lambda, K$
+
+*输出*：E-value（随机期望命中次数）
+
+**核心问题**：搜索返回的比对得分高，是因为真实同源，还是随机巧合？
+
+#### Karlin-Altschul 统计理论
+
+**核心假设**：无相似性的随机序列比对得分服从极值分布（Gumbel分布）
+
+#### 评分体系
+
+**1. 原始得分（Raw Score, $S$）**
+
+$$S = \sum_{i} s(a_i, b_i) + \sum_{j} g(j)$$
+
+其中 $s$ 为替换矩阵得分，$g$ 为 gap 罚分
+
+**2. Bit 得分（标准化）**
+
+$$S' = \frac{\lambda S - \ln K}{\ln 2}$$
+
+- 与评分矩阵和数据库大小无关
+- 便于不同搜索间比较
+
+**3. E-value（期望值）**
+
+$$E = Kmn e^{-\lambda S}$$
+
+其中 $m, n$ 分别为 query 和数据库序列长度
+
+#### E-value 的解释
+
+| E-value | 含义 | 可信度 |
+|---------|------|--------|
+| $< 10^{-50}$ | 极显著 | 几乎确定为同源 |
+| $10^{-50}$ 到 $10^{-6}$ | 显著 | 高度可信的同源 |
+| $10^{-6}$ 到 $0.01$ | 边缘显著 | 可能同源，需验证 |
+| $> 0.01$ | 不显著 | 可能是假阳性 |
+
+**关键洞察**：E-value 与数据库大小 $n$ 成正比。同一比对在更大数据库中会有更高 E-value。
+
+## 9.12 按问题选择算法策略
+
+### 9.12.1 算法选择决策矩阵
+
+<DataTable variant="decision-matrix"
+  rows={[
+    {
+      scenario: '在大型数据库（如 NCBI nr）中搜索蛋白质序列',
+      recommendation: 'BLAST（seed-and-extend + 启发式评分）',
+      rationale: '需要在速度和敏感性之间平衡，seed-and-extend 避免穷举，统计检验评估显著性。',
+    },
+    {
+      scenario: '将数百万条短 read 映射到人类基因组',
+      recommendation: 'BWA/Bowtie（FM-index + seed-and-extend）',
+      rationale: 'FM-index 提供内存高效的参考索引，seed-and-extend 快速定位比对位置。',
+    },
+    {
+      scenario: '在小型自定义数据库中做精确搜索',
+      recommendation: 'k-mer 索引或简单哈希',
+      rationale: '数据库小，精确匹配即可，无需复杂的近似匹配逻辑。',
+    },
+    {
+      scenario: '寻找高度保守的 motif',
+      recommendation: '短 k-mer（k=5-8）索引',
+      rationale: '保守 motif 意味着精确匹配，短 k-mer 能捕获所有出现位置。',
+    },
+    {
+      scenario: '处理长读长测序数据（PacBio/Nanopore）',
+      recommendation: 'minimap2（minimizer 索引）',
+      rationale: 'minimizer 是 k-mer 的变体，更适合处理高错误率的长序列。',
+    },
+  ]}
+/>
+
+## 9.13 经典算法详解
+
+### 9.13.1 BLAST：Basic Local Alignment Search Tool
+
+**问题 9.13.1（BLAST 数据库搜索）**
+
+*输入*：
+- 查询序列 $Q$（蛋白质或核酸）
+- 序列数据库 $D$
+- 替换评分矩阵 $M$（如 BLOSUM62）
+- 参数：word size $w$，邻居阈值 $T$，扩展阈值 $X$
+
+*输出*：与 $Q$ 局部相似性统计显著的数据库序列列表（含比对结果）
+
+#### 完整算法流程
+
+```text
+BLAST(Q, D, M, w, T, X)
+1  // ===== 阶段 1：索引构建（离线） =====
+2  index ← BUILD-KMER-INDEX(D, w)
+3
+4  // ===== 阶段 2：Query 预处理 =====
+5  neighborhood ← empty set
+6  for i ← 1 to |Q| - w + 1
+7      word ← Q[i..i+w-1]
+8      neighborhood ← neighborhood ∪ {word}
+9      // 生成得分 ≥ T 的邻居（蛋白质）
+10     neighbors ← GENERATE-NEIGHBORS(word, M, T)
+11     neighborhood ← neighborhood ∪ neighbors
+12
+13 // ===== 阶段 3：Seed 查找 =====
+14 seeds ← empty list
+15 for each word in neighborhood
+16     hits ← QUERY-INDEX(index, word)
+17     for each (seq-id, pos) in hits
+18         seeds.append((seq-id, pos, word-score))
+19
+20 // ===== 阶段 4：无 gap 扩展 =====
+21 hsps ← empty list  // High-Scoring Segment Pairs
+22 for each (seq-id, pos, score) in seeds
+23     (left-score, right-score) ← UNGAPPED-EXTEND(Q, D[seq-id], pos, X)
+24     total-score ← score + left-score + right-score
+25     if total-score ≥ cutoff
+26         hsps.append((seq-id, total-score, alignment-info))
+27
+28 // ===== 阶段 5：带 gap 验证 =====
+29 results ← empty list
+30 for each hsp in TOP-SCORED(hsps, K)  // 保留前 K 个
+31     alignment ← SMITH-WATERMAN(hsp.region)
+32     bit-score ← CALCULATE-BIT-SCORE(alignment)
+33     e-value ← CALCULATE-E-VALUE(bit-score, |Q|, |D|)
+34     results.append((seq-id, alignment, bit-score, e-value))
+35
+36 return SORT-BY-E-VALUE(results)
+```
+
+#### 算法优化要点
+
+| 阶段 | 优化策略 | 效果 |
+|------|---------|------|
+| Seed 查找 | 邻居生成（蛋白质）或精确匹配（核酸） | 捕获含变异的同源 |
+| 无 gap 扩展 | 早期终止（得分连续下降 $X$） | 避免在低质量区域浪费时间 |
+| Gap 验证 | 仅对高分 HSP 运行 DP | 将 $O(N)$ 降至 $O(K)$ |
+| 统计排序 | Karlin-Altschul E-value | 区分真实同源与随机匹配 |
+
+### 9.13.2 BWA-MEM：基于 FM-index 的短读长比对
+
+**问题 9.13.2（短读长比对）**
+
+*输入*：短读长集合 $R = \{R_1, ..., R_n\}$，参考基因组 $G$
+
+*输出*：每条 read 在 $G$ 上的最优比对位置（允许错配和 indel）
+
+#### 核心算法步骤
+
+```text
+BWA-MEM(R, G)
+1  // ===== 离线：构建索引 =====
+2  bwt ← BWT-TRANSFORM(G + '$')
+3  fm-index ← BUILD-FM-INDEX(bwt)
+4
+5  for each read R in R
+6      // ===== 步骤 1：找 MEM =====
+7      mems ← FIND-MEMS(R, G, fm-index)
+8      // MEM = 不能在两端延伸的精确匹配
+9
+10     // ===== 步骤 2：链式匹配 =====
+11     chains ← CHAIN-MEMS(mems)
+12     // 选择共线且距离合理的 MEM 组合
+13
+14     // ===== 步骤 3：种子扩展 =====
+15     for each chain in chains
+16         alignment ← SEED-AND-EXTEND(R, chain.region, G)
+17         score ← SCORE-ALIGNMENT(alignment)
+18         candidates.append((alignment, score))
+19
+20     // ===== 步骤 4：输出 =====
+21     output BEST-ALIGNMENT(candidates)
+```
+
+#### MEM 查找算法
+
+```text
+FIND-MEMS(R, G, fm-index)
+1  mems ← empty list
+2  i ← 1
+3  while i ≤ |R|
+4      // 向后搜索找最长匹配
+5      (len, sa-interval) ← LONGEST-MATCH(R[i..], fm-index)
+6      if len ≥ min-seed-length
+7          mems.append((i, len, sa-interval))
+8          i ← i + 1  // 继续找下一个
+9      else
+10         i ← i + 1
+11 return mems
+```
+
+#### 关键优势
+
+- **内存效率**：人类基因组 FM-index 仅需 ~4 GB
+- **全基因组搜索**：无需限制性染色体范围
+- **嵌合比对**：通过链式匹配处理剪接位点（RNA-seq）
+
+## 9.14 工作示例：蛋白质序列的同源搜索
+
+### 9.14.1 问题场景
+
+假设你有一条蛋白质序列：
+```text
+MVLSEGEWQLVLHVWAKVEADVAGHGQDILIRLFKSHPETLEKFDRFKHLKTEAEMKASEDLKKH
+GVTVLTALGAILKKKGHHEAELKPLAQSHATKHKIPIKYLEFISEAIIHVLHSRHPGDFGADA
+QGAMNKALELFRKDIAAKYKELGYQG
+```
+
+**目标**：在 UniProt 数据库（数亿条序列）中找到同源蛋白。
+
+### 9.14.2 算法对比分析
+
+| 方法 | 时间复杂度 | 实际耗时 | 结果质量 |
+|-----|-----------|---------|---------|
+| 穷举比对 | $O(10^8 \times 300 \times 300)$ | 数天至数周 | 最优（全局最优） |
+| BLAST | $O(m \cdot 4^w + C \cdot L^2)$ | 秒级 | 近似最优（统计显著） |
+
+**BLAST 执行流程**：
+1. **Query 预处理**：提取 words（如 `MVL`、`VLS`、`LSE`...），蛋白质生成邻居
+2. **Seed 查找**：在预构建的索引中查询，找到数千候选位置
+3. **无 gap 扩展**：从 seed 向两侧延伸，形成 HSP
+4. **统计验证**：计算 E-value，过滤随机匹配
+5. **结果返回**：几秒钟内返回带 E-value 的比对列表
+
+### 9.14.3 参数调优策略
+
+基于算法理解优化搜索：
+
+| 参数 | 保守设置 | 敏感设置 | 权衡 |
+|-----|---------|---------|------|
+| E-value 阈值 | $10^{-6}$ | $10^{-3}$ | 严格 vs 漏检远缘同源 |
+| Word size | 3 | 2 | 速度 vs 敏感性 |
+| 低复杂度过滤 | 开启 | 关闭 | 减少假阳性 vs 捕获真实信号 |
+
+## 9.15 与真实工具或流程的连接
+
+### 9.15.1 工具与算法映射
+
+<NoteCard variant="tools"
+  items={[
+    'BLAST：seed-and-extend + 统计检验的典型实现，几乎所有数据库搜索的起点',
+    'BWA/Bowtie：基于 FM-index 的 read mapping，现代 NGS 流程的基础',
+    'minimap2：基于 minimizer 索引，针对长读长和高错误率优化',
+    'HMMER：基于 profile HMM 的蛋白质家族搜索，比 BLAST 更敏感但更慢',
+    'DIAMOND：BLAST 的加速版本，使用双索引和 SIMD 优化',
+  ]}
+/>
+
+### 9.15.2 流程集成节点
+
+| 分析阶段 | 典型工具 | 核心算法 | 关键参数 |
+|---------|---------|---------|---------|
+| 参考序列比对 | BWA-MEM | FM-index + MEM | seed 长度、错配惩罚 |
+| 蛋白质注释 | BLASTP | Seed-and-Extend | word size、E-value |
+| 重复序列屏蔽 | RepeatMasker | k-mer 索引 | k-mer 频率阈值 |
+| 长读长比对 | minimap2 | minimizer | 最小匹配长度 |
+| 系统发育分析 | HMMER | Profile HMM | 家族特异性模型 |
+
+## 9.16 常见误区与注意事项
+
+<NoteCard variant="pitfalls"
+  items={[
+    '认为 E-value 越小越好：E-value 依赖于数据库大小，不同数据库的 E-value 不能直接比较',
+    '忽略 word size 的影响：word size 太大会漏掉真实同源，太小会产生太多假阳性',
+    '混淆索引和搜索：索引构建是一次性成本，搜索是重复操作，应该针对场景优化',
+    '认为算法越复杂越好：简单问题用简单算法，复杂度应该与需求匹配',
+    '忘记统计检验：得分高不一定显著，必须看 E-value 或 p-value',
+    '忽视索引内存占用：k-mer 索引可能超出可用内存，需考虑压缩或分块策略',
+    '未区分局部与全局比对：BLAST 是局部比对，不适合找全局最优解',
+  ]}
+/>
+
+## 9.17 算法复杂度对比总结
+
+### 9.17.1 理论复杂度比较
+
+| 算法 | 索引构建时间 | 搜索时间 | 内存使用 | 敏感性 |
+|-----|------------|---------|---------|--------|
+| 穷举搜索 | 无 | $O(N \cdot L)$ | $O(1)$ | 最高 |
+| k-mer 索引 | $O(N)$ | $O(m + C \cdot L)$ | $O(N)$ | 高 |
+| FM-index | $O(N)$ | $O(m)$ | $O(N)$（压缩后） | 中高 |
+| BLAST | $O(N)$ | $O(m \cdot 4^w + K \cdot L^2)$ | $O(N)$ | 中 |
+| minimap2 | $O(N)$ | $O(m)$ | $O(N)$ | 中 |
+
+*注：$N$ 为数据库大小，$m$ 为 query 长度，$L$ 为平均序列长度，$C$ 为候选数，$K$ 为高分 HSP 数*
+
+### 9.17.2 选择决策树
+
+```text
+问题类型 → 数据规模 → 推荐算法
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+蛋白质搜索 → 大型数据库 → BLAST / DIAMOND
+         → 家族分析 → HMMER
+短读长比对 → 人类基因组 → BWA-MEM / Bowtie2
+         → 拼接基因组 → BWA
+长读长比对 → PacBio/Nanopore → minimap2
+重复检测 → 基因组 → k-mer 索引
+```
+
+## 9.18 扩展阅读
+
+### 9.18.1 高级索引结构
+
+| 结构 | 特性 | 代表工具 |
+|-----|------|---------|
+| **Minimizer** | k-mer 的采样变体，减少索引大小 | minimap2 |
+| **Suffix Array / Suffix Tree** | 支持复杂查询，模式匹配强大 | Bowtie1, MUMmer |
+| **Bloom Filter** | 概率性数据结构，快速判断"是否存在" | Lighter（测序错误纠正） |
+
+### 9.18.2 近似算法
+
+| 方法 | 原理 | 应用场景 |
+|-----|------|---------|
+| **局部敏感哈希（LSH）** | 高维数据近似相似性搜索 | 大规模蛋白聚类 |
+| **Sketching** | 用短指纹代表长序列，快速估算相似性 | Mash, Sourmash |
+| **MinHash** | Jaccard 相似性的概率估计 | 基因组距离估算 |
+
+### 9.18.3 并行与分布式
+
+- **MapReduce**：BLAST 的分布式实现（如 CloudBurst）
+- **GPU 加速**：CUDASW++（Smith-Waterman GPU 实现）
+- **云端服务**：NCBI BLAST Cloud、EBI Search API
+
+## 9.19 相关页面
+
+<LinkGrid
+  items={[
+    {
+      title: '序列表示与索引',
+      to: '/core-methods/sequence/',
+      label: '索引基础',
+      description: '深入了解 k-mer、suffix array、FM-index 等索引结构。',
+    },
+    {
+      title: '序列比对',
+      to: '/core-methods/alignment/',
+      label: '比对算法',
+      description: '动态规划、全局比对、局部比对等核心比对算法。',
+    },
+    {
+      title: '算法与复杂度',
+      to: '/foundations/algorithms-and-complexity',
+      label: '算法基础',
+      description: '从更高层理解生物信息学中的算法范式。',
+    },
+    {
+      title: '常用数据库与资源',
+      to: '/data-references/databases/common-resources',
+      label: '数据库概览',
+      description: '了解 NCBI、Ensembl、UniProt 等数据库的特点和用途。',
+    },
+    {
+      title: 'BLAST 算法详解',
+      to: '/core-methods/alignment/blast',
+      label: '算法详解',
+      description: 'BLAST seed-and-extend 策略的完整算法分析。',
+    },
+  ]}
+/>

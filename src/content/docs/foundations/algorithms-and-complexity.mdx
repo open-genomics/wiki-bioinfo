@@ -5,7 +5,7 @@ title: "算法与复杂度"
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
@@ -20,9 +20,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '概率、图与动态规划预备', href: '/wiki-bioinfo/foundations/probability-and-graphs' },
-    { label: '分治算法基础', href: '/wiki-bioinfo/foundations/divide-and-conquer' },
-    { label: '动态规划基础', href: '/wiki-bioinfo/foundations/dynamic-programming-basics' }
+    { label: '概率、图与动态规划预备', href: '/foundations/probability-and-graphs' },
+    { label: '分治算法基础', href: '/core-methods/algorithms/divide-and-conquer' },
+    { label: '动态规划基础', href: '/core-methods/algorithms/dynamic-programming-basics' }
   ]}
 />
 
@@ -170,11 +170,11 @@ graph LR
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
-    { title: '穷举搜索', to: '/wiki-bioinfo/foundations/exhaustive-search', description: '理解暴力破解与剪枝' },
-    { title: '换钱问题', to: '/wiki-bioinfo/foundations/change-problem', description: '动态规划的入门案例' },
-    { title: '基因组重排', to: '/wiki-bioinfo/foundations/genome-rearrangements', description: '贪心算法的挑战' },
-    { title: '序列比对入门', to: '/wiki-bioinfo/alignment', description: '将算法应用于真实的生物序列' }
+<LinkGrid
+  items={[
+    { title: '穷举搜索', to: '/core-methods/algorithms/exhaustive-search', description: '理解暴力破解与剪枝' },
+    { title: '换钱问题', to: '/core-methods/algorithms/change-problem', description: '动态规划的入门案例' },
+    { title: '基因组重排', to: '/core-methods/algorithms/genome-rearrangements', description: '贪心算法的挑战' },
+    { title: '序列比对入门', to: '/core-methods/alignment', description: '将算法应用于真实的生物序列' }
   ]}
 />

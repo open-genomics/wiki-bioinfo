@@ -144,5 +144,5 @@ description: 生物信息学核心术语的中英文对照与简要定义，涵�
 - [生物信息学中的基础对象](../foundations/biology-basics/)
 - [序列、字符串与坐标系统](../foundations/sequences-and-strings/)
 - [参考基因组与注释](../foundations/reference-and-annotation/)
-- [常见数据格式总览](../formats/common-file-formats/)
+- [常见数据格式总览](../data-references/formats/common-file-formats/)
 - [数据库与注释系统一览](../data-references/databases-and-annotations/)

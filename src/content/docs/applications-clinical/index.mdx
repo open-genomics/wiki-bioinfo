@@ -1,0 +1,40 @@
+---
+description: 临床应用板块入口，围绕变异检测、临床变异解释与结构生物信息学等偏临床解释的分析方向。
+title: "临床应用"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<PageHeaderMeta
+  audience="关注临床变异解释、变异检测或结构生物信息学的读者"
+  startWith="先看变异检测总览，再进入临床变异解释或结构生物信息学"
+/>
+
+这一部分聚焦偏临床解释的应用方向：变异检测（DNA-seq variant calling）、临床变异解释（ACMG 框架、CNV/SV 证据）与结构生物信息学（蛋白结构、AlphaFold、结构比对）。这些方向对证据标准、注释体系与参考版本更为敏感，与方法层和数据层紧密关联。
+
+## 子主题导航
+
+<LinkGrid
+  items={[
+    {
+      title: '变异检测',
+      to: '/applications-clinical/variants/',
+      badge: 'DNA-seq',
+      description: '围绕 DNA-seq variant calling，理解 BAM、VCF、过滤与证据质量。',
+    },
+    {
+      title: '临床变异解释',
+      to: '/applications-clinical/clinical-variants/',
+      badge: 'clinical interpretation',
+      description: '围绕变异注释、ACMG 框架和 CNV/SV 证据，建立临床解释视角。',
+    },
+    {
+      title: '结构生物信息学',
+      to: '/applications-clinical/structure-bioinfo/',
+      badge: 'structure',
+      description: '从蛋白结构层次到 AlphaFold 与结构比对，理解三维结构如何支持功能解释。',
+    },
+  ]}
+  variant="navigation"
+/>

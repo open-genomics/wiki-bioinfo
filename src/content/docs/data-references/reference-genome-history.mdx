@@ -6,9 +6,9 @@ description: "参考基因组版本体系、主要差异、以及如何选择合
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（GRCh37/hg19 vs GRCh38/hg38）的选择影响所有下游分析的坐标系统、注释兼容性和结果可比性。理解版本差异的本质、补丁更新机制和命名体系，是避免坐标错误和数据整合失败的前提。"
@@ -52,8 +52,8 @@ import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 
 <PrerequisitesBox
   items={[
-    {label: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
-    {label: 'FASTA 格式', href: '/wiki-bioinfo/formats/fasta-format'},
+    {label: '参考基因组、坐标系统与注释', href: '/foundations/reference-and-annotation'},
+    {label: 'FASTA 格式', href: '/data-references/formats/fasta-format'},
   ]}
 />
 
@@ -118,7 +118,7 @@ GRCh38.p14
 
 ### 决策框架
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="选择 GRCh38/hg38"
   rightTitle="选择 GRCh37/hg19"
   rows={[
@@ -210,29 +210,29 @@ CrossMap.py vcf hg19ToHg38.chain input.vcf output.vcf
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '参考基因组、坐标系统与注释',
-      to: '/wiki-bioinfo/foundations/reference-and-annotation',
+      to: '/foundations/reference-and-annotation',
       label: '基础层',
       description: '理解坐标系统和注释体系的基本概念。',
     },
     {
       title: '参考版本与 liftover',
-      to: '/wiki-bioinfo/data-references/reference-versions-and-liftover',
+      to: '/data-references/reference-versions-and-liftover',
       label: '技术细节',
       description: 'liftover 算法原理和坐标转换技术。',
     },
     {
       title: 'FASTA 格式',
-      to: '/wiki-bioinfo/formats/fasta-format',
+      to: '/data-references/formats/fasta-format',
       label: '数据格式',
       description: '参考基因组 FASTA 文件的结构和索引。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/wiki-bioinfo/variants/variant-calling-overview',
+      to: '/applications-clinical/variants/variant-calling-overview',
       description: '参考版本选择如何直接影响变异检测和下游解释。',
     },
   ]}

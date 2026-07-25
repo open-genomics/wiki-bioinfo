@@ -1,0 +1,302 @@
+---
+title: "生物信息学数据格式：字段语义与编码细节"
+description: "FASTA、FASTQ、SAM/BAM、GTF/GFF、BED、VCF/BCF 各格式的字段定义、编码规则与常见陷阱。层级行为与流程定位见数据格式总览。"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+import DataTable from '@/components/docs/DataTable.astro';
+
+> 格式在分析流程中所处的层级、承载的信息类型及上下游衔接关系，见 [常见数据格式总览](../common-formats-overview/)。本页聚焦于每种格式**实际保存什么字段、如何编码、哪些名字相近的格式不能互相替代**。
+
+<NoteCard variant="summary"
+  summary="本页是生物信息学主流格式的字段级参考：FASTA、FASTQ、SAM/BAM/CRAM、GTF/GFF、BED、VCF/BCF 各自的字段定义、编码规则与常见陷阱。"
+  items={[
+    '每种格式编码不同层次的计算对象，字段语义不可互换',
+    '坐标系统差异（0-based half-open vs 1-based closed）是最常见错误源',
+    '质量分数编码（Phred+33 / Phred+64）和 CIGAR 字符串是读懂数据的关键',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: '常见数据格式总览', href: '/data-references/common-formats-overview', description: '先建立格式层级与流程定位的概念框架' },
+    { label: '参考基因组、坐标系统与注释', href: '/foundations/reference-and-annotation', description: '理解坐标系统与版本匹配的约束' },
+  ]}
+/>
+
+## 名字相近，但职责不同
+
+<DataTable variant="comparison"
+  leftTitle="左侧格式"
+  rightTitle="右侧格式"
+  rows={[
+    {
+      aspect: 'FASTA vs FASTQ',
+      left: 'FASTA 保存序列本身，常作为参考或组装结果，不带碱基质量。',
+      right: 'FASTQ 保存 reads 和 base quality，通常是原始测序流程的起点。',
+    },
+    {
+      aspect: 'SAM/BAM/CRAM',
+      left: 'SAM 是文本形式，便于查看字段与调试。',
+      right: 'BAM/CRAM 是更适合大规模分析的压缩表示，但本质仍是比对结果层。',
+    },
+    {
+      aspect: 'GTF/GFF vs BED',
+      left: 'GTF/GFF 更偏注释对象与属性关系，如 gene / transcript / exon。',
+      right: 'BED 更像简洁区间列表，适合表示 peak、区域集合或窗口。',
+    },
+    {
+      aspect: 'VCF vs BCF',
+      left: 'VCF 是文本格式，便于查看候选变异及其字段。',
+      right: 'BCF 是二进制表示，适合更高效存储和处理，但语义层仍是变异结果。',
+    },
+  ]}
+/>
+
+## FASTA：参考序列的计算表示
+
+**字段结构**
+
+```text
+>chr1 Homo sapiens chromosome 1, GRCh38
+NNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNNN...
+```
+
+每条序列由一个以 `>` 开头的定义行（包含序列标识符和描述）后跟序列字符行组成。
+
+**关键约束**
+
+- 只包含序列字符本身，不包含任何关于该序列如何产生、如何被测量、或与其他序列关系的元数据
+- 必须与配套注释文件（如 GTF）使用相同的参考版本和坐标系统
+- 不包含：测序质量分数、比对位置信息、功能注释、变异证据
+
+## FASTQ：原始测序观测的容器
+
+**字段结构**
+
+每条 read 由四行组成：
+
+```text
+@SEQ_ID
+GATTTGGGGTTCAAAGCAGTATCGATCAAATAGTAAATCCATTTGTTC
++
+!''*((((***+))%%%++)(%%%%).1***-+*''))**55CCF>>>
+```
+
+1. `@` 开头的标识符行
+2. 碱基序列行
+3. `+` 分隔行（可选重复 ID）
+4. 质量分数行（每个字符对应一个碱基的质量）
+
+**质量分数编码**
+
+质量分数用 ASCII 字符编码 Phred quality score。两种主要变体：
+
+| 编码 | ASCII 偏移 | 质量范围 | 常见来源 |
+|------|-----------|---------|---------|
+| Phred+33 | 33 | 0–93 | Illumina 1.8+、Sanger、PacBio、Nanopore |
+| Phred+64 | 64 | 0–62 | 旧版 Illumina (1.3–1.7)、Solexa |
+
+Phred 质量值 $Q$ 对应错误概率 $P = 10^{-Q/10}$。例如 $Q=30$ 表示错误率 $10^{-3}$（千分之一的碱基调用错误）。
+
+**关键约束**
+
+- 不包含参考坐标位置、功能注释、或变异推断信息
+- 仅拥有 FASTQ 文件时尚未建立任何与参考基因组的关联
+
+## SAM / BAM / CRAM：比对结果的标准编码
+
+**11 个必需字段**
+
+| 字段 | 含义 | 注意点 |
+|------|------|--------|
+| QNAME | read 标识符 | |
+| FLAG | 比对状态位标记 | 16-bit 位域，如 paired、reverse complement、secondary |
+| RNAME | 参考序列名称 | |
+| POS | 1-based 起始位置 | **1-based**，与 BED 的 0-based 不同 |
+| MAPQ | 比对质量分数 | mapping confidence，-10·log₁₀(P(misaligned)) |
+| CIGAR | 比对操作的紧凑编码 | 见下表 |
+| RNEXT | 配对 read 的参考名 | |
+| PNEXT | 配对 read 的位置 | |
+| TLEN | 模板长度 | |
+| SEQ | 序列 | 可能与原始 FASTQ 不同（如经 soft-clipping） |
+| QUAL | 质量分数 | |
+
+**CIGAR 字符串编码**
+
+| 操作符 | 含义 |
+|--------|------|
+| M | match/mismatch（比对到参考） |
+| I | insertion（read 相对参考插入） |
+| D | deletion（read 相对参考缺失） |
+| N | skip（跳过参考区域，如 intron） |
+| S | soft clip（read 端未比对，但保留在 SEQ） |
+| H | hard clip（read 端未比对，且不在 SEQ） |
+| = | sequence match |
+| X | sequence mismatch |
+
+示例：`4M1I3D2M` 表示 4 match、1 insertion、3 deletion、2 match。
+
+**格式变体**
+
+- **SAM**：文本格式，便于人工阅读和调试
+- **BAM**：二进制压缩格式，适合高效存储和大规模分析
+- **CRAM**：参考感知的压缩格式，通过存储与参考的差异实现更高压缩率
+
+三者语义等价，仅在存储效率上有差异。
+
+## GTF / GFF：基因组注释的结构化表示
+
+**九列制表分隔格式**
+
+```text
+chr1  HAVANA  gene  11869  14409  .  +  .  gene_id "ENSG00000223972"; gene_type "transcribed_unprocessed_pseudogene";
+```
+
+| 列 | 字段 | 说明 |
+|----|------|------|
+| 1 | seqname | 参考序列名称 |
+| 2 | source | 注释来源 |
+| 3 | feature | 特征类型（gene、transcript、exon、CDS、UTR 等） |
+| 4 | start | 1-based 起始坐标 | 
+| 5 | end | 1-based 结束坐标（含端点） |
+| 6 | score | 分数（可为 `.`） |
+| 7 | strand | 链方向（`+`/`-`/`.`） |
+| 8 | phase | 编码相位（0/1/2，仅 CDS） |
+| 9 | attributes | 键值对形式的特征属性 |
+
+**坐标系统**：1-based, closed（如 `1-100` 表示第 1 到第 100 个碱基，含两端）。
+
+**GTF vs GFF3**
+
+- **GTF** 是 GFF2 的严格子集，强制要求 `gene_id`/`transcript_id` 字段
+- **GFF3** 是更通用的格式，支持任意特征类型和更灵活的属性定义，常用 `Parent`/`ID` 编码层级关系
+- 两者在基因结构注释场景下功能等价，但工具兼容性有差异
+
+## BED：区间列表的简洁表示
+
+**3 到 12 列的可变格式**
+
+最少只需要：
+
+```text
+chr1  1000  5000
+```
+
+扩展列（4-12 列）可包含：名称、分数、链方向、thickStart/thickEnd、itemRgb、blockCount/blockSizes/blockStarts。
+
+**坐标系统**：0-based, half-open（如 `0-100` 表示第 1-100 个碱基，起始坐标比 GTF 少 1，结束坐标与 GTF 相同）。
+
+**与 GTF 的关键差异**
+
+| 特性 | BED | GTF |
+|------|-----|-----|
+| 坐标系统 | 0-based, half-open | 1-based, closed |
+| 结构 | 扁平区间列表 | 层级化注释（gene→transcript→exon） |
+| 属性 | 可选名称/分数 | 强制键值对属性 |
+| 典型用途 | peak、panel、窗口 | 基因结构注释 |
+
+BED 与 GTF 坐标系统差异是最容易导致错误的格式陷阱之一。
+
+## VCF / BCF：变异候选的标准编码
+
+**文件结构**
+
+- **Meta-information 行**（`##` 开头）：文件格式版本、参考序列、INFO/FORMAT 定义
+- **Header 行**（`#CHROM...`）：列名和样本列表
+- **Data 行**：每条变异记录
+
+**Data 行字段**
+
+| 字段 | 含义 | 注意点 |
+|------|------|--------|
+| CHROM | 染色体 | |
+| POS | 1-based 位置 | |
+| ID | 变异标识符 | 如 dbSNP rs 号，可为 `.` |
+| REF | 参考等位基因 | |
+| ALT | 替代等位基因 | 多个用逗号分隔 |
+| QUAL | 质量分数 | Phred-scaled，-10·log₁₀(P(变异不存在)) |
+| FILTER | 过滤状态 | `PASS` 或过滤原因标签 |
+| INFO | 变异属性 | 如 `DP=深度`、`AF=等位基因频率` |
+| FORMAT | 样本级字段格式 | 如 `GT:DP:GQ` |
+| 样本列 | 每个样本的基因型 | GT 字段：`0/0`、`0/1`、`1/1` 等 |
+
+**关键约束**
+
+- VCF 不保存产生调用的全部 read-level 证据，仅保存聚合后的统计信息
+- 变异的解释依赖参考版本、调用工具、过滤参数、注释数据库
+- VCF 是依赖上下文的统计推断，不是绝对真理
+
+**VCF vs BCF**
+
+- **VCF**：文本格式，便于查看和人工检查
+- **BCF**：二进制格式，支持高效随机访问和大规模处理
+- 两者语义等价，BCF 更适合作为分析中间格式，VCF 更适合最终报告和归档
+
+## 综合实例：分析交付包的字段依赖
+
+假设收到一个肿瘤外显子测序的分析交付包：
+
+```text
+project/
+├── reference.fa          # 参考基因组序列
+├── genes.gtf             # 基因结构注释
+├── sample.bam            # 比对结果（含索引 .bai）
+└── sample.vcf.gz         # 变异检测结果
+```
+
+**依赖链条**
+
+1. **VCF 依赖 BAM**：变异调用基于比对证据的统计推断，VCF 中每条变异对应 BAM 中的 read pileup 支持（但 VCF 不保存原始 reads，只保存统计摘要）
+2. **BAM 依赖 reference.fa**：比对结果的意义完全依赖所使用的参考版本。同样的 BAM 配合不同参考版本会产生错误解释
+3. **所有功能解释依赖 genes.gtf**：VCF 中变异的功能影响（同义/错义/无义、剪接位点影响）需结合 GTF 注释才能确定
+
+**单独使用各文件的局限性**
+
+- 只有 VCF：失去原始证据链，无法验证变异真实性；脱离参考版本和注释，无法解释生物学意义
+- 只有 BAM：尚未经变异检测算法处理，无法直接得到"存在什么变异"的结论
+- 只有 reference.fa + genes.gtf：只有背景框架，没有样本的实验证据
+
+<NoteCard variant="pitfalls"
+  items={[
+    'FASTA 和 FASTQ 都是"序列文件"可以互相替换：',
+    '两者编码完全不同的对象层：FASTA 是参考序列骨架（无质量），FASTQ 是带质量分数的实验观测。',
+    'BAM 文件包含"所有信息"，不再需要参考序列和注释：',
+    'BAM 只包含定位结果，功能解释仍需依赖外部注释，比对坐标也依赖特定参考版本。',
+    'GTF/GFF 和 BED 都是"坐标文件"可以等价替换：',
+    '两者的层级结构、坐标系统（1-based closed vs 0-based half-open）、语义信息有本质差异，混用会导致坐标偏移错误。',
+    'VCF 文件可以直接作为"最终结论"使用：',
+    'VCF 是依赖 caller 算法、过滤参数和参考版本的统计推断，不是绝对真理。',
+  ]}
+/>
+
+<LinkGrid
+  items={[
+    {
+      title: '常见数据格式总览',
+      to: '/data-references/common-formats-overview',
+      label: '层级框架',
+      description: '格式在分析流程中所处的层级、承载的信息类型及上下游衔接关系。',
+    },
+    {
+      title: '参考基因组、坐标系统与注释',
+      to: '/foundations/reference-and-annotation',
+      label: '基础层',
+      description: '深入理解为什么数据格式必须与参考版本和坐标系统耦合使用。',
+    },
+    {
+      title: 'DNA-seq 变异检测总览',
+      to: '/applications-clinical/variants/variant-calling-overview',
+      label: '应用层',
+      description: '查看 FASTQ → BAM → VCF 在真实变异检测工作流中的完整转换过程。',
+    },
+    {
+      title: 'RNA-seq 定量分析',
+      to: '/applications-omics/workflows/rna-seq',
+      label: '应用层',
+      description: '理解 GTF/GFF 在表达定量中的关键作用，以及与 BED 格式的选择考量。',
+    },
+  ]}
+/>

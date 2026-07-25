@@ -207,63 +207,10 @@
   vertical-align: top;
 }
 
-.home-intro,
-.home-note,
-.home-cta {
-  max-width: 52rem;
-  margin: 0 auto 2rem;
-}
-
-.home-intro p,
-.home-note p,
-.home-cta p {
-  font-size: 1.05rem;
-}
-
-.home-note {
-  padding: 1rem 1.2rem;
-  border-inline-start: 3px solid var(--sl-color-accent);
-  background: var(--sl-color-accent-low);
-  border-radius: 0 var(--bioinfo-radius) var(--bioinfo-radius) 0;
-}
-
-.home-path-grid {
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  align-items: stretch;
-  gap: 1rem;
-  margin: 2rem 0;
-}
-
-.home-path-grid > .home-path-card {
-  margin: 0;
-}
-
-.home-path-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: 1.2rem;
-  border: 1px solid var(--bioinfo-card-border);
-  border-radius: var(--bioinfo-radius);
-  background: var(--bioinfo-card-bg);
-  box-shadow: var(--bioinfo-card-shadow);
-}
-
-.home-path-card h3 {
-  margin-top: 0;
-}
-
-.home-path-card ol {
-  flex: 1;
-  margin: 0.75rem 0 0;
-}
-
 @media (max-width: 72rem) {
   .header-meta-grid,
   .section-nav-grid,
-  .related-grid,
-  .home-path-grid {
+  .related-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
@@ -273,8 +220,7 @@
   .section-nav-grid,
   .related-grid,
   .workflow-grid,
-  .definition-list,
-  .home-path-grid {
+  .definition-list {
     grid-template-columns: 1fr;
   }
 

@@ -1,0 +1,198 @@
+---
+description: 算法应用专题入口，把动态规划、图算法、字符串算法与概率算法放回真实分析任务。
+title: "算法应用专题"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+
+<PageHeaderMeta
+  audience="已经建立基础与方法框架，想把它们放回真实分析任务中的读者"
+  startWith="先看工作流与案例，再按自己的问题进入变异检测、转录组、单细胞或其他专题"
+/>
+
+这一部分承接前面的基础与方法层，将其重新放回具体分析任务中：DNA-seq、RNA-seq、单细胞、表观组、群体遗传学、长读长、空间组学、蛋白质组学与结构生物信息学等问题，最终都需要通过工作流和案例来理解。
+
+这里不是再讲一遍算法，而是把索引、比对、组装、概率模型、数据格式与参考资源重新放回真实任务边界中。若只有方法页而无应用层，读者容易陷入"知道术语，但不了解任务边界"的碎片化问题——真正的分析工作还要求理解任务的输入输出对象、哪些方法是关键依赖、数据版本如何影响解释，以及不同方向为何提出不同的证据标准与流程设计。
+
+## 推荐阅读顺序
+
+1. [工作流与案例](../workflows/index/)
+2. [算法设计范式](../../core-methods/algorithm-design-paradigms/)
+3. [动态规划算法](./dynamic-programming/)
+4. [图算法](./graph-algorithms/)
+5. [字符串算法与索引](./string-algorithms/)
+6. [概率算法](./probabilistic-algorithms/)
+7. [变异检测](../../applications-clinical/variants/index/)
+8. [转录组](../transcriptomics/index/)
+9. [单细胞组学](../single-cell/index/)
+10. [表观基因组学](../epigenomics/index/)
+11. [群体遗传学](../population/index/)
+12. [长读长测序](../long-read/index/)
+13. [空间转录组](../spatial/index/)
+14. [蛋白质组学](../proteomics/index/)
+15. [临床变异解释](../../applications-clinical/clinical-variants/index/)
+16. [结构生物信息学](../../applications-clinical/structure-bioinfo/index/)
+17. [多组学整合](../multi-omics/index/)
+18. [系统发育与进化](../phylogeny/index/)
+19. [机器学习与基础模型](../ml-bioinfo/index/)
+
+## 子主题导航
+
+<LinkGrid
+  items={[
+    {
+      title: '工作流与案例',
+      to: '/applications-omics/workflows/',
+      badge: '起点',
+      meta: 'workflow overview',
+      description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法重新放回真实分析流程。',
+    },
+    {
+      title: '动态规划算法',
+      to: '/applications-omics/alg-applications/dynamic-programming',
+      badge: 'DP',
+      meta: 'dynamic programming',
+      description: '从序列比对、编辑距离到 HMM 推断算法的完整推导与 worked examples。',
+    },
+    {
+      title: '图算法',
+      to: '/applications-omics/alg-applications/graph-algorithms',
+      badge: '图算法',
+      meta: 'graph algorithms',
+      description: '从基因组组装的 de Bruijn graph 到系统发育树构建的完整图论视角。',
+    },
+    {
+      title: '字符串算法与索引',
+      to: '/applications-omics/alg-applications/string-algorithms',
+      badge: '索引',
+      meta: 'string algorithms',
+      description: '从 Trie、Suffix Array 到 FM-index，理解大规模序列搜索与映射的基础设施。',
+    },
+    {
+      title: '概率算法',
+      to: '/applications-omics/alg-applications/probabilistic-algorithms',
+      badge: '概率',
+      meta: 'probabilistic algorithms',
+      description: '从 HMM、贝叶斯方法到 MCMC 采样，理解处理噪声与不确定性的核心方法。',
+    },
+    {
+      title: '变异检测',
+      to: '/applications-clinical/variants/',
+      badge: 'DNA-seq',
+      meta: 'variant calling',
+      description: '围绕 DNA-seq variant calling，理解 BAM、VCF、过滤与证据质量。',
+    },
+    {
+      title: '转录组',
+      to: '/applications-omics/transcriptomics/',
+      badge: 'RNA-seq',
+      meta: 'expression analysis',
+      description: '聚焦 RNA-seq 中的定量、isoform 归属与 pseudo-alignment。',
+    },
+    {
+      title: '单细胞组学',
+      to: '/applications-omics/single-cell/',
+      badge: 'single-cell',
+      meta: 'cell-level heterogeneity',
+      description: '围绕 scRNA-seq 的建库、UMI、聚类、伪时间与细胞类型注释。',
+    },
+    {
+      title: '表观基因组学',
+      to: '/applications-omics/epigenomics/',
+      badge: 'regulation',
+      meta: 'ChIP/ATAC/methylation',
+      description: '理解 ChIP-seq、ATAC-seq 与 DNA 甲基化如何刻画调控层。',
+    },
+    {
+      title: '群体遗传学',
+      to: '/applications-omics/population/',
+      badge: 'population scale',
+      meta: 'HWE / LD / GWAS',
+      description: '从 HWE、LD 到 GWAS 和群体结构，理解群体尺度的变异解释。',
+    },
+    {
+      title: '长读长测序',
+      to: '/applications-omics/long-read/',
+      badge: 'long reads',
+      meta: 'PacBio / Nanopore',
+      description: '围绕 PacBio、Nanopore、SV 与长读长组装建立现代测序视角。',
+    },
+    {
+      title: '空间转录组',
+      to: '/applications-omics/spatial/',
+      badge: 'spatial',
+      meta: 'tissue context',
+      description: '把表达矩阵重新放回组织切片与空间坐标中，理解邻域与组织结构。',
+    },
+    {
+      title: '蛋白质组学',
+      to: '/applications-omics/proteomics/',
+      badge: 'proteomics',
+      meta: 'MS / FDR / quant',
+      description: '从肽段质谱峰到数据库搜索、FDR 和蛋白定量，理解蛋白层分析主线。',
+    },
+    {
+      title: '临床变异解释',
+      to: '/applications-clinical/clinical-variants/',
+      badge: 'clinical interpretation',
+      meta: 'annotation / ACMG',
+      description: '围绕变异注释、ACMG 框架和 CNV/SV 证据，建立临床解释视角。',
+    },
+    {
+      title: '结构生物信息学',
+      to: '/applications-clinical/structure-bioinfo/',
+      badge: 'structure',
+      meta: 'AlphaFold / alignment',
+      description: '从蛋白结构层次到 AlphaFold 与结构比对，理解三维结构如何支持功能解释。',
+    },
+    {
+      title: '多组学整合',
+      to: '/applications-omics/multi-omics/',
+      badge: 'integration',
+      meta: 'multi-modal data',
+      description: '把 RNA、表观组、蛋白和单细胞多模态数据放到同一个整合视角中理解。',
+    },
+    {
+      title: '系统发育与进化',
+      to: '/applications-omics/phylogeny/',
+      badge: 'evolution',
+      meta: 'distance / trees',
+      description: '理解序列差异如何映射成距离、树和进化关系。',
+    },
+    {
+      title: '机器学习与基础模型',
+      to: '/applications-omics/ml-bioinfo/',
+      badge: 'ML / foundation models',
+      meta: 'representation learning',
+      description: '从序列深度学习到生物语言模型，理解新一代表示学习方法。',
+    },
+  ]}
+  variant="navigation"
+/>
+
+## 与其他板块的连接
+
+<LinkGrid
+  items={[
+    {
+      title: '核心方法',
+      to: '/core-methods/',
+      label: '上游方法',
+      description: '应用层不会替代方法层，而是将索引、比对、组装和概率模型放回具体问题中。',
+    },
+    {
+      title: '数据、注释与资源',
+      to: '/data-references/',
+      label: '数据依赖',
+      description: '真实分析流程的稳定性，往往取决于参考版本、注释系统与文件格式的一致性。',
+    },
+    {
+      title: '导论',
+      to: '/intro/',
+      label: '新读者入口',
+      description: '如果你还没有建立整站地图，建议先从学习路线进入，再回到具体应用方向。',
+    },
+  ]}
+/>

@@ -22,22 +22,6 @@ hero:
 ---
 
 import { Card, CardGrid, LinkCard } from '@astrojs/starlight/components';
-import PathCard from '../../components/docs/PathCard.astro';
-
-<div class="home-intro">
-  <p>
-    BioInfo Wiki 试图把<strong>生物学对象、计算模型、核心算法、分析流程和数据资源</strong>
-    连接成一张可以连续阅读的知识地图。
-    它不是工具参数手册，而是帮助读者理解“为什么需要这些方法、它们如何彼此连接”的项目。
-  </p>
-</div>
-
-<div class="home-note">
-  <p>
-    如果你希望从一个稳定的中文入口理解 reads、比对、组装、HMM、RNA-seq、变异检测以及它们背后的共同方法主线，
-    这里就是起点。
-  </p>
-</div>
 
 ## 为什么看这个项目
 
@@ -56,31 +40,23 @@ import PathCard from '../../components/docs/PathCard.astro';
   </Card>
 </CardGrid>
 
-## 六个入口
+## 七个入口
 
 <CardGrid>
   <LinkCard title="导论" href="./intro/" description="项目定位、学习路线、贡献方式与写作规范入口。" />
   <LinkCard title="基础与数学" href="./foundations/" description="对象、抽象模型、算法基础与必要数学前置。" />
   <LinkCard title="核心方法" href="./core-methods/" description="索引、比对、组装、概率模型等核心方法主线。" />
-  <LinkCard title="分析方向" href="./applications/" description="RNA-seq、变异检测、单细胞、长读长等主题入口。" />
+  <LinkCard title="组学应用" href="./applications-omics/" description="RNA-seq、单细胞、表观组、长读长、空间组学等组学应用方向。" />
+  <LinkCard title="临床应用" href="./applications-clinical/" description="变异检测、临床变异解释与结构生物信息学等临床方向。" />
   <LinkCard title="数据与资源" href="./data-references/" description="参考基因组、注释、文件格式与数据库入口。" />
   <LinkCard title="附录" href="./appendix/" description="术语、参考资料和索引性内容。" />
 </CardGrid>
 
 ## 三条阅读路径
 
-<div class="home-path-grid">
-  <PathCard
-    title="初学者路径"
-    steps={['导论', '基础与数学', '数据与资源', '分析方向']}
-  />
-  <PathCard
-    title="算法路径"
-    steps={['导论中的算法入口', '基础与数学', '核心方法', '回到分析方向验证方法位置']}
-  />
-  <PathCard
-    title="任务驱动路径"
-    steps={['选择一个分析方向', '回看相关数据与资源', '追溯到核心方法', '再补基础与模型']}
-  />
-</div>
+<CardGrid>
+  <LinkCard title="初学者路径" href="./intro/roadmap/" description="导论 → 基础与数学 → 数据与资源 → 分析方向，先建立整体框架。" />
+  <LinkCard title="算法路径" href="./intro/roadmap/" description="算法入门 → 基础与数学 → 核心方法 → 分析方向，先抓住方法主干。" />
+  <LinkCard title="任务驱动路径" href="./intro/roadmap/" description="分析方向 → 工作流 → 数据与资源 → 核心方法 → 基础与数学，带着问题回溯。" />
+</CardGrid>
 

@@ -1,0 +1,137 @@
+---
+description: PacBio 与 Oxford Nanopore 两大长读长测序平台的物理原理、误差模式与典型应用场景。
+title: "PacBio 与 Nanopore"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+import DataTable from '@/components/docs/DataTable.astro';
+
+<NoteCard variant="summary"
+  summary="PacBio SMRT 测序与 Oxford Nanopore 测序代表了两种截然不同的长读长技术路线。它们打破了短读长的长度限制，为解析基因组复杂区域、结构变异和单倍型组装提供了关键数据。"
+  items={[
+    '掌握 PacBio HiFi 的环形共识测序（CCS）原理及其高精度特性',
+    '理解 Nanopore 电流信号解码（Basecalling）的挑战与超长 Read 潜力',
+    '辨析两者的误差特征：随机 Indel (PacBio) vs. 系统性同聚物偏差（Nanopore）',
+    '认识直接 RNA 测序在修饰检测中的独特优势'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: '测序 Reads 与覆盖度', href: '/foundations/sequencing-reads-coverage' },
+    { label: '生物学基础对象', href: '/foundations/biology-basics' }
+  ]}
+/>
+
+## 1. 长读长的革命
+
+**传统二代测序（NGS）** 的核心限制是 Read 长度（通常 < 300 bp）。这导致：
+- 无法跨越基因组中的大型重复序列。
+- 难以直接识别大规模的结构变异（SV）。
+- 无法区分来自两条同源染色体的序列（Phasing 问题）。
+
+**长读长测序（Long-read Sequencing）** 将 Read 长度提升到了 $10 \text{ kb}$ 甚至 $1 \text{ Mb}$ 以上，从根本上解决了这些难题。
+
+### 长读长带来的范式转变
+
+短读长时代的基因组组装本质上是"碎片化"的：由于 Read 无法跨越重复区域，组装结果往往被分割成数以万计的 Contigs（连续片段），无法还原完整的染色体结构。长读长技术的出现使得**端到端的染色体级别组装**（Telomere-to-Telomere Assembly）成为可能。
+
+2022 年发表的"完整人类基因组 T2T-CHM13"正是依赖 PacBio HiFi 和 Oxford Nanopore 超长 Read 的组合，才填补了此前长达数十年的基因组空白区域——包括着丝粒和近端粒区域的复杂重复序列。
+
+## 2. PacBio：单分子实时合成（SMRT）
+
+PacBio 通过观测 DNA 聚合酶合成新链时的荧光信号来实现测序。
+
+### SMRT 测序的物理原理
+
+PacBio 的核心是一个称为 **SMRT Cell** 的微流控芯片，其中包含数以万计的微孔（ZMW, Zero-Mode Waveguide）。每个 ZMW 的底部固定着一条单链 DNA 模板和一个 DNA 聚合酶分子。当聚合酶将带有荧光标记的核苷酸掺入新链时，荧光信号会被激发并记录。由于 ZMW 的体积极小（zeptoliter 级别），只有 ZMW 底部极小区域内的荧光能被检测到，从而实现了对单个分子合成事件的实时观测。
+
+### CCS 与 HiFi Reads
+
+PacBio 最具竞争力的技术是 **CCS (Circular Consensus Sequencing)**：
+1.  **闭环模板**：将 DNA 片段制备成环状，两端各加一段接头（Adapter）序列。
+2.  **循环测序**：让聚合酶绕着这个环反复跑几十圈，每次经过插入片段区域时都产生一次测序读数。
+3.  **取平均（Consensus）**：通过对同一分子的多次观测，抵消掉单次读取的随机误差。
+- **结果**：产生长度约 $15 \text{--} 20 \text{ kb}$、准确率高达 $99.9\%$（Q30+）的 **HiFi Reads**。
+
+### PacBio 的误差特征
+
+PacBio 原始 Reads（Subreads）的主要误差是**随机的插入和缺失（Indel）**，这来源于聚合酶在合成过程中的偶尔"打滑"。这种随机误差有一个重要优点：多次观测后可以通过一致性校正（Consensus）有效消除，因此 CCS 产物的准确率极高。
+
+## 3. Oxford Nanopore (ONT)：电流检测
+
+ONT 并不观察合成过程，而是让单链 DNA 直接穿过一个极小的蛋白质孔洞（纳米孔）。
+
+### 物理原理
+- **电流波动**：孔洞中充满了离子电流。当 DNA 碱基穿过时，会阻碍电流，产生独特的特征性波动。
+- **Basecalling**：利用深度学习（如神经网络）将电信号时间序列"翻译"回碱基序列。
+
+Nanopore 的信号解码是一个序列到序列的翻译问题。每个碱基穿过纳米孔时，并非只影响当前时刻的电流，而是同时影响前后约 5--6 个碱基对应的信号窗口。因此，Basecalling 本质上是一个上下文感知的解码任务，这与自然语言处理中的序列标注问题有结构上的相似性。现代 Basecaller（如 Guppy、Dorado）使用卷积神经网络（CNN） 或 Transformer 架构来实现高精度解码。
+
+### 独特优势
+- **超长 Read**：只要 DNA 分子足够完整，它就能一直穿过去。目前最长记录已超过 $4 \text{ Mb}$，这对于跨越超大重复区域（如人类着丝粒中的 $\alpha$-卫星 DNA）至关重要。
+- **直接测序**：可以不经过 PCR 扩增和反转录，直接读取原始 RNA 分子，保留甲基化等修饰信息。直接 RNA 测序让研究者能够观察 RNA 的天然修饰状态（如 m6A），而无需依赖间接的化学推断方法。
+- **实时分析（Real-time Analysis）**：由于测序过程中数据是流式产生的，可以在测序进行中就开始分析。这一特性在传染病快速诊断（如实时病原体鉴定）和靶向测序（Read-until 策略）中具有独特价值。
+
+### Nanopore 的误差特征
+
+Nanopore 的主要误差来源是**同聚物（Homopolymer） 区域**——即由相同碱基连续排列的序列（如 AAAAA）。由于多个相同碱基产生的电流变化非常微弱，模型难以精确区分到底有几个碱基。这种误差本质上是系统性的，不能通过简单的多次观测平均来消除，而是需要更复杂的信号模型来校正。
+
+## 4. 平台特性对比
+
+<DataTable variant="comparison"
+  leftTitle="PacBio HiFi"
+  rightTitle="Oxford Nanopore"
+  rows={[
+    { aspect: '读长', left: '中等长（$15$--$20$ kb）', right: '极长（$10$ kb -- $1$ Mb+）' },
+    { aspect: '单条准确率', left: '极高（$>99.9\\%$）', right: '较高（$90\\%$--$99\\%$）' },
+    { aspect: '误差模式', left: '随机 Indel（经 CCS 校正后极低）', right: '系统性同聚物误差' },
+    { aspect: '设备体积', left: '巨大（实验室级）', right: '便携（MinION 仅 U 盘大小）' },
+    { aspect: '直接 RNA 测序', left: '不支持', right: '支持' },
+    { aspect: '碱基修饰检测', left: '通过动力学信号', right: '通过原始电流信号' },
+    { aspect: '实时分析', left: '不支持', right: '支持（Read-until 实时选读）' },
+  ]}
+/>
+
+## 5. 应用场景
+
+### 基因组 de novo 组装
+
+长读长是完成端到端染色体级别组装的基础。HiFi Reads 的高准确性保证了碱基级别的精度，而 Nanopore 的超长 Read 则能跨越最大的重复结构。在实际项目中，两种技术常被**组合使用**：先用 HiFi Reads 组装出高精度的 Contigs，再用 Nanopore 超长 Read 进行 Scaffolding（支架搭建），最终获得完整的染色体序列。
+
+### 结构变异检测
+
+结构变异（SV） 通常定义为大于 50 bp 的基因组变异，包括缺失（Deletion）、插入（Insertion）、重复（Duplication）、倒位（Inversion） 和易位（Translocation）。短读长在检测 SV 时面临根本性困难——Read 长度不足以跨越变异断点。长读长可以直接观测完整的变异结构，是 SV 检测的金标准数据。
+
+### 单倍型定相（Phasing）
+
+二倍体生物（如人类）拥有两条同源染色体。短读长无法区分某个变异位点上的等位基因究竟来自父本还是母本。长读长由于能同时覆盖多个杂合位点，可以将变异"串联"到各自的染色体上，实现单倍型级别的定相。这对于理解基因的顺式调控效应、遗传病致病机制和器官移植配型都至关重要。
+
+### 转录组学研究
+
+长读长 RNA 测序（如 PacBio Iso-Seq 和 Nanopore 直接 RNA 测序）能够直接获得完整的转录本序列，而不需要像短读长那样通过拼接来推断。这极大地提升了可变剪接（Alternative Splicing） 的检测精度，并能直接鉴定融合转录本（Fusion Transcript）。
+
+<NoteCard variant="pitfalls"
+  items={[
+    '"长读长一定会取代短读长"：',
+    '并非如此。短读长在单位数据成本上仍有巨大优势（约为长读长的 1/10 到 1/50），适合需要极高覆盖度的场景（如大型队列变异检测、ChIP-seq 等表观遗传学实验）。在实际项目中，短读长和长读长往往是互补的关系，而非替代关系。',
+    '"HiFi Reads 已经不需要纠错了"：',
+    'HiFi Reads 的原始准确率确实很高（Q30+），但对于需要极高精度的应用（如临床诊断、参考基因组构建），仍需要进行一轮 Polishing（磨光校正）。特别是在同聚物区域和低复杂度序列中，HiFi Reads 仍可能存在少量错误。',
+    '"Nanopore 的准确率太低，不适合精细分析"：',
+    '早期的 Nanopore 确实存在较高错误率（R9.4.1 芯片约 95%），但最新的化学试剂（R10.4.1）结合深度学习 Basecaller 已经将单条 Read 准确率提升至 Q20（99%）以上。经过 Consensus Polishing 后，Nanopore 组装的质量已经可以与 HiFi 组装媲美。'
+  ]}
+/>
+
+## 相关页面
+
+<LinkGrid
+  items={[
+    { title: '长读长组装', to: '/applications-omics/long-read/long-read-assembly', description: '如何拼接这些长碎片' },
+    { title: '结构变异检测', to: '/applications-omics/long-read/sv-detection', description: '长读长的优势应用' },
+    { title: '测序 Reads 与覆盖度', to: '/foundations/sequencing-reads-coverage', description: '理解深度与质量的关系' },
+    { title: 'Basecalling 算法', to: '/applications-omics/long-read/basecalling-algorithm', description: 'Nanopore 信号解码的深度学习方法' }
+  ]}
+/>

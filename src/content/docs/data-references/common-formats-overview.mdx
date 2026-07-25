@@ -5,9 +5,9 @@ title: "常见数据格式总览"
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学分析中，数据在多个层级间流动与转化。理解每种格式所处的层级——从参考序列、原始观测、定位结果，到注释对象、变异结果和派生指标——是正确使用这些数据的前提。"
@@ -52,9 +52,9 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PrerequisitesBox
   items={[
-    {label: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
+    {label: '参考基因组、坐标系统与注释', href: '/foundations/reference-and-annotation'},
     '理解同一个流程中不同任务的"结果文件"并不一定处于同一层：表达矩阵、BAM、VCF 解决的问题就不同。',
-    {label: '常见文件格式概览', href: '/wiki-bioinfo/formats/common-file-formats'},
+    {label: '常见文件格式概览', href: '/data-references/formats/common-file-formats'},
   ]}
 />
 
@@ -62,7 +62,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 以下对比表总结了每个数据层级的核心问题、典型格式及其信息特征：
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="这一层回答什么问题"
   rightTitle="典型格式"
   rows={[
@@ -206,29 +206,29 @@ FASTA → FASTQ → BAM → VCF → annotation / summary
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '常见文件格式概览',
-      to: '/wiki-bioinfo/formats/common-file-formats',
+      to: '/data-references/formats/common-file-formats',
       label: '具体语义',
       description: '如果你想看每种格式具体保存什么、没保存什么，去看这页。',
     },
     {
       title: '参考基因组、坐标系统与注释',
-      to: '/wiki-bioinfo/foundations/reference-and-annotation',
+      to: '/foundations/reference-and-annotation',
       label: '背景约束',
       description: '理解为什么很多格式层问题本质上仍受参考与坐标体系约束。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/wiki-bioinfo/variants/variant-calling-overview',
+      to: '/applications-clinical/variants/variant-calling-overview',
       label: '实战流程',
       description: '查看 FASTQ、BAM、VCF 在真实变异检测工作流中的连接关系。',
     },
     {
       title: '数据、注释与资源',
-      to: '/wiki-bioinfo/data-references/',
+      to: '/data-references/',
       label: '板块入口',
       description: '回到上层入口，把参考、数据库和格式一起看。',
     },

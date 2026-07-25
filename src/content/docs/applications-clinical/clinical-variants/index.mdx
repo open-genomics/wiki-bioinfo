@@ -1,0 +1,64 @@
+---
+description: 临床变异解释板块入口。如何从数万候选变异中筛选致病变异？ACMG 框架如何整合多维证据？CNV/SV 的临床评估有何特殊考量？
+title: "临床变异解释"
+---
+
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+
+在基因检测中，一个核心挑战是：**面对数万到数百万个候选变异，如何系统性地筛选出最可能与患者疾病相关的致病变异？** 这不仅是一个技术问题，更涉及证据整合、不确定性量化和临床决策支持。
+
+临床变异解释与单纯的变异检测（variant calling）有着本质区别。检测回答"变异是否存在"，而解释回答"该变异是否可能致病、证据强度如何、能否支持临床决策"。
+
+
+## 核心问题
+
+这一部分围绕以下关键问题展开：
+
+- **变异筛选**：面对海量候选，如何通过频率过滤、功能影响评估和遗传模式匹配进行优先级排序？
+- **证据整合**：ACMG/AMP 框架如何将群体频率、功能预测、家系分离和临床数据库等多维证据整合为 Pathogenic / Likely pathogenic / VUS / Benign 的分类？
+- **复杂变异**：CNV 和 SV 涉及更大基因组区间和多个基因，其临床解释有何特殊考量？
+- **算法支持**：优先级排序算法、致病性预测模型和自动化 ACMG 分类如何辅助但不替代临床判断？
+
+## 学习路径建议
+
+建议按以下顺序阅读，形成从筛选到分类、从 SNV 到 CNV/SV 的完整认知：
+
+1. **[变异注释与优先级排序](./variant-annotation-and-prioritization/)** — 掌握从海量候选中筛选的策略与多维证据权衡
+2. **[ACMG 指南](./acmg-guidelines/)** — 理解证据标准化、强度分级和分类整合规则
+3. **[CNV 与 SV 解释](./cnv-and-sv-interpretation/)** — 学习大片段变异的特殊评估维度
+4. **[临床变异解释算法](./algorithms/)** — 了解计算工具如何辅助但不替代临床判断
+
+## 与其他板块的连接
+
+- 原始检测流程见 [变异检测](../variants/index/)；
+- 大型重排证据可参考 [长读长测序](../../applications-omics/long-read/index/)；
+- 人群频率与祖源背景可参考 [群体遗传学](../../applications-omics/population/index/)。
+
+## 子主题导航
+
+<LinkGrid
+  items={[
+    {
+      title: '变异注释与优先级排序',
+      to: '/applications-clinical/clinical-variants/variant-annotation-and-prioritization',
+      description: '从频率、功能影响到表型一致性，理解变异筛选逻辑。',
+    },
+    {
+      title: 'ACMG 指南',
+      to: '/applications-clinical/clinical-variants/acmg-guidelines',
+      description: '理解 pathogenic / likely pathogenic / VUS 等分类框架。',
+    },
+    {
+      title: 'CNV 与 SV 解释',
+      to: '/applications-clinical/clinical-variants/cnv-and-sv-interpretation',
+      description: '理解拷贝数和结构变异在临床解释中的特殊挑战。',
+    },
+    {
+      title: '临床变异解释算法',
+      to: '/applications-clinical/clinical-variants/algorithms',
+      description: '从优先级排序、ACMG 分类到致病性预测与 CNV 检测的核心算法。',
+    },
+  ]}
+  variant="navigation"
+/>

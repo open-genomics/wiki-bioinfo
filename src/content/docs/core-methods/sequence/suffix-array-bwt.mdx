@@ -1,0 +1,298 @@
+---
+title: "Suffix Array、BWT 与索引压缩"
+description: 理解后缀数组、Burrows-Wheeler 变换和压缩索引的理论基础，掌握后向搜索 (Backward Search) 的核心思想。
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<NoteCard variant="summary"
+  summary="当参考序列达到 3 Gb 规模时，我们需要在极小的内存开销下实现极速查询。Suffix Array 将后缀组织成有序数组，而 BWT 则进一步通过数据变换实现了索引的可压缩性与后向搜索的高效性。"
+  items={[
+    '掌握 Suffix Array (SA) 的定义：所有后缀按字典序排列的起始索引',
+    '理解 Burrows-Wheeler Transform (BWT) 如何通过循环位移聚类字符',
+    '掌握后向搜索（Backward Search） 的逻辑：利用 LF 映射在 BWT 空间中逆向查询',
+    '了解 FM-index 如何将 BWT 与辅助数组（C, Rank）结合形成完整索引'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: '索引结构概览', href: '/core-methods/sequence/indexing' },
+    { label: 'Suffix Tree', href: '/core-methods/sequence/suffix-tree' }
+  ]}
+/>
+
+## 是什么
+
+Suffix Array（后缀数组）、Burrows-Wheeler Transform（BWT，Burrows-Wheeler 变换）和 FM-index 是现代序列索引技术的三大基石。它们共同解决了一个核心问题：如何在极小的内存开销下，对大规模参考序列（如人类基因组的 3 Gb 序列）实现极速的子串查询。
+
+从关系上看，Suffix Array 是后缀树（Suffix Tree）的空间高效替代品，BWT 是 Suffix Array 的线性变换，而 FM-index 则在 BWT 之上添加了查询所需的辅助结构。三者层层递进，构成了 BWA-MEM、Bowtie2 等主流比对工具的索引基础。
+
+## 要解决什么生物信息学问题
+
+在序列比对中，我们需要反复回答一个问题：**给定的 read 是否出现在参考序列中？如果出现，在哪些位置？**
+
+暴力方法是对参考序列的每个位置逐一尝试匹配，时间复杂度为 $O(nm)$（$n$ 为参考序列长度，$m$ 为 read 长度）。对于人类基因组（$n \approx 3 \times 10^9$），这在计算上不可行。
+
+Suffix Tree 虽然可以将查询时间降到 $O(m)$，但其空间开销为 $O(n)$ 且常数巨大（每个节点需要多个指针），实际内存消耗可达参考序列的 10-20 倍，对人类基因组来说意味着 30-60 GB，远超一般服务器的内存。
+
+Suffix Array + BWT + FM-index 的组合，将空间开销压缩到接近信息论下界（约为原始文本的压缩熵），同时保持 $O(m)$ 的查询时间。这是 BWA、Bowtie 等工具能在普通计算机上运行的核心原因。
+
+## 输入与输出
+
+- **输入**：参考序列 $T$（长度为 $n$），查询模式串 $P$（长度为 $m$）
+- **输出**：模式串 $P$ 在 $T$ 中出现的所有起始位置（即 SA 中的对应区间）
+
+## 核心思想与数学模型
+
+### 1. Suffix Array (后缀数组)
+
+**定义**：对于长度为 $n$ 的文本 $T$，其 Suffix Array $SA[0 \dots n-1]$ 是一个整数数组，记录了 $T$ 的所有后缀按字典序排序后的起始位置。
+
+形式化地：
+
+$$SA[i] = j \iff T[j \dots n-1] \text{ is the } i\text{-th smallest suffix lexicographically}$$
+
+### 示例：文本 `BANANA$`
+
+| 索引 | 后缀 | $SA$ 值 | 字典序排名 |
+| :--- | :--- | :--- | :--- |
+| 6 | `$` | 6 | 0 |
+| 5 | `A$` | 5 | 1 |
+| 3 | `ANA$` | 3 | 2 |
+| 1 | `ANANA$` | 1 | 3 |
+| 0 | `BANANA$` | 0 | 4 |
+| 4 | `NA$` | 4 | 5 |
+| 2 | `NANA$` | 2 | 6 |
+
+- **查询**：通过对 $SA$ 进行**二分查找**，可以在 $O(m \log n)$ 时间内找到长度为 $m$ 的模式串。
+
+**Suffix Array 的空间开销**：只需存储 $n$ 个整数（每个占 4 字节），总共 $4n$ 字节。对于人类基因组，约 12 GB。这比 Suffix Tree 的 30-60 GB 已经大幅降低，但仍有进一步压缩的空间。
+
+**Suffix Array 的构建算法**：
+
+| 算法 | 时间复杂度 | 空间复杂度 | 特点 |
+| :--- | :--- | :--- | :--- |
+| 朴素排序 | $O(n^2 \log n)$ | $O(n)$ | 直接排序所有后缀，实际中极慢 |
+| Prefix Doubling | $O(n \log^2 n)$ | $O(n)$ | 每次倍增排序前缀长度 |
+| SA-IS | $O(n)$ | $O(n)$ | 线性时间构建，实际中表现优异 |
+| libdivsufsort | $O(n)$ | $O(n)$ | 实用工具，被 BWA 等广泛使用 |
+
+<figure>
+  <img src="/img/illustrations/bwt-construction.svg" alt="BWT 构造过程：循环位移排序与最后一列提取" />
+  <figcaption>BWT 构造过程示意：循环位移排序后提取最后一列</figcaption>
+</figure>
+
+### 2. Burrows-Wheeler Transform (BWT)
+
+BWT 并不是一种简单的压缩算法，而是一种**排列变换**。它将文本中具有相似上下文的字符聚拢在一起，从而提高后续压缩（如 Move-to-Front + 算术编码）的效率。
+
+#### 构造方法
+
+1. 在文本末尾添加一个字典序最小的终止符 `$`（确保没有后缀是另一个后缀的前缀）；
+2. 列出文本 $T$ 的所有循环位移（Rotations）；
+3. 将这些位移按字典序排序形成一个矩阵；
+4. **BWT 串**即为该矩阵的最后一列（Last Column, L）。
+
+**关键性质**：BWT 串中的第 $i$ 个字符正好是 Suffix Array 中排名第 $i$ 的后缀在原文本中的前一个字符。这意味着 BWT 是 Suffix Array 的一个线性变换，两者可以互相推导。
+
+#### BWT 的直觉
+
+为什么 BWT 要将相似上下文的字符聚集？因为在基因组序列中，相似的上下文意味着相似的生物学含义（如同一基因的不同区域、重复元件等）。将这些字符聚集后，连续的相同或相似字符可以更高效地压缩。
+
+<DefinitionList
+  items={[
+    {
+      term: 'First Column (F)',
+      definition: '循环位移排序矩阵的第一列。由于所有位移已经排序，F 列自然也是有序的。F 列中的字符分组统计恰好对应 C 数组。',
+    },
+    {
+      term: 'Last Column (L)',
+      definition: '循环位移排序矩阵的最后一列，即 BWT 串本身。L 列中的字符是 F 列中对应字符在原文本中的"前一个字符"。',
+    },
+    {
+      term: 'LF 映射（Last-to-First mapping）',
+      definition: 'L 列中第 $i$ 行的字符对应 F 列中第 $\text{LF}(i)$ 行的同一字符。LF 映射保持了循环位移的连续性，是后向搜索的核心。',
+    },
+  ]}
+/>
+
+### 3. 后向搜索（Backward Search）
+
+后向搜索是 FM-index 的核心算法：**从后往前匹配模式串**，利用 BWT 的排序性质和 LF 映射，在 $O(m)$ 时间内完成查询。
+
+#### 算法逻辑
+
+假设我们要在文本 `BANANA$` 中查模式串 `ANA`：
+
+1. **查找 `A`**：在排序后的第一列（First Column）中找到所有以 `A` 开头的后缀区间。F 列中 `A` 出现的位置范围是 $[1, 3]$（对应 SA[1] 到 SA[3]）。
+2. **查找 `NA`**：利用 BWT 串（Last Column）和 **LF 映射**，找到那些后面跟着 `A` 且自身是 `N` 的位置。具体来说，在 L 列的 $[1, 3]$ 范围内找到字符 `N`，然后通过 LF 映射得到新的区间。
+3. **查找 `ANA`**：重复上述过程，在 L 列的新范围内找到字符 `A`，再通过 LF 映射得到最终区间。
+
+**LF 映射的直觉**：BWT 矩阵最后一列中的第 $k$ 个字符 `X`，对应于第一列中的第 $k'$ 个字符 `X`。这是因为循环位移保持了一一对应关系。LF 映射允许我们不存储完整矩阵也能在索引空间内自如穿梭。
+
+形式化地，LF 映射定义为：
+
+$$\text{LF}(i) = C[L[i]] + \text{rank}(L[i], i)$$
+
+其中 $C[c]$ 是 F 列中比字符 $c$ 小的字符总数，$\text{rank}(c, i)$ 是 L 列前 $i$ 个位置中字符 $c$ 出现的次数。
+
+### 4. FM-index：现代工业标准
+
+FM-index (Full-text index in Minute space) 将 BWT 与两个关键的辅助结构结合，形成了一个功能完备的压缩全文索引。
+
+#### 辅助结构
+
+- **C[c]**：统计在字典序中比字符 $c$ 小的所有字符在文本中出现的总次数。即 F 列中第一个 `c` 的位置。
+- **Occ(c, i) / Rank(c, i)**：记录字符 $c$ 在 BWT 串的前 $i$ 个位置中出现了多少次。
+
+#### 查询过程
+
+使用 FM-index 查找模式串 $P = p_1 p_2 \dots p_m$ 的后向搜索过程：
+
+1. 初始化搜索区间为 $[0, n-1]$；
+2. 从 $i = m$ 到 $1$，逐步缩小区间：
+   - 新区间的左端点：$sp' = C[p_i] + \text{Occ}(p_i, sp)$
+   - 新区间的右端点：$ep' = C[p_i] + \text{Occ}(p_i, ep + 1) - 1$
+3. 如果 $sp' > ep'$，则模式串不存在于文本中；
+4. 否则，SA 中 $[sp', ep']$ 区间的所有值就是模式串出现的起始位置。
+
+#### 空间优化
+
+Occ 数组的存储是 FM-index 空间开销的主要来源。实际实现中采用分级存储策略：
+
+- 每隔 $\sigma$ 个位置存储一个精确的 Occ 值（checkpoint），中间的值通过扫描 BWT 串重新计算；
+- 采样间隔 $\sigma$ 越大，空间越省但查询越慢，这是一个可调节的时空权衡。
+
+## 示例
+
+以文本 `BANANA$` 为例，完整演示后向搜索查找 `ANA` 的过程。
+
+**步骤 0：构建 BWT 和辅助结构**
+
+循环位移排序矩阵：
+
+| 排名 | 循环位移 | F | L (BWT) |
+| :--- | :--- | :--- | :--- |
+| 0 | `$BANANA` | `$` | `A` |
+| 1 | `A$BANAN` | `A` | `N` |
+| 2 | `ANA$BAN` | `A` | `N` |
+| 3 | `ANANA$B` | `A` | `B` |
+| 4 | `BANANA$` | `B` | `$` |
+| 5 | `NA$BANA` | `N` | `A` |
+| 6 | `NANA$BA` | `N` | `A` |
+
+BWT = `ANNB$AA`
+
+C 数组：`C[$] = 0`，`C[A] = 1`，`C[B] = 4`，`C[N] = 5`
+
+**步骤 1：查找 `A`（从模式串末尾开始）**
+
+区间初始化为 $[0, 6]$。
+
+- $sp' = C[A] + \text{Occ}(A, 0) = 1 + 0 = 1$
+- $ep' = C[A] + \text{Occ}(A, 7) - 1 = 1 + 4 - 1 = 4$
+
+新区间：$[1, 4]$，包含所有以 `A` 结尾的后缀。
+
+**步骤 2：查找 `NA`**
+
+在 L 列的 $[1, 4]$ 范围内找 `N`：
+- L[1] = `N`，L[2] = `N`，L[3] = `B`，L[4] = `$`
+
+- $sp' = C[N] + \text{Occ}(N, 1) = 5 + 0 = 5$
+- $ep' = C[N] + \text{Occ}(N, 5) - 1 = 5 + 2 - 1 = 6$
+
+新区间：$[5, 6]$。
+
+**步骤 3：查找 `ANA`**
+
+在 L 列的 $[5, 6]$ 范围内找 `A`：
+- L[5] = `A`，L[6] = `A`
+
+- $sp' = C[A] + \text{Occ}(A, 5) = 1 + 2 = 3$
+- $ep' = C[A] + \text{Occ}(A, 7) - 1 = 1 + 4 - 1 = 4$
+
+最终区间：$[3, 4]$。
+
+查 SA 数组：$SA[3] = 1$，$SA[4] = 0$。
+
+验证：$T[1 \dots]$ = `ANANA$` 和 $T[0 \dots]$ = `BANANA$`，两者都以 `ANA` 开头。查询正确。
+
+## 复杂度与适用前提
+
+| 指标 | Suffix Array | FM-index |
+| :--- | :--- | :--- |
+| **构建时间** | $O(n)$（SA-IS） | $O(n)$（需要先构建 SA） |
+| **空间开销** | $4n$ 字节 | 约 $2$-$4$ GB（人类基因组），接近压缩熵 |
+| **查询时间** | $O(m \log n)$（二分查找） | $O(m)$（后向搜索） |
+| **精确匹配** | 支持 | 支持 |
+| **允许不匹配** | 需扩展算法 | 需扩展算法（如 BWA-MEM 的方法） |
+
+**适用前提**：
+
+- 参考序列相对稳定，不频繁变化（因为索引构建成本较高）；
+- 查询次数远多于参考序列变化次数（"一次建索引，多次查询"的模式）；
+- 对于允许错误的比对（如最多允许 $k$ 个 mismatch），后向搜索需要扩展为回溯搜索或与其他策略（如 seeding）结合。
+
+**FM-index 的核心优势**：
+
+- **空间极省**：其大小通常接近文本的压缩熵，人类基因组索引仅需约 2-4 GB（相比之下，原始基因组 FASTA 文件约 3 GB，Suffix Array 约 12 GB）。
+- **查询极快**：精确匹配时间仅与模式串长度 $m$ 相关，与文本长度 $n$ 无关。这意味着查询时间不会随参考基因组的增大而增加。
+
+## 与真实工具或流程的连接
+
+### BWA-MEM
+
+BWA（Burrows-Wheeler Aligner）是 BWT 索引在序列比对中最成功的应用之一。
+
+- **BWA-backtrack**（2009）：基于 FM-index 的精确回溯搜索，适合短读长（＜70 bp）。
+- **BWA-SW**（2010）：基于 BWT 的 Smith-Waterman 算法扩展，支持长读长和 gap。
+- **BWA-MEM**（2013）：结合了最大化精确匹配（Maximal Exact Match, MEM）的 seeding 策略和 BWT 索引，是当前最广泛使用的短读长比对工具。
+
+BWA-MEM 的核心流程：
+
+1. 利用 FM-index 快速找到所有 MEM（Maximal Exact Match）作为 seed；
+2. 对 seed 进行链式匹配（chaining）和排序；
+3. 用 Smith-Waterman 动态规划对候选区域做精确比对；
+4. 生成 SAM 格式的输出。
+
+### Bowtie2
+
+Bowtie2 同样基于 FM-index，但采用了不同的搜索策略：
+
+- 使用 FM-index 找到所有种子位置；
+- 通过回溯搜索（backtracking）扩展种子，支持 gap 和 mismatch；
+- 采用双层索引策略进一步加速。
+
+### 其他应用
+
+BWT 和 FM-index 的应用远不止序列比对：
+
+- **字符串集合的索引**：可以将多个参考序列拼接后构建 BWT 索引；
+- **重复序列分析**：BWT 中的连续相同字符区域对应基因组中的重复序列；
+- **文本压缩**：BWT 变换后的文本经过 Move-to-Front 编码和算术编码，可以达到极高的压缩比。
+
+<NoteCard variant="pitfalls"
+  items={[
+    '混淆 BWT 与压缩算法：BWT 本身不压缩数据，它只是一种排列变换。真正的压缩需要配合后续的编码步骤（如 Move-to-Front + 算术编码）。在索引应用中，BWT 的价值在于它支持后向搜索，而非压缩。',
+    '认为 FM-index 只能做精确匹配：虽然基本的后向搜索只支持精确匹配，但通过扩展（如回溯搜索、seed-and-extend 策略），FM-index 也能支持带 mismatch 和 gap 的比对。BWA-MEM 就是这一思路的典型实现。',
+    '忽视终止符 `$` 的作用：在理论描述中，`$` 的字典序最小，确保每个后缀都是不同的。在实际实现中，终止符的处理需要特别注意，否则可能导致索引构建或查询出错。',
+    '混淆 SA 和 BWT 的关系：SA 存储的是后缀的起始位置，BWT 存储的是排序矩阵的最后一列。两者可以互相推导，但服务不同的查询需求。SA 支持二分查找，BWT 支持后向搜索。',
+    '认为 BWT 过时了：虽然 minimizer 等新索引技术在长读长比对中表现优异，但 BWT/FM-index 在短读长比对中仍然是主流方案，且在理论上具有最优的压缩性能。'
+  ]}
+/>
+
+## 相关页面
+
+<LinkGrid
+  items={[
+    { title: 'FM-index 详解', to: '/core-methods/sequence/fm-index', description: '深入算法实现细节' },
+    { title: 'Suffix Tree', to: '/core-methods/sequence/suffix-tree', description: '后缀索引的几何直觉' },
+    { title: 'Minimap2 比对', to: '/applications-omics/long-read/minimap2-alignment', description: 'BWT 索引的长读长应用' },
+    { title: '索引结构概览', to: '/core-methods/sequence/indexing', description: '理解不同索引结构的设计思路' }
+  ]}
+/>

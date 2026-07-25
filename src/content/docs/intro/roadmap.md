@@ -16,7 +16,7 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 1. [导论](./)
 2. [基础与数学](../foundations/)
 3. [数据与资源](../data-references/)
-4. [分析方向](../applications/)
+4. [分析方向](../applications-omics/)
 
 ## 路线二：算法路径
 
@@ -27,7 +27,7 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 1. [算法入门](./algorithms-intro/)
 2. [基础与数学](../foundations/)
 3. [核心方法](../core-methods/)
-4. [分析方向](../applications/)
+4. [分析方向](../applications-omics/)
 
 ## 路线三：任务驱动路径
 
@@ -35,8 +35,8 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 
 推荐顺序：
 
-1. [分析方向](../applications/)
-2. [工作流](../workflows/)
+1. [分析方向](../applications-omics/)
+2. [工作流](../applications-omics/workflows/)
 3. [数据与资源](../data-references/)
 4. [核心方法](../core-methods/)
 5. [基础与数学](../foundations/)
@@ -47,10 +47,10 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 
 - [生物信息学中的基础对象](../foundations/biology-basics/)
 - [参考基因组与注释](../foundations/reference-and-annotation/)
-- [常见文件格式](../formats/common-file-formats/)
-- [编辑距离](../alignment/edit-distance/)
-- [FM-index](../sequence/fm-index/)
-- [RNA-seq 工作流](../workflows/rna-seq/)
+- [常见文件格式](../data-references/formats/common-file-formats/)
+- [编辑距离](../core-methods/alignment/edit-distance/)
+- [FM-index](../core-methods/sequence/fm-index/)
+- [RNA-seq 工作流](../applications-omics/workflows/rna-seq/)
 
 ## 相关页面
 

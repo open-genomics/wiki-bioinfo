@@ -140,6 +140,6 @@ wiki 页面适合建立主线理解，但当你需要进一步确认定义、算
 ## 相关页面
 
 - [写作规范](../intro/style-guide/)
-- [常用数据库与资源](../databases/common-resources/)
+- [常用数据库与资源](../data-references/databases/common-resources/)
 - [数据库与注释系统一览](../data-references/databases-and-annotations/)
 - [术语表](./glossary/)

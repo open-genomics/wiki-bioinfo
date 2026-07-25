@@ -5,7 +5,7 @@ description: 建立 DNA、RNA、蛋白质、基因组、reads 和注释等基本
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
@@ -165,10 +165,10 @@ graph LR
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
-    { title: '序列、字符串与坐标系统', to: '/wiki-bioinfo/foundations/sequences-and-strings', description: '将生物对象抽象为计算对象' },
-    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解原始测序数据的特性' },
-    { title: '算法与复杂度', to: '/wiki-bioinfo/foundations/algorithms-and-complexity', description: '处理大规模生物数据的算法直觉' }
+<LinkGrid
+  items={[
+    { title: '序列、字符串与坐标系统', to: '/foundations/sequences-and-strings', description: '将生物对象抽象为计算对象' },
+    { title: '测序 Reads 与覆盖度', to: '/foundations/sequencing-reads-coverage', description: '理解原始测序数据的特性' },
+    { title: '算法与复杂度', to: '/foundations/algorithms-and-complexity', description: '处理大规模生物数据的算法直觉' }
   ]}
 />

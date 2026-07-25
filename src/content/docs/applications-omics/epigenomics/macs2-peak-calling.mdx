@@ -1,0 +1,307 @@
+---
+description: MACS2（Model-based Analysis of ChIP-Seq）峰调用算法的核心统计思想，包括泊松模型、局部背景估计与片段对齐的教学性解释。
+title: "MACS2 峰调用算法"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="MACS2 是 ChIP-seq 和 ATAC-seq 中最广泛使用的峰调用算法，通过泊松模型和局部背景估计识别基因组上的显著富集区域。"
+  items={[
+    '核心是使用泊松分布建模背景 read 分布',
+    '关键创新是动态估计局部背景参数 λ',
+    '通过正负链偏移对齐精确定位蛋白结合中心'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { name: 'ChIP-seq 概览', href: '/applications-omics/epigenomics/chip-seq-overview', description: 'ChIP-seq 实验原理与数据特点' },
+    { name: '统计检验与多重校正', href: '/foundations/probability-and-graphs', description: '泊松检验与 FDR 校正原理' },
+    { name: 'ATAC-seq', href: '/applications-omics/epigenomics/atac-seq', description: 'ATAC-seq 中同样使用 MACS2' },
+  ]}
+/>
+
+## 问题背景
+
+### 核心问题：从测序信号到结合位点
+
+ChIP-seq 实验产生数百万条测序 reads，这些 reads 来源于免疫富集的 DNA 片段。然而，原始测序数据并不能直接告诉我们蛋白在哪里结合，需要解决以下问题：
+
+- **背景噪声**：基因组大部分区域不与目标蛋白结合，但仍会断裂产生 reads
+- **测序偏差**：开放染色质、GC 含量、比对难度等因素导致系统性偏差
+- **信号定位**：测序得到的是片段两端，需要推断蛋白的实际结合位置
+- **统计显著性**：如何判断一个区域的 reads 富集是真实的而非随机波动？
+
+**峰调用（Peak Calling）** 正是为解决这些问题而设计的核心分析步骤。
+
+### 峰调用的生物学目标
+
+峰调用的输出应回答：
+- 基因组上哪些区域的目标蛋白结合显著高于背景？
+- 这些区域的精确边界在哪里？
+- 不同区域之间是否存在显著的富集差异？
+
+这些问题的答案对于理解基因调控网络至关重要。
+
+### MACS2 的设计思想
+
+MACS2（Model-based Analysis of ChIP-Seq）由 Zhang 等人于 2008 年提出，其设计基于以下关键洞察：
+
+**局部背景优先**：基因组不同区域的背景信号差异显著，使用单一全局背景估计会丢失局部信息
+
+**片段双峰对齐**：ChIP-seq 片段两端在蛋白结合位点两侧形成信号峰，通过对齐可精确定位结合中心
+
+**泊松近似**：在局部小区域内，reads 的分布可近似为泊松过程
+
+## 峰调用的应用场景
+
+MACS2 及类似算法在多种表观遗传学研究中发挥核心作用：
+
+**转录因子研究**：
+- 识别转录因子的全基因组结合位点
+- 发现转录因子的共有 motif
+- 研究转录因子间的共定位与竞争
+
+**组蛋白修饰图谱**：
+- 绘制 H3K4me3、H3K27ac 等活跃标记的分布
+- 识别 H3K27me3 等抑制性修饰的 broad domains
+- 定义染色质状态（chromatin states）
+
+**染色质可及性分析**：
+- ATAC-seq 开放区域的识别
+- DNase-seq 超敏位点的检测
+- 与 motif 分析结合推断转录因子活性
+
+**差异结合分析**：
+- 比较不同条件下的峰强度变化
+- 识别条件特异性的调控事件
+- 研究治疗响应或分化过程中的调控动态
+
+## 统计模型（教学性解释）
+
+> **重要说明**：本节使用简化的数学模型帮助理解 MACS2 的核心思想。实际 MACS2/MACS3 的实现包含大量启发式规则、参数调整和优化策略，与这里的简化描述存在显著差异。请不要将此处的公式和流程直接等同于源码实现。
+
+### 核心假设（教学近似）
+
+为便于理解，MACS2 可视为基于以下简化假设：
+
+1. **泊松分布近似**：在局部小区域内，reads 的分布可近似为泊松分布
+2. **局部背景优先**：背景强度应从局部区域估计，而非使用单一全局值
+3. **片段双峰对齐**：ChIP-seq 片段两端会在目标位置附近形成两个峰，需对齐到中心
+
+### 泊松模型
+
+对于基因组上的一个窗口 `w`，设其长度为 `L` bp。如果该窗口没有真实富集，则 ChIP 样本在该窗口的 read 数 `k` 服从泊松分布：
+
+$$P(K = k) = \frac\{\lambda^k e^\{-\lambda\}\}\{k!\}$$
+
+其中 `λ` 是该窗口的期望 read 数（背景强度）。
+
+### p-value 计算
+
+给定观测到的 read 数 `k`，其富集显著性的 p-value 为：
+
+$$p = P(K \geq k) = \sum_\{i=k\}^\{\infty\} \frac\{\lambda^i e^\{-\lambda\}\}\{i!\}$$
+
+这是单边检验，我们关心的是 read 数是否显著高于背景。
+
+### Lambda 估计策略（概念性说明）
+
+MACS2 的关键创新在于动态估计背景参数 `λ`。
+
+**基本思路**：
+- **全局缩放**：用 ChIP 与 Input 的总 reads 比例作为基准，反映测序深度差异
+- **局部估计**：在候选峰周围（如上下游各 10 kb）提取局部 reads，计算局部密度
+
+**原因**：基因组不同区域背景差异很大——开放染色质、重复序列等都会影响背景水平。
+
+**实际实现**：MACS2 会比较局部估计和全局缩放后的估计，通常取较大值作为最终 `λ`。但具体实现涉及复杂的启发式规则、窗口尺度选择和参数调整，远超此处的简化描述。
+
+ChIP-seq 测序得到的是片段的两端，真实的蛋白结合位置应该在片段中心。
+MACS2 通过以下步骤估计片段大小 `d`：
+
+1. 计算正负链 reads 之间的距离分布
+2. 找到距离分布的峰值（mode）
+3. 这个峰值对应于片段大小 `d`
+
+然后对正链 reads 向右偏移 `d/2`，负链 reads 向左偏移 `d/2`，使它们对齐到真实的结合位置。
+
+## 算法步骤
+
+### 步骤 1：预处理
+
+1. **去除重复**：移除 PCR 产生的完全相同的 reads
+2. **比对质控**：过滤低质量比对
+3. **移除黑名单区域**：去除 ENCODE 黑名单中的 problematic 区域
+
+### 步骤 2：Fragment Size 估计
+
+MACS2 通过分析正负链 reads 之间的距离分布来估计片段大小 `d`，核心是找到距离分布的峰值（mode）。
+
+> **注意**：实际实现使用了优化的统计方法和数据结构，远比这里的描述复杂。此处的简化仅用于说明基本概念。
+
+### 步骤 3：Read Shift
+
+根据估计的 fragment size `d`：
+
+- 正链 reads：向右移动 `d/2` bp
+- 负链 reads：向左移动 `d/2` bp
+
+这样所有 reads 都对齐到可能的蛋白结合中心。
+
+### 步骤 4：滑动窗口扫描
+
+使用滑动窗口扫描基因组：
+
+1. 窗口大小：默认为 fragment size
+2. 步长：默认为 fragment size / 10
+3. 对每个窗口计算 read 数 `k`
+
+### 步骤 5：背景 Lambda 估计（概念性）
+
+对每个候选窗口，MACS2 会：
+
+1. 在窗口周围（如 ±10 kb）提取局部区域的 reads
+2. 计算局部 read 密度
+3. 结合全局缩放因子计算 `λ<sub>local</sub>`
+4. 取 `λ = max(λ<sub>local</sub>, λ<sub>global</sub>)`
+
+> **注意**：实际实现中的窗口尺度、搜索范围和合并策略涉及大量参数调整和启发式规则。
+
+### 步骤 6：统计检验
+
+对每个窗口：
+
+1. 计算 p-value：`p = P(K ≥ k | λ)`
+2. 使用 Benjamini-Hochberg 或其他方法进行多重检验校正
+3. 筛选 FDR < 阈值（如 0.01）的窗口
+
+### 步骤 7：峰合并与精修
+
+1. 合并相邻的显著窗口
+2. 找到每个合并区域的 read 数量最高点作为峰顶（summit）
+3. 输出最终峰区间
+
+## 示例（简化示意）
+
+以下例子仅用于说明统计检验的基本思路，数值和步骤均为简化。
+
+**场景设定**：
+- 某基因组窗口观测到 50 个 ChIP reads
+- 期望背景 read 数（基于局部估计）为 40
+- 全基因组扫描了约 100,000 个候选窗口
+
+**核心思想**：
+1. 在泊松假设下，计算观测到 ≥50 reads 的概率（p-value）
+2. 由于同时检验大量窗口，需进行多重检验校正（如 FDR）
+3. 只有校正后仍显著的窗口才被识别为峰
+
+**关键点**：
+- 实际 MACS2 的实现远比此处的简化计算复杂
+- 真实的背景估计涉及多个尺度和启发式规则
+- 峰合并、精修等步骤在此例中未体现
+
+本例的目的不是教你如何手工计算，而是帮助理解：**峰调用本质上是在局部富集检验和多重校正之间寻找统计显著的信号。**
+
+## 窄峰与宽峰
+
+MACS2 提供两种模式：
+
+### 窄峰模式（--nomodel 或默认）
+
+适用于转录因子等结合位点：
+
+- 使用较小的窗口（默认 fragment size）
+- 期望信号集中在单个峰顶
+- 输出 narrowPeak 格式
+
+### 宽峰模式（--broad）
+
+适用于组蛋白修饰等区域：
+
+- 使用更大的合并窗口
+- 允许信号在较宽区域内连续
+- 输出 broadPeak 格式
+- 通常使用更宽松的阈值
+
+## 性能考虑
+
+MACS2 的性能主要受以下因素影响：
+
+- **数据量**：Read 数量直接影响处理时间
+- **基因组大小**：需要扫描的区域范围
+- **窗口策略**：滑动窗口的大小和步长
+- **背景估计**：局部背景搜索的范围
+
+实际使用中，MACS2 通过索引优化和并行计算来提高效率。对于典型的 ChIP-seq 数据集（数百万 reads），运行时间通常在几分钟到几十分钟之间。
+
+## 与真实工具或流程的连接
+
+MACS2 是以下工具的基础或参考：
+
+- **MACS2/MACS3**：直接实现
+- **SICER**：宽峰检测的替代方案
+- **HMMRATAC**：ATAC-seq 特定的峰调用
+- **Genrich**：不需要对照的峰调用
+
+现代流程通常：
+
+1. 使用 MACS2 进行初步峰调用
+2. 使用 IDR（Irreproducible Discovery Rate）评估重复性
+3. 结合 motif 分析进行功能解释
+
+<NoteCard variant="pitfalls"
+  items={[
+    '有 Input 对照就不需要考虑局部背景：',
+    '不是。Input 对照只能提供全局背景信息，基因组不同区域的背景强度差异很大，必须使用局部估计。',
+    'p-value 越小，生物学意义越强：',
+    '不一定。p-value 只反映统计显著性，生物学意义还需要考虑：',
+    '峰的强度（fold enrichment）',
+    '峰在功能元件中的位置'
+  ]}
+/>
+
+## 算法优化与变体
+
+### MACS3
+
+MACS3 是 MACS2 的升级版本，主要改进：
+
+- 更快的实现（使用 C++ 重写）
+- 更好的内存管理
+- 支持更多输入格式
+- 改进的宽峰检测
+
+### 无对照模式
+
+当没有 Input 对照时，MACS2 可以：
+
+- 使用局部背景估计
+- 假设大部分区域没有富集
+- 但结果可靠性降低
+
+### 单细胞 ATAC-seq 扩展
+
+对于 scATAC-seq，由于数据稀疏，常使用：
+
+- 细胞聚合后再调用峰
+- 或使用专门工具（如 ArchR、Signac）
+- MACS2 的思想仍然适用，但实现需要调整
+
+## 参考资料
+
+- Zhang, Y., et al. (2008). Model-based analysis of ChIP-Seq (MACS). *Genome Biology*, 9(9), R137.
+- Feng, J., et al. (2012). MACS: a powerful tool for ChIP-seq data analysis. *Current Protocols*, Chapter 2, Unit-2.14.
+- Liu, X., et al. (2023). Model-based Analysis for Single-cell ATAC-seq (MACS3). *Bioinformatics*.
+
+<LinkGrid
+  items={[
+    { title: 'ChIP-seq 概览', to: '/applications-omics/epigenomics/chip-seq-overview', description: 'MACS2 所服务的实验技术背景' },
+    { title: 'ATAC-seq', to: '/applications-omics/epigenomics/atac-seq', description: 'ATAC-seq 中的峰调用同样使用 MACS2' },
+    { title: '统计检验与多重校正', to: '/foundations/probability-and-graphs', description: '峰调用中的 FDR 校正原理' },
+    { title: 'Footprinting 算法', to: '/applications-omics/epigenomics/footprinting-algorithms', description: '从峰到转录因子结合位点的精细分析' }
+  ]}
+/>

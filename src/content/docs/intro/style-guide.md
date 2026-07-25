@@ -182,19 +182,18 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 ### 4.7 链接
 
-- 站内链接使用相对路径（如 `../alignment/edit-distance`）或以 `/wiki-bioinfo/` 开头的绝对路径（如 `/wiki-bioinfo/alignment/edit-distance`）。两者等价，`link-utils.ts` 会统一处理 base 前缀。
+- 站内链接使用相对路径（如 `../core-methods/alignment/edit-distance`）或以 `/wiki-bioinfo/` 开头的绝对路径（如 `/wiki-bioinfo/alignment/edit-distance`）。两者等价，`link-utils.ts` 会统一处理 base 前缀。
 - 链接文字应该是有描述性的名词，不要使用"点击这里"。
 - 外链优先指向论文主页、官方文档或可信数据库。
 
-> **推荐**：详见[编辑距离](../alignment/edit-distance)页面。
+> **推荐**：详见[编辑距离](../core-methods/alignment/edit-distance)页面。
 >
-> **不推荐**：点击[这里](../alignment/edit-distance)查看编辑距离。
+> **不推荐**：点击[这里](../core-methods/alignment/edit-distance)查看编辑距离。
 
 ## 5. 文件与命名
 
 - 文件名使用小写英文，以连字符 `-` 分隔单词，如 `needleman-wunsch.mdx`。
-- 普通知识页优先使用 `.md` 格式。
-- 需要导入组件（如 `NoteCard`、`PrerequisitesBox`）时使用 `.mdx`。
+- 默认使用 `.mdx` 格式；仅纯文本无组件导入的页面才用 `.md`。
 - 每个文件必须包含 frontmatter，至少有 `title` 和 `description`。
 
 ```yaml
@@ -298,12 +297,12 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 
 ## 8. MDX 与组件
 
-普通页面优先使用 `.md`。满足以下条件时使用 `.mdx`：
+默认使用 `.mdx`。仅当页面是纯文本且不导入任何组件时，才使用 `.md`。常见组件如下：
 
 - 需要 `NoteCard`（`variant="summary"` 摘要 / `variant="pitfalls"` 误区 / `variant="tools"` 工具映射）
 - 需要 `PrerequisitesBox`（前置知识）
 - 需要 `DataTable`（`variant="comparison"` 对比 / `variant="decision-matrix"` 决策矩阵）
-- 需要 `LinkGrid`（导航网格 / 相关页面卡片，`RelatedLinks` 是其 related 变体的兼容包装）
+- 需要 `LinkGrid`（`variant="navigation"` 导航网格 / `variant="related"` 相关页面卡片）
 
 新增 MDX 页面时，优先复用 `src/components/docs/` 中已有组件。不要为单个页面发明一次性的样式方案。
 
@@ -335,7 +334,7 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 | 术语首次出现 | `覆盖度（coverage）` | `覆盖度（Coverage）` |
 | 标题格式 | `## 动态规划矩阵` | `##动态规划矩阵。` |
 | 代码块 | ` ```bash ` | ` ``` ` |
-| 站内链接 | `详见[编辑距离](../alignment/edit-distance)` | `点击[这里](...)查看` |
+| 站内链接 | `详见[编辑距离](../core-methods/alignment/edit-distance)` | `点击[这里](...)查看` |
 | 标点符号 | `分解为子问题，逐步求解。` | `分解为子问题,逐步求解.` |
 | 文件名 | `needleman-wunsch.mdx` | `NeedlemanWunsch.mdx` |
 

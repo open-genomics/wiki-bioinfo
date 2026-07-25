@@ -1,0 +1,283 @@
+---
+description: 随机化算法：通过引入随机性在巨大搜索空间中更聪明地探索，包括快速排序、Gibbs Sampling 和随机投影。
+title: "随机化算法"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import DataTable from '@/components/docs/DataTable.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+
+<NoteCard variant="summary"
+  summary="随机化算法通过引入随机性来避免陷入局部最优，在巨大搜索空间中更聪明地探索。在生物信息学中，Gibbs Sampling、随机投影等方法在 Motif 发现、聚类分析等任务中发挥重要作用。"
+  items={[
+    '理解随机化算法的核心价值：跳出局部最优、简化算法设计',
+    '掌握快速排序的随机化策略和平均复杂度分析',
+    '学习 Gibbs Sampling 在 Motif 发现中的应用'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: '算法与复杂度', href: '/foundations/algorithms-and-complexity' },
+    { label: '分治算法基础', href: '/core-methods/algorithms/divide-and-conquer' },
+    { label: '概率、图与动态规划预备', href: '/foundations/probability-and-graphs' }
+  ]}
+/>
+
+## 为什么需要随机化算法
+
+确定性算法在处理某些问题时会遇到困难：
+
+- **陷入局部最优**：贪心算法可能被困在局部最优解
+- **算法复杂**：确定性算法可能需要复杂的分析
+- **最坏情况差**：某些确定性算法的最坏情况性能很差
+
+随机化算法通过引入随机性解决这些问题：
+
+<DefinitionList
+  items={[
+    {
+      term: '跳出局部最优',
+      definition: '通过随机选择避免被局部最优吸引',
+    },
+    {
+      term: '简化设计',
+      definition: '随机化往往能简化算法逻辑和分析',
+    },
+    {
+      term: '平均性能好',
+      definition: '虽然最坏情况可能差，但平均性能通常很好',
+    },
+    {
+      term: '概率保证',
+      definition: '可以提供成功概率的理论保证',
+    },
+  ]}
+/>
+
+## 1. 快速排序的随机化
+
+### 确定性快速排序的问题
+
+确定性快速排序选择第一个元素作为 pivot：
+
+- **最坏情况**：已排序数组，复杂度 $O(n^2)$
+- **平均情况**：$O(n \log n)$
+- **问题**：实际数据可能接近已排序，触发最坏情况
+
+### 随机化快速排序
+
+随机选择 pivot：
+
+```text
+RANDOMIZEDQUICKSORT(array, low, high)
+1 if low < high
+2   pivot_index ← RANDOM(low, high)
+3   swap array[low] and array[pivot_index]
+4   pivot ← partition(array, low, high)
+5   RANDOMIZEDQUICKSORT(array, low, pivot - 1)
+6   RANDOMIZEDQUICKSORT(array, pivot + 1, high)
+```
+
+### 复杂度分析
+
+**期望时间复杂度**：$O(n \log n)$
+
+**关键观察**：
+- 随机选择 pivot 使得每个元素有相等的概率成为 pivot
+- 期望的递归深度是 $O(\log n)$
+- 即使输入是已排序的，随机化也能保证平均性能
+
+**最坏情况**：仍然是 $O(n^2)$，但概率极低
+
+### 在生物信息学中的应用
+
+- **大规模数据排序**：比确定性快速排序更稳定
+- **k-mer 计数**：某些工具使用随机化排序变种
+- **分区统计**：快速找到中位数、分位数
+
+## 2. Gibbs Sampling：从"抛硬币"到 Motif 发现
+
+Gibbs Sampling 是一种马尔可夫链蒙特卡洛（MCMC）方法。在生物信息学中，它最经典的应用是解决 **Motif Finding** 问题。
+
+### 为什么需要 Gibbs Sampling？
+在 `Randomized Motif Search` 中，我们每次根据当前的 $t$ 个起始位置构建 Profile，然后寻找所有序列中最匹配的位置。这种方法虽然快，但非常容易陷入局部最优解（即找到了一个还可以但不是最好的模式）。
+
+Gibbs Sampling 通过一种更"谨慎"的随机化方式来缓解这个问题：**它不是一次性更新所有序列的 Motif 位置，而是在每一步只随机选择一条序列进行更新。**
+
+### 算法流程
+1.  **初始化**：随机选择 $t$ 条序列的起始位置 $s_1, \dots, s_t$。
+2.  **选择与移除**：随机选择一条序列 $i$（$1 \leq i \leq t$），暂时将其排除。
+3.  **构建模型**：利用剩余的 $t-1$ 条序列中的 Motif 片段构建 Profile 矩阵 $P$。
+4.  **概率估算**：在被移除的序列 $i$ 中，计算每一个可能的 $l$-mer 在模型 $P$ 下出现的概率。
+5.  **按比例采样（Roulette Wheel Selection）**：
+    - 与贪心算法不同，我们不一定选概率最高的位置。
+    - 我们按照计算出的概率分布随机采样一个新的位置 $s_i$。这意味着概率高的位置更可能被选中，但概率较低的位置也有机会，从而帮助算法跳出局部陷阱。
+6.  **迭代**：重复上述过程 $N$ 次，记录并返回得分最高的 Motif。
+
+### 关键直觉：抛硬币的平衡
+Gibbs Sampling 就像是在一个多维度的"地形"中行走。如果只往高处走（贪心），可能会被困在一个小山丘上。Gibbs Sampling 允许你偶尔往"低处"走一步，从而有机会翻过障碍，到达更高的山峰。
+
+详见：[Motif Discovery 算法路线](../models/motif-discovery-algorithms)
+
+### 在生物信息学中的应用
+
+- **Motif 发现**：寻找转录因子结合位点
+- **序列比对**：某些比对算法使用采样策略
+- **参数估计**：在复杂概率模型中估计参数
+
+## 3. 随机投影（Random Projections）
+
+### 问题的背景
+在 Motif Finding 问题中，如果我们想找一个长度为 $l$ 的模式，且允许最多 $d$ 个错配（称为 $(l, d)$-motif 问题），传统的枚举法或贪心法在 $l$ 较大时会变得极其缓慢。
+
+### 随机投影的直觉
+随机投影（Random Projections）是由 Buhler 和 Tompa 提出的一种巧妙的随机化方法。它的核心思路是：**如果我们无法处理完整的 $l$-mer，那么我们随机挑选其中的 $k$ 个位置进行"投影"。**
+
+### 算法流程
+1.  **选择模板**：随机选择 $k$ 个索引位置（$k < l$），例如 $\{1, 3, 5\}$。
+2.  **投影与桶排序**：对于序列中的每一个 $l$-mer，只保留模板指定的 $k$ 个字符，将其投影为一个 $k$-mer。
+3.  **收集候选者**：将投影后相同的 $k$-mer 放入同一个"桶"中。
+4.  **识别潜在 Motif**：
+    - 如果一个桶里的 $l$-mer 数量异常多，说明这些 $l$-mer 在投影位置上是一致的。
+    - 它们很有可能就是我们要找的 $(l, d)$-motif 的变体。
+5.  **验证与精修**：对高频桶中的 $l$-mer 进行进一步的共识序列计算和局部搜索。
+
+### 为什么有效？
+虽然单次投影可能会漏掉真正的 Motif（如果错配正好发生在我们挑选的 $k$ 个位置上），但由于算法运行非常快，我们可以通过**多次独立投影**来保证以极高的概率捕捉到真正的模式。
+
+## 4. 随机化算法的分类
+
+<DefinitionList
+  items={[
+    {
+      term: 'Las Vegas 算法',
+      definition: '总是返回正确答案，但运行时间是随机的。如随机化快速排序。',
+    },
+    {
+      term: 'Monte Carlo 算法',
+      definition: '运行时间确定，但可能返回错误答案。如随机投影、某些近似算法。',
+    },
+  ]}
+/>
+
+### Las Vegas vs Monte Carlo
+
+<DataTable variant="comparison"
+  leftTitle="Las Vegas"
+  rightTitle="Monte Carlo"
+  rows={[
+    { aspect: '正确性', left: '总是正确', right: '可能错误' },
+    { aspect: '运行时间', left: '随机', right: '确定' },
+    { aspect: '典型应用', left: '随机化快速排序', right: '随机投影、近似算法' },
+    { aspect: '概率保证', left: '期望时间复杂度', right: '成功概率' }
+  ]}
+/>
+
+## 5. 随机化算法的设计原则
+
+### 何时使用随机化
+
+<DefinitionList
+  items={[
+    {
+      term: '搜索空间巨大',
+      definition: '确定性算法无法有效探索',
+    },
+    {
+      term: '容易陷入局部最优',
+      definition: '贪心或确定性方法被困住',
+    },
+    {
+      term: '需要简化设计',
+      definition: '随机化能简化算法逻辑',
+    },
+    {
+      term: '平均性能重要',
+      definition: '可以接受最坏情况，但需要好的平均性能',
+    },
+  ]}
+/>
+
+### 设计技巧
+
+1. **随机重启**：多次运行，取最好结果
+2. **随机采样**：从候选解中随机选择
+3. **随机扰动**：对当前解进行随机修改
+4. **概率接受**：以一定概率接受劣解（如模拟退火）
+
+## 6. 复杂度分析
+
+### 期望复杂度 vs 最坏复杂度
+
+随机化算法通常分析**期望复杂度**（expected complexity）而非最坏复杂度。
+
+**快速排序示例**：
+- 最坏时间：$O(n^2)$
+- 期望时间：$O(n \log n)$
+- 实际中几乎总是接近期望时间
+
+### 概率保证
+
+某些算法提供概率保证：
+
+- **成功概率**：算法以概率 p 返回正确答案
+- **错误概率**：可以通过增加运行次数降低错误概率
+- **高概率保证**：如 $1 - 1/n$ 的概率正确
+
+## 7. 在生物信息学中的扩展应用
+
+### 系统发育树构建
+
+- **随机添加物种**：随机顺序添加物种到树中
+- **随机树搜索**：在树空间中随机游走
+- **Bootstrap**：重采样评估树的置信度
+
+### 聚类分析
+
+- **随机初始化**：k-means 的随机初始中心
+- **随机投影聚类**：降维后聚类
+- **随机森林**：集成学习中的随机性
+
+### 序列分析
+
+- **随机采样**：从大规模数据集中采样
+- **随机游走**：在序列空间中随机游走
+- **随机化测试**：统计显著性检验
+
+<NoteCard variant="pitfalls"
+  items={[
+    '随机化算法不可靠：',
+    '不是。随机化算法：',
+    '有严格的理论分析',
+    '提供概率保证',
+    '实际中往往比确定性算法更稳定',
+    '随机化总是比确定性慢：',
+    '不一定。随机化算法的平均性能往往很好，而且可以避免最坏情况。例如，随机化快速排序在已排序输入上比确定性快速排序快得多。'
+  ]}
+/>
+
+## 与其他算法的连接
+
+- **贪心算法**：随机化可以改进贪心，避免局部最优
+- **动态规划**：某些问题可以用随机化近似求解
+- **近似算法**：随机化是设计近似算法的重要工具
+- **分治算法**：随机化快速排序是分治与随机化的结合
+
+## 参考资料
+
+- Randomized Algorithms, Motwani & Raghavan
+- Introduction to Algorithms (CLRS), 第 5、7 章
+- Bioinformatics Algorithms: An Active Learning Approach
+
+<LinkGrid
+  items={[
+    { title: '近似算法', to: '/core-methods/algorithms/approximation-algorithms', description: '近似算法与随机化算法常常结合使用，在效率与质量间取得平衡。' },
+    { title: 'Motif discovery 的算法路线', to: '/core-methods/models/motif-discovery-algorithms', description: 'Gibbs Sampling 是随机化算法在 Motif 发现中的经典应用。' },
+    { title: '穷举搜索与分支定界', to: '/core-methods/algorithms/exhaustive-search', description: '穷举搜索是理解为什么需要随机化的基线。' },
+    { title: '概率、图与动态规划预备', to: '/foundations/probability-and-graphs', description: '随机化算法的理论基础依赖概率论。' },
+    { title: '分治算法基础', to: '/core-methods/algorithms/divide-and-conquer', description: '随机化快速排序是分治与随机化的经典结合。' },
+  ]}
+/>

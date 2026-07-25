@@ -5,7 +5,7 @@
 ## 从哪里开始
 
 - **项目概览**：[`README.md`](./README.md)
-- **项目设计与内容边界**：[关于本项目](https://lessup.github.io/wiki-bioinfo/intro/about/)
+- **项目设计与内容边界**：[导论](https://lessup.github.io/wiki-bioinfo/intro/)
 - **贡献方式与流程**：[如何贡献](https://lessup.github.io/wiki-bioinfo/intro/contributing/)
 - **写作规范**：[写作规范](https://lessup.github.io/wiki-bioinfo/intro/style-guide/)
 - **Agent 指令**：[`AGENTS.md`](./AGENTS.md)

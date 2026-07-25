@@ -4,9 +4,9 @@ description: 理解测序读段（Reads）的观测特性、深度（Coverage）
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
@@ -21,8 +21,8 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' },
-    { label: '序列与字符串', href: '/wiki-bioinfo/foundations/sequences-and-strings' }
+    { label: '生物学基础对象', href: '/foundations/biology-basics' },
+    { label: '序列与字符串', href: '/foundations/sequences-and-strings' }
   ]}
 />
 
@@ -60,7 +60,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 ### 短读长与长读长的权衡
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="短读长（Short Reads）"
   rightTitle="长读长（Long Reads）"
   rows={[
@@ -214,12 +214,12 @@ $$Q = -10 \log_{10} P_{error}$$
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
-    { title: '基因组组装', to: '/wiki-bioinfo/assembly', description: '如何将 Reads 拼回基因组' },
-    { title: '变异检测总览', to: '/wiki-bioinfo/variants/variant-calling-overview', description: '区分错误与真实变异' },
-    { title: '编辑距离与比对基础', to: '/wiki-bioinfo/alignment/edit-distance', description: '理解比对质量的底层逻辑' },
-    { title: '序列与字符串', to: '/wiki-bioinfo/foundations/sequences-and-strings', description: '理解 Reads 的字符串抽象' },
-    { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '覆盖度统计的数学基础' }
+<LinkGrid
+  items={[
+    { title: '基因组组装', to: '/core-methods/assembly', description: '如何将 Reads 拼回基因组' },
+    { title: '变异检测总览', to: '/applications-clinical/variants/variant-calling-overview', description: '区分错误与真实变异' },
+    { title: '编辑距离与比对基础', to: '/core-methods/alignment/edit-distance', description: '理解比对质量的底层逻辑' },
+    { title: '序列与字符串', to: '/foundations/sequences-and-strings', description: '理解 Reads 的字符串抽象' },
+    { title: '概率、图与动态规划预备', to: '/foundations/probability-and-graphs', description: '覆盖度统计的数学基础' }
   ]}
 />

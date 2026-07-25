@@ -45,6 +45,6 @@ description: BioInfo Wiki 的项目定位、知识组织原则、阅读方式与
 
 - [基础与数学](../foundations/)：对象、抽象模型和算法前置
 - [核心方法](../core-methods/)：索引、比对、组装、概率模型等主线
-- [分析方向](../applications/)：围绕真实分析任务组织内容
+- [分析方向](../applications-omics/)：围绕真实分析任务组织内容
 - [数据与资源](../data-references/)：参考基因组、注释、格式和数据库
 - [附录](../appendix/)：术语、参考资料和索引

@@ -1,0 +1,94 @@
+---
+description: 组学应用板块入口，把核心方法放回 RNA-seq、单细胞、表观组、长读长、空间组学、蛋白质组学、多组学、系统发育与机器学习等真实任务。
+title: "组学应用"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<PageHeaderMeta
+  audience="已经建立基础与方法框架，想把它们放回真实组学分析任务的读者"
+  startWith="先看工作流与案例，再按自己的问题进入转录组、单细胞、表观组或其他专题"
+/>
+
+这一部分承接前面的基础与方法层，将其重新放回具体组学分析任务中：RNA-seq、单细胞、表观组、群体遗传学、长读长、空间组学、蛋白质组学、多组学整合、系统发育与机器学习。这里不是再讲一遍算法，而是把索引、比对、组装、概率模型、数据格式与参考资源重新放回真实任务边界中。
+
+## 子主题导航
+
+<LinkGrid
+  items={[
+    {
+      title: '工作流与案例',
+      to: '/applications-omics/workflows/',
+      badge: '起点',
+      description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法重新放回真实分析流程。',
+    },
+    {
+      title: '算法应用专题',
+      to: '/applications-omics/alg-applications/',
+      badge: 'DP / 图 / 字符串 / 概率',
+      description: '动态规划、图算法、字符串算法与概率算法在真实分析任务中的应用。',
+    },
+    {
+      title: '转录组',
+      to: '/applications-omics/transcriptomics/',
+      badge: 'RNA-seq',
+      description: '聚焦 RNA-seq 中的定量、isoform 归属与 pseudo-alignment。',
+    },
+    {
+      title: '单细胞组学',
+      to: '/applications-omics/single-cell/',
+      badge: 'single-cell',
+      description: '围绕 scRNA-seq 的建库、UMI、聚类、伪时间与细胞类型注释。',
+    },
+    {
+      title: '表观基因组学',
+      to: '/applications-omics/epigenomics/',
+      badge: 'regulation',
+      description: '理解 ChIP-seq、ATAC-seq 与 DNA 甲基化如何刻画调控层。',
+    },
+    {
+      title: '群体遗传学',
+      to: '/applications-omics/population/',
+      badge: 'population scale',
+      description: '从 HWE、LD 到 GWAS 和群体结构，理解群体尺度的变异解释。',
+    },
+    {
+      title: '长读长测序',
+      to: '/applications-omics/long-read/',
+      badge: 'long reads',
+      description: '围绕 PacBio、Nanopore、SV 与长读长组装建立现代测序视角。',
+    },
+    {
+      title: '空间转录组',
+      to: '/applications-omics/spatial/',
+      badge: 'spatial',
+      description: '把表达矩阵重新放回组织切片与空间坐标中，理解邻域与组织结构。',
+    },
+    {
+      title: '蛋白质组学',
+      to: '/applications-omics/proteomics/',
+      badge: 'proteomics',
+      description: '从肽段质谱峰到数据库搜索、FDR 和蛋白定量，理解蛋白层分析主线。',
+    },
+    {
+      title: '多组学整合',
+      to: '/applications-omics/multi-omics/',
+      badge: 'integration',
+      description: '把 RNA、表观组、蛋白和单细胞多模态数据放到同一个整合视角中理解。',
+    },
+    {
+      title: '系统发育与进化',
+      to: '/applications-omics/phylogeny/',
+      badge: 'evolution',
+      description: '理解序列差异如何映射成距离、树和进化关系。',
+    },
+    {
+      title: '机器学习与基础模型',
+      to: '/applications-omics/ml-bioinfo/',
+      badge: 'ML / foundation models',
+      description: '从序列深度学习到生物语言模型，理解新一代表示学习方法。',
+    },
+  ]}
+  variant="navigation"
+/>

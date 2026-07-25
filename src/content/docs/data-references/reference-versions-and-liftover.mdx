@@ -5,9 +5,9 @@ title: "参考版本、构建号与坐标转换"
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="参考基因组版本（如 GRCh37、GRCh38）是所有基因组坐标的空间背景。理解版本差异的本质、掌握坐标转换（liftover）的原理与局限，是确保数据整合准确性的基础。"
@@ -58,15 +58,15 @@ liftover 不是简单的坐标平移，而是依赖于区域间序列同源性�
 
 <PrerequisitesBox
   items={[
-    {label: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
-    {label: 'SAM/BAM/CRAM 格式', href: '/wiki-bioinfo/formats/sam-bam-cram'},
-    {label: 'VCF/BCF 格式', href: '/wiki-bioinfo/formats/vcf-bcf-format'},
+    {label: '参考基因组、坐标系统与注释', href: '/foundations/reference-and-annotation'},
+    {label: 'SAM/BAM/CRAM 格式', href: '/data-references/formats/sam-bam-cram'},
+    {label: 'VCF/BCF 格式', href: '/data-references/formats/vcf-bcf-format'},
   ]}
 />
 
 ## 先分清几个容易混淆的名字
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="你看到的名称"
   rightTitle="它更偏什么含义"
   rows={[
@@ -243,29 +243,29 @@ liftover 依赖的是不同参考版本之间的全基因组比对关系。它�
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '参考基因组、坐标系统与注释',
-      to: '/wiki-bioinfo/foundations/reference-and-annotation',
+      to: '/foundations/reference-and-annotation',
       label: '基础背景',
       description: '先打稳参考、坐标和注释的基础，再理解版本迁移为什么重要。',
     },
     {
       title: '数据库与注释系统一览',
-      to: '/wiki-bioinfo/data-references/databases-and-annotations',
+      to: '/data-references/databases-and-annotations',
       label: '解释层',
       description: '理解数据库对象、ID 与版本体系为什么必须和参考背景一起看。',
     },
     {
       title: '常见数据格式总览',
-      to: '/wiki-bioinfo/data-references/common-formats-overview',
+      to: '/data-references/common-formats-overview',
       label: '文件层级',
       description: '把 BAM、VCF、GTF 等文件重新放回流程层级里理解。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/wiki-bioinfo/variants/variant-calling-overview',
+      to: '/applications-clinical/variants/variant-calling-overview',
       label: '实战流程',
       description: '看参考版本选择如何直接影响变异检测、过滤和后续解释。',
     },

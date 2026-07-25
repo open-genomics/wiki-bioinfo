@@ -5,9 +5,9 @@ description: 参考基因组的构建与版本演进（GRCh37/38）、基因组�
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import WorkflowSteps from '@/components/docs/WorkflowSteps.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="这页想回答的是：为什么同一份测序数据，只有先放进某个参考背景、再配上正确的注释对象，后面的比对、定量、变异解释和数据库映射才真正有意义。"
@@ -98,7 +98,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 三者是如何一起工作的
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="它解决什么问题"
   rightTitle="典型表现"
   rows={[
@@ -221,35 +221,35 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '参考版本、构建号与坐标转换',
-      to: '/wiki-bioinfo/data-references/reference-versions-and-liftover',
+      to: '/data-references/reference-versions-and-liftover',
       label: '版本迁移',
       description: '如果你已经面对多个参考版本或历史数据整合，继续看这页。',
     },
     {
       title: '常见文件格式概览',
-      to: '/wiki-bioinfo/formats/common-file-formats',
+      to: '/data-references/formats/common-file-formats',
       label: '文件语义',
       description: '理解 FASTA、GTF、BAM、VCF 在这个框架里各自承载什么信息。',
     },
     {
       title: '数据库与资源',
-      to: '/wiki-bioinfo/databases/common-resources',
+      to: '/data-references/databases/common-resources',
       label: '解释层',
       description: '看结果最终如何接到数据库对象、功能资源和公开数据入口。',
     },
     {
       title: 'DNA-seq 变异检测总览',
-      to: '/wiki-bioinfo/variants/variant-calling-overview',
+      to: '/applications-clinical/variants/variant-calling-overview',
       label: '实战流程',
       description: '查看参考、坐标和注释如何直接影响 variant calling 与解释。',
     },
     {
       title: 'RNA-seq 工作流概览',
-      to: '/wiki-bioinfo/workflows/rna-seq',
+      to: '/applications-omics/workflows/rna-seq',
       label: '实战流程',
       description: '查看注释版本和 feature 对象如何影响表达定量。',
     },

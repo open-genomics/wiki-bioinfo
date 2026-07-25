@@ -1,0 +1,180 @@
+---
+description: 多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。
+title: "批次效应与数据协调"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。"
+/>
+
+## 问题定义
+
+### 什么是批次效应
+
+**批次效应（Batch Effect）** 指由于技术因素而非生物学因素导致的系统差异。这些因素包括：
+
+- **实验平台差异**：不同测序仪、芯片或质谱仪
+- **操作批次差异**：不同日期、不同操作人员
+- **试剂差异**：不同批号试剂、不同文库制备方案
+- **处理条件差异**：温度、时间等实验条件波动
+
+### 形式化描述
+
+设观测数据 $X
+\in \mathbb{R}^{n \times p}$ 由两部分组成：
+
+$$
+X = B + S + \epsilon
+$$
+
+其中：
+- $B$ 为批次效应（技术变异）
+- $S$ 为真实生物学信号
+- $\epsilon$ 为随机噪声
+
+批次校正的目标是估计并去除 $B$，同时保留 $S$。
+
+## 为什么这是核心问题
+
+多组学整合最易失败的环节往往不是模型复杂度不足，而是**批次效应掩盖了真实的生物学信号**。具体表现为：
+
+| 问题类型 | 具体表现 | 后果 |
+|---------|---------|------|
+| 平台差异 | 不同测序平台的数据分布不同 | 样本按平台聚类而非按生物学状态聚类 |
+| 时间批次 | 不同日期处理的样本呈现系统偏移 | 假阳性差异信号 |
+| 操作差异 | 不同技术人员引入的系统性偏差 | 技术伪迹被误认为生物学信号 |
+
+## 数据协调的理想目标
+
+数据协调（Data Harmonization）旨在实现以下三个目标：
+
+### 目标 1：消除技术批次分离
+确保同一生物学群体内的样本不因技术批次而聚类分离。
+
+### 目标 2：保留生物学差异
+不同细胞类型、疾病状态等生物学差异应保持可分辨。
+
+### 目标 3：避免过度校正
+不应将真实的生物学信号误判为批次效应而消除。
+
+### 三者之间的张力
+
+这三个目标之间存在内在张力：
+- 过度追求批次消除 $\rightarrow$ 可能抹去生物学差异
+- 过度保留生物学差异 $\rightarrow$ 可能残留批次效应
+- 校正不足或过度 $\rightarrow$ 下游分析均受影响
+
+## 批次校正方法
+
+### 基于线性模型的方法
+
+**ComBat（Empirical Bayes framework）**
+
+假设批次效应可用线性模型描述：
+
+$$
+Y_{ijg} = \alpha_g + X_{ij}\beta_g + \gamma_{ig} + \delta_{ig}\tilde{Y}_{ijg} + \epsilon_{ijg}
+$$
+
+其中：
+- $\gamma_{ig}$：批次 $i$ 对基因 $g$ 的加性效应
+- $\delta_{ig}$：批次 $i$ 对基因 $g$ 的乘性效应
+- $\tilde{Y}_{ijg}$：标准化后的表达值
+
+### 基于嵌入空间的方法
+
+**Harmony**
+
+在高维嵌入空间迭代修正批次效应：
+1. 初始降维（PCA）
+2. 软聚类：估计细胞属于各群体的概率
+3. 线性校正：在每个群体内部校正批次效应
+4. 迭代至收敛
+
+**相互最近邻（MNN, Mutual Nearest Neighbors）**
+
+假设不同批次间存在共享的生物学群体：
+1. 在各批次间识别相互最近邻对
+2. 计算批次间的"校正向量"
+3. 应用校正向量对齐批次
+
+### 基于深度生成模型的方法
+
+**scVI / totalVI / MultiVI**
+
+使用变分自编码器同时建模：
+- 共享的潜在生物学状态 $z$
+- 批次特异的噪声参数
+- 组学特异的生成过程
+
+### 基于因子分析的方法
+
+**MOFA+**
+
+明确分离共享因子与批次特异因子：
+
+$$
+X^{(k)} = W^{(k)} Z + W_{\text{batch}}^{(k)} Z_{\text{batch}} + \epsilon^{(k)}
+$$
+
+通过贝叶斯推断自动学习各因子的重要性。
+
+## 整合质量评估
+
+### 评估维度
+
+有效的数据协调评估需从多个维度进行：
+
+| 维度 | 指标 | 评估目标 |
+|-----|------|---------|
+| 批次去除 | kBET、批次熵 | 样本是否按批次聚类 |
+| 生物学保留 | 细胞类型纯度、 silhouette score | 生物学标签是否可分辨 |
+| 下游任务 | 差异表达一致性、轨迹连续性 | 下游分析是否合理 |
+| 过校正检测 | 细胞类型混合度、伪时间偏移 | 是否过度混合不同群体 |
+
+### 常用评估指标
+
+**批次效应检测**
+- kBET（k-nearest neighbor Batch Effect Test）：检验近邻中批次分布是否均匀
+- 批次熵（Batch Entropy）：衡量局部邻域的批次多样性
+
+**生物学保留**
+- 细胞类型纯度（Cell Type Purity）：校正后同簇内细胞类型一致性
+- Silhouette Width：衡量簇内紧凑性与簇间分离度
+
+**过校正检测**
+- 细胞类型混合指数（Cell Type Mixing Index）
+- 伪时间相关性（Pseudotime Correlation）
+
+<NoteCard variant="pitfalls"
+  items={[
+    '真实的生物学差异被过度校正消除',
+    '不同细胞类型被错误地混合在一起',
+    '疾病组与对照组由不同实验室处理',
+    '不同发育阶段使用不同测序平台',
+    '整合/聚类/可视化使用校正后的数据'
+  ]}
+/>
+
+## 方法选择指南
+
+| 场景 | 推荐方法 | 理由 |
+|-----|---------|------|
+| 已知批次标签，样本量中等 | ComBat、Harmony | 计算高效，校正效果稳定 |
+| 单细胞多组学整合 | scVI、totalVI、MultiVI | 专为单细胞设计，可处理多模态 |
+| 需要不确定性估计 | MOFA+ | 贝叶斯框架，提供后验分布 |
+| 批次-生物学耦合 | MNN | 不依赖批次标签，基于共享群体 |
+| 大规模数据 | Harmony、scVI | 可扩展性好 |
+
+<LinkGrid
+  items={[
+    { title: '多组学整合策略', to: '/applications-omics/multi-omics/integration-strategies', description: '批次校正在整合流程中的位置' },
+    { title: '单细胞 Multiome', to: '/applications-omics/multi-omics/single-cell-multiome', description: '多模态数据中的批次问题' },
+    { title: 'MOFA+', to: '/applications-omics/multi-omics/mofa-plus', description: '贝叶斯因子分析中的批次建模' },
+    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '单细胞分析基础' }
+  ]}
+/>

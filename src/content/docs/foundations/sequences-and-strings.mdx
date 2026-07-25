@@ -4,9 +4,9 @@ description: 将生物序列抽象为计算机科学中的字符串，理解碱�
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 import DefinitionList from '@/components/docs/DefinitionList.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <NoteCard variant="summary"
@@ -21,8 +21,8 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics' },
-    { label: '算法与复杂度', href: '/wiki-bioinfo/foundations/algorithms-and-complexity' }
+    { label: '生物学基础对象', href: '/foundations/biology-basics' },
+    { label: '算法与复杂度', href: '/foundations/algorithms-and-complexity' }
   ]}
 />
 
@@ -130,7 +130,7 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 
 ### 两种坐标系统
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="0-based (零基)"
   rightTitle="1-based (一基)"
   rows={[
@@ -262,11 +262,11 @@ $$S^{rc} = \overline{s_n} \cdot \overline{s_{n-1}} \cdots \overline{s_1}$$
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
-    { title: '测序 Reads 与覆盖度', to: '/wiki-bioinfo/foundations/sequencing-reads-coverage', description: '理解字符串碎片的来源与统计特性' },
-    { title: '精确字符串匹配', to: '/wiki-bioinfo/sequence/exact-string-matching', description: '最基础的字符串算法' },
-    { title: '参考基因组与注释', to: '/wiki-bioinfo/foundations/reference-and-annotation', description: '坐标系统在基因组尺度上的应用' },
-    { title: '概率、图与动态规划预备', to: '/wiki-bioinfo/foundations/probability-and-graphs', description: '字符串操作背后的数学模型' }
+<LinkGrid
+  items={[
+    { title: '测序 Reads 与覆盖度', to: '/foundations/sequencing-reads-coverage', description: '理解字符串碎片的来源与统计特性' },
+    { title: '精确字符串匹配', to: '/core-methods/sequence/exact-string-matching', description: '最基础的字符串算法' },
+    { title: '参考基因组与注释', to: '/foundations/reference-and-annotation', description: '坐标系统在基因组尺度上的应用' },
+    { title: '概率、图与动态规划预备', to: '/foundations/probability-and-graphs', description: '字符串操作背后的数学模型' }
   ]}
 />

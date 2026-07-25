@@ -1,0 +1,227 @@
+---
+description: 剪接比对（Spliced Alignment）是相似性基因预测的核心算法，通过将候选外显子链与目标蛋白比对，解决基因结构预测问题。
+title: "剪接比对"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import DataTable from '@/components/docs/DataTable.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
+  items={[
+    '结合候选外显子生成与全局比对约束',
+    '三维动态规划同时考虑基因组位置、蛋白位置和当前外显子',
+    '避免 Exon Chaining 的"链不匹配"问题',
+    '是相似性基因预测的算法核心'
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: 'Exon Chaining', href: '/core-methods/models/exon-chaining' },
+    { label: '序列比对', href: '/core-methods/alignment/needleman-wunsch' },
+    { label: '动态规划', href: '/core-methods/algorithms/dynamic-programming-basics' }
+  ]}
+/>
+
+## 是什么
+
+**剪接比对（Spliced Alignment）** 是相似性基因预测的算法核心：给定基因组序列、候选外显子集合和**目标蛋白序列**，找到**最佳外显子链**，使其拼接后的序列与目标蛋白的比对得分最高。
+
+相比 Exon Chaining，剪接比对增加了**全局比对约束**，确保选出的外显子链能与目标蛋白形成有效比对。
+
+### 剪接比对中的 Mosaic 效应
+
+当我们将候选外显子与蛋白质进行比对时，如果外显子太短，可能会出现 **Mosaic 效应**：
+
+- **现象**：算法可能会通过拼凑许多极短且不相关的 DNA 片段，来拟合目标蛋白序列，从而得到一个看似高分但生物学上无意义的"马赛克"链。
+- **原因**：由于搜索空间巨大，且短片段随机匹配蛋白质的概率较高。
+- **对策**：
+    1. **长度过滤**：排除过短的候选外显子（如 < 20 bp）。
+    2. **局部得分阈值**：仅保留与蛋白有显著局部相似性的片段。
+    3. **惩罚项**：在动态规划中加入"外显子切换"的固定惩罚，限制外显子总数。
+
+## 要解决什么生物信息学问题
+
+### Exon Chaining 的局限
+
+**问题场景**：
+- 外显子 A 匹配目标蛋白的后缀
+- 外显子 B 匹配目标蛋白的前缀
+- Exon Chaining 可能同时选择 A 和 B，但无法形成有效全局比对
+
+### 剪接比对的优势
+
+**输入**：
+- 基因组序列 $G = g_1...g_n$
+- 候选外显子集合 $\mathcal{B} = \{B_1, ..., B_m\}$
+- 目标蛋白序列 $T = t_1...t_p$
+
+**输出**：外显子链 $\Gamma$，使 $s(\Gamma^*, T)$ 最大
+
+其中 $\Gamma^*$ 是链中外显子拼接后的 DNA 序列，$s$ 是比对得分函数。
+
+## 图的视角
+
+### 剪接比对图
+
+- **顶点**：每个候选外显子 $B_i$
+- **边**：当 $B_i$ 和 $B_j$ 不重叠且 $B_i$ 在 $B_j$ 之前时，建立边 $(B_i, B_j)$
+- **权重**：外显子 $B$ 的权重是**其与目标蛋白最优局部比对的得分**
+
+### 与 Exon Chaining 的区别
+
+<DataTable variant="comparison"
+  leftTitle="Exon Chaining"
+  rightTitle="剪接比对"
+  rows={[
+    { aspect: '权重', left: '预定义固定值', right: '与目标蛋白的比对得分' },
+    { aspect: '路径权重', left: '边权重之和', right: '与路径相关的复杂函数' },
+    { aspect: '全局约束', left: '无', right: '有（蛋白序列连续性）' }
+  ]}
+/>
+
+**关键差异**：剪接比对中路径权重**不能简单分解**为边权重之和，需要同时考虑蛋白序列的连续性。
+
+## 三维动态规划
+
+### 状态定义
+
+定义 $S(i, j, B)$ 为：
+- 基因组前缀 $g_1...g_i$
+- 蛋白前缀 $t_1...t_j$
+- **以候选外显子 $B$ 结尾** 时的最优比对得分
+
+### 递推关系
+
+**情况 1**：$i$ 不是外显子 $B$ 的起始位置（在 $B$ 内部）
+
+与标准序列比对相同：
+
+$$S(i, j, B) = \max \begin{cases} S(i-1, j, B) - \sigma & \text{deletion} \\ S(i, j-1, B) - \sigma & \text{insertion} \\ S(i-1, j-1, B) + \delta(g_i, t_j) & \text{match/mismatch} \end{cases}$$
+
+**情况 2**：$i$ 是外显子 $B$ 的起始位置
+
+需要考虑从前一个外显子 $B_{pre}$ 转移：
+
+$$S(i, j, B) = \max \begin{cases} S(i, j-1, B) - \sigma & \text{insertion at B start} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j-1, B_{pre}) + \delta(g_i, t_j) & \text{transfer from } B_{pre} \text{ and match} \\ \max_{B_{pre}} S(\text{end}(B_{pre}), j, B_{pre}) - \sigma & \text{transfer from } B_{pre} \text{ and delete} \end{cases}$$
+
+### 初始化与终止
+
+- **初始化**：对所有外显子 $B$，$S(\text{start}(B), 0, B) = 0$
+- **终止**：$\max_B S(\text{end}(B), p, B)$
+
+## 算法优化
+
+### 图变换优化
+
+原始图：顶点对应外显子，边表示兼容关系。
+
+**优化**：将图变换为边数更少但等价的形式：
+
+```text
+原图: B1 → B2 → B3
+      ↓    ↓
+      B4 → B5
+
+优化: 添加"入口"和"出口"节点，减少边数
+```
+
+### 时间复杂度
+
+| 版本 | 复杂度 | 说明 |
+|------|--------|------|
+| 朴素 | $O(n \cdot p \cdot m \cdot d)$ | $d$ 是平均兼容外显子数 |
+| 优化图 | $O(n \cdot p \cdot (m + e))$ | $e$ 是兼容边数 |
+| 实践 | 接近 $O(n \cdot p)$ | 大多数位置外显子数很少 |
+
+## 实例说明
+
+### 简化示例
+
+基因组："It was brilliant thrilling morning and the slimy, hellish, lithe doves gyrated and gambled nimbly in the waves"
+
+候选外显子（片段）：
+```text
+[It was brill] [iant thril] [ling morning] [and the sli] [my, hellish,] [lithe doves] [gyrated and] [gambled nimbly] [in the waves]
+```
+
+目标蛋白（Lewis Carroll 名句）：
+```text
+'twas brillig, and the slithy toves did gyre and gimble in the wabe
+```
+
+### 最优链
+
+```text
+It was brill + iant thril + ling morning + ...
+     ↓              ↓              ↓
+  'twas brillig   ...           ...
+```
+
+算法找到与目标蛋白最佳匹配的外显子组合。
+
+## 处理 Mosaic 效应
+
+### 问题
+
+**Mosaic 效应**：短候选外显子过多时，容易随机拼凑出匹配任何目标序列的链。
+
+**类比**：
+- 用 1000 个随机 2-字母串拼凑给定句子很容易
+- 用 1000 个随机 5-字母串拼凑则几乎不可能
+
+### 过滤策略
+
+1. **长度过滤**：去除过短（如 < 20 bp）的候选外显子
+2. **相似度阈值**：只保留与目标蛋白有显著相似性的外显子
+3. **信号强度过滤**：要求外显子有强的剪接信号支持
+
+## 应用场景
+
+### 跨物种基因预测
+
+```text
+已知：人类基因 X 的蛋白序列
+输入：小鼠基因组序列
+输出：小鼠基因 X 的外显子结构
+```
+
+### 复杂基因识别
+
+- 大内含子基因（>100 kb）
+- 可变剪接异构体预测
+- 假基因与功能基因区分
+
+<LinkGrid
+  items={[
+    { title: 'Exon Chaining', to: '/core-methods/models/exon-chaining', description: '基础的外显子选择算法' },
+    { title: '基因预测', to: '/core-methods/models/gene-prediction', description: '更全面的预测方法' },
+    { title: 'HMM 基因预测', to: '/core-methods/models/hmm', description: '统计方法的基因预测' }
+  ]}
+/>
+
+## 历史注记
+
+剪接比对由 **Gelfand, Mironov 和 Pevzner** 于 1996 年提出，首次系统地将相似性信息整合到基因预测算法中。该方法成为 **twinscan**、**N-SCAN** 等流行基因预测工具的基础。
+
+<NoteCard variant="pitfalls"
+  items={[
+    '剪接比对只是在 Exon Chaining 基础上加了比对约束：',
+    '虽然剪接比对确实在 Exon Chaining 上增加了全局比对约束，但这一增加从根本上改变了问题的计算结构。Exon Chaining 的路径权重可以简单分解为边权重之和，而剪接比对的路径权重依赖于蛋白序列的连续性，不能简单分解。这导致剪接比对需要三维动态规划（基因组位置 × 蛋白位置 × 当前外显子），复杂度显著高于 Exon Chaining。',
+    '候选外显子集合可以直接由 GT-AG 规则生成：',
+    'GT-AG 规则（供体位点 GT、受体位点 AG）确实能生成大量候选外显子，但其中包含大量假阳性。真实剪接位点附近有更复杂的序列特征（分支点、多嘧啶区等），仅靠 GT-AG 过于宽松。不经过质量过滤的候选外显子集合会导致 Mosaic 效应和计算效率下降。',
+    '剪接比对能完美预测基因结构：',
+    '剪接比对的结果依赖于候选外显子的质量和目标蛋白的相似性。如果目标蛋白与真实基因产物的同源性不够高，或者候选外显子集合遗漏了真实外显子，预测结果就会不准确。此外，可变剪接（一个基因产生多种转录本）使得"正确答案"本身可能不是唯一的。'
+  ]}
+/>
+
+## 总结
+
+- **剪接比对解决了 Exon Chaining 的全局一致性问题**
+- **三维动态规划同时考虑基因组位置、蛋白位置和外显子选择**
+- **通过图变换可优化算法效率**
+- **需要过滤短外显子以避免 Mosaic 效应**
+- **是跨物种基因预测和复杂基因识别的核心算法**

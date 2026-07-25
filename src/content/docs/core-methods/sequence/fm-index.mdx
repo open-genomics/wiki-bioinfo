@@ -1,0 +1,146 @@
+---
+title: "FM-index"
+description: "基于BWT的压缩全文索引，理解backward search算法和Occ/C数组如何支持高效精确匹配"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="FM-index 是基于 BWT 的压缩全文索引，通过 backward search 和 Occ/C 数组实现高效的精确匹配查询，是 BWA、Bowtie 等现代比对工具的核心。"
+  items={[
+    '核心结构：BWT 字符串 + C 数组 + Occ/Rank 数据结构',
+    '查询算法：Backward search，从右向左逐步收缩区间',
+    '空间效率：接近信息论下界，适合大基因组索引',
+    '时间效率：单次查询 O(|P|)，与文本长度无关'
+  ]}
+/>
+
+## 是什么
+
+FM-index 是建立在 BWT 之上的压缩全文索引。它的重要特点是：在保存较少空间的同时，仍然能支持快速 exact matching。
+
+在生物信息学里，它常被理解为"为什么 read mapper 可以在巨大参考基因组上做高效查找"的核心答案之一。
+
+## 要解决什么生物信息学问题
+
+如果我们有：
+
+- 非常长的参考序列；
+- 大量短 reads 需要搜索；
+- 对内存占用又比较敏感；
+
+那么直接保存所有匹配位置或庞大索引会很昂贵。FM-index 的价值就在于：
+
+- 利用 BWT 的可压缩性；
+- 通过 backward search 逐步收缩候选区间；
+- 在较低空间成本下完成大规模 exact matching。
+
+<PrerequisitesBox
+  items={[
+    '先理解 suffix array 和 BWT 的基本动机。',
+    '理解 exact matching 与 approximate matching 解决的是不同层次的问题。',
+  ]}
+/>
+
+## 输入与输出
+
+- 输入：参考序列及其 BWT 表示
+- 辅助结构：C 数组、Occ / rank 查询等
+- 输出：pattern 在参考中的候选出现区间
+
+## 核心思想 / 数学模型
+
+FM-index 允许我们从 pattern 的最后一个字符开始做 backward search：
+
+1. 先找到最后一个字符在 BWT 中对应的区间；
+2. 再逐步把前面的字符往左"接回去"；
+3. 每加入一个字符，候选区间进一步收缩；
+4. 若区间最终非空，就说明 pattern 在参考中存在匹配。
+
+它并不是逐字符扫描参考，而是在索引区间上做更新。
+
+## 示例
+
+对于 pattern `ACT`，FM-index 的思路可以粗略理解成：
+
+- 先找所有末尾为 `T` 的候选区间；
+- 再约束这些候选前面必须是 `C`；
+- 再约束更前面必须是 `A`；
+- 如果区间还存在，那么 `ACT` 就在参考中出现。
+
+这种"从后往前缩区间"的方式，是它高效的关键。
+
+## 复杂度与适用前提
+
+FM-index 特别适合：
+
+- exact matching 非常频繁的场景；
+- 需要在大参考上做重复查询的场景；
+- 希望把空间成本控制在合理范围内的场景。
+
+但真实比对任务通常还要允许 mismatch 和 gap，因此 FM-index 往往只是前端候选搜索的一部分，而不是全部流程。
+
+## 与真实工具或流程的连接
+
+在 read mapping 里，FM-index 常用于：
+
+- 快速找到 seed 或精确匹配片段；
+- 缩小候选位置范围；
+- 为后续局部精细比对提供入口。
+
+因此它是"索引结构"和"比对算法"之间最重要的桥梁之一。
+
+<NoteCard variant="pitfalls"
+  items={[
+    'FM-index 等于完整比对算法：',
+    '不是。它主要解决快速搜索与候选定位，后续仍常需要局部比对和评分模型。',
+    '只要用了 FM-index，搜索就没有代价：',
+    '也不对。它只是把代价从朴素扫描转移到更高效的索引区间更新。',
+    '有了 FM-index 就不需要 seed-and-extend：',
+    '不一定。真实工具通常仍会结合 seeding、过滤和局部扩展策略。'
+  ]}
+/>
+
+## 历史注记
+
+FM-index由Ferragina和Manzini于2000年提出，名称来自作者姓氏首字母（Ferragina-Manzini Index）。它将原本用于数据压缩的BWT发展为支持高效查询的全文索引。
+
+**关键发展**：
+- 2000年：FM-index理论提出
+- 2009年：BWA将FM-index引入生物信息学，成为NGS比对的标准方法
+- 2011年：Bowtie2进一步优化，支持gapped alignment
+- 至今：FM-index仍是短读长比对的主流索引方法
+
+## 参考文献
+
+1. Ferragina, P., & Manzini, G. (2000). Opportunistic data structures with applications. *FOCS 2000*, 390-398.
+2. Ferragina, P., & Manzini, G. (2005). Indexing compressed text. *JACM*, 52(4), 552-581.
+3. Li, H., & Durbin, R. (2009). Fast and accurate short read alignment with Burrows-Wheeler transform. *Bioinformatics*, 25(14), 1754-1760.
+4. Langmead, B., et al. (2009). Ultrafast and memory-efficient alignment of short DNA sequences to the human genome. *Genome Biology*, 10(3), R25.
+
+## 相关页面
+
+<LinkGrid
+  items={[
+    {
+      title: 'Suffix Array、BWT 与索引压缩',
+      to: '/core-methods/sequence/suffix-array-bwt',
+      label: '前置',
+      description: '先理解 FM-index 建立在什么结构之上。',
+    },
+    {
+      title: '精确匹配与近似匹配',
+      to: '/core-methods/sequence/exact-vs-approximate',
+      label: '概念对照',
+      description: '理解为什么 exact matching 只是 read mapping 的前半段。',
+    },
+    {
+      title: 'BLAST 启发式搜索',
+      to: '/core-methods/alignment/blast',
+      label: '方法延伸',
+      description: '查看 FM-index 如何在真实比对流程中与扩展策略结合。',
+    },
+  ]}
+/>

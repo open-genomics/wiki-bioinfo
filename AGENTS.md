@@ -12,7 +12,7 @@
 - **项目**：面向中文社区的生物信息学体系化知识库
 - **技术栈**：Astro 6.x + Starlight + TypeScript + KaTeX
 - **部署**：GitHub Pages `https://lessup.github.io/wiki-bioinfo/`
-- **结构边界**：维持现有 6 个顶层入口，不重做顶层信息架构
+- **结构边界**：维持现有 7 个顶层入口（intro / foundations / core-methods / applications-omics / applications-clinical / data-references / appendix），不重做顶层信息架构
 
 ## 3. Closeout-first rules
 

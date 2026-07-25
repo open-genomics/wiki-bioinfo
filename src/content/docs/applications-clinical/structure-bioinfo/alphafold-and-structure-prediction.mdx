@@ -1,0 +1,385 @@
+---
+description: AlphaFold 的核心思想、输出指标解读与置信度边界。
+title: "AlphaFold 与结构预测"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import DefinitionList from '@/components/docs/DefinitionList.astro';
+
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="AlphaFold 是深度学习驱动的蛋白质结构预测系统，它从序列和进化信息出发，学习残基之间的相对几何关系，输出三维坐标和置信度。理解其核心思想有助于正确解读预测结果：它不是记忆已知结构，而是学习折叠的物理规律。"
+  items={[
+    '核心是利用 MSA 和模板信息预测残基间几何关系，而非直接匹配已知结构',
+    'pLDDT 和 PAE 是两个关键置信度指标，分别衡量局部精度和域间相对位置精度',
+    '理解置信度边界：无序区、多域相对位置、配体效应是主要局限'
+  ]}
+/>
+
+<PrerequisitesBox
+  prerequisites={[
+    { name: '蛋白结构基础', href: '/applications-clinical/structure-bioinfo/protein-structure-basics', description: '蛋白质结构的层次与表示' },
+    { name: 'Transformer for Sequences', href: '/applications-omics/ml-bioinfo/transformer-for-sequences', description: 'AlphaFold 的注意力机制基础' },
+    { name: '多序列比对（MSA）', href: '/core-methods/alignment/multiple-sequence-alignment', description: '共进化信息的来源' },
+  ]}
+/>
+
+## 引言：蛋白质折叠问题的历史
+
+蛋白质结构预测是生物信息学中最古老也最困难的问题之一。早在 1972 年，Christian Anfinsen 因阐明"序列决定结构"的原理而获得诺贝尔奖，但他同时也提出了一个挑战：**给定氨基酸序列，能否预测其三维结构？**
+
+这个问题被称为**蛋白质折叠问题**，困扰了科学家近半个世纪。早期的尝试包括：
+
+- **物理方法**：基于分子动力学模拟折叠过程，但受限于计算能力和力场精度
+- **统计方法**：分析已知结构中氨基酸的偏好构象（如 Chou-Fasman 方法预测二级结构）
+- **比较建模**：利用已知同源结构作为模板（如 SWISS-MODEL）
+- **从头预测**：不依赖模板，直接预测折叠（如 Rosetta）
+
+1994 年启动的 **CASP（Critical Assessment of Structure Prediction）** 竞赛每两年评估一次预测方法的进展。直到 2018 年，即使最好的从头预测方法也只能达到中等精度。真正的突破来自 2020 年：DeepMind 的 AlphaFold 2 在 CASP14 中达到了接近实验测定的精度，被认为是解决了单链蛋白的折叠问题。
+
+## AlphaFold 的核心思想
+
+AlphaFold 不是"记忆数据库中的结构"，而是学习**折叠的物理规律**：
+
+### 输入：序列与进化信息
+
+AlphaFold 的核心输入包括：
+
+- **蛋白质序列**：要预测的氨基酸序列
+- **多序列比对（MSA）**：从序列数据库中搜索到的同源序列比对
+- **可选模板**：已知同源蛋白的结构坐标
+
+MSA 至关重要。进化相关的序列中，共同进化的残基对（在 MSA 中呈现相关变异）往往空间上接近——这是**共进化（co-evolution）**的原理。
+
+<figure>
+  <img src="/img/illustrations/alphafold-pipeline.svg" alt="AlphaFold 结构预测流水线：从序列输入、MSA、几何关系到 3D 模型输出" />
+  <figcaption>AlphaFold 结构预测流水线：从序列到三维结构的完整信息流</figcaption>
+</figure>
+
+### 模型：学习几何关系
+
+AlphaFold 2 的关键创新在于它**预测几何关系而非直接坐标**：
+
+- **残基间距离分布**：两个残基的 Cβ 原子距离
+- **角度**：主链扭转角和侧链方向
+- **Evoformer**：处理 MSA 信息并更新残基对表示的注意力模块
+
+这种"几何优先"的方法比直接预测坐标更稳定，因为几何关系在不同参考系下是不变的。
+
+### 输出：坐标与置信度
+
+- **三维坐标**：每个重原子的 3D 位置（PDB 格式）
+- **pLDDT**：每个残基的局部置信度（predicted Local Distance Difference Test）
+- **PAE**：预测对齐误差矩阵（Predicted Aligned Error）
+- **多模型**：通常输出 5 个候选结构，按置信度排序
+
+## 为什么重要：结构预测的实用价值
+
+AlphaFold 的影响不仅在于解决了长期存在的科学问题，更在于它**改变了生物学研究的方式**：
+
+### 实验方法的局限
+
+| 方法 | 优势 | 局限 | 适用场景 |
+|-----|------|------|---------|
+| X射线晶体学 | 高分辨率（< 2 Å） | 需要结晶，耗时数月到数年 | 可结晶的稳定蛋白 |
+| NMR | 溶液状态，动态信息 | 蛋白大小受限（< 50 kDa） | 小蛋白动态研究 |
+| Cryo-EM | 无需结晶，适合大复合体 | 分辨率相对较低，设备昂贵 | 膜蛋白、大复合体 |
+
+### 预测方法的价值
+
+AlphaFold 的价值体现在多个维度：
+
+- **填补结构空白**：UniProt 有超过 2 亿条序列，但 PDB 只有约 20 万个结构。预测方法为绝大多数蛋白提供了结构模型。
+
+- **加速研究流程**：在实验前先获得结构假设，可以指导突变设计、实验优先级排序。
+
+- **功能推断**：从三维结构可以识别潜在的结合口袋、活性位点、蛋白质-蛋白质相互作用界面。
+
+- **药物设计**：为虚拟筛选提供靶点结构，加速先导化合物发现。
+
+但必须强调：**预测结构是高质量假设，不等同于实验确认。**
+
+## 核心输出指标
+
+### pLDDT（predicted Local Distance Difference Test）
+
+pLDDT 是每个残基的局部置信度评分，范围 0-100：
+
+<DefinitionList
+  items={[
+    {
+      term: 'pLDDT > 90',
+      definition: '高置信度。通常对应有序结构，如 α-helix、β-sheet。',
+    },
+    {
+      term: '70 < pLDDT ≤ 90',
+      definition: '中等置信度。结构基本合理，但某些细节可能不准确。',
+    },
+    {
+      term: '50 < pLDDT ≤ 70',
+      definition: '低置信度。可能是无序区或结构不稳定区域。',
+    },
+    {
+      term: 'pLDDT ≤ 50',
+      definition: '极低置信度。几乎不可信，可能是完全无序或预测失败。',
+    },
+  ]}
+/>
+
+关键直觉：
+- pLDDT 衡量的是**局部几何的准确性**，不保证全局折叠正确；
+- 对于多域蛋白，每个域内部可能高置信度，但域间相对位置可能不准确。
+
+### PAE（Predicted Aligned Error）
+
+PAE 是一个残基对残基的误差矩阵，衡量如果以残基 i 为参考，残基 j 的位置误差有多大。
+
+**用途**：
+- 判断多域蛋白中不同域之间的相对位置是否可靠；
+- 识别结构域边界；
+- 判断整个蛋白的折叠是否可信。
+
+**解读**：
+- 如果 PAE 矩阵中某些区域（如域 1 和域 2 之间）误差很大，说明域间相对摆放不可信；
+- 如果整个 PAE 矩阵都很小，说明整体折叠可靠。
+
+### ranked models
+
+AlphaFold 通常输出 5 个候选模型，按置信度排序：
+
+- **ranked_1**：置信度最高的模型，通常作为主要参考；
+- **ranked_2-5**：备选模型，可用于比较和验证。
+
+**使用建议**：
+- 先看 ranked_1，但也要检查其他模型是否一致；
+- 如果不同模型在某个区域差异很大，说明该区域不确定性高。
+
+## 示例
+
+假设预测一个 300 残基的蛋白，想用 AlphaFold 预测其结构并评估结果是否可靠。
+
+### 输入信息
+- 蛋白序列：长度 300 aa
+- MSA 深度：从 UniRef90 检索到 500 条同源序列
+- 模板：PDB 中有 2 个同源结构（序列相似度 35% 和 28%）
+
+### 决策链条：逐步评估
+
+**第一步：检查 MSA 质量**
+
+| 指标 | 数值 | 判断 | 理由 |
+|------|------|------|------|
+| MSA 深度 | 500 条 | **良好** | 足够的进化信息 |
+| 序列覆盖度 | 95% | **良好** | 大部分残基有同源覆盖 |
+| 序列多样性 | 中等 | **可接受** | 不是高度保守的家族 |
+
+**第二步：检查 pLDDT 分布**
+
+| 区域 | 残基范围 | 平均 pLDDT | 判断 |
+|------|---------|-----------|------|
+| Domain 1 | 1-150 | 92 | **高置信度** |
+| Domain 2 | 151-280 | 88 | **高置信度** |
+| C-terminal tail | 281-300 | 45 | **低置信度** |
+
+**关键观察**：
+- Domain 1 和 2 的 pLDDT > 90，结构预测可靠
+- C-terminal tail 的 pLDDT < 50，可能是无序区或预测不确定
+
+**第三步：检查 PAE 矩阵**
+
+PAE 矩阵显示：
+- Domain 1 内部残基对：PAE < 2 Å → **内部结构可靠**
+- Domain 2 内部残基对：PAE < 3 Å → **内部结构可靠**
+- Domain 1 和 Domain 2 之间：PAE = 8-12 Å → **相对位置不确定**
+
+**结论**：
+- 两个 domain 各自的内部结构可靠
+- 但两个 domain 之间的相对摆放位置不确定
+
+**第四步：检查 ranked models**
+
+| 模型 | 平均 pLDDT | 与 model 1 的 RMSD |
+|------|-----------|-------------------|
+| model 1 | 89 | 0 Å |
+| model 2 | 87 | 1.2 Å |
+| model 3 | 85 | 3.5 Å |
+| model 4 | 82 | 5.8 Å |
+| model 5 | 78 | 8.2 Å |
+
+**观察**：
+- model 1 和 2 的 RMSD 很小（1.2 Å），说明预测一致
+- model 3-5 的 RMSD 逐渐增大，说明不确定性增加
+
+**第五步：与模板对比**
+
+- 模板 1（35% 相似度）：与 AlphaFold model 1 的 RMSD = 2.1 Å
+- 模板 2（28% 相似度）：与 AlphaFold model 1 的 RMSD = 3.5 Å
+
+**结论**：AlphaFold 预测与模板结构一致，支持预测的可靠性
+
+### 最终评估
+
+| 方面 | 评估 | 可信度 |
+|------|------|-------|
+| Domain 1 结构 | 高度可靠 | pLDDT > 90，PAE < 2 Å |
+| Domain 2 结构 | 高度可靠 | pLDDT > 88，PAE < 3 Å |
+| Domain 相对位置 | 不确定 | PAE = 8-12 Å |
+| C-terminal tail | 可能无序 | pLDDT < 50 |
+
+### 应用建议
+
+- **可靠区域**：可以用于分子对接、突变分析、功能位点预测
+- **不确定区域**：需要谨慎，可能需要实验验证
+- **C-terminal tail**：可能是无序区，可以考虑用无序区预测工具（如 IUPred）验证
+
+## 什么地方要谨慎
+
+### 无序区
+
+无序区（intrinsically disordered regions）通常表现为：
+
+- 低 pLDDT（< 50）；
+- 在不同模型中结构差异大；
+- 缺乏稳定的二级结构。
+
+**注意**：低置信度不等于"没有意义"。很多无序区在生物学上很重要（如转录因子的激活域），只是它们没有固定的三维结构。
+
+### 多域蛋白
+
+对于多域蛋白：
+
+- 每个域内部可能高置信度；
+- 域间相对位置可能低置信度（看 PAE 矩阵）；
+- 域间连接区（linker）通常是无序的。
+
+**建议**：用 PAE 判断域间关系，不要假设域间相对摆放是准确的。
+
+### 配体和辅因子
+
+AlphaFold 预测的是**apo 结构**（无配体状态）：
+
+- 配体结合位点可能预测不准确；
+- 某些结构域可能只在配体存在时才稳定；
+- 膜蛋白的膜环境效应无法直接建模。
+
+**建议**：如果研究配体结合，需要结合 docking 或实验结构。
+
+### 构象变化
+
+AlphaFold 通常预测一个静态结构：
+
+- 无法预测构象变化（如开放/关闭状态）；
+- 无法预测动态过程；
+- 某些蛋白可能有多个功能相关的构象。
+
+**建议**：结合分子动力学模拟或实验数据理解构象变化。
+
+### 寡聚化和复合体
+
+AlphaFold 预测的是单体结构：
+
+- 无法预测蛋白-蛋白相互作用界面；
+- 无法预测寡聚化状态；
+- AlphaFold-Multimer 可以预测复合体，但精度低于单体。
+
+**建议**：用其他工具（如 docking、共进化分析）研究相互作用。
+
+## 与真实研究流程的连接
+
+AlphaFold 不是孤立工具，它在研究流程中的位置：
+
+**上游依赖**：
+- **序列质量**：错误的序列会导致错误的结构；
+- **MSA 深度**：MSA 越深，预测通常越可靠；
+- **同源结构**：如果存在高质量模板，预测会更好。
+
+**下游应用**：
+- **功能注释**：从结构推断功能位点；
+- **突变解释**：评估突变对结构的影响；
+- **药物设计**：为虚拟筛选提供结构基础；
+- **实验设计**：指导结晶实验或突变实验。
+
+**验证**：
+- 与已知实验结构比较（如果有）；
+- 用不同模型的一致性验证；
+- 结合生化实验验证关键假设。
+
+<NoteCard variant="pitfalls"
+  items={[
+    '**预测结构 = 实验真值**：AlphaFold 是高质量预测，但在关键功能位点或药物设计场景仍需实验验证',
+    '**pLDDT 高就说明功能正确**：pLDDT 只衡量几何准确性，不保证功能推断正确',
+    '**低置信度区域没有意义**：低置信度常对应无序区，后者在调控和信号传导中很重要',
+    '**AlphaFold 可以预测所有蛋白**：极短序列、完全无同源序列、高度重复序列可能预测失败',
+    '**AlphaFold 可以替代实验测定**：它是互补工具而非替代；实验结构仍是金标准'
+  ]}
+/>
+
+## 为什么 AlphaFold 比传统方法好
+
+### 传统同源建模（如 SWISS-MODEL）
+
+**方法**：
+1. 找到同源模板结构
+2. 将目标序列比对到模板
+3. 基于模板构建模型
+4. 优化侧链和环区
+
+**局限性**：
+- 严重依赖模板质量和相似度
+- 如果没有好的模板（如相似度低于 30%），预测质量通常会明显下降
+- 无法预测新的折叠类型
+- 环区和侧链摆放不准确
+
+**例子**：
+- 目标序列与模板相似度 25%
+- 传统方法：RMSD > 5 Å，拓扑可能错误
+- AlphaFold：即使没有模板，仍可能预测正确折叠
+
+### AlphaFold 的优势
+
+1. **深度学习驱动的几何关系学习**
+   - 不依赖显式模板，而是从大量已知结构中学习几何规律
+   - 可以预测新的折叠类型
+
+2. **MSA 提供进化约束**
+   - 同源序列的共进化信息提供强约束
+   - 即使没有结构模板，也能预测准确结构
+
+3. **端到端优化**
+   - 直接从序列到三维坐标，避免传统方法的级联误差
+
+4. **置信度估计**
+   - pLDDT 和 PAE 提供明确的可靠性评估
+   - 传统方法的置信度估计通常不准确
+
+## 模型演进：从 AlphaFold 1 到 AlphaFold 3
+
+AlphaFold 不是静止的方法，而是持续演进：
+
+| 版本 | 关键改进 | 主要能力 |
+|-----|---------|---------|
+| **AlphaFold 1 (2018)** | 基于共进化特征的距离预测 | CASP12 初步展示潜力 |
+| **AlphaFold 2 (2020)** | Evoformer + 结构模块，端到端训练 | 解决单链蛋白折叠 |
+| **AlphaFold-Multimer (2021)** | 扩展至多链复合体预测 | 预测蛋白-蛋白相互作用 |
+| **AlphaFold 3 (2024)** | 统一框架，涵盖 DNA/RNA/小分子 | 预测复合体、核酸、配体 |
+
+每次演进都扩展了可预测的结构类型，但核心思想保持不变：从序列和进化信息学习几何约束。
+
+## 参考资料
+
+- Jumper, J., et al. (2021). Highly accurate protein structure prediction with AlphaFold. *Nature*, 596(7873), 583-589.
+- Varadi, M., et al. (2022). AlphaFold Protein Structure Database. *Nucleic Acids Research*, 50(D1), D439-D444.
+- CASP14 assessment papers. https/predictioncenter.org/casp14/
+- Abrabmson, J., et al. (2024). Accurate structure prediction of biomolecular interactions with AlphaFold 3. *Nature*, 630, 493-500.
+
+## 相关页面
+
+<LinkGrid
+  items={[
+    { title: '蛋白结构基础', href: '/applications-clinical/structure-bioinfo/protein-structure-basics', description: '理解蛋白结构的四个层次' },
+    { title: '结构比对与 fold', href: '/applications-clinical/structure-bioinfo/structure-alignment-and-fold', description: '结构相似性比较与分类' },
+    { title: '机器学习与生物信息学', href: '/applications-omics/ml-bioinfo', description: '深度学习在生物信息学的应用' },
+  ]}
+/>

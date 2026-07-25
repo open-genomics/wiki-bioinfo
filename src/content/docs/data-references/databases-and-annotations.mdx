@@ -5,9 +5,8 @@ title: "数据库与注释系统一览"
 
 import NoteCard from '@/components/docs/NoteCard.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
 import DataTable from '@/components/docs/DataTable.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
   summary="生物信息学数据库并非平面的资源列表，而是围绕特定生物学对象（基因、转录本、变异、蛋白、样本等）组织的信息体系。理解不同数据库的中心对象、ID 命名规则和版本背景，是正确整合与解释数据的前提。"
@@ -48,8 +47,8 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 <PrerequisitesBox
   items={[
-    {label: '参考基因组、坐标系统与注释', href: '/wiki-bioinfo/foundations/reference-and-annotation'},
-    {label: '生物学基础对象', href: '/wiki-bioinfo/foundations/biology-basics'},
+    {label: '参考基因组、坐标系统与注释', href: '/foundations/reference-and-annotation'},
+    {label: '生物学基础对象', href: '/foundations/biology-basics'},
     '很多数据库页面同时显示多个交叉引用，但交叉引用并不等于对象本体完全相同。',
   ]}
 />
@@ -58,7 +57,7 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 这张图展示了不同类型的数据库与其中心生物学对象之间的关系。
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="中心对象"
   rightTitle="代表资源"
   rows={[
@@ -215,40 +214,40 @@ import RelatedLinks from '@/components/docs/RelatedLinks.astro';
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '常用数据库与资源',
-      to: '/wiki-bioinfo/databases/common-resources',
+      to: '/data-references/databases/common-resources',
       label: '实战入口',
       description: '如果你更想按具体分析任务选择资源入口，去看这页。',
     },
     {
       title: '参考版本、构建号与 liftover',
-      to: '/wiki-bioinfo/data-references/reference-versions-and-liftover',
+      to: '/data-references/reference-versions-and-liftover',
       label: '版本背景',
       description: '理解为什么数据库记录往往和特定 assembly 与坐标转换绑定。',
     },
     {
       title: '参考基因组、坐标系统与注释',
-      to: '/wiki-bioinfo/foundations/reference-and-annotation',
+      to: '/foundations/reference-and-annotation',
       label: '对象边界',
       description: '先打稳参考与注释基础，再看数据库对象如何接入结果解释。',
     },
     {
       title: '常见文件格式概览',
-      to: '/wiki-bioinfo/formats/common-file-formats',
+      to: '/data-references/formats/common-file-formats',
       label: '文件接口',
       description: '数据库对象最终往往通过 FASTA、GTF、VCF 等文件格式进入实际流程。',
     },
     {
       title: '临床变异解释',
-      to: '/wiki-bioinfo/clinical-variants/',
+      to: '/applications-clinical/clinical-variants/',
       description: 'ClinVar、gnomAD 等变异数据库在 ACMG 致病性评估中的使用。',
     },
     {
       title: 'VCF/BCF 格式',
-      to: '/wiki-bioinfo/formats/vcf-bcf-format',
+      to: '/data-references/formats/vcf-bcf-format',
       description: '变异数据库信息通常以 VCF 格式附加到变异注释中。',
     },
   ]}

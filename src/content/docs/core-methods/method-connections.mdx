@@ -4,8 +4,8 @@ description: "序列表示、比对、组装和概率模型之间如何互相依
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import RelatedLinks from '@/components/docs/RelatedLinks.astro';
-import ComparisonTable from '@/components/docs/ComparisonTable.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+import DataTable from '@/components/docs/DataTable.astro';
 
 <NoteCard variant="summary"
   summary="核心方法的四个子板块（序列表示与索引、序列比对、组装与图算法、概率模型与模式识别）不是孤立的算法集合，而是围绕同一个计算问题——如何从海量序列中提取生物学信息——形成的有机链条。理解它们之间的内在连接，是选择合适方法和追溯分析依赖的前提。"
@@ -75,7 +75,7 @@ Ref:  ...ATGCATCGATCGATCGATCG...
 
 **这是索引和比对的直接连接**：没有高效索引，就没有快速比对。
 
-→ 深入阅读：[序列表示与索引](../sequence/)、[序列比对](../alignment/)
+→ 深入阅读：[序列表示与索引](./sequence/)、[序列比对](./alignment/)
 
 ## 比对 → 组装：从定位到重建
 
@@ -115,7 +115,7 @@ ATGC → TGCG → GCGA → CGAT → GATC → ATCG → TCGA → CGTA → GTAA
 
 **这是比对和组装的连接**：两者都处理 reads，但组装在无参考时使用图算法重建序列。
 
-→ 深入阅读：[组装与图算法](../assembly/)
+→ 深入阅读：[组装与图算法](./assembly/)
 
 ## 比对/组装 → 概率模型：处理不确定性
 
@@ -150,11 +150,11 @@ VCF：变异候选 + 置信度
 
 **这是确定性方法（比对）和概率方法（推断）的连接**：比对提供证据，概率模型评估置信度。
 
-→ 深入阅读：[概率模型与模式识别](../models/)
+→ 深入阅读：[概率模型与模式识别](./models/)
 
 ## 方法选择的决策框架
 
-<ComparisonTable
+<DataTable variant="comparison"
   leftTitle="如果你有参考基因组"
   rightTitle="如果你没有参考基因组"
   rows={[
@@ -215,29 +215,29 @@ VCF：变异候选 + 置信度
 
 ## 相关页面
 
-<RelatedLinks
-  links={[
+<LinkGrid
+  items={[
     {
       title: '序列表示与索引',
-      to: '/wiki-bioinfo/sequence/',
+      to: '/core-methods/sequence/',
       label: '数据结构层',
       description: 'k-mer、suffix array、BWT、FM-index 的原理和应用。',
     },
     {
       title: '序列比对',
-      to: '/wiki-bioinfo/alignment/',
+      to: '/core-methods/alignment/',
       label: '证据层',
       description: '编辑距离、动态规划、seed-and-extend 的比对策略。',
     },
     {
       title: '组装与图算法',
-      to: '/wiki-bioinfo/assembly/',
+      to: '/core-methods/assembly/',
       label: '结构层',
       description: 'OLC、de Bruijn 图和图遍历算法。',
     },
     {
       title: '概率模型与模式识别',
-      to: '/wiki-bioinfo/models/',
+      to: '/core-methods/models/',
       label: '推断层',
       description: 'HMM、PWM、贝叶斯推断处理不确定性。',
     },

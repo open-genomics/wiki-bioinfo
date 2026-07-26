@@ -35,6 +35,9 @@
 - 修改文档、配置、组件、workflow 后运行：`npm run check`
 - 只保留高信号 CI/CD；默认避免低 ROI 自动化
 - 覆盖层和样式做减法，避免保留纯装饰性复杂逻辑
+- 链接单源：组件 `to:` 用无前缀路径（`/core-methods/...`），由 `link-utils.ts` 统一拼接 `BASE_URL`；markdown 链接用相对路径（`./`/`../`）
+- 文档组件 7 个：`NoteCard` / `PrerequisitesBox` / `DefinitionList` / `DataTable` / `LinkGrid` / `PageHeaderMeta` / `WorkflowSteps`，共享 `link-utils.ts`
+- `sections.ts` 是侧边栏单一真相源，目录迁移后必须同步 slug
 
 ## 6. AI workflow
 

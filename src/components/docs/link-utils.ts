@@ -9,15 +9,11 @@ function normalizeBase(base: string): string {
 }
 
 function normalizeInternalPath(path: string): string {
-  const strippedDocsPrefix = path.replace(/^\/?(docs|wiki-bioinfo|wiki)(?=\/|$)/, '') || '/';
-
-  if (strippedDocsPrefix === '/') {
+  if (path === '/') {
     return '/';
   }
 
-  return strippedDocsPrefix.startsWith('/')
-    ? strippedDocsPrefix
-    : `/${strippedDocsPrefix}`;
+  return path.startsWith('/') ? path : `/${path}`;
 }
 
 export function isExternalHref(to: string): boolean {

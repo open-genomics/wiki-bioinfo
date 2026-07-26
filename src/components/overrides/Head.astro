@@ -7,14 +7,23 @@ const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
 const pageDescription = description || siteConfig.description;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 
-const structuredData = {
-  '@context': 'https://schema.org',
-  '@type': 'WebSite',
-  name: siteConfig.title,
-  url: siteUrl,
-  description: pageDescription,
-  inLanguage: siteConfig.locale,
-};
+// 仅首页注入 WebSite 结构化数据；内容页由 Starlight 自身处理 head
+const slug = Astro.url.pathname
+  .replace(import.meta.env.BASE_URL, '')
+  .replace(/\/$/, '')
+  .replace(/^\//, '');
+const isHomePage = slug === '';
+
+const structuredData = isHomePage
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: siteConfig.title,
+      url: siteUrl,
+      description: pageDescription,
+      inLanguage: siteConfig.locale,
+    }
+  : null;
 ---
 
 <StarlightHead {...Astro.props}>
@@ -44,4 +53,6 @@ const structuredData = {
 />
 <meta name="theme-color" content={siteConfig.themeColor} />
 
-<script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+{structuredData && (
+  <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+)}

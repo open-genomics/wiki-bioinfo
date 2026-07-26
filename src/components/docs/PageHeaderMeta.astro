@@ -8,21 +8,12 @@
 interface Props {
   audience?: string;
   startWith?: string;
-  prereqs?: string[];
-  estimatedTime?: string;
-  difficulty?: string;
 }
 
 import { Icon } from '@astrojs/starlight/components';
 import { getSectionFromSlug, getSectionMeta } from '@/data/sections';
 
-const {
-  audience,
-  startWith,
-  prereqs = [],
-  estimatedTime,
-  difficulty,
-} = Astro.props;
+const { audience, startWith } = Astro.props;
 
 // 从路径自动推断 section
 const slug = Astro.url.pathname
@@ -32,7 +23,7 @@ const slug = Astro.url.pathname
 const sectionId = getSectionFromSlug(slug);
 const sectionMeta = sectionId ? getSectionMeta(sectionId) : undefined;
 
-type HeaderMetaIcon = 'list-format' | 'random' | 'document' | 'right-arrow';
+type HeaderMetaIcon = 'list-format' | 'random' | 'right-arrow';
 
 interface HeaderMetaCard {
   icon: HeaderMetaIcon;
@@ -43,15 +34,12 @@ interface HeaderMetaCard {
 
 /**
  * 构建头部元信息卡片。只返回有真实内容的卡片，无内容则省略。
- * 卡片顺序：板块 → 适合谁读 → 阅读信息 → 阅读路径。
+ * 卡片顺序：板块 → 适合谁读 → 阅读路径。
  */
 function buildPageHeaderCards(input: {
   sectionMeta?: { label: string; description: string };
   audience?: string | undefined;
   startWith?: string | undefined;
-  prereqs: string[];
-  estimatedTime?: string | undefined;
-  difficulty?: string | undefined;
 }): HeaderMetaCard[] {
   const cards: HeaderMetaCard[] = [];
 
@@ -75,31 +63,13 @@ function buildPageHeaderCards(input: {
     });
   }
 
-  // 卡片 3：阅读信息（仅当提供 estimatedTime 或 difficulty）
-  if (input.estimatedTime || input.difficulty) {
-    const parts: string[] = [];
-    if (input.estimatedTime) parts.push(`预计阅读：${input.estimatedTime}`);
-    if (input.difficulty) parts.push(`难度：${input.difficulty}`);
-    cards.push({
-      icon: 'document',
-      label: '阅读信息',
-      value: input.difficulty ? `难度：${input.difficulty}` : '阅读时长',
-      detail: parts.join('；'),
-    });
-  }
-
-  // 卡片 4：阅读路径（仅当提供 startWith 或 prereqs）
-  if (input.startWith || input.prereqs.length > 0) {
-    const detailParts: string[] = [];
-    if (input.startWith) detailParts.push(input.startWith);
-    if (input.prereqs.length > 0) {
-      detailParts.push(`相关前置：${input.prereqs.join('、')}`);
-    }
+  // 卡片 3：阅读路径（仅当提供 startWith）
+  if (input.startWith) {
     cards.push({
       icon: 'right-arrow',
-      label: input.startWith ? '建议起点' : '建议前置',
-      value: input.startWith ? '推荐阅读路径' : '建议先准备相关前置',
-      detail: detailParts.join('；'),
+      label: '建议起点',
+      value: '推荐阅读路径',
+      detail: input.startWith,
     });
   }
 
@@ -112,9 +82,6 @@ const cards = buildPageHeaderCards({
     : {}),
   audience,
   startWith,
-  prereqs,
-  estimatedTime,
-  difficulty,
 });
 ---
 

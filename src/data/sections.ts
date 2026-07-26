@@ -10,7 +10,7 @@
  */
 
 export interface SectionMeta {
-  /** 板块 ID（用于 frontmatter 中的 section 字段） */
+  /** 板块标识，与 sections 对象的 key 同名（运行时通过对象 key 查找，不读取此字段） */
   id: string;
   /** 板块标题（用于 sidebar 和组件显示） */
   label: string;
@@ -420,18 +420,6 @@ export const sections: Record<string, SectionMeta> = {
  */
 export function getSectionMeta(sectionId: string): SectionMeta | undefined {
   return sections[sectionId];
-}
-
-/**
- * 根据板块标题或 key 查找板块元信息
- * 为 PageHeaderMeta 提供统一的查找接口
- */
-export function findSectionByLabelOrKey(labelOrKey: string): SectionMeta | undefined {
-  if (sections[labelOrKey]) {
-    return sections[labelOrKey];
-  }
-
-  return Object.values(sections).find((section) => section.label === labelOrKey);
 }
 
 /**

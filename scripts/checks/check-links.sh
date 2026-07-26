@@ -10,7 +10,12 @@
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DOCS_BASE="$PROJECT_ROOT/src/content/docs"
-SITE_BASE="/wiki-bioinfo"
+# 从 site-config.ts 单源读取 base，去掉首尾斜杠后用于匹配带前缀的绝对路径
+SITE_BASE="$(node --input-type=module -e "import('$PROJECT_ROOT/src/data/site-config.ts').then(m => console.log(m.siteConfig.base.replace(/^\//,'').replace(/\/$/,'')))" 2>/dev/null)"
+if [[ -z "$SITE_BASE" ]]; then
+  echo "ERROR: 无法从 site-config.ts 读取 base 配置" >&2
+  exit 2
+fi
 broken=0
 
 check_slug() {

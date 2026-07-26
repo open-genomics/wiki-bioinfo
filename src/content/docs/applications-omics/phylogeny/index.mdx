@@ -8,7 +8,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <PageHeaderMeta
   audience="已经理解比对与距离概念，希望进一步理解树结构与进化关系解释的读者"
-  startWith="先从层次聚类和 k-means 建立数据分群直觉，再进入 MSA 与系统发育方法。"
+  startWith="先从距离方法概览建立距离矩阵直觉，再进入 MSA 与系统发育方法。"
 />
 
 ## 问题定义
@@ -60,36 +60,22 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 推荐阅读顺序
 
+> 聚类方法（层次聚类、k-means）已移至[单细胞组学板块](../single-cell/)。
+
 我们推荐以下学习路径：
 
-1. **[层次聚类](./hierarchical-clustering/)** — 理解树状结构的基本构建方法
-2. **[k-means 在生物信息学中的应用](./k-means-bioinformatics/)** — 理解聚类与分区概念
-3. **[多序列比对（MSA）](../../core-methods/alignment/multiple-sequence-alignment/)** — 获得系统发育分析的输入数据
-4. **[距离方法概览](./distance-methods/)** — 理解距离矩阵方法的一般框架
-5. **[UPGMA算法](./upgma/)** — 学习基于分子钟假设的层次聚类
-6. **[Neighbor-Joining算法](./neighbor-joining/)** — 学习不依赖分子钟假设的距离法
-7. **[加法系统发育（Additive Phylogeny）](./additive-phylogeny/)** — 理解距离矩阵与树的理论关系
-8. **[Parsimony](./parsimony/)** — 学习基于最小进化的位点方法
-9. **[Maximum Likelihood](./maximum-likelihood/)** — 学习基于统计模型的现代方法
+1. **[多序列比对（MSA）](../../core-methods/alignment/multiple-sequence-alignment/)** — 获得系统发育分析的输入数据
+2. **[距离方法概览](./distance-methods/)** — 理解距离矩阵方法的一般框架
+3. **[UPGMA算法](./upgma/)** — 学习基于分子钟假设的层次聚类
+4. **[Neighbor-Joining算法](./neighbor-joining/)** — 学习不依赖分子钟假设的距离法
+5. **[加法系统发育（Additive Phylogeny）](./additive-phylogeny/)** — 理解距离矩阵与树的理论关系
+6. **[Parsimony](./parsimony/)** — 学习基于最小进化的位点方法
+7. **[Maximum Likelihood](./maximum-likelihood/)** — 学习基于统计模型的现代方法
 
 ## 子主题导航
 
 <LinkGrid
   items={[
-    {
-      title: '层次聚类',
-      to: '/applications-omics/phylogeny/hierarchical-clustering',
-      badge: '表达数据',
-      meta: 'dendrogram',
-      description: '从 gene/sample expression matrix 出发，理解 dendrogram 和树状结构的直觉。',
-    },
-    {
-      title: 'k-means 在生物信息学中的应用',
-      to: '/applications-omics/phylogeny/k-means-bioinformatics',
-      badge: '表达数据',
-      meta: 'partition clustering',
-      description: '理解基因表达聚类与样本分群中的 k-means 目标函数和局限。',
-    },
     {
       title: '距离方法概览',
       to: '/applications-omics/phylogeny/distance-methods',

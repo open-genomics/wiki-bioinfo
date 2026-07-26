@@ -11,6 +11,8 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
   startWith="先看工作流与案例，再按自己的问题进入转录组、单细胞、表观组或其他专题"
 />
 
+本板块关注从数据到生物学发现：如何从原始测序数据中提取基因表达、调控、进化等生物学信号。如果关注的是从变异到临床决策，见[临床应用](../applications-clinical/)。
+
 这一部分承接前面的基础与方法层，将其重新放回具体组学分析任务中：RNA-seq、单细胞、表观组、群体遗传学、长读长、空间组学、蛋白质组学、多组学整合、系统发育与机器学习。这里不是再讲一遍算法，而是把索引、比对、组装、概率模型、数据格式与参考资源重新放回真实任务边界中。
 
 ## 子主题导航
@@ -22,12 +24,6 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
       to: '/applications-omics/workflows/',
       badge: '起点',
       description: '以 NGS、RNA-seq 和 metagenomics 为主线，把算法重新放回真实分析流程。',
-    },
-    {
-      title: '算法应用专题',
-      to: '/applications-omics/alg-applications/',
-      badge: 'DP / 图 / 字符串 / 概率',
-      description: '动态规划、图算法、字符串算法与概率算法在真实分析任务中的应用。',
     },
     {
       title: '转录组',
@@ -61,7 +57,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
     },
     {
       title: '空间转录组',
-      to: '/applications-omics/spatial/',
+      to: '/applications-omics/single-cell/spatial-transcriptomics-overview',
       badge: 'spatial',
       description: '把表达矩阵重新放回组织切片与空间坐标中，理解邻域与组织结构。',
     },

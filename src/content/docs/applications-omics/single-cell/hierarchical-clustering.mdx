@@ -64,6 +64,42 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 | **Complete Linkage** | 两个簇中最远点对的距离 | 倾向于产生紧凑的球形簇。 |
 | **Average Linkage** | 所有点对距离的算术平均 | **即 UPGMA 的核心**，在稳健性上表现均衡。 |
 
+### 链接准则的数学定义
+
+设两个簇 $A$ 和 $B$，距离函数 $d(x, y)$：
+
+| 准则 | 定义 | 特点 |
+|------|------|------|
+| 单链接（Single） | $\min_{x \in A, y \in B} d(x,y)$ | 倾向产生链状簇 |
+| 全链接（Complete） | $\max_{x \in A, y \in B} d(x,y)$ | 倾向产生紧凑簇 |
+| 平均链接（Average/UPGMA） | $\frac{1}{|A||B|} \sum_{x \in A} \sum_{y \in B} d(x,y)$ | 折中，最常用 |
+| Ward | 最小化合并后簇内方差增量 | 倾向等大簇 |
+
+### Worked Example：4 个基因的表达聚类
+
+距离矩阵（1 - Pearson 相关）：
+
+|   | g1 | g2 | g3 | g4 |
+|---|----|----|----|----|
+| g1 | 0 | 0.2 | 0.8 | 0.9 |
+| g2 | 0.2 | 0 | 0.7 | 0.85 |
+| g3 | 0.8 | 0.7 | 0 | 0.3 |
+| g4 | 0.9 | 0.85 | 0.3 | 0 |
+
+**步骤 1**：最小距离 d(g1,g2) = 0.2 → 合并 (g1,g2)
+**步骤 2**：更新距离（平均链接）：d((g1,g2), g3) = (0.8+0.7)/2 = 0.75；d((g1,g2), g4) = (0.9+0.85)/2 = 0.875
+**步骤 3**：最小距离 d(g3,g4) = 0.3 → 合并 (g3,g4)
+**步骤 4**：d((g1,g2), (g3,g4)) = (0.8+0.9+0.7+0.85)/4 = 0.8125 → 合并
+
+树状图（dendrogram）：
+```text
+     ┌──────────────────────── 0.8125
+     │
+  ┌──┴──┐                  ┌──┴──┐
+  g1   g2                  g3   g4
+  └─0.2─┘                  └─0.3─┘
+```
+
 ## 4. 评价标准：同质性与分离性
 
 一个好的聚类应该满足：
@@ -97,7 +133,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <LinkGrid
   items={[
     { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma', description: '层次聚类在系统发育中的特例' },
-    { title: 'k-means 聚类', to: '/applications-omics/phylogeny/k-means-bioinformatics', description: '另一种扁平化的聚类方法' },
+    { title: 'k-means 聚类', to: '/applications-omics/single-cell/k-means-bioinformatics', description: '另一种扁平化的聚类方法' },
     { title: '距离矩阵方法', to: '/applications-omics/phylogeny/distance-methods', description: '理解演化距离的计算' }
   ]}
 />

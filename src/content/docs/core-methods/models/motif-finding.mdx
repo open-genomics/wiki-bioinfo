@@ -60,7 +60,7 @@ motif 寻找的难点在于：
 给定 N 个长度为 L 的 motif 实例，PFM 记录每个位置上各字符出现的次数：
 
 $$
-\text\{PFM\}[i][c] = \text\{count of character \} c \text\{ at position \} i
+\text{PFM}[i][c] = \text{count of character } c \text{ at position } i
 $$
 
 其中 $i \in \{1, 2, ..., L\}$，$c \in \{A, C, G, T\}$。
@@ -68,7 +68,7 @@ $$
 转换为频率：
 
 $$
-f_\{i,c\} = \frac\{\text\{PFM\}[i][c]\}\{N\}
+f_{i,c} = \frac{\text{PFM}[i][c]}{N}
 $$
 
 ### 位置权重矩阵（PWM）
@@ -76,7 +76,7 @@ $$
 PWM 通过对数比值将频率转换为权重：
 
 $$
-w_\{i,c\} = \log_2\left(\frac\{f_\{i,c\} + \alpha\}\{b_c\}\right)
+w_{i,c} = \log_2\left(\frac{f_{i,c} + \alpha}{b_c}\right)
 $$
 
 其中：
@@ -89,7 +89,7 @@ $$
 共识序列是每个位置最频繁的字符：
 
 $$
-\text\{consensus\}[i] = \arg\max_c \text\{PFM\}[i][c]
+\text{consensus}[i] = \arg\max_c \text{PFM}[i][c]
 $$
 
 也可以使用简并碱基表示（如 R = A/G, Y = C/T）来表示位置上的变异。
@@ -220,12 +220,12 @@ GREEDYMOTIFSEARCH(DNA, t, n, l)
 使用伪计数 α = 1（拉普拉斯平滑）：
 
 $$
-f_\{i,c\} = \frac\{\text\{PFM\}[i][c] + \alpha\}\{N + 4\alpha\}
+f_{i,c} = \frac{\text{PFM}[i][c] + \alpha}{N + 4\alpha}
 $$
 
 对于位置 1，碱基 T：
 $$
-f_\{1,T\} = \frac\{4 + 1\}\{4 + 4\} = \frac\{5\}\{8\} = 0.625
+f_{1,T} = \frac{4 + 1}{4 + 4} = \frac{5}{8} = 0.625
 $$
 
 ### 步骤 3：构建 PWM
@@ -233,17 +233,17 @@ $$
 假设背景频率 $b_A = b_C = b_G = b_T = 0.25$，使用伪计数 α = 0.5：
 
 $$
-w_\{i,c\} = \log_2\left(\frac\{f_\{i,c\} + \alpha\}\{b_c\}\right)
+w_{i,c} = \log_2\left(\frac{f_{i,c} + \alpha}{b_c}\right)
 $$
 
 对于位置 1，碱基 T：
 $$
-w_\{1,T\} = \log_2\left(\frac\{0.625 + 0.5\}\{0.25\}\right) = \log_2(4.5) \approx 2.17
+w_{1,T} = \log_2\left(\frac{0.625 + 0.5}{0.25}\right) = \log_2(4.5) \approx 2.17
 $$
 
 对于位置 1，碱基 A：
 $$
-w_\{1,A\} = \log_2\left(\frac\{0 + 0.5\}\{0.25\}\right) = \log_2(2) = 1.00
+w_{1,A} = \log_2\left(\frac{0 + 0.5}{0.25}\right) = \log_2(2) = 1.00
 $$
 
 完整 PWM（示例）：

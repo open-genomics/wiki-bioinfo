@@ -26,7 +26,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     {
       term: 'DNA (脱氧核糖核酸)',
-      definition: '基因组信息的终极载体。由 A, T, G, C 四种碱基组成，双螺旋结构通过互补配对（Chargaff 规则）实现信息复制。',
+      definition: '基因组信息的主要载体。由 A, T, G, C 四种碱基组成，双螺旋结构通过互补配对（Chargaff 规则）实现信息复制。',
     },
     {
       term: 'RNA (核糖核酸)',
@@ -69,10 +69,9 @@ graph LR
 在生物信息学中，"基因"不仅是抽象的概念，而是基因组上的一个**坐标区间**，具有明确的结构组成：
 
 ```text
-          ┌───── Exon 1 ─────┐                ┌──── Exon 2 ────┐
-──[Promoter]─[5'UTR]─────────[3'UTR]──Intron──[5'UTR]────────[3'UTR]──[PolyA]──>
-          ↑                   ↑                ↑                ↑
-       转录起始           剪接供体          剪接受体         转录终止
+──[Promoter]──[5'UTR]──[Exon 1]──Intron──[Exon 2]──[3'UTR]──[PolyA]──>
+               ↑          ↑       ↑   ↑       ↑        ↑
+           转录起始     编码区  剪接供体/受体  编码区   翻译终止
 ```
 
 ### 结构组件

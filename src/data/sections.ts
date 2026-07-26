@@ -71,6 +71,7 @@ export const sections: Record<string, SectionMeta> = {
         label: '算法专题',
         collapsed: true,
         items: [
+          { slug: 'core-methods/algorithms' },
           { slug: 'core-methods/algorithms/graph-algorithms' },
           { slug: 'core-methods/algorithms/string-pattern-matching' },
           { slug: 'core-methods/algorithms/dynamic-programming-basics' },
@@ -82,7 +83,6 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'core-methods/algorithms/randomized-algorithms' },
           { slug: 'core-methods/algorithms/restriction-mapping' },
           { slug: 'core-methods/algorithms/genome-rearrangements' },
-          { slug: 'core-methods/algorithms/gene-prediction' },
           { slug: 'core-methods/algorithms/breakpoints-and-reversals' },
           { slug: 'core-methods/algorithms/pancake-flipping' },
           { slug: 'core-methods/algorithms/eulerian-hamiltonian-paths' },
@@ -154,7 +154,7 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'core-methods/models/profile-hmm' },
           { slug: 'core-methods/models/em-algorithm' },
           { slug: 'core-methods/models/bayesian-inference' },
-          { slug: 'core-methods/models/gene-prediction' },
+          { slug: 'core-methods/models/gene-prediction-hmm' },
           { slug: 'core-methods/models/exon-chaining' },
           { slug: 'core-methods/models/spliced-alignment' },
           { slug: 'core-methods/models/gibbs-sampling' },
@@ -168,17 +168,6 @@ export const sections: Record<string, SectionMeta> = {
     description: '把核心方法放回 RNA-seq、单细胞、表观组、长读长、空间组学、蛋白质组学、多组学、系统发育与机器学习等真实任务。',
     items: [
       { slug: 'applications-omics' },
-      {
-        label: '算法应用专题',
-        collapsed: true,
-        items: [
-          { slug: 'applications-omics/alg-applications' },
-          { slug: 'applications-omics/alg-applications/dynamic-programming' },
-          { slug: 'applications-omics/alg-applications/graph-algorithms' },
-          { slug: 'applications-omics/alg-applications/string-algorithms' },
-          { slug: 'applications-omics/alg-applications/probabilistic-algorithms' },
-        ],
-      },
       {
         label: '工作流与案例',
         collapsed: true,
@@ -212,6 +201,11 @@ export const sections: Record<string, SectionMeta> = {
           { slug: 'applications-omics/single-cell/clustering-and-umap' },
           { slug: 'applications-omics/single-cell/trajectory-analysis' },
           { slug: 'applications-omics/single-cell/doublet-detection' },
+          { slug: 'applications-omics/single-cell/spatial-transcriptomics-overview' },
+          { slug: 'applications-omics/single-cell/spatial-spot-vs-single-cell' },
+          { slug: 'applications-omics/single-cell/spatial-deconvolution-and-mapping' },
+          { slug: 'applications-omics/single-cell/hierarchical-clustering' },
+          { slug: 'applications-omics/single-cell/k-means-bioinformatics' },
         ],
       },
       {
@@ -253,16 +247,6 @@ export const sections: Record<string, SectionMeta> = {
         ],
       },
       {
-        label: '空间转录组',
-        collapsed: true,
-        items: [
-          { slug: 'applications-omics/spatial' },
-          { slug: 'applications-omics/spatial/spatial-transcriptomics-overview' },
-          { slug: 'applications-omics/spatial/spot-vs-single-cell' },
-          { slug: 'applications-omics/spatial/deconvolution-and-mapping' },
-        ],
-      },
-      {
         label: '蛋白质组学',
         collapsed: true,
         items: [
@@ -295,8 +279,6 @@ export const sections: Record<string, SectionMeta> = {
         collapsed: true,
         items: [
           { slug: 'applications-omics/phylogeny' },
-          { slug: 'applications-omics/phylogeny/hierarchical-clustering' },
-          { slug: 'applications-omics/phylogeny/k-means-bioinformatics' },
           { slug: 'applications-omics/phylogeny/distance-methods' },
           { slug: 'applications-omics/phylogeny/additive-phylogeny' },
           { slug: 'applications-omics/phylogeny/upgma' },

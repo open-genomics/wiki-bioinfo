@@ -47,7 +47,7 @@ const resolvedItems = items;
 ---
 
 {variant === 'summary' ? (
-  <section class={`summary-card`}>
+  <section class={cardClass}>
     <strong><Icon name={icon} size="1.2rem" /> {resolvedTitle}</strong>
     {summary && <p>{summary}</p>}
     <slot />

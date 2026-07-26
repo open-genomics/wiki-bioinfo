@@ -1,0 +1,88 @@
+---
+title: "算法专题"
+description: "动态规划、贪心、分治、穷举、随机化等算法设计范式在生物信息学问题中的系统应用"
+---
+
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<PageHeaderMeta
+  audience="希望系统掌握算法设计范式，并理解它们如何映射到生物信息学经典问题的读者"
+  startWith="从动态规划基础开始，再按范式逐一展开，最后进入组合优化与图算法应用"
+/>
+
+本专题聚焦于生物信息学中最常用的**算法设计范式**（Algorithm Design Paradigms）：动态规划（Dynamic Programming, DP）、贪心（Greedy）、分治（Divide and Conquer）、穷举与剪枝（Exhaustive Search）、随机化（Randomized）以及近似算法（Approximation）。每种范式都不是孤立的技巧，而是面对特定问题结构时的系统性建模思路。本专题通过基因组重排、限制性酶切图谱、字符串匹配等真实生物信息学问题，帮助读者建立"问题结构 → 范式选择 → 算法实现"的完整链路。
+
+## 推荐阅读顺序
+
+以下顺序按照从核心范式到组合应用的逻辑递进组织：
+
+1. [动态规划基础](./dynamic-programming-basics/) — DP 核心思想：最优子结构与重叠子问题
+2. [贪心算法](./greedy-algorithms/) — 贪心策略与局部最优的适用条件
+3. [穷举搜索](./exhaustive-search/) — 穷举框架与剪枝优化
+4. [分治算法](./divide-and-conquer/) — 分解、递归与合并
+5. [图算法](./graph-algorithms/) — 图建模与遍历策略
+6. [字符串模式匹配](./string-pattern-matching/) — 模式串搜索的经典算法族
+7. [找零问题](./change-problem/) — DP 入门案例，从直觉到递推
+
+掌握以上范式后，可进入以下应用专题：
+
+- [基因组重排](./genome-rearrangements/) — 用反转距离建模基因组进化
+- [断点与反转](./breakpoints-and-reversals/) — 断点消除的贪心策略
+- [煎饼翻转](./pancake-flipping/) — 排序问题的组合优化视角
+- [欧拉路径与哈密顿路径](./eulerian-hamiltonian-paths/) — 图遍历与组装问题的联系
+- [DAG 最长路径](./dag-longest-path/) — 有向无环图上的动态规划
+- [限制性酶切图谱](./restriction-mapping/) — 从片段长度重建酶切位点
+- [近似算法](./approximation-algorithms/) — NP-hard 问题的近似求解策略
+- [随机化算法](./randomized-algorithms/) — 概率方法与期望性能保证
+
+## 子主题导航
+
+<LinkGrid
+  items={[
+    {
+      title: '动态规划基础',
+      to: '/core-methods/algorithms/dynamic-programming-basics',
+      badge: '核心范式',
+      description: '最优子结构、重叠子问题与状态转移方程，贯穿比对、组装和图算法的通用框架。',
+    },
+    {
+      title: '贪心算法',
+      to: '/core-methods/algorithms/greedy-algorithms',
+      badge: '核心范式',
+      description: '局部最优选择何时能导出全局最优？理解贪心适用条件与反例。',
+    },
+    {
+      title: '穷举搜索',
+      to: '/core-methods/algorithms/exhaustive-search',
+      badge: '核心范式',
+      description: '暴力枚举的系统化框架，以及剪枝如何将指数级搜索变为可行。',
+    },
+    {
+      title: '图算法',
+      to: '/core-methods/algorithms/graph-algorithms',
+      badge: '图方法',
+      description: 'BFS、DFS、最短路径与拓扑排序在生物网络建模中的角色。',
+    },
+    {
+      title: '字符串模式匹配',
+      to: '/core-methods/algorithms/string-pattern-matching',
+      badge: '经典问题',
+      description: '从朴素匹配到 KMP，理解序列搜索的算法基础。',
+    },
+    {
+      title: '欧拉路径与哈密顿路径',
+      to: '/core-methods/algorithms/eulerian-hamiltonian-paths',
+      badge: '图遍历',
+      description: '两种图遍历范式如何分别对应 de Bruijn 图组装与 OLC 组装。',
+    },
+  ]}
+  variant="navigation"
+/>
+
+## 与其他板块的连接
+
+- [序列比对](../alignment/) — 编辑距离、Needleman-Wunsch、Smith-Waterman 都是 DP 范式的直接应用
+- [概率模型与模式识别](../models/) — motif 搜索中的穷举与随机化策略（Gibbs sampling）与本专题紧密相关
+- [组装与图算法](../assembly/) — de Bruijn 图组装本质上是欧拉路径问题，OLC 组装依赖哈密顿路径
+- [算法与复杂度基础](../../foundations/algorithms-and-complexity/) — 复杂度类、NP-hard 与近似比的形式化定义

@@ -58,7 +58,7 @@
 
 ### 文档组件
 
-位于 `src/components/docs/`：
+位于 `src/components/docs/`，共 7 个，共享 `link-utils.ts`：
 
 | 组件 | 用途 | 类型 |
 |------|------|------|
@@ -69,6 +69,12 @@
 | `PrerequisitesBox` | 前置知识提示框 | 学习路径 |
 | `DefinitionList` | 定义列表 | 数据展示 |
 | `WorkflowSteps` | 工作流步骤 | 流程展示 |
+
+### 链接约定
+
+- **组件 `to:` 字段**：用无前缀绝对路径（`/core-methods/alignment/edit-distance`），由 `link-utils.ts` 的 `buildHref()` 统一拼接 `BASE_URL`。不要硬编码 `/wiki-bioinfo/` 前缀。
+- **markdown 链接**：用相对路径（`./edit-distance`、`../models/hmm`），由 Astro 原生解析。
+- **链接检查**：`scripts/checks/check-links.sh` 校验 markdown 相对路径 + 组件 `to:` 无前缀路径。
 
 ## 参考文档
 

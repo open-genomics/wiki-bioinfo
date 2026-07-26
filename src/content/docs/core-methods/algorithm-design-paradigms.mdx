@@ -102,7 +102,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **复杂度特征**：一维 DP 为 $O(n)$，二维 DP（如比对）为 $O(nm)$。
 
-详见：[动态规划算法详解](../applications-omics/alg-applications/dynamic-programming/)
+详见：[动态规划算法详解](../alignment/)
 
 ### 4. 分治算法（Divide and Conquer）
 
@@ -143,7 +143,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **适用条件**：问题中的对象具有明确的关系结构，可以自然地用图建模。
 
-详见：[图算法在生物信息学中的应用](../applications-omics/alg-applications/graph-algorithms/)
+详见：[图算法在生物信息学中的应用](../assembly/)
 
 ### 6. 随机化算法（Randomized Algorithms）
 
@@ -167,7 +167,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **复杂度特征**：通常为多项式，但结果质量依赖于运行时间或采样次数。
 
-详见：[概率算法与统计推断](../applications-omics/alg-applications/probabilistic-algorithms/)
+详见：[概率算法与统计推断](../models/)
 
 ## 算法选择框架
 
@@ -282,9 +282,9 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
     { title: '动态规划基础', to: '/core-methods/algorithms/dynamic-programming-basics', description: '掌握 DP 的核心递推' },
     { title: '图算法基础', to: '/core-methods/algorithms/graph-algorithms', description: '理解顶点与边的建模力' },
     { title: '穷举搜索与剪枝', to: '/core-methods/algorithms/exhaustive-search', description: '暴力搜索的艺术' },
-    { title: '动态规划算法详解', to: '/applications-omics/alg-applications/dynamic-programming', description: '序列比对、编辑距离等核心 DP 应用' },
-    { title: '图算法在生信中的应用', to: '/applications-omics/alg-applications/graph-algorithms', description: '从 de Bruijn graph 到系统发育树' },
-    { title: '字符串算法与索引结构', to: '/applications-omics/alg-applications/string-algorithms', description: 'FM-index、Suffix Array 等搜索基础设施' },
-    { title: '概率算法与统计推断', to: '/applications-omics/alg-applications/probabilistic-algorithms', description: 'HMM、贝叶斯方法与 MCMC 采样' },
+    { title: '序列比对', to: '/core-methods/alignment', description: '动态规划在序列比对中的核心应用' },
+    { title: '基因组组装', to: '/core-methods/assembly', description: '图算法在基因组组装中的建模与求解' },
+    { title: '序列表示与索引', to: '/core-methods/sequence', description: 'FM-index、Suffix Array 等搜索基础设施' },
+    { title: '概率模型与模式识别', to: '/core-methods/models', description: 'HMM、贝叶斯方法与 MCMC 采样' },
   ]}
 />

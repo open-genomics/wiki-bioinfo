@@ -29,7 +29,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 仿射 Gap 罚分（Affine Gap Penalty）是序列比对中 Gap 代价模型的重要改进。在简单的线性模型中，长度为 $k$ 的 Gap 代价为 $k \cdot g$，这意味着 $k$ 个连续 Gap 和 $k$ 个分散 Gap 的代价相同。仿射模型将 Gap 代价拆分为两部分——固定的开启代价和线性的延长代价——使得连续 Gap 比分散 Gap 更受偏好，更符合分子进化中插入/缺失事件的生物学现实。
 
-这一模型由 Gotoh（1982）首次在 $O(nm)$ 时间内高效实现，因此也被称为 **Gotoh 算法**（详见 [Gotoh 算法](./gotoh/)）。
+这一模型由 Gotoh（1982）首次在 $O(nm)$ 时间内高效实现，因此也被称为 **Gotoh 算法**。
 
 ## 2. 要解决什么生物信息学问题
 
@@ -245,7 +245,11 @@ A C G T T - G
 
 ### Gotoh 的空间优化
 
-Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(mn)$ 优化到 $O(\min(m,n))$，同时保持时间复杂度为 $O(mn)$。关键观察是：$I_{i,j}$ 只依赖于 $I_{i,j-1}$ 和 $M_{i,j-1}$，$D_{i,j}$ 只依赖于 $D_{i-1,j}$ 和 $M_{i-1,j}$。因此，只需要保留当前列和前一列的值即可。但空间优化的代价是无法直接回溯——需要使用 Hirschberg 算法的分治策略来恢复比对。详见 [Gotoh 算法](./gotoh/)。
+Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(mn)$ 优化到 $O(\min(m,n))$，同时保持时间复杂度为 $O(mn)$。关键观察是：$I_{i,j}$ 只依赖于 $I_{i,j-1}$ 和 $M_{i,j-1}$，$D_{i,j}$ 只依赖于 $D_{i-1,j}$ 和 $M_{i-1,j}$。因此，只需要保留当前列和前一列的值即可。但空间优化的代价是无法直接回溯——需要使用 Hirschberg 算法的分治策略来恢复比对。
+
+### 局部比对扩展
+
+三矩阵递推同样可以扩展到局部比对：仿照 Smith-Waterman 的做法，在每个递推公式中加入取 $0$ 的选项，允许比对从任意位置重新开始，即可在仿射罚分下求最优局部相似片段。
 
 ### 适用前提
 
@@ -315,7 +319,6 @@ Gotoh（1982）证明了，在仿射罚分下，可以将空间复杂度从 $O(m
 <LinkGrid
   items={[
     { title: '打分矩阵', to: '/core-methods/alignment/scoring-matrices', description: '理解替换得分的由来' },
-    { title: 'Gotoh 算法', to: '/core-methods/alignment/gotoh', description: '仿射罚分的 $O(nm)$ 高效实现' },
     { title: '全局比对', to: '/core-methods/alignment/needleman-wunsch', description: '基础比对框架' }
   ]}
 />

@@ -258,6 +258,15 @@ TOPOLOGICALSORT(G)
 
 给定金额 $M$ 和硬币面额 $c = (c_1, c_2, \ldots, c_d)$，用最少数量的硬币凑出金额 $M$。
 
+### 贪心为何不够
+
+在日常币制下"优先取最大面额"的贪心策略通常有效，但在任意币值下会失效。设 $M = 40$、$c = \{25, 20, 1\}$：
+
+- **贪心解**：先取 25，剩余 15 只能用 1 凑，共 $1 + 15 = 16$ 枚；
+- **最优解**：取 2 个 20，共 $2$ 枚。
+
+贪心只顾眼前最大面额，错过了更优的组合。动态规划通过保存每个金额 $m$ 的最少硬币数，确保得到全局最优。
+
 ### 递推关系
 
 ```text
@@ -356,7 +365,7 @@ DPCHANGE(M, c, d)
     { title: 'Smith-Waterman 局部比对', to: '/core-methods/alignment/smith-waterman', description: '在 DP 框架下寻找最优局部相似区域。' },
     { title: '编辑距离', to: '/core-methods/alignment/edit-distance', description: '编辑距离是 DP 的另一个经典应用，与序列比对紧密相关。' },
     { title: 'DAG 最长路径', to: '/core-methods/algorithms/dag-longest-path', description: '从曼哈顿网格推广到通用 DAG 的最长路径问题。' },
-    { title: '仿射 Gap 罚分', to: '/core-methods/alignment/gotoh', description: '对基础 DP 比对的扩展，引入更合理的Gap 罚分模型。' },
+    { title: '仿射 Gap 罚分', to: '/core-methods/alignment/affine-gap-penalty', description: '对基础 DP 比对的扩展，引入更合理的Gap 罚分模型。' },
     { title: '分治算法基础', to: '/core-methods/algorithms/divide-and-conquer', description: 'Hirschberg 算法展示了分治如何优化 DP 的空间复杂度。' },
     { title: '贪心算法', to: '/core-methods/algorithms/greedy-algorithms', description: '对比贪心与 DP 的优劣。' },
   ]}

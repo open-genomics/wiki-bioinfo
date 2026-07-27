@@ -24,6 +24,23 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   ]}
 />
 
+## 从一个问题开始
+
+想象你在研究一个基因家族。你有一条新测序的基因序列，想知道：
+
+> 这条序列与已知基因有多相似？它在哪个物种中有同源基因？它的功能区域在哪里？
+
+这些问题看似简单，但背后涉及一系列计算挑战：如何度量两条序列的相似程度？如何在海量数据库中快速找到相似序列？如何从序列模式推断功能位点？这正是生物信息学的核心任务——**把生物学问题转化为可计算的问题，再设计算法求解**。
+
+许多研究者能熟练使用 BLAST、BWA、GATK 等工具，但当结果异常时往往束手无策——调参只能靠试错，读新论文只能死记硬背。根源在于：**只学会了操作工具，没有理解算法思想**。理解算法带来的能力差异如下：
+
+| 能力 | 工具使用者 | 算法理解者 |
+|------|----------|----------|
+| 工具选择 | 凭经验或他人推荐 | 根据问题特征和数据规模理性选择 |
+| 问题调试 | 试错或求助 | 从算法假设出发定位问题根源 |
+| 参数优化 | 套用默认或文献值 | 理解参数对应的生物学假设 |
+| 方法创新 | 难以参与 | 能借鉴或组合现有算法范式 |
+
 ## 为什么需要算法视角
 
 生物信息学分析任务常常面临三个根本挑战：
@@ -54,7 +71,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 穷举搜索保证能找到全局最优，但代价是搜索空间随问题规模呈指数级增长。在生物信息学中，纯粹的穷举几乎从不适用于真实规模的数据，但理解穷举的搜索空间有助于理解为什么需要更高效的范式。
 
-- **生物学示例**：[限制性图谱构建](./algorithms/restriction-mapping)（枚举所有切点组合）、[Motif 寻找](./models/motif-finding)（枚举所有起始位置）。
+- **生物学示例**：[限制性图谱构建](./algorithms/exhaustive-search)（枚举所有切点组合）、[Motif 寻找](./models/motif-finding)（枚举所有起始位置）。
 - **优化手段**：通常通过**分支定界（Branch and Bound）** 剪枝，即在某条搜索路径已不可能优于当前最优解时提前终止。
 
 **适用条件**：问题规模极小，或需要作为基准（baseline）评估近似算法质量。
@@ -68,7 +85,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 贪心算法的关键在于证明"局部最优能累积为全局最优"。当贪心选择性质和最优子结构成立时，贪心既高效又正确。但当这些性质不成立时，贪心可能给出远离最优的解。
 
 - **生物学示例**：[基因组重排中的简单反转排序](./algorithms/genome-rearrangements)。
-- **陷阱**：局部最优不等于全局最优。[找零问题](./algorithms/change-problem)证明了贪心在非标准币制下会失效。
+- **陷阱**：局部最优不等于全局最优。[找零问题](./algorithms/dynamic-programming-basics)证明了贪心在非标准币制下会失效。
 
 **典型应用**：
 
@@ -102,7 +119,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **复杂度特征**：一维 DP 为 $O(n)$，二维 DP（如比对）为 $O(nm)$。
 
-详见：[动态规划算法详解](../alignment/)
+详见：[动态规划算法详解](./alignment/)
 
 ### 4. 分治算法（Divide and Conquer）
 
@@ -143,7 +160,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **适用条件**：问题中的对象具有明确的关系结构，可以自然地用图建模。
 
-详见：[图算法在生物信息学中的应用](../assembly/)
+详见：[图算法在生物信息学中的应用](./assembly/)
 
 ### 6. 随机化算法（Randomized Algorithms）
 
@@ -167,7 +184,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **复杂度特征**：通常为多项式，但结果质量依赖于运行时间或采样次数。
 
-详见：[概率算法与统计推断](../models/)
+详见：[概率算法与统计推断](./models/)
 
 ## 算法选择框架
 

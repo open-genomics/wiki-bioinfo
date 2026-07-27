@@ -58,12 +58,6 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
       description: '局部比对的标准动态规划算法，理解如何寻找最优局部相似片段。',
     },
     {
-      title: 'Gotoh 算法',
-      to: '/core-methods/alignment/gotoh',
-      badge: '算法优化',
-      description: '处理 affine gap penalty 的三状态动态规划算法。',
-    },
-    {
       title: 'Hirschberg 算法',
       to: '/core-methods/alignment/hirschberg',
       badge: '算法优化',
@@ -87,12 +81,6 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
       badge: '进阶对齐',
       description: '理解为什么多条序列不能简单重复 pairwise DP，以及 progressive alignment 的核心思路。',
     },
-    {
-      title: 'Four Russians 加速',
-      to: '/core-methods/alignment/four-russians-speedup',
-      badge: '算法优化',
-      description: '通过预计算块对齐得分将比对复杂度从 O(n²) 降至 O(n²/log n)。',
-    },
   ]}
   variant="navigation"
 />
@@ -100,7 +88,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 ## 视觉化：alignment 方法与 mapper 技术栈
 
 <figure>
-  <img src="/wiki-bioinfo/img/figures/alignment-mapper-stack.webp" alt="Layered diagram showing sequence representations, alignment models, seed-and-extend strategy, and real-world tools like BLAST, BWA, and minimap2" />
+  <img src={`${import.meta.env.BASE_URL}img/figures/alignment-mapper-stack.webp`} alt="Layered diagram showing sequence representations, alignment models, seed-and-extend strategy, and real-world tools like BLAST, BWA, and minimap2" />
   <figcaption>从序列表示与索引，到编辑距离与动态规划，再到 seed-and-extend 与具体工具（BLAST / BWA / minimap2）的技术栈示意。</figcaption>
 </figure>
 

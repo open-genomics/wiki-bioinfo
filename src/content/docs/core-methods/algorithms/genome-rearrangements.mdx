@@ -20,7 +20,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <PrerequisitesBox
   items={[
     { label: '算法与复杂度', href: '/foundations/algorithms-and-complexity' },
-    { label: '贪心算法基础', href: '/foundations/algorithms-and-complexity' },
+    { label: '贪心算法基础', href: '/core-methods/algorithms/greedy-algorithms' },
     { label: '近似算法', href: '/core-methods/algorithms/approximation-algorithms' },
   ]}
 />
@@ -197,6 +197,8 @@ BREAKPOINTREVERSALSORT(π)
 
 **近似比**：这个改进算法的近似比为 4，即返回的解最多是最优解的 4 倍。
 
+**证明概要**：有递减条带时，算法每一步都能减少断点；没有递减条带时，反转一个递增条带即可创造出递减条带，下一步再减少断点。因此每 2 步至少消除 1 个断点，总步数 $\leq 2b(\pi)$。又因为每次反转最多消除 2 个断点，最优解 $\geq b(\pi)/2$，两者相除得到近似比 $\leq \frac{2b(\pi)}{b(\pi)/2} = 4$。
+
 ### 进一步改进
 
 当排列中没有递减条带时，我们可以翻转任意递增条带来创建递减条带，然后继续减少断点。
@@ -218,6 +220,20 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 ### 2-近似算法
 
 通过更复杂的分析，可以得到近似比为 2 的算法。目前最好的已知算法的近似比为 1.375。
+
+### 其他重排操作
+
+断点分析可以推广到反转以外的重排操作，不同操作每次能消除的断点数不同，近似比也随之变化：
+
+| 操作 | 每次最多消除断点 | 近似比 |
+|------|------------------|--------|
+| 反转（reversal） | 2 | 4 |
+| 转位（transposition） | 3 | 3 |
+| 反转 + 转位 | 更灵活 | 更小 |
+
+### 历史注记
+
+断点概念由 Sankoff 与 Nadeau 在 1980—90 年代发展，用于比较基因组学；Kececioglu 与 Sankoff（1995）提出了基于断点的贪心算法；Berman、Hannenhalli 与 Karpinski（2002）将近似比改进到 1.375。
 
 ### 有符号排列
 
@@ -259,8 +275,6 @@ IMPROVEDBREAKPOINTREVERSALSORT(π)
 
 <LinkGrid
   items={[
-    { title: '煎饼翻转问题', to: '/core-methods/algorithms/pancake-flipping', description: '前缀反转排序的简化模型与 Bill Gates 的经典结果' },
-    { title: '断点与反转', to: '/core-methods/algorithms/breakpoints-and-reversals', description: '断点概念与基于断点的改进贪心策略' },
     { title: '近似算法', to: '/core-methods/algorithms/approximation-algorithms', description: '理解近似比与性能保证' },
     { title: '贪心算法', to: '/foundations/algorithms-and-complexity', description: '基础算法策略' },
     { title: '动态规划基础', to: '/core-methods/algorithms/dynamic-programming-basics', description: '动态规划的路径模型' }

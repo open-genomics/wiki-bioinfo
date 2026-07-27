@@ -47,10 +47,21 @@ OLC（Overlap-Layout-Consensus）是一类经典组装思路，它把序列重�
 
 长读长时代让这套思路重新变得非常重要，因为长读长之间的重叠信息更丰富，更有机会跨过重复区域并提供稳定布局线索。
 
+## 理论背景：最短超串问题
+
+OLC 的思想可以用一个更简化的理论模型来理解——**最短超串问题（Shortest Superstring Problem）**：
+
+- **输入**：一组字符串 $s_1, s_2, \ldots, s_n$（视为测序 reads）；
+- **输出**：一个包含所有输入串作为子串、且长度尽可能短的字符串。
+
+定义 $\text{overlap}(s_i, s_j)$ 为 $s_j$ 的最长前缀同时也是 $s_i$ 后缀的长度（如 $\text{overlap}(\text{ABCDEF}, \text{DEFGHI}) = 3$）。把每个字符串看作顶点，边权设为 $-\text{overlap}(s_i, s_j)$，则"找最大总重叠的排列"等价于**旅行商问题（TSP）**，因此最短超串问题是 **NP-完全**的，不存在已知的多项式时间精确算法。
+
+实用的近似策略是贪心：反复选取重叠最长的一对字符串合并（重叠部分只保留一次），直到只剩一个串。该贪心算法的近似比被推测为 2，实际表现通常远好于最坏上界。OLC 的 Layout 阶段正是这一思想在真实数据上的扩展——它额外处理测序错误、重复序列和正负链等理论模型忽略的因素。
+
 ## 核心流程
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/olc-workflow.svg" alt="OLC 组装流程示意图" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/olc-workflow.svg`} alt="OLC 组装流程示意图" />
   <figcaption>OLC 组装的三个核心阶段：重叠检测、布局构建与一致性序列生成。</figcaption>
 </figure>
 

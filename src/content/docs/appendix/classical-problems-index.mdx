@@ -24,10 +24,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 | 问题名称 | 问题描述 | 算法策略 | Wiki 对应 |
 |---------|---------|---------|-----------|
-| **Partial Digest Problem (PDP)** | 给定所有点对距离的多重集，重构点的位置 | 穷举 + 分支定界 | [限制图谱](../core-methods/algorithms/restriction-mapping/) |
+| **Partial Digest Problem (PDP)** | 给定所有点对距离的多重集，重构点的位置 | 穷举 + 分支定界 | [穷举搜索](../core-methods/algorithms/exhaustive-search/) |
 | **Motif Finding Problem** | 在 t 个序列中找到 l-mer，使最小汉明距离最小 | 穷举所有位置组合 | [Motif 发现](../core-methods/models/motif-finding/) |
 | **Median String Problem** | 找到与所有序列最接近的模式串 | 穷举 4^l 空间 | [Motif discovery 的算法路线](../core-methods/models/motif-discovery-algorithms/) |
-| **Turnpike Problem** | PDP 的等价表述，求一维点集 | 分支定界 | [限制图谱](../core-methods/algorithms/restriction-mapping/) |
+| **Turnpike Problem** | PDP 的等价表述，求一维点集 | 分支定界 | [穷举搜索](../core-methods/algorithms/exhaustive-search/) |
 
 **关键概念**：
 - **分支定界**（Branch and Bound）：通过上下界剪枝减少搜索空间
@@ -62,7 +62,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 | **Fitting Alignment** | 将一个序列比对到另一个的子串 | 网格 DP，特殊边界 | - |
 | **Overlap Alignment** | 一个后缀与另一个前缀的最优比对 | 网格 DP，特殊边界 | - |
 | **Semiglobal Alignment** | 不计末端间隙的全局比对 | 网格 DP，特殊边界 | [半全局比对](../core-methods/alignment/semi-global-alignment/) |
-| **Affine Gap Penalty Alignment** | 带仿射间隙惩罚的比对 | 三维 DP 状态 | [Gotoh 算法](../core-methods/alignment/gotoh/) |
+| **Affine Gap Penalty Alignment** | 带仿射间隙惩罚的比对 | 三维 DP 状态 | [仿射 Gap 罚分](../core-methods/alignment/affine-gap-penalty/) |
 | **Multiple Alignment** | 多个序列的同时比对 | 多维 DP（NP-hard，启发式） | [多序列比对](../core-methods/alignment/multiple-sequence-alignment/) |
 | **Spliced Alignment** | 考虑剪接的外显子链比对 | DAG 上的路径 DP | [基因预测](../core-methods/models/gene-prediction-hmm/) |
 | **Exon Chaining** | 选择非重叠外显子使总权重最大 | 加权区间调度 DP | [基因预测](../core-methods/models/gene-prediction-hmm/) |
@@ -83,7 +83,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 | **Longest Path in DAG** | DAG 中最长路径 | 拓扑序 + DP | [图算法基础](../core-methods/algorithms/graph-algorithms/) |
 | **Eulerian Cycle Problem** | 图中经过每条边一次的回路 | 欧拉路径理论 | [de Bruijn 图](../core-methods/assembly/de-bruijn/) |
 | **Hamiltonian Cycle Problem** | 图中经过每个顶点一次的回路 | NP-hard | [图遍历算法](../core-methods/assembly/graph-traversal-algorithms/) |
-| **Shortest Superstring Problem** | 包含所有输入字符串的最短超串 | Overlap 图 | [最短超串](../core-methods/assembly/shortest-superstring/) |
+| **Shortest Superstring Problem** | 包含所有输入字符串的最短超串 | Overlap 图 | [OLC 组装](../core-methods/assembly/olc/) |
 | **Sequencing by Hybridization (SBH)** | 从杂交数据重构序列 | de Bruijn 图 | [图遍历算法](../core-methods/assembly/graph-traversal-algorithms/) |
 | **Peptide Sequencing Problem** | 从质谱数据推导肽段序列 | 谱图 | [蛋白质组学](../applications-omics/proteomics/) |
 | **Spectral Alignment** | 实验谱与理论谱的对齐 | 谱图比对 | [蛋白质组学](../applications-omics/proteomics/) |
@@ -99,9 +99,9 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 | 问题名称 | 问题描述 | 算法 | Wiki 对应 |
 |---------|---------|------|-----------|
-| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [层次聚类](../applications-omics/single-cell/hierarchical-clustering/) |
-| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [k-Means](../applications-omics/single-cell/k-means-bioinformatics/) |
-| **Corrupted Cliques** | 在噪声中寻找紧密子图 | 启发式搜索 | - |
+| **Hierarchical Clustering** | 层次化聚类基因表达数据 | UPGMA, 邻接法 | [聚类算法](../core-methods/algorithms/clustering-algorithms/) |
+| **k-Means Clustering** | 将数据划分为 k 个聚类 | 迭代优化 | [聚类算法](../core-methods/algorithms/clustering-algorithms/) |
+| **Corrupted Cliques** | 在噪声中寻找紧密子图 | 启发式搜索 | [聚类算法（CAST）](../core-methods/algorithms/clustering-algorithms/) |
 | **Distance-Based Phylogeny** | 从距离矩阵构建进化树 | 邻接法、UPGMA | [邻接法](../applications-omics/phylogeny/neighbor-joining/), [UPGMA](../applications-omics/phylogeny/upgma/) |
 | **Additive Phylogeny** | 从可加矩阵构建树 | 递归降维 | [可加性系统发育](../applications-omics/phylogeny/additive-phylogeny/) |
 | **Small Parsimony Problem** | 给定树结构，求最节俭标签 | Fitch、Sankoff 算法 | [简约法](../applications-omics/phylogeny/parsimony/) |

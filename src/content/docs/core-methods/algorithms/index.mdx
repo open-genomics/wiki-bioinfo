@@ -11,7 +11,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
   startWith="从动态规划基础开始，再按范式逐一展开，最后进入组合优化与图算法应用"
 />
 
-本专题聚焦于生物信息学中最常用的**算法设计范式**（Algorithm Design Paradigms）：动态规划（Dynamic Programming, DP）、贪心（Greedy）、分治（Divide and Conquer）、穷举与剪枝（Exhaustive Search）、随机化（Randomized）以及近似算法（Approximation）。每种范式都不是孤立的技巧，而是面对特定问题结构时的系统性建模思路。本专题通过基因组重排、限制性酶切图谱、字符串匹配等真实生物信息学问题，帮助读者建立"问题结构 → 范式选择 → 算法实现"的完整链路。
+本专题聚焦于生物信息学中最常用的**算法设计范式**（Algorithm Design Paradigms）：动态规划（Dynamic Programming, DP）、贪心（Greedy）、分治（Divide and Conquer）、穷举与剪枝（Exhaustive Search）、随机化（Randomized）以及近似算法（Approximation）。每种范式都不是孤立的技巧，而是面对特定问题结构时的系统性建模思路。本专题通过基因组重排、字符串匹配等真实生物信息学问题，帮助读者建立"问题结构 → 范式选择 → 算法实现"的完整链路。
 
 ## 推荐阅读顺序
 
@@ -22,19 +22,15 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 3. [穷举搜索](./exhaustive-search/) — 穷举框架与剪枝优化
 4. [分治算法](./divide-and-conquer/) — 分解、递归与合并
 5. [图算法](./graph-algorithms/) — 图建模与遍历策略
-6. [字符串模式匹配](./string-pattern-matching/) — 模式串搜索的经典算法族
-7. [找零问题](./change-problem/) — DP 入门案例，从直觉到递推
 
 掌握以上范式后，可进入以下应用专题：
 
 - [基因组重排](./genome-rearrangements/) — 用反转距离建模基因组进化
-- [断点与反转](./breakpoints-and-reversals/) — 断点消除的贪心策略
-- [煎饼翻转](./pancake-flipping/) — 排序问题的组合优化视角
 - [欧拉路径与哈密顿路径](./eulerian-hamiltonian-paths/) — 图遍历与组装问题的联系
 - [DAG 最长路径](./dag-longest-path/) — 有向无环图上的动态规划
-- [限制性酶切图谱](./restriction-mapping/) — 从片段长度重建酶切位点
 - [近似算法](./approximation-algorithms/) — NP-hard 问题的近似求解策略
 - [随机化算法](./randomized-algorithms/) — 概率方法与期望性能保证
+- [聚类算法](./clustering-algorithms/) — 层次聚类、k-means 与 CAST 在表达数据分群中的应用
 
 ## 子主题导航
 
@@ -63,12 +59,6 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
       to: '/core-methods/algorithms/graph-algorithms',
       badge: '图方法',
       description: 'BFS、DFS、最短路径与拓扑排序在生物网络建模中的角色。',
-    },
-    {
-      title: '字符串模式匹配',
-      to: '/core-methods/algorithms/string-pattern-matching',
-      badge: '经典问题',
-      description: '从朴素匹配到 KMP，理解序列搜索的算法基础。',
     },
     {
       title: '欧拉路径与哈密顿路径',

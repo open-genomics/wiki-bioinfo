@@ -1,0 +1,224 @@
+---
+description: 生物信息学中的聚类算法：层次聚类（含 UPGMA 关联）、k-means 划分聚类与 CAST 噪声聚类，聚焦基因表达与单细胞数据的分群问题。
+title: "聚类算法"
+---
+
+import NoteCard from '@/components/docs/NoteCard.astro';
+import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
+<NoteCard variant="summary"
+  summary="聚类（Clustering）在无标签的高维生物数据中自动发现行为相似的模式组，是基因共表达分析、样本分型与单细胞分群的基础。本页覆盖三大范式：层次聚类、k-means 划分聚类与 CAST 噪声聚类。"
+  items={[
+    '层次聚类不需预设簇数 k，输出树状图（Dendrogram），与 UPGMA 同源',
+    'k-means 高效但需预设 k、假设球形簇，对初始化与离群点敏感',
+    'CAST 用图论框架提升噪声鲁棒性，无需预设 k',
+  ]}
+/>
+
+<PrerequisitesBox
+  items={[
+    { label: '距离矩阵方法', href: '/applications-omics/phylogeny/distance-methods' },
+    { label: 'UPGMA 算法', href: '/applications-omics/phylogeny/upgma' },
+    { label: '算法与复杂度', href: '/foundations/algorithms-and-complexity' },
+  ]}
+/>
+
+## 问题定义
+
+### 要解决什么生物信息学问题
+
+聚类要回答：**如何在无标签的高维生物数据中，把行为相似的对象（基因、样本、细胞）自动归为一组？** 典型场景：
+
+- **基因共表达分析**：将多个实验条件下表达模式相似的基因分组，推断共同调控机制；
+- **样本分型**：将患者表达谱聚为分子亚型，指导精准治疗；
+- **单细胞分群**：将表达谱相似的细胞归类，识别细胞类型或状态。
+
+一个好的聚类应同时满足：
+
+- **同质性（Homogeneity）**：簇内对象高度相似（内部距离小）；
+- **分离性（Separation）**：不同簇之间显著不同（外部距离大）。
+
+### 两大范式
+
+| 范式 | 代表 | 是否预设 k | 输出 |
+|------|------|-----------|------|
+| **层次聚类（Hierarchical）** | 凝聚式聚类、UPGMA | 否 | 树状图 |
+| **划分聚类（Partitional）** | k-means、CAST | k-means 需预设；CAST 否 | 扁平簇标签 |
+
+## 层次聚类（Hierarchical Clustering）
+
+层次聚类的核心价值在于**不需要预设簇数 $k$**，而是通过完整的合并过程展示数据内部的结构层次。
+
+### 凝聚式算法
+
+凝聚式（Agglomerative）层次聚类采用**贪心策略**：从每个对象自成一簇开始，每一步合并当前距离最近的两个簇。
+
+```text
+1. 初始化：n 个对象各为一簇
+2. 循环直到只剩一个簇：
+   a. 在距离矩阵中找到最近的两个簇 C1、C2
+   b. 合并为新簇 C
+   c. 按链接准则（Linkage）计算 C 与其余簇的距离
+   d. 更新距离矩阵
+3. 输出：记录全部合并过程的树状图
+```
+
+### 链接准则（Linkage）
+
+如何定义"两个簇之间的距离"决定了树形。设两簇 $A$、$B$，点间距离 $d(x,y)$：
+
+| 准则 | 定义 | 特点 |
+|------|------|------|
+| 单链接（Single） | $\min_{x \in A, y \in B} d(x,y)$ | 倾向链状簇，对噪声敏感 |
+| 全链接（Complete） | $\max_{x \in A, y \in B} d(x,y)$ | 倾向紧凑球形簇 |
+| 平均链接（Average） | $\frac{1}{|A||B|} \sum_{x \in A} \sum_{y \in B} d(x,y)$ | 折中、稳健，**即 UPGMA 的核心** |
+| Ward | 最小化合并后簇内方差增量 | 倾向等大簇 |
+
+### Worked Example：4 个基因的表达聚类
+
+距离矩阵（1 − Pearson 相关）：
+
+|   | g1 | g2 | g3 | g4 |
+|---|----|----|----|----|
+| g1 | 0 | 0.2 | 0.8 | 0.9 |
+| g2 | 0.2 | 0 | 0.7 | 0.85 |
+| g3 | 0.8 | 0.7 | 0 | 0.3 |
+| g4 | 0.9 | 0.85 | 0.3 | 0 |
+
+采用平均链接：
+
+1. 最小距离 $d(g1,g2)=0.2$ → 合并 $(g1,g2)$；
+2. 更新 $d((g1,g2),g3)=(0.8+0.7)/2=0.75$，$d((g1,g2),g4)=(0.9+0.85)/2=0.875$；
+3. 最小距离 $d(g3,g4)=0.3$ → 合并 $(g3,g4)$；
+4. $d((g1,g2),(g3,g4))=(0.8+0.9+0.7+0.85)/4=0.8125$ → 合并。
+
+```text
+     ┌────────────── 0.8125 ──────────────┐
+   ┌─┴─┐                                ┌─┴─┐
+   g1  g2                               g3  g4
+   └0.2┘                                └0.3┘
+```
+
+### 与 UPGMA 的联系
+
+UPGMA（Unweighted Pair Group Method with Arithmetic Mean）就是**采用平均链接的凝聚式层次聚类**在系统发育重建中的特例：它额外假设分子钟（恒定进化速率），用合并高度估计分歧时间。因此 UPGMA 可视为层次聚类的一个带生物学约束的版本，详见 [UPGMA 算法](/applications-omics/phylogeny/upgma)。
+
+### 层次聚类树 vs 系统发育树
+
+二者看起来都像树，但生物学含义不同：
+
+- **层次聚类树**：纯粹基于数据相似性的数学组织，枝长仅代表合并时的距离；
+- **系统发育树**：试图恢复真实演化历史，枝长通常代表演化时间或替换数。
+
+不要过度解读层次聚类树的根节点——它通常只是最后合并的结果，并不必然代表"祖先"。
+
+## k-means 划分聚类
+
+### 目标函数
+
+给定 $n \times d$ 数据矩阵 $X$（$n$ 个对象、$d$ 维）与簇数 $k$，k-means 寻找划分 $C_1,\dots,C_k$ 使**平方误差和（Sum of Squared Errors, SSE）** 最小：
+
+$$\mathrm{Cost}(C_1,\dots,C_k)=\sum_{i=1}^{k}\sum_{x \in C_i}\|x-\mu_i\|^2, \qquad \mu_i=\frac{1}{|C_i|}\sum_{x \in C_i}x$$
+
+其中 $\mu_i$ 是簇 $i$ 的均值中心。该目标也称**组内平方和（Within-Cluster Sum of Squares, WCSS）**。从信息论看，它等价于用 $k$ 个原型向量近似整个数据集的**向量量化（Vector Quantization）** 编码损失。
+
+### Lloyd 算法
+
+精确求解全局最优是 NP-难的，实践中用启发式的 Lloyd 算法：
+
+1. **初始化**：随机选 $k$ 个点作为初始中心；
+2. **分配（Assignment）**：将每个点划入最近中心所在的簇 $C_i=\{x:\|x-\mu_i\|\le\|x-\mu_j\|,\forall j\ne i\}$；
+3. **更新（Update）**：以簇内均值重新计算中心；
+4. **收敛**：重复 2–3 直到中心不再显著变化。
+
+每轮 SSE 单调不增，故有限步内收敛，但**不保证全局最优**，结果依赖初始化。每轮时间复杂度 $O(n\cdot k\cdot d)$，在大规模表达矩阵上非常高效。
+
+### Worked Example：基因表达聚类
+
+6 个基因在 2 个时间点的表达值，设 $k=2$，初始化 $\mu_1=g_1=(1,2)$、$\mu_2=g_4=(8,9)$：
+
+| 基因 | t1 | t2 | 第一轮分配 |
+|------|----|----|-----------|
+| $g_1$ | 1 | 2 | 簇 1 |
+| $g_2$ | 1 | 3 | 簇 1 |
+| $g_3$ | 2 | 1 | 簇 1 |
+| $g_4$ | 8 | 9 | 簇 2 |
+| $g_5$ | 9 | 8 | 簇 2 |
+| $g_6$ | 9 | 10 | 簇 2 |
+
+更新后 $\mu_1=(1.33,2.0)$、$\mu_2=(8.67,9.0)$，第二轮分配不变即收敛，得到低表达簇 $\{g_1,g_2,g_3\}$ 与高表达簇 $\{g_4,g_5,g_6\}$。
+
+### k 值选择
+
+真实簇数通常未知，常用：
+
+- **肘部法则（Elbow Method）**：绘制 SSE 随 $k$ 的曲线，取下降显著减缓的拐点；
+- **轮廓系数（Silhouette Score）**：衡量簇内紧密度与邻簇分离度，范围 $[-1,1]$；
+- **Gap Statistic**：将实际 SSE 与均匀分布参考数据的 SSE 比较。
+
+### 局限性
+
+- **需预设 k**：真实细胞类型或模块数往往未知；
+- **球形簇假设**：对长条、螺旋形分布效果差；
+- **离群点敏感**：极端表达值会剧烈拉动簇中心；
+- **等大簇倾向**：生物学中的簇常大小悬殊。
+
+实践上需先做 Z-score 标准化与 PCA 降维，并多次运行（如 50–100 次）取 SSE 最小者。
+
+## CAST 噪声聚类
+
+**CAST（聚类亲和力搜索技术, Cluster Affinity Search Technique）** 针对含噪声基因表达数据设计，弥补 k-means 在噪声鲁棒性上的不足。它基于图论框架：把基因视作顶点，距离小于阈值 $\theta$ 的基因对连边，理想聚类对应**团图（Clique Graph）**（每个连通分量是完全图，分量间无边）。噪声会破坏团图结构，而用最少边增删恢复团图的 **Corrupted Cliques 问题**已被证明 NP 完全，因此需启发式求解。
+
+基因 $i$ 对簇 $C$ 的亲和力定义为它与簇成员的平均距离：
+
+$$\mathrm{Affinity}(i,C)=\frac{1}{|C|}\sum_{j \in C}d(i,j)$$
+
+若 $\mathrm{Affinity}(i,C)\le\theta$ 则称 $i$ 与 $C$ **Close**，否则 **Distant**。CAST 采用"边建边修"：
+
+1. **选种**：从剩余基因中度数最高者作为新簇种子；
+2. **拉人**：把所有与当前簇 Close 的基因加入；
+3. **踢人**：新成员改变簇重心后，重新检查并把变 Distant 的成员踢出；
+4. **收敛**：簇成员不再变化即完成一个簇，从总集移除后构建下一个。
+
+"踢人"步骤是 CAST 区别于简单贪心聚类的关键，保证簇内亲和力始终满足阈值。最坏时间复杂度 $O(n^3)$，实际通常远快于此。CAST 无需预设 k、对噪声更稳健，但对阈值 $\theta$ 敏感、不保证最优、无法处理重叠聚类；它最初为微阵列数据设计，对连续渐变数据可能强制离散化。WGCNA 的网络模块检测思想与其图论框架高度一致。
+
+## 方法对比与选择
+
+| 特性 | 层次聚类 | k-means | CAST |
+|------|---------|---------|------|
+| **需要预设 k** | 否 | 是 | 否 |
+| **距离度量** | 任意 | 欧几里得 | 任意 |
+| **噪声鲁棒性** | 中等 | 差 | 较好 |
+| **时间复杂度** | $O(n^2)$ | $O(n\cdot k\cdot d)$ | $O(n^3)$ 最坏 |
+| **输出** | 树状图 | 扁平簇 | 扁平簇 |
+
+选择建议：需要层次结构与可视化、簇数未知时用层次聚类；大规模、簇近似球形且需高效时用 k-means；数据噪声大、簇数未知时用 CAST 或图聚类（如单细胞常用的 Leiden/Louvain）。
+
+<NoteCard variant="pitfalls"
+  items={[
+    '聚类结果就是生物学真相：聚类高度依赖参数（链接准则、k、分辨率），需结合标记基因与生物学知识验证。',
+    'SSE 最小等价于正确分组：SSE 是纯数学目标，低 SSE 可能只反映了批次效应而非真实生物学分组。',
+    '共表达即共调控：聚类只能说明表达模式相似，共表达是共调控的必要而非充分条件。',
+    '预处理可忽略：基于距离的方法对标准化/Log 变换极其敏感，不标准化时高表达基因会主导结果。',
+  ]}
+/>
+
+<NoteCard variant="tools"
+  items={[
+    'R：hclust()（层次聚类）、stats::kmeans()（Hartigan-Wong 改进 Lloyd）、pheatmap（表达矩阵可视化）。',
+    'Python：scipy.cluster.hierarchy（层次聚类与绘图）、scikit-learn KMeans（含 k-means++ 初始化）。',
+    '经典文献：Eisen et al. (1998) 首次将层次聚类大规模用于酵母芯片数据；CLUSTER 软件包实现了 CAST。',
+  ]}
+/>
+
+## 相关页面
+
+<LinkGrid
+  items={[
+    { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma', description: '平均链接层次聚类在系统发育中的特例' },
+    { title: '距离矩阵方法', to: '/applications-omics/phylogeny/distance-methods', description: '理解演化距离的计算' },
+    { title: '聚类与 UMAP 降维', to: '/applications-omics/single-cell/clustering-and-umap', description: '单细胞分群中的图聚类实践' },
+    { title: '图算法基础', to: '/core-methods/algorithms/graph-algorithms', description: 'CAST 与图聚类的图论背景' },
+  ]}
+/>

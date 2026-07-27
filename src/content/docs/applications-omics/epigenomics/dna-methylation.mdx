@@ -63,11 +63,44 @@ WGBS 的比对面临独特挑战——传统的碱基级比对会因大量 $C \t
 - **三碱基比对**：将参考基因组和 reads 中的 C 全部替换为 T（或在正负链分别处理），在"退化"的三字母空间（A, T, G） 中完成比对，再映射回原始坐标。
 - **方向性**（Directional）vs **非方向性**（Non-directional）文库：方向性文库只保留原始链的信息，非方向性文库保留正负两条链。分析流程需要根据文库类型调整。
 
-## 4. 统计分析：DMR 的鉴定
+## 4. 差异甲基化区域（DMR）检测
 
-**DMR (Differentially Methylated Regions)** 是指在不同条件（如癌症 vs 正常）下甲基化水平显著不同的区域。
-- **量化**：计算每个位点的甲基化比例 $\beta = \frac{C}{C+T}$。
-- **建模**：由于 $\beta$ 值具有有界性（0 到 1 之间），通常使用 **Beta-Binomial 分布** 来处理生物学重复间的变异。
+**DMR（Differentially Methylated Region, 差异甲基化区域）** 是在不同条件（如癌症 vs 正常）下甲基化水平显著差异的连续基因组区域。
+
+### 为什么从位点提升到区域
+
+直接逐位点比较面临多重困难：覆盖度不均使低覆盖位点估计不可靠；全基因组数百万 CpG 逐个检验的多重校正过于保守；单个位点变化的功能意义不明确。而生物学上甲基化调控通常**作用于区域而非单个位点**（启动子、增强子的协同变化），因此 DMR 检测把分析提升到功能区域层面，是连接分子数据与生物学功能的桥梁。它要回答三个子问题：哪些 CpG 应视为一个区域、如何检验区域层面差异、如何处理全基因组多重检验。
+
+### 统计模型
+
+每个 CpG 位点观测到甲基化 read 数 $m_i$、未甲基化 read 数 $u_i$、总深度 $n_i=m_i+u_i$，甲基化比例 $\beta_i=m_i/n_i$。由于 $\beta$ 具有有界性（$\beta\in[0,1]$）与过离散性（方差大于二项分布期望，见第 6 节），常用 **beta-binomial 模型**：
+
+$$P(m_i\mid n_i,\alpha,\beta)=\binom{n_i}{m_i}\frac{B(m_i+\alpha,\,n_i-m_i+\beta)}{B(\alpha,\beta)}$$
+
+其中 $B(\cdot,\cdot)$ 是 Beta 函数，期望 $\mu=\alpha/(\alpha+\beta)$，离散度 $\phi=1/(\alpha+\beta)$；$\phi\to 0$ 时退化为二项分布。
+
+对两条件 A、B 检验 $H_0:\mu_A=\mu_B$。常用 **Wald 检验**：
+
+$$Z=\frac{\hat\mu_A-\hat\mu_B}{\sqrt{\mathrm{Var}(\hat\mu_A)+\mathrm{Var}(\hat\mu_B)}}, \qquad \mathrm{Var}(\hat\mu)=\frac{\mu(1-\mu)}{n}[1+(n-1)\phi]$$
+
+或**似然比检验** $LR=-2\log\frac{L(H_0)}{L(H_1)}$（大样本下近似服从自由度 1 的 $\chi^2$ 分布）。
+
+> 以上为帮助理解核心思想的简化模型。实际工具（DSS、methylKit、bsseq）包含贝叶斯推断、平滑优化与参数调整，与这里的描述存在差异，不要直接等同于源码实现。
+
+### 区域推断策略
+
+1. **滑动窗口法**：在基因组上滑动固定窗口，汇总窗内 CpG 数据后检验（如 methylKit 的 tile 分析）；
+2. **连续 CpG 平滑法（BSmooth 风格）**：先对各样本甲基化信号做移动平均/LOESS 平滑，再识别连续差异区域（bsseq）；
+3. **分段常数模型（DSS 风格）**：假设基因组由若干甲基化水平恒定的区域组成，用贝叶斯分层模型推断区域边界后再检验，适合低覆盖数据。
+
+### 关键参数
+
+- **最小 CpG 数**：DMR 通常要求至少 3–5 个 CpG，保证统计功效；
+- **最小覆盖深度**：单位点常要求 $\geq 5\times$，区域汇总 $\geq 20\times$；
+- **最小差异阈值**：除显著性外常要求 $|\Delta\beta|\geq 0.1$–$0.2$；
+- **最大 gap**：允许 CpG 间的最大间隔，默认 500–1000 bp。
+
+实践中还需注意：bulk 组织的甲基化差异可能源于细胞组成变化而非真实表观改变，必要时用参考数据解卷积或结合单细胞甲基化；并联合 ChIP-seq、ATAC-seq、RNA-seq 提高生物学解释性。
 
 ## 5. 甲基化与基因表达的关系
 
@@ -87,7 +120,7 @@ DNA 甲基化数据具有独特的统计特性，需要专门的建模策略：
 - **过离散**：生物学变异使方差大于二项分布的预期，需要 **Beta-Binomial 分布** 来处理。
 - **覆盖不均**：不同位点覆盖深度差异大，低覆盖位点估计不可靠，通常要求 $\geq 5\times$ 覆盖。
 
-常用分析工具包括 **methylKit**（差异分析与可视化）、**DSS**（贝叶斯分层模型，适用于低覆盖数据）和 **bsseq**（BSmooth 平滑算法）。这些工具的核心都是处理甲基化数据的特殊分布特性。
+常用分析工具包括 **methylKit**（差异分析与可视化）、**DSS**（贝叶斯分层模型，适用于低覆盖数据）、**bsseq**（BSmooth 平滑算法）和 **metilene**（快速分段算法，适合大规模数据）。这些工具的核心都是处理甲基化数据的特殊分布特性。
 
 ## 7. 单细胞 DNA 甲基化
 
@@ -137,7 +170,7 @@ DNA 甲基化研究经历了从现象观察到分子机制的深入：
 <LinkGrid
   items={[
     { title: '隐马尔可夫模型', to: '/core-methods/models/hmm', description: 'CG 岛识别的底层模型' },
-    { title: 'DMR 检测算法', to: '/applications-omics/epigenomics/dmr-detection', description: '深入统计检验细节' },
+    { title: '统计检验与多重校正', to: '/foundations/probability-and-graphs', description: 'DMR 检测的统计基础' },
     { title: 'ATAC-seq 概览', to: '/applications-omics/epigenomics/atac-seq', description: '另一种关键的表观组学技术' }
   ]}
 />

@@ -18,10 +18,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: '重叠检测算法', href: '/applications-omics/long-read/overlap-detection', description: 'Minimizer 索引的核心概念' },
-    { name: '序列比对基础', href: '/core-methods/alignment/index', description: '动态规划比对的通用框架' },
-    { name: 'PacBio 与 Nanopore', href: '/applications-omics/long-read/pacbio-nanopore', description: '长读长测序技术的特点' },
+  items={[
+    { label: '重叠检测算法', href: '/applications-omics/long-read/overlap-detection' },
+    { label: '序列比对基础', href: '/core-methods/alignment/index' },
+    { label: 'PacBio 与 Nanopore', href: '/applications-omics/long-read/pacbio-nanopore' },
   ]}
 />
 
@@ -113,6 +113,18 @@ $$
 ## Seeding 阶段：降维索引
 
 ### Minimizer 索引构建
+
+给定序列 $S$、窗口大小 $w$ 和 k-mer 大小 $k$，**minimizer** 是窗口内哈希值最小的 k-mer：
+
+$$
+\text{minimizer}(S[i:i+w]) = \arg\min_{j \in [i, i+w-k+1]} \text{hash}(S[j:j+k])
+$$
+
+核心洞察是**不索引所有 k-mer，只索引这个代表性子集**：当序列发生小突变时，最小 k-mer 改变的概率较低，因此 minimizer 相对稳定。关键性质：
+
+- 相邻窗口往往共享相同的 minimizer，故 minimizer 密度约为 $2/(w+1)$；
+- 窗口大小 $w$ 控制采样密度：$w$ 越大，minimizer 越少、索引越小；
+- 反向互补序列的 minimizer 一致，便于处理 DNA 双链。
 
 **参考基因组预处理**：
 1. 滑动窗口提取 minimizers（窗口大小 $w$，k-mer 大小 $k$）
@@ -387,9 +399,9 @@ Minimap2 支持多种模式：
 
 <LinkGrid
   items={[
-    { title: '重叠检测算法', to: '/applications-omics/long-read/overlap-detection', description: 'Minimap 的核心思想来源' },
-    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm', description: '利用比对结果进行序列纠错' },
-    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore', description: 'Minimap2 支持的技术平台' },
-    { title: '序列比对基础', to: '/core-methods/alignment/index', description: '比对的通用算法框架' }
+    { title: '重叠检测算法', to: '/applications-omics/long-read/overlap-detection' },
+    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm' },
+    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore' },
+    { title: '序列比对基础', to: '/core-methods/alignment/index' }
   ]}
 />

@@ -22,7 +22,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
   items={[
     { label: 'scRNA-seq 总览', href: '/applications-omics/single-cell/scrna-seq-overview' },
     { label: '概率、图与动态规划预备', href: '/foundations/probability-and-graphs' },
-    { label: 'k-means 与 CAST 噪声聚类', href: '/applications-omics/single-cell/k-means-bioinformatics' }
+    { label: '聚类算法（k-means 与 CAST）', href: '/core-methods/algorithms/clustering-algorithms' }
   ]}
 />
 
@@ -113,7 +113,7 @@ $$
 
 ## 5. 聚类的数学直觉：同质性与分离性
 
-正如在 [k-means 与 CAST 噪声聚类](./k-means-bioinformatics/#噪声聚类cast) 中讨论的，一个理想的聚类（如团图）应满足：
+正如在 [聚类算法：CAST 噪声聚类](../../core-methods/algorithms/clustering-algorithms/#cast-噪声聚类) 中讨论的，一个理想的聚类（如团图）应满足：
 1.  **同质性（Homogeneity）**：同一簇内的细胞在转录组上高度相似。
 2.  **分离性（Separation）**：不同簇的细胞之间界限清晰。
 
@@ -219,7 +219,7 @@ $$
 ## 7. Worked Example：从矩阵到 UMAP
 
 <figure>
-  <img src="/img/illustrations/scrna-umap.svg" alt="scRNA-seq UMAP 聚类可视化：不同细胞类型的二维分布" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/scrna-umap.svg`} alt="scRNA-seq UMAP 聚类可视化：不同细胞类型的二维分布" />
   <figcaption>UMAP 可视化：不同颜色代表不同细胞类型的聚类结果</figcaption>
 </figure>
 
@@ -350,7 +350,7 @@ sc.tl.umap(adata)
 <LinkGrid
   items={[
     { title: 'scRNA-seq 总览', to: '/applications-omics/single-cell/scrna-seq-overview', description: '理解单细胞分析全流程' },
-    { title: 'k-means 与 CAST', to: '/applications-omics/single-cell/k-means-bioinformatics', description: '聚类算法的理论深度（含 CAST 噪声聚类）' },
+    { title: '聚类算法', to: '/core-methods/algorithms/clustering-algorithms', description: '聚类算法的理论深度（含 k-means 与 CAST 噪声聚类）' },
     { title: '轨迹推断', to: '/applications-omics/single-cell/trajectory-analysis', description: '当聚类界限模糊时的分化研究' }
   ]}
 />

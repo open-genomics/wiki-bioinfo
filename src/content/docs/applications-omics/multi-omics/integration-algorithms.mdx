@@ -20,7 +20,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <PrerequisitesBox
   items={[
     { label: '多组学整合策略', href: '/applications-omics/multi-omics/integration-strategies' },
-    { label: '联合 NMF', href: '/applications-omics/multi-omics/joint-nmf' },
+    { label: '批次效应与数据协调', href: '/applications-omics/multi-omics/batch-effect-and-harmonization' },
     { label: '概率模型基础', href: '/core-methods/models/index' },
   ]}
 />
@@ -58,22 +58,33 @@ $$
 \min_{W, H^{(1)}, ..., H^{(K)}} \sum_{k=1}^{K} \|X^{(k)} - W H^{(k)}\|_F^2 + \lambda \mathcal{R}(W, H)
 $$
 
-其中 $W$ 是共享的基矩阵（$n \times r$），$H^{(k)}$ 是各组学特异的系数矩阵（$r \times p_k$）。
+其中 $W$ 是共享的基矩阵（$n \times r$），$H^{(k)}$ 是各组学特异的系数矩阵（$r \times p_k$）。共享 $W$ 即自动实现各组学在样本维度的对齐，$W$ 的列可解释为共同的生物学过程（通路、细胞类型、疾病亚型）。
+
+**求解**：目标函数非凸，通常用交替乘法更新（multiplicative update）求局部最优：
+
+$$
+W_{ij} \leftarrow W_{ij} \cdot \frac{\sum_k (X^{(k)} (H^{(k)})^T)_{ij}}{\sum_k (W H^{(k)} (H^{(k)})^T)_{ij}}, \qquad
+H^{(k)}_{ij} \leftarrow H^{(k)}_{ij} \cdot \frac{(W^T X^{(k)})_{ij}}{(W^T W H^{(k)})_{ij}}
+$$
+
+正则项 $\mathcal{R}$ 常用 L2、稀疏（L1）或组间一致性约束 $\sum_{k<l}\|H^{(k)}-H^{(l)}\|_F^2$。
 
 **优点**：
 - 数学形式清晰，易于解释
-- 非负约束符合生物学直觉
-- 计算效率较高
+- 非负约束符合生物学直觉（"部分组成整体"）
+- 计算效率较高，适合中小规模数据
 
 **缺点**：
 - 难以处理缺失数据
-- 对初始化敏感
-- 非凸优化可能陷入局部最优
+- 对初始化敏感（非凸，需多次运行取优）
+- 要求数据非负（z-score 等含负值数据需先变换）
+
+**适用场景**：样本匹配、规模中等（$n < 10^4$）、需要可解释因子、数据为非负计数/丰度的场景。
 
 **变体**：
-- **iNMF**：整合单细胞多模态数据
-- **MultiNMF**：加入正则项控制组学权重
-- **SNF（Similarity Network Fusion）**：构建相似性网络后融合
+- **iNMF**：整合单细胞多模态数据，加入对齐约束并可处理部分模态缺失
+- **MultiNMF**：加入组学权重 $w_k$ 控制各组学贡献，可自动学习
+- **SNF（Similarity Network Fusion）**：构建相似性网络后融合（见下文图方法）
 
 ### 典型相关分析（CCA）及扩展
 
@@ -85,12 +96,16 @@ $$
 \max_{u, v} u^T X^T Y v \quad \text{s.t.} \quad u^T X^T X u = 1, v^T Y^T Y v = 1
 $$
 
+约束保证典型变量（canonical variate）方差为 1，避免平凡解。
+
+**求解**：可转化为广义特征值问题。令 $\Sigma_{xx}=X^TX$、$\Sigma_{yy}=Y^TY$、$\Sigma_{xy}=X^TY$，计算 $M=\Sigma_{xx}^{-1}\Sigma_{xy}\Sigma_{yy}^{-1}\Sigma_{yx}$，其特征值 $\lambda_k$ 给出典型相关系数 $\rho_k=\sqrt{\lambda_k}$，可依次求得 $r=\min(p,q)$ 对互不相关的典型变量。显著性可用 Wilks' Lambda $\Lambda=\prod_i(1-\rho_i^2)$ 或置换检验评估。
+
 **扩展方法**：
 
-- **Sparse CCA**：加入 L1 正则实现特征选择
+- **Sparse CCA**：加入 L1 正则 $\max\, w_x^T\Sigma_{xy}w_y-\lambda_x\|w_x\|_1-\lambda_y\|w_y\|_1$ 实现特征选择
 - **Kernel CCA**：通过核函数处理非线性关系
 - **Group CCA**：扩展到多组学（>2 组）
-- **Deep CCA**：使用深度网络学习非线性映射
+- **Deep CCA**：使用深度网络学习非线性映射 $\max_{f,g}\mathrm{Corr}(f(X),g(Y))$
 
 **优点**：
 - 理论基础扎实
@@ -99,8 +114,10 @@ $$
 
 **缺点**：
 - 线性 CCA 难以捕捉复杂非线性关系
-- 对噪声敏感
-- 样本量要求较高
+- 对噪声敏感，标准 CCA 不能处理缺失数据
+- 样本量要求较高（$n > p+q$）
+
+**适用场景**：两组匹配样本、线性关联假设合理、需要可解释权重的关联发现。CCA 最大化线性相关的思想也是现代对比学习（如 CLIP）与多模态表示学习的源头之一。
 
 ## 因子分析类算法
 
@@ -119,18 +136,26 @@ $$
 - $W^{(k)}$ 是组学 $k$ 的因子载荷矩阵
 - $\tau^{(k)}$ 是组学 $k$ 的噪声参数
 
-**推断方法**：使用变分推断近似后验分布
+**ARD 先验与自动权重学习**：对载荷设自动相关性确定（Automatic Relevance Determination, ARD）先验 $W^{(k)}_{jr}\sim\mathcal{N}(0,\alpha_{kr}^{-1})$。精度 $\alpha_{kr}$ 越小，因子 $r$ 对组学 $k$ 越重要，从而由数据自动学习各组学-因子的权重，无需手工指定。
+
+**推断方法**：后验 $p(Z,W\mid X)$ 难以精确计算，采用变分推断，以因子化近似 $q(Z,W)=q(Z)\prod_k q(W^{(k)})$ 最大化证据下界（Evidence Lower Bound, ELBO）：
+
+$$
+\mathcal{L}=\mathbb{E}_q[\log p(X,Z,W)]-\mathbb{E}_q[\log q(Z,W)]
+$$
 
 **优点**：
-- 可处理缺失数据
-- 提供不确定性估计
+- 可处理缺失数据（直接标记 NA，无需填充）
+- 提供不确定性估计（后验分布）
 - 可解释性强（因子可标注为生物学过程）
-- 支持视图权重自动学习
+- 支持视图权重自动学习与多种数据类型（连续/二值/计数）
 
 **缺点**：
 - 假设因子服从正态分布
-- 计算复杂度随样本量增长
-- 需要选择因子数量
+- 计算复杂度随样本量增长，推断较慢
+- 需要选择因子数量（可用 ELBO 曲线或方差解释率）
+
+**适用场景**：存在缺失数据、需要不确定性估计、样本量较小或数据类型多样的队列级多组学整合。
 
 ### 变分自编码器（VAE）类方法
 
@@ -158,24 +183,32 @@ $$
 
 ### 相似性网络融合（SNF）
 
+**基本思想**：不假设数据分布，把每组学数据转化为样本相似性网络，再通过迭代消息传递融合成一张网络，用于下游聚类/可视化。
+
 **基本流程**：
 
-1. 为每组学构建样本相似性网络
-2. 迭代融合网络：
+1. 为每组学构建样本相似性网络。用热核（heat kernel）加局部缩放定义相似度，并做行归一化得到随机矩阵：
+   $$
+   W_{ij}=\exp\!\left(-\frac{d_{ij}^2}{\mu\,\epsilon_i\epsilon_j}\right), \qquad P_{ij}=\frac{W_{ij}}{\sum_l W_{il}}
+   $$
+   其中 $d_{ij}$ 为欧氏距离，$\epsilon_i$ 取样本 $i$ 到第 $K$ 个近邻的距离，$\mu$ 为超参数。
+2. 迭代融合网络（$S^{(k)}$ 为 $P^{(k)}$ 的对称化版本）：
    $$
    P^{(k)} \leftarrow S^{(k)} \times \left(\frac{\sum_{l \neq k} P^{(l)}}{K-1}\right) \times (S^{(k)})^T
    $$
-3. 融合后的网络用于下游分析（聚类、可视化）
+3. 融合后的网络用于下游分析（谱聚类、可视化）。
 
 **优点**：
-- 不假设数据分布
-- 可处理不同类型的数据
-- 算法简单直观
+- 不假设数据分布，可处理不同类型的数据
+- 网络表示直观、易于可视化
+- 算法简单直观，对噪声相对鲁棒
 
 **缺点**：
 - 相似性度量选择影响结果
 - 难以处理缺失数据
-- 计算复杂度 $O(n^2)$
+- 计算复杂度 $O(n^2)$（融合每轮 $O(Kn^3)$），不适合超大规模
+
+**适用场景**：样本量中等（$n<5000$）、数据类型多样、需要样本层面（而非特征层面）整合与网络表示的场景。
 
 ### 图神经网络（GNN）方法
 
@@ -265,7 +298,7 @@ $$
   items={[
     { title: '多组学整合策略', to: '/applications-omics/multi-omics/integration-strategies', description: '整合策略的选择原则' },
     { title: '批次效应与数据协调', to: '/applications-omics/multi-omics/batch-effect-and-harmonization', description: '整合前必须处理的技术噪声' },
-    { title: '联合 NMF', to: '/applications-omics/multi-omics/joint-nmf', description: '矩阵分解类整合方法详解' },
+    { title: '多组学整合', to: '/applications-omics/multi-omics/index', description: '本章导航与学习路径' },
     { title: '单细胞 Multiome', to: '/applications-omics/multi-omics/single-cell-multiome', description: '单细胞多模态整合应用' }
   ]}
 />

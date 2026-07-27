@@ -123,11 +123,34 @@ ATAC-seq 数据的质量评估依赖几个关键指标：
 
 ## 8. 转录因子足迹分析（Footprinting）
 
-ATAC-seq 可以识别开放染色质区域，但开放区域不一定意味着转录因子正在结合。Footprinting 旨在解决：**在开放的区域中，哪些位置实际上被转录因子占据？**
+ATAC-seq 可以识别开放染色质区域，但开放区域不一定意味着转录因子正在结合。一个调控元件可能完全开放（无蛋白结合）、被转录因子占据（蛋白保护 DNA 不被切割）或被核小体占据。**Footprinting 旨在区分：在开放区域中，哪些位点实际被转录因子结合？**
 
-- **原理**：转录因子结合 DNA 后会物理阻碍 Tn5 插入，导致 Motif 中心区域插入显著减少而两侧正常，形成"凹陷"信号。
-- **挑战**：Footprinting 是间接证据，依赖高覆盖度（通常 >50M reads）、Tn5 序列偏好校正以及 motif 数据库的完整性。
-- **注意**：可靠的 footprint 分析需要严格的统计检验和多重校正，独立实验验证（如 ChIP-seq 或 motif 富集）仍是金标准。
+### 原理
+
+转录因子（TF）结合 DNA 后会物理阻碍 Tn5 插入，导致 **motif 中心区域插入显著减少、两侧正常**，形成"凹陷"（dip）信号。检测所有 motif 位点的这种凹陷，可以推断哪些 TF 在当前条件下活跃、比较不同细胞类型的 TF 活性差异、构建细胞类型特异的调控网络。单碱基分析前必须先做 Tn5 偏移校正（见第 3 节）。
+
+### 统计检验
+
+> 以下为帮助理解核心思想的简化模型。实际工具（TOBIAS、HINT、chromVAR）包含复杂的偏好估计与统计模型，不要直接等同于源码实现。
+
+对 motif 区域 $[L,R]$，设中心插入计数 $c_{center}$、侧翼（如 ±50 bp）计数 $c_{flank}$，检验中心插入率是否显著低于侧翼：
+
+$$H_0:\lambda_{center}=\lambda_{flank}, \qquad H_1:\lambda_{center}<\lambda_{flank}$$
+
+用泊松检验 $p=P(K\le c_{center}\mid \lambda=\hat\lambda_{flank})$，其中 $\hat\lambda_{flank}=\frac{c_{flank}}{L_{flank}}\times L_{center}$。检验前需校正 Tn5 序列偏好（用全基因组 k-mer 频率估计偏好因子，观测值除以偏好因子），否则偏好本身会产生类似 footprint 的假象。
+
+其他思路：**窗口扫描（HINT 风格）** 在 motif 周围滑动窗口寻找插入率最低的区域；**深度学习** 用 CNN/RNN 直接从 motif 周围插入信号学习结合模式。
+
+### 常用工具
+
+- **TOBIAS**：结合 Tn5 偏好校正，在 motif 周围计算 footprint 得分并检验，提供可视化；
+- **HINT**：基于窗口扫描，兼容 ATAC-seq 与 DNase-seq，区分正负链；
+- **chromVAR**：基于 motif 偏差（deviation）而非绝对 footprint，适合单细胞数据与降维分析；
+- **Wellington**：早期 DNase-seq footprinting 工具，比较 motif 中心与两侧的切割频率。
+
+### 挑战与局限
+
+Footprint 是**间接证据**：可能由其他 DNA 结合蛋白或结构因素引起，需 ChIP-seq 等独立验证；反过来，没有可检测 footprint 也不等于没有结合（数据深度不足、结合时间短都可能使 footprint 不可见）。该方法依赖高深度数据（bulk 通常 $\geq$ 50M reads）、充分的 Tn5 偏好校正和完整的 motif 数据库；bulk 数据中不同细胞类型的信号混合会稀释 footprint，必要时需单细胞或解卷积方法。
 
 ## 9. 单细胞 ATAC-seq (scATAC-seq)
 
@@ -169,6 +192,6 @@ ATAC-seq 的发展代表了表观基因组学技术的进步轨迹：
   items={[
     { title: 'ChIP-seq 概览', to: '/applications-omics/epigenomics/chip-seq-overview', description: '对比"结合"与"开放"' },
     { title: 'MACS2 峰调用', to: '/applications-omics/epigenomics/macs2-peak-calling', description: '深入统计检测算法' },
-    { title: 'Footprinting 算法', to: '/applications-omics/epigenomics/footprinting-algorithms', description: '识别精准的蛋白结合足迹' }
+    { title: 'PWM / PSSM', to: '/core-methods/models/pwm-pssm', description: 'footprinting 中 motif 扫描的打分模型' }
   ]}
 />

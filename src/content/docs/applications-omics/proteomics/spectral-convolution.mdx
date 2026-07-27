@@ -4,7 +4,6 @@ title: "谱卷积与修饰鉴定"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
-import DataTable from '@/components/docs/DataTable.astro';
 import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
@@ -204,21 +203,9 @@ IDENTIFY-MODIFICATIONS(convolution, threshold):
 
 ## 谱卷积 vs 谱对齐
 
-<DataTable variant="comparison"
-  leftTitle="谱卷积"
-  rightTitle="谱对齐"
-  rows={[
-    { aspect: '**修饰检测**', left: '全局修饰（所有位点相同偏移）', right: '局部修饰（位点特异性偏移）' },
-    { aspect: '**输出**', left: '质量偏移量', right: '最优对齐路径' },
-    { aspect: '**复杂度**', left: '$O(n^2)$', right: '$O(n^2 k)$' },
-    { aspect: '**修饰位点**', left: '不直接提供', right: '精确定位' }
-  ]}
-/>
+两者的逐项对比（输出、修饰检测粒度、复杂度、信息粒度）统一收敛在[谱对齐算法 · 谱卷积 vs 谱对齐](./spectral-alignment/#谱卷积-vs-谱对齐)。一句话概括：谱卷积给出**全局质量偏移**（粗粒度、$O(n^2)$），能发现修饰但不能定位；谱对齐用动态规划**精确定位修饰位点**（细粒度、$O(n^2 k)$）。
 
-**实际应用**：
-1. **谱卷积**：快速识别候选修饰质量
-2. **谱对齐**：精确定位修饰位点
-3. **联合使用**：修饰鉴定的完整流程
+**实际应用**：先用谱卷积快速识别候选修饰质量，再用谱对齐精确定位修饰位点，两者联合构成修饰鉴定的完整流程。
 
 ## 修饰蛋白鉴定流程
 

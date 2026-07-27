@@ -19,10 +19,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: '长读长组装', href: '/applications-omics/long-read/long-read-assembly', description: '重叠检测在组装中的作用' },
-    { name: 'k-mer 与序列索引', href: '/core-methods/sequence/kmers', description: 'k-mer 索引的基础概念' },
-    { name: '序列比对基础', href: '/core-methods/alignment/index', description: '局部比对的基本原理' },
+  items={[
+    { label: '长读长组装', href: '/applications-omics/long-read/long-read-assembly' },
+    { label: 'k-mer 与序列索引', href: '/core-methods/sequence/kmers' },
+    { label: '序列比对基础', href: '/core-methods/alignment/index' },
   ]}
 />
 
@@ -82,42 +82,12 @@ $$
 
 ## Minimap：Minimizer 采样策略
 
-### 核心思想
+Minimap 的核心洞察是：**不需要索引所有 k-mer，只需索引具有代表性的子集（minimizer）**。minimizer 是窗口内哈希值最小的 k-mer，相邻窗口往往共享同一个 minimizer，因此序列发生小突变时它相对稳定。minimizer 的形式化定义与性质见 [Minimap2 比对算法](./minimap2-alignment/#seeding-阶段-降维索引)，此处只关注它如何用于重叠候选筛选：
 
-Minimap 的核心洞察是：**不需要索引所有 k-mers，只需索引具有代表性的子集**。
-
-考虑一个序列窗口：如果我们知道窗口内"最小"（哈希值最小）的 k-mer，这个 k-mer 相对稳定——当序列发生小的突变时，最小 k-mer 改变的概率较低。
-
-### Minimizer 定义
-
-给定序列 $S$、窗口大小 $w$ 和 k-mer 大小 $k$，**minimizer** 是窗口内哈希值最小的 k-mer：
-
-$$
-\text{minimizer}(S[i:i+w]) = \arg\min_{j \in [i, i+w-k+1]} \text{hash}(S[j:j+k])
-$$
-
-**关键性质**：
-- 相邻窗口往往共享相同的 minimizer，因此 minimizer 密度约为 $2/(w+1)$
-- 窗口大小 $w$ 控制采样密度：大 $w$ 产生更少 minimizers
-- 反向互补序列的 minimizers 一致，便于处理 DNA 双链
-
-### 算法流程
-
-1. **索引构建**：
-   - 对每条 read 提取所有 minimizers
-   - 构建倒排索引：minimizer → [(read_id, position), ...]
-
-2. **候选识别**：
-   - 查询 read 的 minimizers
-   - 共享足够多 minimizers 的 read 对进入候选
-
-3. **共线性检查**：
-   - 候选 read 对的 minimizer 位置应呈线性关系（斜率一致）
-   - 过滤随机共享的 minimizers
-
-4. **精确验证**：
-   - 对通过检查的候选进行局部动态规划比对
-   - 确认重叠长度和相似度满足阈值
+1. **索引构建**：对每条 read 提取所有 minimizer，构建倒排索引 minimizer → [(read_id, position), ...]
+2. **候选识别**：共享足够多 minimizer 的 read 对进入候选
+3. **共线性检查**：候选对的 minimizer 位置应呈线性关系（斜率一致），过滤随机共享的 minimizer
+4. **精确验证**：对通过检查的候选进行局部动态规划比对，确认重叠长度和相似度满足阈值
 
 ## MHAP：MinHash 概率估计策略
 
@@ -203,78 +173,8 @@ $$
 
 ## 示例
 
-### Minimap 示例
+Minimap 风格的 minimizer 提取与命中定位的完整数值示例见 [Minimap2 比对算法 · 示例](./minimap2-alignment/#示例)。重叠检测复用同一套 seeding 逻辑，差异仅在于：比对是把 read 定位到参考基因组，而重叠检测是在 read 集合内部做全对全候选筛选，并额外依赖上文的共线性检查确认两条 read 的 minimizer 位置呈一致斜率。
 
-考虑两条 reads：
-
-- r₁ = `ACGTACGTACGT`（长度 12）
-- r₂ = `CGTACGTACGTA`（长度 12）
-
-参数：k = 3, w = 5
-
-#### 步骤 1：提取 minimizers
-
-对于 r₁：
-
-窗口和对应的 k-mers：
-
-- 窗口 [0:5] = `ACGTA`：k-mers 为 ACG, CGT, GTA, TAC
-  - hash(ACG) = 100, hash(CGT) = 50, hash(GTA) = 80, hash(TAC) = 120
-  - minimizer = CGT（hash=50），位置 1
-
-- 窗口 [1:6] = `CGTAC`：k-mers 为 CGT, GTA, TAC, ACG
-  - hash(CGT) = 50, hash(GTA) = 80, hash(TAC) = 120, hash(ACG) = 100
-  - minimizer = CGT（hash=50），位置 1
-
-- 窗口 [2:7] = `GTACG`：k-mers 为 GTA, TAC, ACG, CGT
-  - hash(GTA) = 80, hash(TAC) = 120, hash(ACG) = 100, hash(CGT) = 50
-  - minimizer = CGT（hash=50），位置 4
-
-- 窗口 [3:8] = `TACGT`：k-mers 为 TAC, ACG, CGT, GTA
-  - hash(TAC) = 120, hash(ACG) = 100, hash(CGT) = 50, hash(GTA) = 80
-  - minimizer = CGT（hash=50），位置 5
-
-- 窗口 [4:9] = `ACGTA`：同窗口 0
-  - minimizer = CGT（hash=50），位置 5
-
-- 窗口 [5:10] = `CGTAC`：同窗口 1
-  - minimizer = CGT（hash=50），位置 6
-
-- 窗口 [6:11] = `GTACG`：同窗口 2
-  - minimizer = CGT（hash=50），位置 7
-
-r₁ 的 minimizers（去重后）：[(CGT, 1), (CGT, 4), (CGT, 5), (CGT, 6), (CGT, 7)]
-
-对于 r₂（类似分析）：
-r₂ 的 minimizers：[(CGT, 0), (CGT, 3), (CGT, 4), (CGT, 5), (CGT, 6)]
-
-#### 步骤 2：共享 minimizer 检测
-
-r₁ 和 r₂ 共享 minimizer CGT，因此是候选对。
-
-#### 步骤 3：共线性检查
-
-共享 minimizer 位置：
-- r₁: [1, 4, 5, 6, 7]
-- r₂: [0, 3, 4, 5, 6]
-
-计算斜率：位置差大致为 1，呈线性关系，通过检查。
-
-#### 步骤 4：精确比对
-
-进行局部比对：
-
-```text
-r₁: ACGTACGTACGT
-r₂:  CGTACGTACGTA
-```
-
-比对结果：
-- 重叠长度：11
-- 匹配数：10
-- 相似度：10/11 ≈ 90.9%
-
-如果 L_min = 10, S_min = 90%，则保留该重叠。
 ## 与真实工具或流程的连接
 
 ### Minimap2
@@ -332,9 +232,9 @@ Minimap2 是当前最流行的长读长比对工具，它扩展了原始 Minimap
 
 <LinkGrid
   items={[
-    { title: '长读长组装', to: '/applications-omics/long-read/long-read-assembly', description: '重叠检测在组装中的核心作用' },
-    { title: 'Minimap2 比对算法', to: '/applications-omics/long-read/minimap2-alignment', description: '基于 minimizer 的快速比对' },
-    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm', description: '利用重叠信息进行序列纠错' },
-    { title: '序列比对基础', to: '/core-methods/alignment/index', description: '比对算法的通用框架' }
+    { title: '长读长组装', to: '/applications-omics/long-read/long-read-assembly' },
+    { title: 'Minimap2 比对算法', to: '/applications-omics/long-read/minimap2-alignment' },
+    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm' },
+    { title: '序列比对基础', to: '/core-methods/alignment/index' }
   ]}
 />

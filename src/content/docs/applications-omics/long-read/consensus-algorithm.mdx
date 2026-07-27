@@ -19,10 +19,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: '重叠检测算法', href: '/applications-omics/long-read/overlap-detection', description: 'Consensus 依赖的 read 重叠关系' },
-    { name: '序列比对基础', href: '/core-methods/alignment/index', description: '多序列比对的核心概念' },
-    { name: '长读长组装', href: '/applications-omics/long-read/long-read-assembly', description: '组装 polishing 的上下文' },
+  items={[
+    { label: '重叠检测算法', href: '/applications-omics/long-read/overlap-detection' },
+    { label: '序列比对基础', href: '/core-methods/alignment/index' },
+    { label: '长读长组装', href: '/applications-omics/long-read/long-read-assembly' },
   ]}
 />
 
@@ -280,9 +280,9 @@ PacBio 生态使用不同的 consensus 算法：
 
 <LinkGrid
   items={[
-    { title: '长读长组装', to: '/applications-omics/long-read/long-read-assembly', description: 'Consensus 在组装 polishing 中的应用' },
-    { title: '重叠检测算法', to: '/applications-omics/long-read/overlap-detection', description: '组装前识别 read 重叠关系' },
-    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore', description: '长读长技术平台对比' },
-    { title: '序列比对基础', to: '/core-methods/alignment/index', description: '比对算法的通用框架' }
+    { title: '长读长组装', to: '/applications-omics/long-read/long-read-assembly' },
+    { title: '重叠检测算法', to: '/applications-omics/long-read/overlap-detection' },
+    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore' },
+    { title: '序列比对基础', to: '/core-methods/alignment/index' }
   ]}
 />

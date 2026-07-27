@@ -88,7 +88,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 四级结构的组装通常涉及亚基表面的互补性，以及特定的相互作用界面。
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/protein-folding.svg" alt="protein folding hierarchy" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/protein-folding.svg`} alt="protein folding hierarchy" />
   <figcaption>蛋白质结构的四个层次：从线性序列到局部二级结构、整体折叠，再到多亚基复合体。每一层次都建立在前一层次之上，又赋予新的功能属性。</figcaption>
 </figure>
 
@@ -194,9 +194,9 @@ Domain 的识别对于理解蛋白功能至关重要：
 
 <LinkGrid
   items={[
-    { title: 'AlphaFold 与结构预测', href: '/applications-clinical/structure-bioinfo/alphafold-and-structure-prediction', description: '现代计算结构预测方法' },
-    { title: '结构比对与 fold', href: '/applications-clinical/structure-bioinfo/structure-alignment-and-fold', description: '结构相似性比较方法' },
-    { title: '蛋白质组学', href: '/applications-omics/proteomics', description: '大规模蛋白质研究' },
+    { title: 'AlphaFold 与结构预测', to: '/applications-clinical/structure-bioinfo/alphafold-and-structure-prediction', description: '现代计算结构预测方法' },
+    { title: '结构比对与 fold', to: '/applications-clinical/structure-bioinfo/structure-alignment-and-fold', description: '结构相似性比较方法' },
+    { title: '蛋白质组学', to: '/applications-omics/proteomics', description: '大规模蛋白质研究' },
   ]}
 />
 

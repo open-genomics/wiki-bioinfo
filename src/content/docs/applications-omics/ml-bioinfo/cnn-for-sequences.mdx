@@ -17,10 +17,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: '序列深度学习', href: '/applications-omics/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体框架' },
-    { name: 'PWM / PSSM', href: '/core-methods/models/pwm-pssm', description: '传统 motif 表示方法与 CNN 的关系' },
-    { name: '转录因子结合位点', href: '/core-methods/models/motif-finding', description: 'CNN 应用场景的生物学背景' },
+  items={[
+    { label: '序列深度学习', href: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' },
+    { label: 'PWM / PSSM', href: '/core-methods/models/pwm-pssm' },
+    { label: '转录因子结合位点', href: '/core-methods/models/motif-finding' },
   ]}
 />
 
@@ -72,7 +72,7 @@ CNN 特别适合以下类型的生物信息学问题：
 在位置 `i` 处的卷积操作为：
 
 $$
-h_i = \sigma \left( \sum_\{j=0\}^\{k-1\} X_\{i+j\} \cdot W_j + b \right)
+h_i = \sigma \left( \sum_{j=0}^{k-1} X_{i+j} \cdot W_j + b \right)
 $$
 
 其中：
@@ -88,7 +88,7 @@ $$
 通常使用多个卷积核（n 个）来检测不同的 motif：
 
 $$
-H = [h^\{(1)\}, h^\{(2)\}, ..., h^\{(n)\}]
+H = [h^{(1)}, h^{(2)}, ..., h^{(n)}]
 $$
 
 其中 `$H \in \mathbb{R}^{n\times(L-k+1)}$`，每个 `$h^{(j)}$` 对应一个卷积核的特征图。
@@ -98,7 +98,7 @@ $$
 池化层用于降维和实现位置不变性。常用最大池化：
 
 $$
-p_j = \max_\{i\} h^\{(j)\}_i
+p_j = \max_{i} h^{(j)}_i
 $$
 
 对每个特征图取最大值，得到固定长度的表示 p = [p₁, p₂, ..., p_n]
@@ -184,7 +184,7 @@ b = 0
 在位置 `i = 0` 处（子序列 "ATAT"）：
 
 $$
-h_0 = \text\{ReLU\}(X_0 \cdot W_0 + X_1 \cdot W_1 + X_2 \cdot W_2 + X_3 \cdot W_3 + b)
+h_0 = \text{ReLU}(X_0 \cdot W_0 + X_1 \cdot W_1 + X_2 \cdot W_2 + X_3 \cdot W_3 + b)
 $$
 
 计算：
@@ -225,7 +225,7 @@ p = max(h) = 4
 假设全连接层权重 w = 1，偏置 b = -2：
 
 $$
-y = \text\{sigmoid\}(w \cdot p + b) = \text\{sigmoid\}(1 \cdot 4 - 2) = \text\{sigmoid\}(2) ≈ 0.88
+y = \text{sigmoid}(w \cdot p + b) = \text{sigmoid}(1 \cdot 4 - 2) = \text{sigmoid}(2) ≈ 0.88
 $$
 
 由于 y > 0.5，预测该序列包含 TATA box motif。
@@ -283,7 +283,7 @@ CNN 在生物信息学中的代表性应用：
 堆叠多个卷积层，学习更复杂的特征：
 
 $$
-H^\{(l)\} = \text\{ReLU\}(W^\{(l)\} * H^\{(l-1)\} + b^\{(l)\})
+H^{(l)} = \text{ReLU}(W^{(l)} * H^{(l-1)} + b^{(l)})
 $$
 
 ### Dilated Convolution（空洞卷积）
@@ -291,7 +291,7 @@ $$
 使用空洞卷积扩大感受野，不增加参数量：
 
 $$
-h_i = \sigma \left( \sum_\{j=0\}^\{k-1\} X_\{i+j \cdot d\} \cdot W_j + b \right)
+h_i = \sigma \left( \sum_{j=0}^{k-1} X_{i+j \cdot d} \cdot W_j + b \right)
 $$
 
 其中 d 是空洞率（dilation rate）。
@@ -301,7 +301,7 @@ $$
 添加残差连接，缓解梯度消失问题：
 
 $$
-H = \text\{ReLU\}(W * X + X)
+H = \text{ReLU}(W * X + X)
 $$
 
 ### Attention Pooling
@@ -309,7 +309,7 @@ $$
 使用注意力机制替代最大池化，加权汇总特征：
 
 $$
-p_j = \sum_\{i\} \alpha_i \cdot h^\{(j)\}_i
+p_j = \sum_{i} \alpha_i \cdot h^{(j)}_i
 $$
 
 其中 α_i 是注意力权重。
@@ -347,9 +347,9 @@ $$
 
 <LinkGrid
   items={[
-    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体概览' },
-    { title: 'RNN/LSTM for Sequences', to: '/applications-omics/ml-bioinfo/rnn-lstm-for-sequences', description: 'CNN 的互补架构，擅长长程依赖建模' },
-    { title: 'Transformer for Sequences', to: '/applications-omics/ml-bioinfo/transformer-for-sequences', description: '全局注意力的现代序列建模架构' },
-    { title: 'PWM / PSSM', to: '/core-methods/models/pwm-pssm', description: 'CNN 卷积核学习的 motif 与传统 PWM 的关系' }
+    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' },
+    { title: '嵌入与语言模型', to: '/applications-omics/ml-bioinfo/embeddings-and-language-models' },
+    { title: 'Transformer for Sequences', to: '/applications-omics/ml-bioinfo/transformer-for-sequences' },
+    { title: 'PWM / PSSM', to: '/core-methods/models/pwm-pssm' }
   ]}
 />

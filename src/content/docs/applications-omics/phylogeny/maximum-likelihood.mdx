@@ -1,6 +1,6 @@
 ---
-description: Maximum Likelihood最大似然法：在给定演化模型下寻找最可能产生观测数据的系统发育树。
-title: "Maximum Likelihood算法"
+description: 最大似然法（Maximum Likelihood）：在给定演化模型下寻找最可能产生观测数据的系统发育树。
+title: "最大似然法（Maximum Likelihood）"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -18,10 +18,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'Neighbor-Joining 算法', href: '/applications-omics/phylogeny/neighbor-joining', description: '距离矩阵建树的基础方法' },
-    { name: 'Parsimony 算法', href: '/applications-omics/phylogeny/parsimony', description: '位点级系统发育推断的对比方法' },
-    { name: '多序列比对（MSA）', href: '/core-methods/alignment/multiple-sequence-alignment', description: 'ML 分析的输入数据' },
+  items={[
+    { label: 'Neighbor-Joining 算法', href: '/applications-omics/phylogeny/neighbor-joining' },
+    { label: 'Parsimony 算法', href: '/applications-omics/phylogeny/parsimony' },
+    { label: '多序列比对（MSA）', href: '/core-methods/alignment/multiple-sequence-alignment' },
   ]}
 />
 
@@ -115,7 +115,7 @@ $$
 假设不同位点独立演化，总似然是各位点似然的乘积：
 
 $$
-L(T, b, \theta | D) = \prod_\{k=1\}^\{L\} P(D_k | T, b, \theta)
+L(T, b, \theta | D) = \prod_{k=1}^{L} P(D_k | T, b, \theta)
 $$
 
 其中 $D_k$ 是第k个位点的观测状态。
@@ -125,7 +125,7 @@ $$
 为避免数值下溢，通常使用对数似然：
 
 $$
-\ell(T, b, \theta | D) = \sum_\{k=1\}^\{L\} \log P(D_k | T, b, \theta)
+\ell(T, b, \theta | D) = \sum_{k=1}^{L} \log P(D_k | T, b, \theta)
 $$
 
 ### 替换模型
@@ -191,8 +191,8 @@ Pruning算法是计算似然值的核心技术，使用动态规划避免枚举�
       L_v(a) = 1 if a == s else 0
    b. 如果v是内节点，有子节点left和right：
       for each state a:
-         L_v(a) = [∑_b P_\{ab\}(t_left) · L_left(b)] ·
-                  [∑_c P_\{ac\}(t_right) · L_right(c)]
+         L_v(a) = [∑_b P_{ab}(t_left) · L_left(b)] ·
+                  [∑_c P_{ac}(t_right) · L_right(c)]
 3. 计算根节点的似然：
    L_root = ∑_a π_a · L_root(a)
    其中π是平衡频率向量
@@ -259,7 +259,7 @@ Maximum Likelihood不仅优化树拓扑，还要优化分支长度和模型参�
 ### 优化目标
 
 $$
-\max_\{T, b, \theta\} \ell(T, b, \theta | D)
+\max_{T, b, \theta} \ell(T, b, \theta | D)
 $$
 
 ### 优化策略
@@ -418,9 +418,9 @@ Maximum Likelihood在真实工具中的应用：
 
 <LinkGrid
   items={[
-    { title: 'Parsimony 算法', to: '/applications-omics/phylogeny/parsimony', description: '无需概率模型的最简变化方法' },
-    { title: 'Neighbor-Joining 算法', to: '/applications-omics/phylogeny/neighbor-joining', description: 'ML 常用的初始化方法' },
-    { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma', description: '基于分子钟假设的层次聚类方法' },
-    { title: '多序列比对（MSA）', to: '/core-methods/alignment/multiple-sequence-alignment', description: 'ML 分析的输入数据准备' }
+    { title: 'Parsimony 算法', to: '/applications-omics/phylogeny/parsimony' },
+    { title: 'Neighbor-Joining 算法', to: '/applications-omics/phylogeny/neighbor-joining' },
+    { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma' },
+    { title: '多序列比对（MSA）', to: '/core-methods/alignment/multiple-sequence-alignment' }
   ]}
 />

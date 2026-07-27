@@ -18,10 +18,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'HMM 与 Viterbi 算法', href: '/core-methods/models/viterbi-forward-backward', description: 'Basecalling 中 HMM 解码的算法基础' },
-    { name: '序列深度学习', href: '/applications-omics/ml-bioinfo/deep-learning-for-sequences', description: '神经网络 basecaller 的架构背景' },
-    { name: 'PacBio 与 Nanopore', href: '/applications-omics/long-read/pacbio-nanopore', description: 'Nanopore 测序技术的物理原理' },
+  items={[
+    { label: 'HMM 与 Viterbi 算法', href: '/core-methods/models/viterbi-forward-backward' },
+    { label: '序列深度学习', href: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' },
+    { label: 'PacBio 与 Nanopore', href: '/applications-omics/long-read/pacbio-nanopore' },
   ]}
 />
 
@@ -322,9 +322,9 @@ Oxford Nanopore 的官方 basecaller：
 
 <LinkGrid
   items={[
-    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore', description: '长读长测序技术平台对比' },
-    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm', description: 'Basecalling 后的序列纠错与共识' },
-    { title: '结构变异检测', to: '/applications-omics/long-read/sv-detection', description: '长读长在 SV 检测中的应用' },
-    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的更多应用' }
+    { title: 'PacBio 与 Nanopore', to: '/applications-omics/long-read/pacbio-nanopore' },
+    { title: 'Consensus 算法', to: '/applications-omics/long-read/consensus-algorithm' },
+    { title: '结构变异检测', to: '/applications-omics/long-read/sv-detection' },
+    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' }
   ]}
 />

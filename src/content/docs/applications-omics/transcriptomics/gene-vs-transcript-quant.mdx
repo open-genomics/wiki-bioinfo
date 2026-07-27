@@ -132,7 +132,8 @@ RNA-seq 表达定量可以在两个层级上进行：**转录本级**（Transcri
     '不同转录本共享外显子的比例差异巨大。简单地把所有外显子上的 Reads 加起来，会高估短转录本的贡献、低估长转录本的贡献。',
     '内含子保留（Intron Retention）等剪接事件的 Reads 会被错误地计算在内。',
     '正确流程：比对到转录组/基因组（保留剪接信息） -> 转录本层定量 -> 聚合到基因层。',
-    '忽略 Isoform Switching：'
+    '忽略 Isoform Switching：',
+    '只看基因层总表达会掩盖转录本层的 isoform 切换——基因总量不变，但主导转录本发生替换，功能可能已改变。需在转录本层检测 isoform switching（如 IsoformSwitchAnalyzeR）。'
   ]}
 />
 

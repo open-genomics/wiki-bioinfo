@@ -17,10 +17,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'CNN for Sequences', href: '/applications-omics/ml-bioinfo/cnn-for-sequences', description: '局部模式检测的高效架构' },
-    { name: 'RNN/LSTM for Sequences', href: '/applications-omics/ml-bioinfo/rnn-lstm-for-sequences', description: '序列建模的经典架构' },
-    { name: '嵌入与语言模型', href: '/applications-omics/ml-bioinfo/embeddings-and-language-models', description: 'Transformer 预训练的基础' },
+  items={[
+    { label: 'CNN for Sequences', href: '/applications-omics/ml-bioinfo/cnn-for-sequences' },
+    { label: '序列深度学习（含 RNN/LSTM）', href: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' },
+    { label: '嵌入与语言模型', href: '/applications-omics/ml-bioinfo/embeddings-and-language-models' },
   ]}
 />
 
@@ -570,9 +570,9 @@ $$
 
 <LinkGrid
   items={[
-    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences', description: '深度学习在序列分析中的整体概览' },
-    { title: '嵌入与语言模型', to: '/applications-omics/ml-bioinfo/embeddings-and-language-models', description: 'Transformer 预训练的基础' },
-    { title: 'CNN for Sequences', to: '/applications-omics/ml-bioinfo/cnn-for-sequences', description: '局部模式检测的高效架构' },
-    { title: 'AlphaFold 与结构预测', to: '/applications-clinical/structure-bioinfo/alphafold-and-structure-prediction', description: 'Transformer 在蛋白质结构预测中的成功应用' }
+    { title: '序列深度学习', to: '/applications-omics/ml-bioinfo/deep-learning-for-sequences' },
+    { title: '嵌入与语言模型', to: '/applications-omics/ml-bioinfo/embeddings-and-language-models' },
+    { title: 'CNN for Sequences', to: '/applications-omics/ml-bioinfo/cnn-for-sequences' },
+    { title: 'AlphaFold 与结构预测', to: '/applications-clinical/structure-bioinfo/alphafold-and-structure-prediction' }
   ]}
 />

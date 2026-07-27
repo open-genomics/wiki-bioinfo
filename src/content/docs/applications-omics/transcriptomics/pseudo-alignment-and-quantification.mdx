@@ -19,10 +19,10 @@ import DataTable from '@/components/docs/DataTable.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'RNA-seq 工作流概览', href: '/applications-omics/workflows/rna-seq', description: '定量在完整分析流程中的位置' },
-    { name: '序列比对基础', href: '/core-methods/alignment/index', description: '精确比对与 pseudo-alignment 的对比' },
-    { name: 'TPM、FPKM、CPM 与有效长度', href: '/applications-omics/transcriptomics/tpm-fpkm-cpm', description: '定量后的归一化方法' },
+  items={[
+    { label: 'RNA-seq 工作流概览', href: '/applications-omics/workflows/rna-seq' },
+    { label: '序列比对基础', href: '/core-methods/alignment/index' },
+    { label: 'TPM、FPKM、CPM 与有效长度', href: '/applications-omics/transcriptomics/tpm-fpkm-cpm' },
   ]}
 />
 
@@ -216,9 +216,9 @@ Pseudo-alignment 算法**假设参考转录组注释是完备的**。如果：
 
 <LinkGrid
   items={[
-    { title: 'RNA-seq 工作流概览', to: '/applications-omics/workflows/rna-seq', description: '将 pseudo-alignment 放在完整分析流程中理解' },
-    { title: 'TPM、FPKM、CPM 与有效长度', to: '/applications-omics/transcriptomics/tpm-fpkm-cpm', description: '定量后的归一化方法' },
-    { title: '序列比对', to: '/core-methods/alignment/index', description: '精确比对的算法基础' },
-    { title: '基因层与转录本层表达定量', to: '/applications-omics/transcriptomics/gene-vs-transcript-quant', description: '定量结果的层级聚合' }
+    { title: 'RNA-seq 工作流概览', to: '/applications-omics/workflows/rna-seq' },
+    { title: 'TPM、FPKM、CPM 与有效长度', to: '/applications-omics/transcriptomics/tpm-fpkm-cpm' },
+    { title: '序列比对', to: '/core-methods/alignment/index' },
+    { title: '基因层与转录本层表达定量', to: '/applications-omics/transcriptomics/gene-vs-transcript-quant' }
   ]}
 />

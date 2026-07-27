@@ -1,6 +1,6 @@
 ---
-description: Neighbor-Joining算法：不依赖分子钟假设的距离矩阵建树方法，通过Q矩阵最小化总树长。
-title: "Neighbor-Joining算法"
+description: 邻接法（Neighbor-Joining）：不依赖分子钟假设的距离矩阵建树方法，通过 Q 矩阵最小化总树长。
+title: "邻接法（Neighbor-Joining）"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -19,10 +19,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'UPGMA 算法', href: '/applications-omics/phylogeny/upgma', description: '层次聚类建树的入门方法' },
-    { name: '距离方法概览', href: '/applications-omics/phylogeny/distance-methods', description: '距离矩阵建树方法族' },
-    { name: '多序列比对（MSA）', href: '/core-methods/alignment/multiple-sequence-alignment', description: '距离矩阵的来源' },
+  items={[
+    { label: 'UPGMA 算法', href: '/applications-omics/phylogeny/upgma' },
+    { label: '距离方法概览', href: '/applications-omics/phylogeny/distance-methods' },
+    { label: '多序列比对（MSA）', href: '/core-methods/alignment/multiple-sequence-alignment' },
   ]}
 />
 
@@ -417,9 +417,9 @@ NJ和Maximum Likelihood（ML）的关系：
 
 <LinkGrid
   items={[
-    { title: '距离方法概览', to: '/applications-omics/phylogeny/distance-methods', description: 'NJ 所属的距离矩阵建树方法族' },
-    { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma', description: '需要分子钟假设的对比方法' },
-    { title: 'Maximum Likelihood', to: '/applications-omics/phylogeny/maximum-likelihood', description: 'NJ 初始化后的精确优化方法' },
-    { title: '加法系统发育', to: '/applications-omics/phylogeny/additive-phylogeny', description: 'NJ 理论基础的加法树模型' }
+    { title: '距离方法概览', to: '/applications-omics/phylogeny/distance-methods' },
+    { title: 'UPGMA 算法', to: '/applications-omics/phylogeny/upgma' },
+    { title: 'Maximum Likelihood', to: '/applications-omics/phylogeny/maximum-likelihood' },
+    { title: '加法系统发育', to: '/applications-omics/phylogeny/additive-phylogeny' }
   ]}
 />

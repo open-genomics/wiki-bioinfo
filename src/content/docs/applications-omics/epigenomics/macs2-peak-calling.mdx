@@ -17,10 +17,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'ChIP-seq 概览', href: '/applications-omics/epigenomics/chip-seq-overview', description: 'ChIP-seq 实验原理与数据特点' },
-    { name: '统计检验与多重校正', href: '/foundations/probability-and-graphs', description: '泊松检验与 FDR 校正原理' },
-    { name: 'ATAC-seq', href: '/applications-omics/epigenomics/atac-seq', description: 'ATAC-seq 中同样使用 MACS2' },
+  items={[
+    { label: 'ChIP-seq 概览', href: '/applications-omics/epigenomics/chip-seq-overview' },
+    { label: '统计检验与多重校正', href: '/foundations/probability-and-graphs' },
+    { label: 'ATAC-seq', href: '/applications-omics/epigenomics/atac-seq' },
   ]}
 />
 
@@ -96,7 +96,7 @@ MACS2 及类似算法在多种表观遗传学研究中发挥核心作用：
 
 对于基因组上的一个窗口 `w`，设其长度为 `L` bp。如果该窗口没有真实富集，则 ChIP 样本在该窗口的 read 数 `k` 服从泊松分布：
 
-$$P(K = k) = \frac\{\lambda^k e^\{-\lambda\}\}\{k!\}$$
+$$P(K = k) = \frac{\lambda^k e^{-\lambda}}{k!}$$
 
 其中 `λ` 是该窗口的期望 read 数（背景强度）。
 
@@ -104,7 +104,7 @@ $$P(K = k) = \frac\{\lambda^k e^\{-\lambda\}\}\{k!\}$$
 
 给定观测到的 read 数 `k`，其富集显著性的 p-value 为：
 
-$$p = P(K \geq k) = \sum_\{i=k\}^\{\infty\} \frac\{\lambda^i e^\{-\lambda\}\}\{i!\}$$
+$$p = P(K \geq k) = \sum_{i=k}^{\infty} \frac{\lambda^i e^{-\lambda}}{i!}$$
 
 这是单边检验，我们关心的是 read 数是否显著高于背景。
 
@@ -299,9 +299,9 @@ MACS3 是 MACS2 的升级版本，主要改进：
 
 <LinkGrid
   items={[
-    { title: 'ChIP-seq 概览', to: '/applications-omics/epigenomics/chip-seq-overview', description: 'MACS2 所服务的实验技术背景' },
-    { title: 'ATAC-seq', to: '/applications-omics/epigenomics/atac-seq', description: 'ATAC-seq 中的峰调用同样使用 MACS2' },
-    { title: '统计检验与多重校正', to: '/foundations/probability-and-graphs', description: '峰调用中的 FDR 校正原理' },
-    { title: 'Footprinting 算法', to: '/applications-omics/epigenomics/footprinting-algorithms', description: '从峰到转录因子结合位点的精细分析' }
+    { title: 'ChIP-seq 概览', to: '/applications-omics/epigenomics/chip-seq-overview' },
+    { title: 'ATAC-seq', to: '/applications-omics/epigenomics/atac-seq' },
+    { title: '统计检验与多重校正', to: '/foundations/probability-and-graphs' },
+    { title: 'DNA 甲基化', to: '/applications-omics/epigenomics/dna-methylation' }
   ]}
 />

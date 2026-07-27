@@ -23,10 +23,10 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: 'RNA-seq 工作流概览', href: '/applications-omics/workflows/rna-seq', description: '差异分析在完整流程中的位置' },
-    { name: 'TPM、FPKM、CPM 与有效长度', href: '/applications-omics/transcriptomics/tpm-fpkm-cpm', description: '表达定量的单位与归一化' },
-    { name: '统计检验与多重校正', href: '/foundations/probability-and-graphs', description: '假设检验与 FDR 校正原理' },
+  items={[
+    { label: 'RNA-seq 工作流概览', href: '/applications-omics/workflows/rna-seq' },
+    { label: 'TPM、FPKM、CPM 与有效长度', href: '/applications-omics/transcriptomics/tpm-fpkm-cpm' },
+    { label: '统计检验与多重校正', href: '/foundations/probability-and-graphs' },
   ]}
 />
 
@@ -288,7 +288,7 @@ $$\log \mu_{ij} = \log s_j + \text{condition}_j \cdot \beta_i + \text{batch}_j \
     '小 fold change（LFC < 0.5）即使统计显著，可能无生物学功能',
     '建议同时考虑效应大小和显著性',
     '忽略模型假设检验：',
-    'DESeq2/edgeR 假设：'
+    'DESeq2/edgeR 假设：counts 服从负二项分布、样本间归一化合理、离散度借由跨基因共享信息估计。生物学重复过少（n<3）时离散度估计不稳，统计结论需谨慎。'
   ]}
 />
 

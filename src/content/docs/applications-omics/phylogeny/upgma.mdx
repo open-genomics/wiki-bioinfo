@@ -1,6 +1,6 @@
 ---
-description: UPGMA算法：基于分子钟假设的层次聚类系统发育重建方法。
-title: "UPGMA算法"
+description: 非加权组平均法（UPGMA）：基于分子钟假设的层次聚类系统发育重建方法。
+title: "非加权组平均法（UPGMA）"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -18,10 +18,10 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <PrerequisitesBox
-  prerequisites={[
-    { name: '系统发育树概览', href: '/applications-omics/phylogeny/', description: '系统发育树的概念与表示' },
-    { name: '距离方法概览', href: '/applications-omics/phylogeny/distance-methods', description: '距离矩阵建树方法族' },
-    { name: '层次聚类', href: '/applications-omics/single-cell/hierarchical-clustering', description: 'UPGMA 的算法本质' },
+  items={[
+    { label: '系统发育树概览', href: '/applications-omics/phylogeny/' },
+    { label: '距离方法概览', href: '/applications-omics/phylogeny/distance-methods' },
+    { label: '聚类算法（层次聚类）', href: '/core-methods/algorithms/clustering-algorithms' },
   ]}
 />
 
@@ -142,17 +142,17 @@ $$
 
 1. 初始化：每个样本 i 是一个独立的类群 C_i，包含一个成员
 2. while 类群数量 > 1:
-   a. 在当前距离矩阵中找到最小距离 d_\{min\} = min(d_\{ij\})
+   a. 在当前距离矩阵中找到最小距离 d_{min} = min(d_{ij})
    b. 选择对应的类群 A 和 B 进行合并
    c. 创建新节点 u，连接 A 和 B
    d. 计算分支长度：
-      - u 到 A 的长度：L_A = d_\{min\} / 2
-      - u 到 B 的长度：L_B = d_\{min\} / 2
+      - u 到 A 的长度：L_A = d_{min} / 2
+      - u 到 B 的长度：L_B = d_{min} / 2
    e. 创建新类群 C = A ∪ B，成员数 n_C = n_A + n_B
    f. 更新距离矩阵：
       - 删除 A 和 B 的行和列
       - 添加新类群 C 的行和列
-      - 对于每个其他类群 D，计算 d_\{CD\} = (n_A·d_\{AD\} + n_B·d_\{BD\}) / (n_A + n_B)
+      - 对于每个其他类群 D，计算 d_{CD} = (n_A·d_{AD} + n_B·d_{BD}) / (n_A + n_B)
 3. 返回构建的树
 ```
 
@@ -378,9 +378,9 @@ WPGMA在某些情况下可能更稳定，但UPGMA更常用。
 
 <LinkGrid
   items={[
-    { title: '距离方法概览', to: '/applications-omics/phylogeny/distance-methods', description: 'UPGMA 所属的距离矩阵建树方法族' },
-    { title: 'Neighbor-Joining 算法', to: '/applications-omics/phylogeny/neighbor-joining', description: '不依赖分子钟假设的建树方法' },
-    { title: '层次聚类', to: '/applications-omics/single-cell/hierarchical-clustering', description: 'UPGMA 的算法本质' },
-    { title: '加法系统发育', to: '/applications-omics/phylogeny/additive-phylogeny', description: 'UPGMA 正确性的理论基础' }
+    { title: '距离方法概览', to: '/applications-omics/phylogeny/distance-methods' },
+    { title: 'Neighbor-Joining 算法', to: '/applications-omics/phylogeny/neighbor-joining' },
+    { title: '聚类算法（层次聚类）', to: '/core-methods/algorithms/clustering-algorithms' },
+    { title: '加法系统发育', to: '/applications-omics/phylogeny/additive-phylogeny' }
   ]}
 />

@@ -182,7 +182,8 @@ description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容
 
 ### 4.7 链接
 
-- 站内链接使用相对路径（如 `../core-methods/alignment/edit-distance`）或以 `/wiki-bioinfo/` 开头的绝对路径（如 `/wiki-bioinfo/alignment/edit-distance`）。两者等价，`link-utils.ts` 会统一处理 base 前缀。
+- **markdown 链接**：用相对路径（如 `../core-methods/alignment/edit-distance`），由 Astro 原生解析。不要写绝对路径，否则在带 base 前缀的生产环境会 404。
+- **组件 `to:` / `href:` 字段**：用无前缀绝对路径（如 `/core-methods/alignment/edit-distance`），由 `link-utils.ts` 统一拼接 base 前缀。不要硬编码 `/wiki-bioinfo/`。
 - 链接文字应该是有描述性的名词，不要使用"点击这里"。
 - 外链优先指向论文主页、官方文档或可信数据库。
 
@@ -234,7 +235,7 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 | "对于 X 来说" | "对 X" |
 | "正如我们所看到的" | "如上所示" |
 | "这并不令人惊讶" | 删除，直接陈述 |
-| "值得注意的是" | "值得注意的是"（保留但每篇最多一次） |
+| "值得注意的是" | 直接陈述要点（如确需强调，每篇至多一次） |
 
 ### 6.4 每篇文章的核心要素
 
@@ -303,6 +304,9 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 - 需要 `PrerequisitesBox`（前置知识）
 - 需要 `DataTable`（`variant="comparison"` 对比 / `variant="decision-matrix"` 决策矩阵）
 - 需要 `LinkGrid`（`variant="navigation"` 导航网格 / `variant="related"` 相关页面卡片）
+- 需要 `DefinitionList`（术语/定义列表）
+- 需要 `PageHeaderMeta`（板块入口页头部元信息，自动推断所属板块）
+- 需要 `WorkflowSteps`（流程页的步骤总览）
 
 新增 MDX 页面时，优先复用 `src/components/docs/` 中已有组件。不要为单个页面发明一次性的样式方案。
 

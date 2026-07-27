@@ -29,14 +29,12 @@
 | `core-methods` | 序列比对 | `core-methods/alignment/` |
 | `core-methods` | 组装与图算法 | `core-methods/assembly/` |
 | `core-methods` | 概率模型与模式识别 | `core-methods/models/` |
-| `applications-omics` | 算法应用专题 | `applications-omics/alg-applications/` |
 | `applications-omics` | 工作流与案例 | `applications-omics/workflows/` |
 | `applications-omics` | 转录组 | `applications-omics/transcriptomics/` |
-| `applications-omics` | 单细胞组学 | `applications-omics/single-cell/` |
+| `applications-omics` | 单细胞组学（含空间转录组） | `applications-omics/single-cell/` |
 | `applications-omics` | 表观基因组学 | `applications-omics/epigenomics/` |
 | `applications-omics` | 群体遗传学 | `applications-omics/population/` |
 | `applications-omics` | 长读长测序 | `applications-omics/long-read/` |
-| `applications-omics` | 空间转录组 | `applications-omics/spatial/` |
 | `applications-omics` | 蛋白质组学 | `applications-omics/proteomics/` |
 | `applications-omics` | 多组学整合 | `applications-omics/multi-omics/` |
 | `applications-omics` | 系统发育与进化 | `applications-omics/phylogeny/` |

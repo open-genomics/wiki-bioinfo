@@ -160,7 +160,7 @@ Suffix Tree 是许多经典算法教材的核心，因为它提供了处理长�
 MUMmer 是基于 Suffix Tree 的全基因组比对工具，其核心流程为：
 1. 为参考基因组构建 Suffix Tree。
 2. 将查询基因组的每个位置在 Suffix Tree 中查找，寻找**最大唯一匹配**（即在两个基因组中都只出现一次的最长公共子串）。
-3. 对 MUMs 进行排序，用最短提升超几何（Sparse Superstring） 算法将它们组装为对齐块。
+3. 对 MUMs 进行排序，用最长递增子序列（Longest Increasing Subsequence, LIS）算法筛选出共线性的一致链，组装为对齐块。
 
 ## 5. 复杂度与适用前提
 

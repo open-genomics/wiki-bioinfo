@@ -10,14 +10,15 @@
 
 围绕序列、比对、组装、概率模型、工作流等核心主题组织知识主干，提供从导论到真实分析场景的连续阅读路径，并强调概念、算法、数据格式与流程之间的交叉引用。详细的设计理念与内容边界见[导论](https://lessup.github.io/wiki-bioinfo/intro/)。
 
-## 六个入口
+## 七个入口
 
 | 入口 | 作用 |
 | --- | --- |
 | 导论 | 项目定位、学习路线、贡献方式 |
 | 基础与数学 | 生物对象、抽象模型、算法基础 |
 | 核心方法 | 索引、比对、组装、概率模型 |
-| 分析方向 | RNA-seq、变异检测、单细胞等主题 |
+| 组学应用 | RNA-seq、单细胞、表观组、长读长等组学分析方向 |
+| 临床应用 | 变异检测、临床变异解释、结构生物信息学 |
 | 数据与资源 | 参考基因组、注释、文件格式、数据库 |
 | 附录 | 术语、参考资料、索引 |
 
@@ -26,7 +27,7 @@
 - 从 [导论](https://lessup.github.io/wiki-bioinfo/intro/) 了解整体结构
 - 从 [基础与数学](https://lessup.github.io/wiki-bioinfo/foundations/) 建立对象与模型框架
 - 从 [核心方法](https://lessup.github.io/wiki-bioinfo/core-methods/) 进入主要算法主线
-- 从 [分析方向](https://lessup.github.io/wiki-bioinfo/applications/) 或 [工作流](https://lessup.github.io/wiki-bioinfo/workflows/) 带着问题回溯方法
+- 从 [组学应用](https://lessup.github.io/wiki-bioinfo/applications-omics/) 或 [临床应用](https://lessup.github.io/wiki-bioinfo/applications-clinical/) 带着问题回溯方法
 
 ## 本地开发
 

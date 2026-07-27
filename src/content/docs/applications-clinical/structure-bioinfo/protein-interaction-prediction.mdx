@@ -61,14 +61,7 @@ $$\text{Input: Structure A + Structure B} \rightarrow \text{Output: Complex A:B}
 
 ### 对接流程
 
-```mermaid
-graph LR
-    A[受体结构] --> C[构象采样]
-    B[配体结构] --> C
-    C --> D[打分函数]
-    D --> E[排名]
-    E --> F[最优结合模式]
-```
+受体结构 + 配体结构 → 构象采样 → 打分函数 → 排名 → 最优结合模式
 
 ### 1. 构象采样（Sampling）
 

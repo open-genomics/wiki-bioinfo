@@ -92,17 +92,7 @@ $$E_{total} = E_{bonded} + E_{nonbonded}$$
 
 ### 标准流程
 
-```mermaid
-graph TD
-    A[初始结构 PDB] --> B[添加氢原子]
-    B --> C[溶剂化 Water Box]
-    C --> D[添加离子 Neutralize]
-    D --> E[能量最小化]
-    E --> F[NVT 平衡]
-    F --> G[NPT 平衡]
-    G --> H[Production MD]
-    H --> I[轨迹分析]
-```
+初始结构（PDB）→ 添加氢原子 → 溶剂化（Water Box）→ 添加离子中和 → 能量最小化 → NVT 平衡 → NPT 平衡 → Production MD → 轨迹分析
 
 ### 关键步骤
 

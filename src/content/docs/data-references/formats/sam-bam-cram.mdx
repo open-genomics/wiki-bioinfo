@@ -25,27 +25,7 @@ import DataTable from '@/components/docs/DataTable.astro';
 
 **SAM（Sequence Alignment/Map）** 格式编码的是**比对结果（alignment）**——将原始 reads 定位到参考序列坐标系中的计算产物。
 
-```mermaid
-graph LR
-    subgraph "Read Space"
-    R["Read: ATGC..."]
-    end
-
-    subgraph "Alignment Process"
-    Map["Mapper"]
-    end
-
-    subgraph "Reference Space"
-    Ref["Reference: ...NNNATGCNNN..."]
-    Pos["Position: chr1:1000"]
-    CIGAR["CIGAR: 4M"]
-    end
-
-    R --> Map
-    Map --> Ref
-    Map --> Pos
-    Map --> CIGAR
-```
+一条 read（`ATGC…`）经比对工具（Mapper）定位到参考序列（`…NNNATGCNNN…`），产出参考位置（`chr1:1000`）与 CIGAR 字符串（`4M`）。
 
 ### 核心数据结构
 

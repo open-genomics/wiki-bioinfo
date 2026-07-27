@@ -156,7 +156,7 @@ $|Z| > 3$ 的 Read Pair 被视为异常。在候选区域中，如果异常 Read
 ## 5. Read Depth 与 CNV 检测
 
 <figure>
-  <img src="/img/illustrations/cnv-interpretation.svg" alt="CNV 染色体区间解读：正常与异常拷贝数区域对比" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/cnv-interpretation.svg`} alt="CNV 染色体区间解读：正常与异常拷贝数区域对比" />
   <figcaption>CNV 检测中的 Read Depth 信号与拷贝数解读</figcaption>
 </figure>
 
@@ -240,17 +240,7 @@ $$\hat{L}_{\text{DEL}} = 700 - 350 = 350 \text{ bp}$$
 
 ## 9. 临床与功能意义
 
-- **剂量效应**：大片段缺失或重复（CNV）常导致基因拷贝数变化，引发发育疾病或癌症。
-- **基因融合**：易位可能将两个不相关的基因拼在一起（如 BCR-ABL），成为癌症的驱动因子。
-
-### 临床中常见的 SV
-
-| 疾病/场景 | SV 类型 | 代表性变异 | 功能后果 |
-| :--- | :--- | :--- | :--- |
-| 慢性髓性白血病（CML） | 平衡易位 | t(9;22) BCR-ABL1 融合 | 产生具有持续酪氨酸激酶活性的融合蛋白 |
-| DiGeorge 综合征 | 大片段缺失 | 22q11.2 缺失（约 3 Mb） | TBX1 等基因单倍型不足，导致心脏和免疫缺陷 |
-| Charcot-Marie-Tooth 病 | 基因重复 | PMP22 基因重复（1.5 Mb） | PMP22 过表达导致周围神经脱髓鞘 |
-| 微阵列基因组杂交（CMA） | CNV | 全基因组 CNV 扫描 | 一线临床遗传学诊断工具 |
+SV 的临床解释（剂量效应、基因融合、致病性评估）涉及与 SNV 完全不同的证据框架，详见 [CNV 与 SV 临床解释](../clinical-variants/cnv-and-sv-interpretation/)。
 
 ## 10. 常见误区
 

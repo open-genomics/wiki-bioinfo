@@ -47,18 +47,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 
 **中心法则（Central Dogma）** 描述了遗传信息的标准流向：**DNA $\to$ RNA $\to$ 蛋白质**。
 
-```mermaid
-graph LR
-    DNA["DNA (Genome)"] -- "Transcription (转录)" --> RNA["RNA (Transcriptome)"]
-    RNA -- "Translation (翻译)" --> Protein["Protein (Proteome)"]
-
-    DNA -.->|"Replication (复制)"| DNA
-    RNA -.->|"Reverse Transcription"| DNA
-
-    style DNA fill:#f9f,stroke:#333
-    style RNA fill:#bbf,stroke:#333
-    style Protein fill:#bfb,stroke:#333
-```
+| 过程 | 方向 | 说明 |
+|:---|:---|:---|
+| 复制（Replication） | DNA → DNA | 基因组自我拷贝 |
+| 转录（Transcription） | DNA → RNA | DNA 模板合成 RNA |
+| 翻译（Translation） | RNA → Protein | mRNA 按密码子表组装氨基酸 |
+| 逆转录（Reverse Transcription） | RNA → DNA | 逆转录病毒等特殊场景 |
 
 - **转录（Transcription）**：DNA 模板合成 RNA。
 - **翻译（Translation）**：mRNA 在核糖体上按密码子表（Codon Table）组装氨基酸。
@@ -90,24 +84,7 @@ graph LR
 
 ## 4. 基因组与参考序列
 
-### 什么是参考基因组
-
-参考基因组（Reference Genome） 是一个物种的**共识序列**，它不代表任何一个个体，而是综合多个个体数据拼接而成的"标准"序列。
-
-- **人类参考基因组**：目前主要使用 GRCh38（也叫 hg38），其前一个版本 GRCh37（hg19）仍有大量遗留数据。
-- **版本差异的影响**：hg19 和 hg38 之间存在大量坐标偏移（特别是着丝粒附近），同一个 SNP 的位置在不同版本上可能不同。**混用不同版本的坐标是最常见的数据分析错误之一**。
-- **为什么需要参考**：测序产生的短 reads 无法独立组装出完整基因组，需要将它们"贴"到参考序列上，才能确定每条 read 的来源位置。
-
-### 基因组注释
-
-参考基因组只是一个碱基序列（如 `ATGCGATCG...`），本身不告诉你哪里是基因。**基因组注释（Annotation）** 就是标记参考基因组上各种功能元素的位置：
-
-- **基因位置**：每个基因的转录起始位点、外显子边界、转录终止位点
-- **调控元件**：启动子、增强子、沉默子
-- **重复序列**：转座子、卫星序列、低复杂度区域
-- **常见注释格式**：GTF/GFF（基因结构）、BED（区间）、VCF（变异）
-
-常用注释来源：GENCODE（人类和小鼠）、Ensembl（多物种）、RefSeq（NCBI 维护）。
+参考基因组（Reference Genome）是一个物种的共识序列，为所有比对、注释和变异检测提供坐标框架。基因组注释（Annotation）则在参考序列上标记基因位置、调控元件和重复区域等功能元素。参考版本选择（GRCh37 vs GRCh38）和注释体系（GENCODE、Ensembl、RefSeq）的详细内容见 [参考基因组、坐标系统与注释](./reference-and-annotation/)。
 
 ## 5. 从生物对象到计算对象
 

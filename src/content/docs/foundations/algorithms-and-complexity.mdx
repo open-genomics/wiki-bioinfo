@@ -47,7 +47,7 @@ Bob 尝试总结规律，但他很快发现当石头数量增加时，情况变�
 - 从两堆各拿一个石头 $\approx$ 将两个碱基对齐（Match/Mismatch）。
 - 寻找最优策略 $\approx$ 在比对矩阵中寻找最优路径。
 
-如果你不能理解石头游戏的致胜算法，你可能也无法真正理解 BLAST 或 Needle-Wunsch 算法背后的动态规划逻辑。
+如果你不能理解石头游戏的致胜算法，你可能也无法真正理解 BLAST 或 Needleman-Wunsch 算法背后的动态规划逻辑。
 
 ## 2. 什么是算法？
 
@@ -81,28 +81,6 @@ Bob 尝试总结规律，但他很快发现当石头数量增加时，情况变�
 
 大自然本身就在运行"算法"。最典型的例子是 **DNA 复制（DNA Replication）**。
 
-```mermaid
-graph TD
-    subgraph "Biological Process"
-    Helicase["Helicase (解旋酶)"] -->|"Unwinds"| DNA_Strand["DNA Strand"]
-    Primase["Primase (引物酶)"] -->|"Starts"| Synthesis["Synthesis (合成)"]
-    Polymerase["Polymerase (聚合酶)"] -->|"Adds Bases"| Synthesis
-    Ligase["Ligase (连接酶)"] -->|"Seals"| Result["New DNA"]
-    end
-
-    subgraph "Algorithmic Abstraction"
-    Read["Read Input String"]
-    Init["Initialize Pointer"]
-    Copy["Copy & Append"]
-    Check["Error Check & Concat"]
-    end
-
-    Helicase --- Read
-    Primase --- Init
-    Polymerase --- Copy
-    Ligase --- Check
-```
-
 | 步骤 | 生物过程（分子机器） | 算法抽象 |
 | :--- | :--- | :--- |
 | **解旋** | 解旋酶（Helicase） 打开双链 | 读取字符串 |
@@ -118,22 +96,7 @@ graph TD
 
 ### 时间复杂度
 
-我们使用 $O(f(n))$ 来描述随着输入规模 $n$ 的增加，运行时间增长的趋势。
-
-```mermaid
-graph LR
-    subgraph "Complexity Hierarchy (Fast to Slow)"
-    O1["O(1)"] --> OlogN["O(log n)"]
-    OlogN --> ON["O(n)"]
-    ON --> ONlogN["O(n log n)"]
-    ONlogN --> ON2["O(n^2)"]
-    ON2 --> O2N["O(2^n)"]
-    end
-
-    style O1 fill:#dfd
-    style ON fill:#fff
-    style O2N fill:#fdd
-```
+我们使用 $O(f(n))$ 来描述随着输入规模 $n$ 的增加，运行时间增长的趋势。从快到慢：$O(1) \to O(\log n) \to O(n) \to O(n \log n) \to O(n^2) \to O(2^n)$。
 
 | 记号 | 名称 | 生物信息学示例 | 对 3 Gb 基因组的意义 |
 | :--- | :--- | :--- | :--- |
@@ -173,7 +136,7 @@ graph LR
 <LinkGrid
   items={[
     { title: '穷举搜索', to: '/core-methods/algorithms/exhaustive-search', description: '理解暴力破解与剪枝' },
-    { title: '换钱问题', to: '/core-methods/algorithms/change-problem', description: '动态规划的入门案例' },
+    { title: '动态规划基础', to: '/core-methods/algorithms/dynamic-programming-basics', description: '从找零问题到网格路径的 DP 入门案例' },
     { title: '基因组重排', to: '/core-methods/algorithms/genome-rearrangements', description: '贪心算法的挑战' },
     { title: '序列比对入门', to: '/core-methods/alignment', description: '将算法应用于真实的生物序列' }
   ]}

@@ -109,7 +109,7 @@ $$
 考虑把 `GATT` 变成 `GCAT`。
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/edit-distance-matrix.svg" alt="编辑距离动态规划矩阵示意图" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/edit-distance-matrix.svg`} alt="编辑距离动态规划矩阵示意图" />
   <figcaption>构造一个包含空串行列的动态规划矩阵，蓝色高亮为匹配（代价 0），黄色高亮为替换（代价 1），箭头标出一条最优路径。最终 dp[4][4] = 2，表示最小编辑距离为 2。</figcaption>
 </figure>
 

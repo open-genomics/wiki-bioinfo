@@ -53,7 +53,7 @@ de Bruijn graph 是短读长组装中的经典模型。它的核心思想不是�
 ### 顶点与边的定义
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/de-bruijn-details.svg" alt="de Bruijn graph 构建与干扰结构示意图" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/de-bruijn-details.svg`} alt="de Bruijn graph 构建与干扰结构示意图" />
   <figcaption>左：从序列到 k-mer 的滑动窗口分解；右：顶点（（k-1）-mer）与边（k-mer）的映射关系；下：图中常见的错误结构（Tip 和 Bubble）。</figcaption>
 </figure>
 
@@ -92,7 +92,7 @@ de Bruijn graph 是短读长组装中的经典模型。它的核心思想不是�
 ## 示例
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/de-bruijn-graph.svg" alt="de Bruijn graph 图结构示意图" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/de-bruijn-graph.svg`} alt="de Bruijn graph 图结构示意图" />
   <figcaption>把 k-mer 映射成边、把（k-1）-mer 映射成顶点之后，组装问题就转成图上的路径与图清理问题。</figcaption>
 </figure>
 

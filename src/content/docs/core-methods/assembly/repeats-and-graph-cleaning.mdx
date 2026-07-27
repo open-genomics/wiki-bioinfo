@@ -69,7 +69,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 ### 测序错误会制造假分叉
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/assembly-cleaning-repeats.svg" alt="组装图异常结构与清理策略示意图" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/assembly-cleaning-repeats.svg`} alt="组装图异常结构与清理策略示意图" />
   <figcaption>常见的图异常结构：1. Tips (由测序错误产生的死端)；2. Bubbles (由变异或局部错误产生的平行路径)；3. Repeats (由于序列重复导致的路径坍缩与分叉)。</figcaption>
 </figure>
 

@@ -24,7 +24,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 系统发育分析试图根据序列或特征差异重建物种、基因或样本之间的进化关系。
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/phylogeny-tree.svg" alt="phylogeny tree concepts" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/phylogeny-tree.svg`} alt="phylogeny tree concepts" />
   <figcaption>系统发育树用叶节点、内部节点和分支结构来表达样本之间的关系；但不同建树方法对应的统计假设并不相同。</figcaption>
 </figure>
 
@@ -60,7 +60,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 推荐阅读顺序
 
-> 聚类方法（层次聚类、k-means）已移至[单细胞组学板块](../single-cell/)。
+> 通用聚类方法（层次聚类、k-means、CAST）已移至[核心方法 · 聚类算法](../../core-methods/algorithms/clustering-algorithms/)。
 
 我们推荐以下学习路径：
 

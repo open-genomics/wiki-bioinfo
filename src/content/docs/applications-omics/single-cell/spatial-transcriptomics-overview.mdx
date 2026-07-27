@@ -24,7 +24,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 />
 
 <figure>
-  <img src="/wiki-bioinfo/img/illustrations/spatial-workflow.svg" alt="spatial transcriptomics workflow" />
+  <img src={`${import.meta.env.BASE_URL}img/illustrations/spatial-workflow.svg`} alt="spatial transcriptomics workflow" />
   <figcaption>空间转录组把组织切片、显微图像和带空间条码的表达矩阵结合起来，使表达结果可以重新投影回组织结构。</figcaption>
 </figure>
 

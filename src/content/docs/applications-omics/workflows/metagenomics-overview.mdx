@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="宏基因组学分析流程：从环境样本到物种组成、功能注释与差异分析的计算管线。"
+  summary="宏基因组的核心挑战是样本本身即多物种混合体，整条管线都围绕『不依赖单一参考』展开：宿主去除 → 物种分类与丰度估计 → 组装 binning 重建 MAG → 功能注释。"
+  items={[
+    '分类三条路线各有取舍：Kraken2 的 k-mer 精确匹配速度快，MetaPhlAn3 的标记基因法定量准，MEGAN 的 LCA 能处理多映射 reads',
+    'Binning 依据序列组成（k-mer 频率）与差异覆盖度把 contigs 归组为 MAG，用 CheckM 评估完整度与污染率（高质量标准：>90% / <5%）',
+    '功能注释基于序列同源，是「潜力」而非「现实」；且 30-60% 的宏基因组基因在现有数据库中无同源（暗物质基因）',
+  ]}
 />
 
 ## 任务目标
@@ -20,8 +25,8 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <PrerequisitesBox
   items={[
     { label: 'NGS 流程总览', href: '/applications-omics/workflows/ngs-overview' },
-    { label: '组装与图算法', href: '/core-methods/assembly/index' },
-    { label: '数据库与资源', href: '/data-references/databases/index' },
+    { label: '组装与图算法', href: '/core-methods/assembly/' },
+    { label: '数据库与资源', href: '/data-references/databases/' },
   ]}
 />
 
@@ -35,8 +40,8 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 - [测序 reads、coverage 与错误模型](../../foundations/sequencing-reads-coverage)
 - [常见文件格式概览](../../data-references/formats/common-file-formats)
-- [组装与图算法](../../core-methods/assembly/index)
-- [数据库与资源](../../data-references/databases/index)
+- [组装与图算法](../../core-methods/assembly/)
+- [数据库与资源](../../data-references/databases/)
 
 ## 步骤总览
 
@@ -197,7 +202,7 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 
 - 如果关注单个物种的基因组分析，阅读 [NGS 流程总览](./ngs-overview)；
 - 如果关注组装算法的原理，阅读 [de Bruijn graph 组装](../../core-methods/assembly/de-bruijn)；
-- 如果关注分类算法的细节，阅读 [序列比对](../../core-methods/alignment/index)；
+- 如果关注分类算法的细节，阅读 [序列比对](../../core-methods/alignment/)；
 - 如果关注功能注释相关的数据库，阅读 [数据库与注释系统一览](../../data-references/databases-and-annotations)。
 
 ## 常见误区
@@ -221,8 +226,8 @@ clean reads -> k-mer 优化选择 -> de Bruijn 图构建 -> contig 生成 -> sca
 <LinkGrid
   items={[
     { title: 'NGS 流程总览', to: '/applications-omics/workflows/ngs-overview', description: '通用 NGS 分析流程概览' },
-    { title: '组装与图算法', to: '/core-methods/assembly/index', description: '宏基因组组装的算法基础' },
+    { title: '组装与图算法', to: '/core-methods/assembly/', description: '宏基因组组装的算法基础' },
     { title: '质控与数据预处理', to: '/applications-omics/workflows/qc-overview', description: '宏基因组 QC 的特殊考量' },
-    { title: '数据库与资源', to: '/data-references/databases/index', description: '物种分类与功能注释数据库' }
+    { title: '数据库与资源', to: '/data-references/databases/', description: '物种分类与功能注释数据库' }
   ]}
 />

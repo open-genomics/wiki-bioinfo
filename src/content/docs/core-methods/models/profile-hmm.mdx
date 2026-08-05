@@ -275,12 +275,12 @@ Profile HMM 的推断方式和一般 HMM 一样，也依赖：
 - PWM/PSSM 的更强表达形式；
 - 又是一般 HMM 思想在序列家族问题中的专门化版本。
 
-## 与 gene prediction 的区别
+## 与基因预测的区别
 
 - **Profile HMM**：
   - 强调一个序列是否符合某个家族/域的 profile；
   - 常用于蛋白家族比对、结构域搜索；
-- **Gene prediction HMM**：
+- **基因预测 HMM**：
   - 强调把一段长基因组序列切分成 exon/intron/intergenic 等状态；
   - 更关注整条基因结构的解释。
 
@@ -313,6 +313,6 @@ Profile HMM 在蛋白家族分析中非常重要，典型用途包括：
     { title: 'PWM 与 PSSM', to: '/core-methods/models/pwm-pssm', description: 'Profile HMM 是 PWM/PSSM 的扩展，显式建模插入和缺失。' },
     { title: '隐马尔可夫模型', to: '/core-methods/models/hmm', description: 'Profile HMM 是一般 HMM 在序列家族建模上的专门化。' },
     { title: 'Viterbi、Forward 与 Backward', to: '/core-methods/models/viterbi-forward-backward', description: 'Profile HMM 的推断依赖这三个核心算法。' },
-    { title: 'Gene prediction', to: '/core-methods/models/gene-prediction-hmm', description: 'Gene prediction HMM 与 Profile HMM 共享状态建模思想，但应用目标不同。' },
+    { title: '基因预测', to: '/core-methods/models/gene-prediction-hmm', description: '基因预测 HMM 与 Profile HMM 共享状态建模思想，但应用目标不同。' },
   ]}
 />

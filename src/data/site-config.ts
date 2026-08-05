@@ -25,7 +25,7 @@ export const siteConfig: SiteConfig = {
   site: 'https://lessup.github.io',
   base: '/wiki-bioinfo/',
   locale: 'zh-CN',
-  ogImage: 'img/bioinfo-logo.svg',
+  ogImage: 'img/og-image.png',
   themeColor: '#4f46e5',
   keywords: 'bioinformatics, 生物信息学, sequence analysis, genomics, algorithms, RNA-seq',
 };

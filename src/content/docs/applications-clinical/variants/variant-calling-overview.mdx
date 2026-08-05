@@ -17,7 +17,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '序列比对', href: '/core-methods/alignment/index' },
+    { label: '序列比对', href: '/core-methods/alignment/' },
     { label: '常见文件格式概览', href: '/data-references/formats/common-file-formats' },
     { label: '测序 Reads 与覆盖度', href: '/foundations/sequencing-reads-coverage' },
   ]}
@@ -48,7 +48,7 @@ DNA-seq 变异检测要解决的核心问题是：
 
 - [测序 reads、coverage 与错误模型](../../foundations/sequencing-reads-coverage/)
 - [常见文件格式概览](../../data-references/formats/common-file-formats/)
-- [序列比对](../../core-methods/alignment/index/)
+- [序列比对](../../core-methods/alignment/)
 - [参考基因组、坐标系统与注释](../../foundations/reference-and-annotation/)
 
 ## 核心概念
@@ -132,7 +132,7 @@ FASTQ -> QC -> alignment -> BAM -> candidate variants -> filtering -> VCF annota
 <LinkGrid
   items={[
     { title: 'DNA-seq 变异过滤与质量控制', to: '/applications-clinical/variants/variant-filtering', description: '变异调用后的候选集过滤' },
-    { title: '序列比对', to: '/core-methods/alignment/index', description: '变异检测的输入依赖' },
+    { title: '序列比对', to: '/core-methods/alignment/', description: '变异检测的输入依赖' },
     { title: '常见文件格式概览', to: '/data-references/formats/common-file-formats', description: 'BAM/VCF 等核心文件格式' },
     { title: '长读长 SV 检测', to: '/applications-omics/long-read/sv-detection', description: '结构变异检测专题' }
   ]}

@@ -1,6 +1,6 @@
 ---
-description: Gibbs Sampling 是用于 Motif Finding 的马尔可夫链蒙特卡洛方法，通过随机采样在庞大的搜索空间中寻找保守序列模式。
-title: "Gibbs Sampling"
+description: Gibbs 采样 是用于 Motif Finding 的马尔可夫链蒙特卡洛方法，通过随机采样在庞大的搜索空间中寻找保守序列模式。
+title: "Gibbs 采样"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -8,7 +8,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="Gibbs Sampling 是用于 Motif Finding 的随机化算法，通过马尔可夫链蒙特卡洛方法在庞大的搜索空间中高效寻找保守序列模式。"
+  summary="Gibbs 采样 是用于 Motif Finding 的随机化算法，通过马尔可夫链蒙特卡洛方法在庞大的搜索空间中高效寻找保守序列模式。"
   items={[
     '马尔可夫链蒙特卡洛（MCMC）方法',
     '每次迭代只改变一个序列的 motif 位置',
@@ -27,13 +27,13 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 是什么
 
-**Gibbs Sampling** 是一种用于 Motif Finding 的随机化算法，由 Charles Lawrence 等人于 1993 年提出。它属于**马尔可夫链蒙特卡洛（MCMC）**方法家族，通过巧妙的随机采样策略在庞大的搜索空间中寻找保守的 DNA 序列模式（motif）。
+**Gibbs 采样** 是一种用于 Motif Finding 的随机化算法，由 Charles Lawrence 等人于 1993 年提出。它属于**马尔可夫链蒙特卡洛（MCMC）**方法家族，通过巧妙的随机采样策略在庞大的搜索空间中寻找保守的 DNA 序列模式（motif）。
 
 ### 核心思想
 
 **问题背景**：Motif Finding 的搜索空间巨大——对于 $t$ 条长度为 $n$ 的序列，寻找长度为 $l$ 的 motif，共有 $(n-l+1)^t$ 种可能的起始位置组合。
 
-**Gibbs Sampling 洞察**：
+**Gibbs 采样 洞察**：
 1. **逐步优化**：每次只改变一条序列的 motif 位置
 2. **概率采样**：基于当前 profile 质量，随机选择新位置
 3. **马尔可夫链**：形成一个状态转移链，逐步收敛到高得分 motif
@@ -50,7 +50,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 - 容易陷入局部最优
 - 一旦选择错误位置，后续难以纠正
 
-### Gibbs Sampling 的优势
+### Gibbs 采样 的优势
 
 1. **避免局部最优**：随机性允许"跳出"局部最优
 2. **渐进改进**：每次只改一条序列，保持已有好的选择
@@ -208,7 +208,7 @@ GIBBSSAMPLER(DNA, t, n, l, max_iter, burn_in):
 
 ### 收敛性
 
-Gibbs Sampling 形成一条**马尔可夫链**：
+Gibbs 采样 形成一条**马尔可夫链**：
 - **状态空间**：所有可能的起始位置组合
 - **转移概率**：由 profile 匹配概率决定
 - **平稳分布**：理论上会收敛到与 motif 质量相关的分布
@@ -230,7 +230,7 @@ Gibbs Sampling 形成一条**马尔可夫链**：
 ### 预热期（Burn-in）
 
 ```text
-带预热的 Gibbs Sampling:
+带预热的 Gibbs 采样:
     for iter = 1 to max_iter:
         // 执行一次 Gibbs 迭代
         ...
@@ -280,9 +280,9 @@ Seq3: G A T C G A T C G A T C G T A C G A
 
 ## 变体与改进
 
-### 贪婪 Gibbs Sampling
+### 贪婪 Gibbs 采样
 
-标准 Gibbs Sampling 是完全随机的，贪婪变体选择概率最高的位置：
+标准 Gibbs 采样 是完全随机的，贪婪变体选择概率最高的位置：
 
 ```text
 GREEDY_GIBBS(DNA, t, n, l, max_iter):
@@ -332,13 +332,13 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 |------|------|------|------|
 | 穷举搜索 | 确定性 | 保证找到最优 | 只能处理小规模 |
 | 贪心算法 | 确定性 | 快速 | 容易局部最优 |
-| **Gibbs Sampling** | 随机 | 避免局部最优 | 收敛时间不确定 |
+| **Gibbs 采样** | 随机 | 避免局部最优 | 收敛时间不确定 |
 | EM 算法 | 迭代 | 数学基础扎实 | 对初始化敏感 |
 | 随机投影 | 随机 | 适合高突变 motif | 参数调优复杂 |
 
 ## 应用场景
 
-### 1. 转录因子结合位点预测
+### 1. 转录因子（Transcription Factor, TF）结合位点预测
 
 ```text
 输入：
@@ -371,12 +371,12 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 <NoteCard variant="pitfalls"
   items={[
-    'Gibbs Sampling 运行足够多次迭代就一定能找到全局最优 motif：',
-    'Gibbs Sampling 理论上在无限次迭代后能收敛到平稳分布，但这并不意味着一定能访问到全局最优解。收敛到平稳分布只是说明采样频率反映了各状态的概率，而全局最优 motif 的概率可能非常小。实践中，算法的搜索能力受初始化位置、序列保守程度和 motif 长度的强烈影响。对于高度退化的 motif（信息含量低），单次运行的 Gibbs Sampling 几乎必然错过最优解，必须依赖多次随机重启。',
+    'Gibbs 采样 运行足够多次迭代就一定能找到全局最优 motif：',
+    'Gibbs 采样 理论上在无限次迭代后能收敛到平稳分布，但这并不意味着一定能访问到全局最优解。收敛到平稳分布只是说明采样频率反映了各状态的概率，而全局最优 motif 的概率可能非常小。实践中，算法的搜索能力受初始化位置、序列保守程度和 motif 长度的强烈影响。对于高度退化的 motif（信息含量低），单次运行的 Gibbs 采样 几乎必然错过最优解，必须依赖多次随机重启。',
     '伪计数（pseudocount）只是技术细节，用默认值即可：',
-    '伪计数的选择对 Gibbs Sampling 的结果有实质性影响。过小的伪计数（如 0.01）会导致 profile 对异常位置过于敏感——一旦某次采样选中了一个噪声位置，profile 会被严重扭曲。过大的伪计数（如 1.0 或更大）则会使 profile 趋于均匀分布，降低对真正 motif 信号的区分能力。伪计数本质上是在"拟合训练数据"和"保持先验平滑"之间的权衡，需要根据序列数量和 motif 保守程度进行调整。',
-    'Gibbs Sampling 与 EM 算法解决的是同一个问题：',
-    '虽然两者都用于 Motif Finding，但搜索策略有根本区别。EM 算法在 E-step 对所有可能的起始位置计算期望（软分配），倾向于快速收敛到最近的局部最优。Gibbs Sampling 在每步只随机选择一条序列更新一个位置（硬分配），其随机性使它有更大概率跳出局部最优。EM 通常收敛更快但更容易陷入局部最优，Gibbs Sampling 更慢但探索能力更强。选择哪种方法取决于数据特性和对速度/质量的需求。'
+    '伪计数的选择对 Gibbs 采样 的结果有实质性影响。过小的伪计数（如 0.01）会导致 profile 对异常位置过于敏感——一旦某次采样选中了一个噪声位置，profile 会被严重扭曲。过大的伪计数（如 1.0 或更大）则会使 profile 趋于均匀分布，降低对真正 motif 信号的区分能力。伪计数本质上是在"拟合训练数据"和"保持先验平滑"之间的权衡，需要根据序列数量和 motif 保守程度进行调整。',
+    'Gibbs 采样 与 EM 算法解决的是同一个问题：',
+    '虽然两者都用于 Motif Finding，但搜索策略有根本区别。EM 算法在 E-step 对所有可能的起始位置计算期望（软分配），倾向于快速收敛到最近的局部最优。Gibbs 采样 在每步只随机选择一条序列更新一个位置（硬分配），其随机性使它有更大概率跳出局部最优。EM 通常收敛更快但更容易陷入局部最优，Gibbs 采样 更慢但探索能力更强。选择哪种方法取决于数据特性和对速度/质量的需求。'
   ]}
 />
 
@@ -391,11 +391,11 @@ TEMPERED_GIBBS(DNA, t, n, l, max_iter):
 
 ## 历史注记
 
-Gibbs Sampling 算法由 **Charles Lawrence**、**Stephen Altschul**、**Mark Boguski**、**Jun Liu**、**Andrew Neuwald** 和 **John Wootton** 于 **1993 年**提出，发表在 Science 上。该方法将统计学中的 MCMC 方法引入生物信息学，开创了随机化算法在序列分析中的应用。算法名字来源于物理学家 **Josiah Willard Gibbs**，他在统计力学中奠定了相关理论基础。
+Gibbs 采样 算法由 **Charles Lawrence**、**Stephen Altschul**、**Mark Boguski**、**Jun Liu**、**Andrew Neuwald** 和 **John Wootton** 于 **1993 年**提出，发表在 Science 上。该方法将统计学中的 MCMC 方法引入生物信息学，开创了随机化算法在序列分析中的应用。算法名字来源于物理学家 **Josiah Willard Gibbs**，他在统计力学中奠定了相关理论基础。
 
 ## 总结
 
-- **Gibbs Sampling 是用于 Motif Finding 的 MCMC 随机算法**
+- **Gibbs 采样 是用于 Motif Finding 的 MCMC 随机算法**
 - **每次迭代只更新一条序列的 motif 位置，逐步收敛**
 - **通过概率采样避免陷入局部最优**
 - **在实践中表现优异，是生物信息学中的标准工具**

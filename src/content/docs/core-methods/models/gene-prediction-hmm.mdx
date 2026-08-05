@@ -1,6 +1,6 @@
 ---
-description: Gene prediction 的详细实现：理解如何用 HMM 等概率模型识别基因组序列中的 exon、intron 和基因结构，包括算法步骤和 worked example。
-title: "Gene prediction"
+description: 基因预测 的详细实现：理解如何用 HMM 等概率模型识别基因组序列中的 exon、intron 和基因结构，包括算法步骤和 worked example。
+title: "基因预测"
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -9,7 +9,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="Gene prediction 是识别基因组序列中基因结构的经典问题：通过 HMM 等概率模型，将序列分段为 exon、intron、intergenic 等功能状态，预测完整的基因模型。"
+  summary="基因预测 是识别基因组序列中基因结构的经典问题：通过 HMM 等概率模型，将序列分段为 exon、intron、intergenic 等功能状态，预测完整的基因模型。"
   items={[
     '核心是状态建模：exon、intron、intergenic 等功能状态的转移和发射',
     'Viterbi 算法用于寻找最优状态路径，即最可能的基因结构',
@@ -27,7 +27,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 是什么
 
-Gene prediction（基因预测）关注的是：给定一段基因组序列，如何识别其中哪些区段更可能对应 exon、intron、起始/终止信号或完整基因结构。它要做的不是简单寻找几个 motif，而是把原始字符序列解释成更高层的注释对象。在原核生物中，基因通常是连续的编码序列；但在真核生物中，基因被内含子（introns）分割成外显子（exons），需要复杂的剪接过程，这使得预测难度显著增加。
+基因预测（基因预测）关注的是：给定一段基因组序列，如何识别其中哪些区段更可能对应 exon、intron、起始/终止信号或完整基因结构。它要做的不是简单寻找几个 motif，而是把原始字符序列解释成更高层的注释对象。在原核生物中，基因通常是连续的编码序列；但在真核生物中，基因被内含子（introns）分割成外显子（exons），需要复杂的剪接过程，这使得预测难度显著增加。
 
 ### 为什么基因预测困难
 
@@ -38,7 +38,7 @@ Gene prediction（基因预测）关注的是：给定一段基因组序列，�
 
 ## 要解决什么生物信息学问题
 
-序列本身只是字符流。Gene prediction 的核心任务，是把这串字符映射成更高层的功能结构：
+序列本身只是字符流。基因预测 的核心任务，是把这串字符映射成更高层的功能结构：
 
 - 哪些区段可能是蛋白编码区域；
 - 哪些是 intron 或非编码区域；
@@ -56,7 +56,7 @@ Gene prediction（基因预测）关注的是：给定一段基因组序列，�
 
 ### 输入
 
-gene prediction 常见输入包括：
+基因预测 常见输入包括：
 
 - 基因组序列；
 - 可选的序列统计特征，例如 codon usage、GC content、splice signal；
@@ -244,7 +244,7 @@ S(i, j, B) = max \{
 
 ## 核心思想 / 数学模型
 
-Gene prediction 常把问题理解成一种"序列分段 + 状态识别"任务，因此非常适合和 HMM 等概率模型联系起来理解：
+基因预测 常把问题理解成一种"序列分段 + 状态识别"任务，因此非常适合和 HMM 等概率模型联系起来理解：
 
 - 不同隐藏状态代表不同功能区段，如 intergenic、exon、intron、start、stop；
 - 不同状态下会产生不同的观测模式，如密码子偏好、剪接信号、长度分布；
@@ -457,11 +457,11 @@ I I I S E E E E T I I I
 - gene 边界与 intergenic 区域的分离；
 - 不同外显子长度和内含子长度的统计分布。
 
-Gene prediction 困难的地方正在于：局部 motif 往往不够可靠，必须和更长程的结构约束结合起来，才能得到可解释的结果。
+基因预测 困难的地方正在于：局部 motif 往往不够可靠，必须和更长程的结构约束结合起来，才能得到可解释的结果。
 
 ## 复杂度与适用前提
 
-Gene prediction 的效果依赖于多种前提：
+基因预测 的效果依赖于多种前提：
 
 - 目标物种的序列特征是否与模型假设相符；
 - 是否有足够好的训练数据或先验参数；
@@ -473,16 +473,16 @@ Gene prediction 的效果依赖于多种前提：
 
 ## 与真实工具或流程的连接
 
-Gene prediction 是把序列模型、统计建模和注释生成连接起来的经典问题。它既是教材中的概率建模案例，也是很多 genome annotation pipeline 的核心步骤。
+基因预测 是把序列模型、统计建模和注释生成连接起来的经典问题。它既是教材中的概率建模案例，也是很多 genome annotation pipeline 的核心步骤。
 
-在真实注释流程中，gene prediction 通常要结合：
+在真实注释流程中，基因预测 通常要结合：
 
 - **ab initio 模型**：仅基于序列与统计结构；
 - **同源信息**：与已知基因或蛋白对齐；
 - **转录组证据**：RNA-seq coverage、splice junction、transcript assembly；
 - **注释整合**：把多类证据融合成最终 gene model。
 
-因此，gene prediction 更适合理解为"候选注释结构生成与评分"，而不是一步到位得到绝对真值。
+因此，基因预测 更适合理解为"候选注释结构生成与评分"，而不是一步到位得到绝对真值。
 
 ## 代表性工具
 
@@ -529,7 +529,7 @@ Gene prediction 是把序列模型、统计建模和注释生成连接起来的�
     '只靠局部 motif 就能完整预测基因：',
     '通常不够。真实基因结构识别往往需要把局部信号和全局结构约束一起考虑。',
     '预测结果就是"真注释"：',
-    '不对。Gene prediction 的结果往往是"模型下最合理的解释"，而不是严格意义上的地面真值。实际注释通常来自多个证据源的融合。',
+    '不对。基因预测 的结果往往是"模型下最合理的解释"，而不是严格意义上的地面真值。实际注释通常来自多个证据源的融合。',
     'HMM 只适合讲教材例子，不适合真实注释：',
     '也不对。即使真实工具会更复杂，状态建模、路径评分和证据整合的思想仍然是核心。'
   ]}
@@ -547,6 +547,6 @@ Gene prediction 是把序列模型、统计建模和注释生成连接起来的�
     { title: 'Viterbi、Forward 与 Backward', to: '/core-methods/models/viterbi-forward-backward', description: 'Viterbi 算法用于寻找最优的 exon/intron 状态路径。' },
     { title: 'Profile HMM', to: '/core-methods/models/profile-hmm', description: 'Profile HMM 与基因预测 HMM 共享状态建模思想，但应用目标不同。' },
     { title: '参考基因组、坐标系统与注释', to: '/foundations/reference-and-annotation', description: '基因预测的输出是基因组注释的核心组成部分。' },
-    { title: '转录组概览', to: '/applications-omics/transcriptomics/index', description: 'RNA-seq 等转录组数据是基因预测的重要证据来源。' },
+    { title: '转录组概览', to: '/applications-omics/transcriptomics/', description: 'RNA-seq 等转录组数据是基因预测的重要证据来源。' },
   ]}
 />

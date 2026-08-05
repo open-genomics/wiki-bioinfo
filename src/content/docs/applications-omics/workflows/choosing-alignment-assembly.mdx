@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="根据研究目标（变异检测、定量分析、基因组重建）和数据特征，选择合适的序列分析策略。"
+  summary="alignment、assembly 与 pseudo-alignment 解决的是不同问题：前者给碱基级精确定位，中者不依赖参考重建序列，后者以牺牲碱基精度换取定量速度。本页给出三者之间的决策框架。"
+  items={[
+    '参考条件是分水岭：有高质量参考选 alignment/pseudo-alignment，无参考或与参考差异过大（如肿瘤、非模式生物）选 de novo assembly 或 hybrid 策略',
+    'pseudo-alignment（Salmon、Kallisto）快 10-50 倍但不输出 BAM，不能用于 variant calling；变异检测必须用 BWA-MEM、minimap2 做精确 alignment',
+    '策略并非二选一：融合基因检测中 STAR 剪接感知比对与 Salmon 定量可互补使用',
+  ]}
 />
 
 ## 任务目标
@@ -20,8 +25,8 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <PrerequisitesBox
   items={[
     { label: 'NGS 流程总览', href: '/applications-omics/workflows/ngs-overview' },
-    { label: '序列比对', href: '/core-methods/alignment/index' },
-    { label: '组装与图算法', href: '/core-methods/assembly/index' },
+    { label: '序列比对', href: '/core-methods/alignment/' },
+    { label: '组装与图算法', href: '/core-methods/assembly/' },
   ]}
 />
 
@@ -32,9 +37,9 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 前置知识
 
-- [序列比对](../../core-methods/alignment/index)
-- [组装与图算法](../../core-methods/assembly/index)
-- [转录组](../transcriptomics/index)
+- [序列比对](../../core-methods/alignment/)
+- [组装与图算法](../../core-methods/assembly/)
+- [转录组](../transcriptomics/)
 - [NGS 流程总览](./ngs-overview)
 
 ## 步骤总览

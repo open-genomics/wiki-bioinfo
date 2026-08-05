@@ -24,7 +24,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
   ]}
 />
 
-## 1. 直觉模型：公平赌场（The Fair Bet Casino）
+## 直觉模型：公平赌场（The Fair Bet Casino）
 
 理解 HMM 最直观的方式是"公平赌场"模型。
 
@@ -45,7 +45,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 这个模型完美类比了 **CG 岛（CG-islands）** 的识别：DNA 序列中某些区域的 `C` 和 `G` 含量异常高，这些区域（隐藏状态）发射 `C/G` 的概率（发射概率）不同于背景区域。
 
-## 2. 模型组成
+## 适用场景
 
 HMM 常用于这样的问题：
 
@@ -222,7 +222,7 @@ $$
   items={[
     { title: 'Viterbi、Forward 与 Backward', to: '/core-methods/models/viterbi-forward-backward', description: 'HMM 的三个核心推断算法，分别解决 decoding、evaluation 和 posterior 问题。' },
     { title: '概率、图与动态规划预备', to: '/foundations/probability-and-graphs', description: 'HMM 的理论基础依赖概率论，推断算法依赖动态规划。' },
-    { title: 'Gene prediction', to: '/core-methods/models/gene-prediction-hmm', description: 'HMM 在基因预测中用于将序列分段为 exon/intron/intergenic。' },
+    { title: '基因预测', to: '/core-methods/models/gene-prediction-hmm', description: 'HMM 在基因预测中用于将序列分段为 exon/intron/intergenic。' },
     { title: 'Profile HMM', to: '/core-methods/models/profile-hmm', description: 'Profile HMM 是 HMM 在蛋白家族建模上的专门化扩展。' },
     { title: '动态规划基础', to: '/core-methods/algorithms/dynamic-programming-basics', description: '理解 DP 思想有助于掌握 Viterbi 和 Forward-Backward 算法。' },
   ]}

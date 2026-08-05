@@ -39,14 +39,27 @@ while IFS=: read -r filepath linenum link; do
   [[ -z "$url" ]] && continue
   [[ "$url" == "..." ]] && continue
 
+  # 目录 index 页的规范链接是 .../ 形式；/index 或 /index/ 在生产环境要么 404 要么非规范
+  if [[ "$url" =~ (^|/)index/?$ ]]; then
+    relsrc="${filepath#"$DOCS_BASE"/}"
+    echo "BROKEN: $relsrc:$linenum -> $url (链接不应以 /index 结尾，目录页请用 .../ 形式)"
+    broken=1
+    continue
+  fi
+
   if [[ "$url" =~ ^/ ]]; then
+    relsrc="${filepath#"$DOCS_BASE"/}"
     if [[ "$url" == "$SITE_BASE/"* ]]; then
       slug="${url#"$SITE_BASE"/}"
       if ! check_slug "$slug"; then
-        relsrc="${filepath#"$DOCS_BASE"/}"
         echo "BROKEN: $relsrc:$linenum -> $url"
         broken=1
       fi
+    else
+      # 无 base 前缀的根绝对路径：markdown 链接不会被 Astro 自动加 base，
+      # 在 GitHub Pages 生产环境必然 404。markdown 链接应使用相对路径。
+      echo "BROKEN: $relsrc:$linenum -> $url (根绝对路径缺少 base 前缀，应改用相对路径)"
+      broken=1
     fi
     continue
   fi
@@ -78,6 +91,13 @@ while IFS=: read -r filepath linenum match; do
   [[ -z "$path" ]] && continue
   [[ "$path" =~ ^https?:// ]] && continue
   [[ "$path" =~ ^# ]] && continue
+
+  if [[ "$path" =~ (^|/)index/?$ ]]; then
+    relsrc="${filepath#"$DOCS_BASE"/}"
+    echo "BROKEN: $relsrc:$linenum -> $path (链接不应以 /index 结尾，目录页请用 .../ 形式)"
+    broken=1
+    continue
+  fi
 
   slug="$path"
   if [[ "$slug" == "$SITE_BASE/"* ]]; then

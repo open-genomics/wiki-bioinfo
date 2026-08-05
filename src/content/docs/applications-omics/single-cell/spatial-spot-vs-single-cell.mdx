@@ -9,7 +9,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="spot-based 空间数据与 scRNA-seq 在分辨率、噪声模型与解释上的差异"
+  summary="spot 不是细胞，而是 1–10 个细胞的混合测量单位——这是理解空间转录组一切解释陷阱的起点。本页讲清两类数据的本质差别、信息取舍与联合分析的逻辑。"
+  items={[
+    '本质差别在基本测量单位：scRNA-seq 测单个细胞转录组，spot 表达值是覆盖细胞的加权混合（Σw·x + ε），并保留二维坐标',
+    '"spot 高表达 marker X 即该处是细胞类型 X"是典型误读——信号可能来自少数细胞类型，需去卷积推断组成比例',
+    '两者互补而非替代：单细胞给高分辨率细胞图谱，空间给位置分布，经 RCTD / cell2location / Tangram 整合是标准范式',
+  ]}
 />
 
 ## 核心差别
@@ -30,7 +35,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 <PrerequisitesBox
   items={[
     { label: '空间转录组总览', href: '/applications-omics/single-cell/spatial-transcriptomics-overview' },
-    { label: '单细胞组学', href: '/applications-omics/single-cell/index' },
+    { label: '单细胞组学', href: '/applications-omics/single-cell/' },
     { label: '去卷积与细胞映射', href: '/applications-omics/single-cell/spatial-deconvolution-and-mapping' },
   ]}
 />
@@ -180,7 +185,7 @@ scRNA-seq 数据
   items={[
     { title: '空间转录组总览', to: '/applications-omics/single-cell/spatial-transcriptomics-overview', description: '空间技术的原理与数据结构' },
     { title: '去卷积与细胞映射', to: '/applications-omics/single-cell/spatial-deconvolution-and-mapping', description: '整合 scRNA-seq 与空间数据的具体方法' },
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '单细胞分析基础' },
-    { title: '概率模型', to: '/core-methods/models/index', description: '去卷积的统计基础' }
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '单细胞分析基础' },
+    { title: '概率模型', to: '/core-methods/models/', description: '去卷积的统计基础' }
   ]}
 />

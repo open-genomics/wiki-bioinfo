@@ -3,6 +3,7 @@ title: "参考资料"
 description: 本知识库引用的经典教材、综述论文与在线资源汇总。
 ---
 
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 是什么
 
@@ -139,7 +140,11 @@ wiki 页面适合建立主线理解，但当你需要进一步确认定义、算
 
 ## 相关页面
 
-- [写作规范](../intro/style-guide/)
-- [常用数据库与资源](../data-references/databases/common-resources/)
-- [数据库与注释系统一览](../data-references/databases-and-annotations/)
-- [术语表](./glossary/)
+<LinkGrid
+  items={[
+    { title: '写作规范', to: '/intro/style-guide', description: '排版格式与内容标准' },
+    { title: '常用数据库与资源', to: '/data-references/databases/common-resources', description: '常见数据库入口与资源' },
+    { title: '数据库与注释系统一览', to: '/data-references/databases-and-annotations', description: 'Ensembl/RefSeq/GENCODE 等注释体系' },
+    { title: '术语表', to: '/appendix/glossary', description: '核心术语中英文对照' },
+  ]}
+/>

@@ -3,6 +3,7 @@ title: "术语表"
 description: 生物信息学核心术语的中英文对照与简要定义，涵盖测序、比对、变异、转录组等领域。
 ---
 
+import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ## 是什么
 
@@ -27,7 +28,7 @@ description: 生物信息学核心术语的中英文对照与简要定义，涵�
 - **覆盖度（coverage / depth）**：某段序列被读段覆盖的深度（平均每个碱基被多少条 read 覆盖）或广度（基因组中至少被一条 read 覆盖的比例）。
 - **质量分数（quality score, Phred score）**：描述碱基被错误测定的概率。Q30 表示错误率约 0.1%。计算公式：$Q = -10 \log_{10}(P_e)$，其中 $P_e$ 为错误概率。
 - **接头序列（adapter sequence）**：测序文库构建中添加到 DNA 片段两端的已知序列，用于在测序仪上锚定和启动测序。在分析前通常需要去除。
-- **k-mer**：长度为 k 的子串，是索引、计数、组装图和伪比对（pseudo-alignment）的常见基本单位。例如，序列 "ACGTACG" 的 3-mer 集合为 {ACG, CGT, GTA, TAC, ACG}。
+- **k-mer**：长度为 k 的子串，是索引、计数、组装图和伪比对（pseudo-alignment）的常见基本单位。例如，序列 "ACGTACG" 的 3-mer 集合为 `{ACG, CGT, GTA, TAC, ACG}`。
 - **GC 含量（GC content）**：序列中鸟嘌呤（G）和胞嘧啶（C）碱基占总碱基的比例。影响测序均匀性和 PCR 偏好。
 - **FASTQ 格式**：存储原始测序数据的常用文件格式，每条 read 包含序列和对应的质量分数。
 - **SAM/BAM 格式**：存储序列比对结果的文件格式。SAM 为文本格式，BAM 为其二进制压缩版本。包含 read 序列、比对位置、CIGAR 字符串和比对质量（MAPQ）等信息。
@@ -141,8 +142,12 @@ description: 生物信息学核心术语的中英文对照与简要定义，涵�
 
 ## 相关页面
 
-- [生物信息学中的基础对象](../foundations/biology-basics/)
-- [序列、字符串与坐标系统](../foundations/sequences-and-strings/)
-- [参考基因组与注释](../foundations/reference-and-annotation/)
-- [常见数据格式总览](../data-references/formats/common-file-formats/)
-- [数据库与注释系统一览](../data-references/databases-and-annotations/)
+<LinkGrid
+  items={[
+    { title: '生物信息学中的基础对象', to: '/foundations/biology-basics', description: 'DNA、RNA、蛋白质与基因组等核心对象' },
+    { title: '序列、字符串与坐标系统', to: '/foundations/sequences-and-strings', description: '序列表示与坐标系基础' },
+    { title: '参考基因组与注释', to: '/foundations/reference-and-annotation', description: '参考版本与注释层级' },
+    { title: '常见数据格式总览', to: '/data-references/formats/common-file-formats', description: 'FASTA/FASTQ/BAM/GTF/VCF 速查' },
+    { title: '数据库与注释系统一览', to: '/data-references/databases-and-annotations', description: '主要数据库与注释资源' },
+  ]}
+/>

@@ -3,6 +3,8 @@ title: "写作规范"
 description: BioInfo Wiki 的排版格式、语言风格、页面结构与内容标准
 ---
 
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
 本规范分为两大部分：**排版格式**（如何写）和**内容策略**（写什么）。前者确保视觉一致，后者确保知识质量。
 
 > 本规范参考了 [OI Wiki 格式手册](https://oi-wiki.org/intro/format/)、[中文技术文档写作风格指南](https://zh-style-guide.readthedocs.io/)以及[中文文案排版指北](https://github.com/sparanoid/chinese-copywriting-guidelines)。
@@ -293,8 +295,9 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 
 适合一个大板块的入口导航。
 
-- **核心章节**：本板块概述 → 子主题导航 → 与其他板块的连接
+- **核心章节**：`PageHeaderMeta` 导读 → 本板块概述 → 子主题导航 → 与其他板块的连接
 - **可选章节**：学习前置、推荐阅读顺序
+- 七个顶级板块入口页均使用 `PageHeaderMeta`（传入 `audience` 与 `startWith`）；子板块入口页可按需选用。
 
 ## 8. MDX 与组件
 
@@ -305,7 +308,7 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 - 需要 `DataTable`（`variant="comparison"` 对比 / `variant="decision-matrix"` 决策矩阵）
 - 需要 `LinkGrid`（`variant="navigation"` 导航网格 / `variant="related"` 相关页面卡片）
 - 需要 `DefinitionList`（术语/定义列表）
-- 需要 `PageHeaderMeta`（板块入口页头部元信息，自动推断所属板块）
+- 需要 `PageHeaderMeta`（板块顶级入口页头部导读，自动推断所属板块；子板块入口与专题页可选）
 - 需要 `WorkflowSteps`（流程页的步骤总览）
 
 新增 MDX 页面时，优先复用 `src/components/docs/` 中已有组件。不要为单个页面发明一次性的样式方案。
@@ -359,6 +362,10 @@ description: Needleman-Wunsch 算法的动态规划递推公式、回溯与完�
 
 ## 相关页面
 
-- [导论](./) — 知识库设计理念与组织原则
-- [如何贡献](contributing/) — 贡献流程与技术细节
-- [学习路线](roadmap/) — 推荐的学习路径
+<LinkGrid
+  items={[
+    { title: '导论', to: '/intro/', description: '知识库设计理念与组织原则' },
+    { title: '如何贡献', to: '/intro/contributing', description: '贡献流程与技术细节' },
+    { title: '学习路线', to: '/intro/roadmap', description: '推荐的学习路径' },
+  ]}
+/>

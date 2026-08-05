@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="多组学整合的核心算法：矩阵分解、因子分析与深度学习方法。"
+  summary="本页是多组学整合的算法地图：从 K 个组学矩阵出发，提取共享低维表示与组学特异分量。四类方法对应不同的样本规模、缺失程度与可解释性权衡，选型的关键是匹配数据条件而非追求复杂度。"
+  items={[
+    '共享表示是核心输出：Joint NMF 通过共享基矩阵 W 强制各组学在样本维度对齐，CCA 则直接最大化跨组学线性相关',
+    'MOFA+ 用 ARD 先验从数据自动学习各组学-因子权重，变分推断可处理缺失值并给出后验不确定性，是小样本、可解释场景的首选',
+    '选型逻辑：小样本+可解释选 Joint NMF/MOFA+，缺失多选 MOFA+/scVI，复杂非线性选 VAE/GNN/Transformer——简单方法在小数据上往往更稳健',
+  ]}
 />
 
 ## 问题定义
@@ -21,7 +26,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
   items={[
     { label: '多组学整合策略', href: '/applications-omics/multi-omics/integration-strategies' },
     { label: '批次效应与数据协调', href: '/applications-omics/multi-omics/batch-effect-and-harmonization' },
-    { label: '概率模型基础', href: '/core-methods/models/index' },
+    { label: '概率模型基础', href: '/core-methods/models/' },
   ]}
 />
 
@@ -298,7 +303,7 @@ $$
   items={[
     { title: '多组学整合策略', to: '/applications-omics/multi-omics/integration-strategies', description: '整合策略的选择原则' },
     { title: '批次效应与数据协调', to: '/applications-omics/multi-omics/batch-effect-and-harmonization', description: '整合前必须处理的技术噪声' },
-    { title: '多组学整合', to: '/applications-omics/multi-omics/index', description: '本章导航与学习路径' },
+    { title: '多组学整合', to: '/applications-omics/multi-omics/', description: '本章导航与学习路径' },
     { title: '单细胞 Multiome', to: '/applications-omics/multi-omics/single-cell-multiome', description: '单细胞多模态整合应用' }
   ]}
 />

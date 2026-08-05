@@ -31,7 +31,7 @@
 
 ## 5. Engineering rules
 
-- 站点单源配置：`astro.config.mjs`
+- 站点单源配置：`src/data/site-config.ts`（站点元信息）与 `src/data/sections.ts`（侧边栏/板块），`astro.config.mjs` 仅消费这两者
 - 修改文档、配置、组件、workflow 后运行：`npm run check`
 - 只保留高信号 CI/CD；默认避免低 ROI 自动化
 - 覆盖层和样式做减法，避免保留纯装饰性复杂逻辑

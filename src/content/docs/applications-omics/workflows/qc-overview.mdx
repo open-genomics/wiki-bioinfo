@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="NGS 数据质量控制的核心指标（FastQC）、接头去除（Trimming）与过滤策略。"
+  summary="QC 的目标不是「尽可能多删 reads」，而是在进入下游之前建立对数据状态的解释框架：区分哪些问题只是噪声、哪些会在后续流程中被放大、哪些说明文库本身存在结构性偏差。"
+  items={[
+    '五类常见异常：read 尾部质量下滑、接头污染（insert 太短致 read 穿过插入片段边界）、GC 偏差、高重复率提示文库复杂度不足、overrepresented sequences 提示污染',
+    'QC 指标要翻译成下游决策：低质量尾部与接头影响 mapping 定位，错误碱基与异常 k-mer 会污染组装图，样本偏差会扭曲差异分析归一化',
+    '过度 trimming 同样有害：高重复率不等于实验失败，需结合实验类型解释（如富集类实验本身就高重复）',
+  ]}
 />
 
 ## 是什么

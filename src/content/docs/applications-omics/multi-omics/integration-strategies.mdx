@@ -22,7 +22,7 @@ import DataTable from '@/components/docs/DataTable.astro';
   items={[
     { label: '整合算法概览', href: '/applications-omics/multi-omics/integration-algorithms' },
     { label: '批次效应与数据协调', href: '/applications-omics/multi-omics/batch-effect-and-harmonization' },
-    { label: '概率模型基础', href: '/core-methods/models/index' },
+    { label: '概率模型基础', href: '/core-methods/models/' },
   ]}
 />
 
@@ -226,9 +226,9 @@ import DataTable from '@/components/docs/DataTable.astro';
 - 问题：严重的高维灾难，模型会过拟合
 
 尝试降维后再拼接：
-- WGS: 4,000,000 → 50 PCA（保留 60% 方差）
-- RNA-seq: 20,000 → 50 PCA（保留 75% 方差）
-- 蛋白组: 5,000 → 50 PCA（保留 80% 方差）
+- WGS：4,000,000 → 50 PCA（保留 60% 方差）
+- RNA-seq：20,000 → 50 PCA（保留 75% 方差）
+- 蛋白组：5,000 → 50 PCA（保留 80% 方差）
 - 拼接后：150 维特征
 
 **问题**：WGS 的 PCA 主成分可能主要由群体结构（如 ancestry）驱动，而不是癌症相关的信号，这会引入噪声。
@@ -416,6 +416,6 @@ model_survival.fit(X, y)
     { title: '批次效应与数据协调', to: '/applications-omics/multi-omics/batch-effect-and-harmonization', description: '整合前必须处理的技术偏差' },
     { title: '整合算法概览', to: '/applications-omics/multi-omics/integration-algorithms', description: '具体整合算法的技术细节' },
     { title: '单细胞 Multiome', to: '/applications-omics/multi-omics/single-cell-multiome', description: '单细胞多模态整合的典型案例' },
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '单细胞分析基础' }
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '单细胞分析基础' }
   ]}
 />

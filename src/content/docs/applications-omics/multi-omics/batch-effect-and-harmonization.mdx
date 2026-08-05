@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="多组学与单细胞数据中的批次效应识别、校正方法与数据协调（harmonization）评估。"
+  summary="批次效应是多组学整合最易失败的环节：技术变异让样本按平台而非按生物学状态聚类。本页给出校正目标的形式化分解、四类主流方法，以及从批次去除与生物学保留两侧评估校正质量的指标体系。"
+  items={[
+    '校正目标即分解 X = B + S + ε：去除技术批次 B 的同时保留生物信号 S；批次去除、生物学保留、避免过校正三个目标存在内在张力',
+    '方法谱系：ComBat（经验贝叶斯线性模型，估计加性与乘性批次效应）、Harmony（嵌入空间迭代校正）、MNN（相互最近邻校正向量，不依赖批次标签）、scVI/MOFA+（概率建模分离共享与批次特异因子）',
+    '评估必须双侧进行：kBET/批次熵查批次去除，细胞类型纯度/silhouette 查生物学保留，还需用混合指数与伪时间相关性检测过校正',
+  ]}
 />
 
 ## 问题定义
@@ -175,6 +180,6 @@ $$
     { title: '多组学整合策略', to: '/applications-omics/multi-omics/integration-strategies', description: '批次校正在整合流程中的位置' },
     { title: '单细胞 Multiome', to: '/applications-omics/multi-omics/single-cell-multiome', description: '多模态数据中的批次问题' },
     { title: '整合算法', to: '/applications-omics/multi-omics/integration-algorithms', description: 'MOFA+ 等贝叶斯因子分析中的批次建模' },
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '单细胞分析基础' }
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '单细胞分析基础' }
   ]}
 />

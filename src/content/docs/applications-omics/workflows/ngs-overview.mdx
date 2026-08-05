@@ -1,6 +1,6 @@
 ---
 title: "NGS 流程总览"
-description: 高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。
+description: 高通量测序（NGS）分析流程总览：从原始数据获取、质控、比对或组装，到定量、变异检测与结果解释的完整链路，附主流测序平台对比。
 ---
 
 import NoteCard from '@/components/docs/NoteCard.astro';
@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="高通量测序（NGS）技术概览：从 Illumina 短读长到 PacBio/Nanopore 长读长的技术特征与典型应用场景。"
+  summary="NGS 分析流程把原始测序数据逐步转化为可解释的生物学结果。本页是理解整个二代测序分析生态的地图页，强调各阶段的输入输出与错误传播。"
+  items={[
+    '主线：原始数据获取 → 质控 → 比对或组装 → 定量/变异检测 → 结果解释',
+    '比对与组装是核心岔路口：有参考选比对，无参考或需重建选组装',
+    '下游结果异常往往要回溯上游：参考版本、质控充分性、mapping 稳定性',
+  ]}
 />
 
 <PrerequisitesBox
@@ -145,7 +150,7 @@ FASTQ -> QC -> mapping / pseudo-alignment -> quantification -> differential anal
   items={[
     { title: '质量控制（QC）总览', to: '/applications-omics/workflows/qc-overview', description: 'NGS 流程的入口质控步骤' },
     { title: 'RNA-seq 工作流概览', to: '/applications-omics/workflows/rna-seq', description: '最常见的 NGS 分析分支' },
-    { title: '序列比对', to: '/core-methods/alignment/index', description: '比对与组装的算法基础' },
-    { title: '基因组组装', to: '/core-methods/assembly/index', description: '无参考的序列重建方法' }
+    { title: '序列比对', to: '/core-methods/alignment/', description: '比对与组装的算法基础' },
+    { title: '基因组组装', to: '/core-methods/assembly/', description: '无参考的序列重建方法' }
   ]}
 />

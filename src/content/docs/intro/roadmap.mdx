@@ -3,6 +3,8 @@ title: "学习路线"
 description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 ---
 
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
 ## 如何选路线
 
 这个项目不是从单一入口强推所有读者，而是提供三条常用路径：先建立对象与流程概念、先抓住算法主线，或者从具体分析任务倒推方法。
@@ -60,6 +62,10 @@ description: 按不同背景和目标选择 BioInfo Wiki 的推荐阅读路径
 
 ## 相关页面
 
-- [导论](./)
-- [如何贡献](./contributing/)
-- [写作规范](./style-guide/)
+<LinkGrid
+  items={[
+    { title: '导论', to: '/intro/', description: '项目定位与整体结构' },
+    { title: '如何贡献', to: '/intro/contributing', description: '贡献方式与开发流程' },
+    { title: '写作规范', to: '/intro/style-guide', description: '排版格式与内容标准' },
+  ]}
+/>

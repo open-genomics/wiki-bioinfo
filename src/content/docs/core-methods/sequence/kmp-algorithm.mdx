@@ -9,11 +9,11 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="KMP算法通过预处理模式串构建failure function，在失配时避免无谓的重复比较，实现O(n+m)的线性时间复杂度，是字符串算法的经典范例。"
+  summary="KMP 算法通过预处理模式串构建 failure function，在失配时避免无谓的重复比较，实现 O(n+m)的线性时间复杂度，是字符串算法的经典范例。"
   items={[
     '核心思想：利用模式串自身的重复结构避免回退',
     'failure function π[i]：最长真前缀同时也是后缀的长度',
-    '时间复杂度：预处理O(m)，匹配O(n+m)，最坏情况保证',
+    '时间复杂度：预处理 O(m)，匹配 O(n+m)，最坏情况保证',
     '理论意义：证明字符串匹配可以在线性时间内完成'
   ]}
 />
@@ -32,14 +32,14 @@ Knuth-Morris-Pratt（KMP）算法解决的是经典的精确字符串匹配问�
 
 > 给定文本 `T` 和模式串 `P`，在 `T` 中找出所有与 `P` 完全相同的出现位置。
 
-与朴素扫描不同，KMP的关键创新是：当发生失配时，不是简单地回退到下一个位置重新开始，而是利用已经匹配过的信息，跳过那些肯定不会匹配的位置。
+与朴素扫描不同，KMP 的关键创新是：当发生失配时，不是简单地回退到下一个位置重新开始，而是利用已经匹配过的信息，跳过那些肯定不会匹配的位置。
 
 ## 算法历史
 
-KMP算法由 Donald Knuth、James H. Morris 和 Vaughan Pratt 于1977年发表，是首个在最坏情况下具有线性时间复杂度的字符串匹配算法。
+KMP 算法由 Donald Knuth、James H. Morris 和 Vaughan Pratt 于 1977 年发表，是首个在最坏情况下具有线性时间复杂度的字符串匹配算法。
 
 **发表背景**：
-- Morris 在 IBM 工作时独立发现了该算法（1970年）
+- Morris 在 IBM 工作时独立发现了该算法（1970 年）
 - Knuth 和 Pratt 随后独立发现了类似结果
 - 三人合作发表了经典论文 "Fast pattern matching in strings"
 
@@ -50,12 +50,12 @@ KMP算法由 Donald Knuth、James H. Morris 和 Vaughan Pratt 于1977年发表�
 
 ## 在生物信息学中的价值
 
-虽然现代生物信息学工具很少直接使用KMP算法，但其核心思想具有深远影响：
+虽然现代生物信息学工具很少直接使用 KMP 算法，但其核心思想具有深远影响：
 
 **算法思想传承**：
-- **Aho-Corasick算法**：将failure function扩展到多模式匹配场景
+- **Aho-Corasick 算法**：将 failure function 扩展到多模式匹配场景
 - **Suffix Automaton**：利用类似的重复结构进行高效字符串处理
-- **Read Mapper设计**：seed-and-extend策略中避免重复计算的思想
+- **Read Mapper 设计**：seed-and-extend 策略中避免重复计算的思想
 
 **教学价值**：
 - 理解"预处理如何避免重复计算"的经典案例
@@ -63,10 +63,10 @@ KMP算法由 Donald Knuth、James H. Morris 和 Vaughan Pratt 于1977年发表�
 - 建立字符串算法的理论基础
 
 **局限性**：
-KMP在生物信息学中的直接应用有限，主要因为：
+KMP 在生物信息学中的直接应用有限，主要因为：
 - 实际生物序列查询通常需要近似匹配（允许错配）
 - 大规模基因组查询更适合基于索引的方法（BWT/FM-index）
-- 多模式匹配场景更常用Aho-Corasick
+- 多模式匹配场景更常用 Aho-Corasick
 
 ## 核心思想
 
@@ -81,15 +81,15 @@ P: A B A B C
 ```
 
 朴素扫描会：
-1. 从位置0开始，匹配到第4个字符时失配（C vs B）
-2. 回退到位置1重新开始
+1. 从位置 0 开始，匹配到第 4 个字符时失配（C vs B）
+2. 回退到位置 1 重新开始
 3. 重复比较前面已经匹配过的"ABAB"
 
-问题是：我们已经知道位置1-3是"ABA"，但朴素方法没有利用这个信息。
+问题是：我们已经知道位置 1-3 是"ABA"，但朴素方法没有利用这个信息。
 
-### KMP的洞察
+### KMP 的洞察
 
-KMP的关键观察是：当在位置 `i` 失配时，我们已经知道 `T[i-j:i]` 与 `P[0:j]` 完全匹配。如果 `P` 的某个前缀同时也是这个匹配后缀的后缀，我们就可以利用这个信息跳过一些位置。
+KMP 的关键观察是：当在位置 `i` 失配时，我们已经知道 `T[i-j:i]` 与 `P[0:j]` 完全匹配。如果 `P` 的某个前缀同时也是这个匹配后缀的后缀，我们就可以利用这个信息跳过一些位置。
 
 具体来说，如果 `P[0:j]` 的某个真前缀等于它的后缀，那么我们可以直接跳到下一个可能匹配的位置，而无需重新比较。
 
@@ -122,9 +122,9 @@ $$
 
 即：`P[0:i]` 的最长真前缀同时也是该前缀后缀的长度。
 
-### 计算failure function
+### 计算 failure function
 
-**算法1：计算failure function**
+**算法 1：计算 failure function**
 
 ```text
 输入：模式串 P = p_0p_1...p_\{m-1\}
@@ -157,11 +157,11 @@ $$
 | 3 | B    | 1 → 2       | 2    |
 | 4 | C    | 2 → 0       | 0    |
 
-得到的failure function为：`π = [0, 1, 1, 2, 0]`
+得到的 failure function 为：`π = [0, 1, 1, 2, 0]`
 
-## KMP匹配算法
+## KMP 匹配算法
 
-**算法2：KMP字符串匹配**
+**算法 2：KMP 字符串匹配**
 
 ```text
 输入：文本 T = t_0t_1...t_\{n-1\}，模式串 P = p_0p_1...p_\{m-1\}
@@ -220,21 +220,21 @@ P:           A B A B C
 ...继续...
 ```
 
-最终在位置4找到匹配：`"ABABC"`
+最终在位置 4 找到匹配：`"ABABC"`
 
 ## 复杂度分析
 
 ### 时间复杂度
 
-- **预处理**：计算failure function需要 $O(m)$ 时间
-- **匹配**：主循环中，文本指针 `i` 只向前移动，模式串指针 `j` 通过failure function跳转，总的比较次数不超过 $2n$
+- **预处理**：计算 failure function 需要 $O(m)$ 时间
+- **匹配**：主循环中，文本指针 `i` 只向前移动，模式串指针 `j` 通过 failure function 跳转，总的比较次数不超过 $2n$
 - **总体**：$O(n + m)$
 
 ### 为什么是线性时间
 
 关键在于：
 - 文本指针 `i` 在外层循环中只增不减
-- 模式串指针 `j` 通过failure function跳转，但每次跳转都会让 `j` 减小
+- 模式串指针 `j` 通过 failure function 跳转，但每次跳转都会让 `j` 减小
 - `j` 的总增加次数不超过 $n$，总减少次数也不超过 $n$
 - 因此总操作次数是 $O(n)$
 
@@ -249,33 +249,33 @@ P:           A B A B C
 
 ## 在生物信息学中的位置
 
-KMP本身在现代生物信息学工具中不常直接使用，但：
+KMP 本身在现代生物信息学工具中不常直接使用，但：
 
-- **思想传承**：Aho-Corasick算法（多模式匹配）扩展了failure function的思想
-- **索引基础**：suffix automaton、suffix array等高级结构都利用了类似的预处理思想
+- **思想传承**：Aho-Corasick 算法（多模式匹配）扩展了 failure function 的思想
+- **索引基础**：suffix automaton、suffix array 等高级结构都利用了类似的预处理思想
 - **教学价值**：是理解"如何避免重复计算"的经典案例
 
 在实际的生物序列搜索中，更常见的是：
-- 基于k-mer的索引（如BWA、minimap2）
-- 基于后缀的索引（如FM-index）
+- 基于 k-mer 的索引（如 BWA、minimap2）
+- 基于后缀的索引（如 FM-index）
 - 这些方法在预处理阶段构建复杂索引，查询时达到亚线性时间
 
 <NoteCard variant="pitfalls"
   items={[
-    'KMP总是最快的：',
+    'KMP 总是最快的：',
     '不是。在实际应用中：',
-    'Boyer-Moore在大多数情况下更快',
-    '基于索引的方法（如FM-index）在多次查询时优势明显',
-    'KMP的价值在于理论保证和教学意义',
-    'failure function就是模式串的重复结构：'
+    'Boyer-Moore 在大多数情况下更快',
+    '基于索引的方法（如 FM-index）在多次查询时优势明显',
+    'KMP 的价值在于理论保证和教学意义',
+    'failure function 就是模式串的重复结构：'
   ]}
 />
 
 ## 历史注记
 
-KMP算法的发表是字符串算法发展的重要里程碑。在此之前，人们认为字符串匹配的最坏时间复杂度不可能优于 $O(nm)$。KMP证明通过适当的预处理，线性时间是可以实现的。
+KMP 算法的发表是字符串算法发展的重要里程碑。在此之前，人们认为字符串匹配的最坏时间复杂度不可能优于 $O(nm)$。KMP 证明通过适当的预处理，线性时间是可以实现的。
 
-有趣的是，Morris 在1970年就发现了该算法，但当时只作为 IBM 内部技术报告发布。直到1974年Knuth开始研究该问题，Morris 才公开发表自己的工作。Knuth、Morris 和 Pratt 最终合作完成了经典论文。
+有趣的是，Morris 在 1970 年就发现了该算法，但当时只作为 IBM 内部技术报告发布。直到 1974 年 Knuth 开始研究该问题，Morris 才公开发表自己的工作。Knuth、Morris 和 Pratt 最终合作完成了经典论文。
 
 ## 参考文献
 
@@ -287,8 +287,8 @@ KMP算法的发表是字符串算法发展的重要里程碑。在此之前，�
 ## 相关页面
 
 - [精确字符串匹配](./exact-string-matching/)
-- [Trie与多模式匹配](./trie-and-multi-pattern-matching/)
-- [Boyer-Moore算法](./boyer-moore-algorithm/)
+- [Trie 与多模式匹配](./trie-and-multi-pattern-matching/)
+- [Boyer-Moore 算法](./boyer-moore-algorithm/)
 - [索引结构概览](./indexing/)
 
 <LinkGrid

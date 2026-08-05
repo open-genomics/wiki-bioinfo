@@ -1,5 +1,5 @@
 ---
-description: 图遍历算法详解：从DFS、BFS到Hamiltonian path，理解组装中的图搜索问题。
+description: 图遍历算法详解：从 DFS、BFS 到 Hamiltonian path，理解组装中的图搜索问题。
 title: "图遍历算法"
 ---
 
@@ -10,9 +10,9 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="图遍历算法是理解组装、路径查找和图清理的基础工具，从基础的DFS/BFS到复杂的Hamiltonian path问题，构成了图算法的核心。"
+  summary="图遍历算法是理解组装、路径查找和图清理的基础工具，从基础的 DFS/BFS 到复杂的 Hamiltonian path 问题，构成了图算法的核心。"
   items={[
-    '重点理解DFS和BFS的差异，以及Hamiltonian path的NP难性质',
+    '重点理解 DFS 和 BFS 的差异，以及 Hamiltonian path 的 NP 难性质',
     '图遍历算法在组装中用于路径恢复、错误检测和图简化',
   ]}
 />
@@ -28,7 +28,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 图遍历算法是指系统地访问图中所有顶点和边的方法。在生物信息学中，特别是基因组组装中，图遍历算法用于：
 
-- 在de Bruijn graph中寻找重建序列的路径
+- 在 de Bruijn graph 中寻找重建序列的路径
 - 检测和清理图中的错误结构（tips、bubbles）
 - 分析图的连通性和拓扑结构
 - 解决路径搜索问题
@@ -40,7 +40,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 - **路径恢复**：从图中找到代表原始序列的路径
 - **错误检测**：通过遍历识别低频错误边和异常结构
 - **图简化**：通过遍历策略简化复杂图结构
-- **复杂度理解**：Hamiltonian path问题解释了为什么组装在理论上很难
+- **复杂度理解**：Hamiltonian path 问题解释了为什么组装在理论上很难
 
 ## 基础遍历算法
 
@@ -70,7 +70,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 #### 算法描述
 
-**算法1：深度优先搜索**
+**算法 1：深度优先搜索**
 
 ```text
 输入：图 G = (V, E)，起始顶点 s
@@ -119,7 +119,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 #### 算法描述
 
-**算法2：广度优先搜索**
+**算法 2：广度优先搜索**
 
 ```text
 输入：图 G = (V, E)，起始顶点 s
@@ -161,7 +161,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
     },
     {
       term: '复杂度',
-      definition: 'Hamiltonian path问题是NP完全问题，没有已知的多项式时间算法。',
+      definition: 'Hamiltonian path 问题是 NP 完全问题，没有已知的多项式时间算法。',
     },
   ]}
 />
@@ -169,28 +169,28 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 ### 为什么重要
 
 在基因组组装中：
-- 理想情况下，我们希望找到一条Hamiltonian path来重建序列
-- 但由于NP难性质，实际组装器使用启发式方法
+- 理想情况下，我们希望找到一条 Hamiltonian path 来重建序列
+- 但由于 NP 难性质，实际组装器使用启发式方法
 - 这解释了为什么组装问题在理论上很难
 
-### 与Eulerian Path的区别
+### 与 Eulerian Path 的区别
 
 <DataTable variant="comparison"
   leftTitle="Eulerian Path"
   rightTitle="Hamiltonian Path"
   rows={[
     { aspect: '定义', left: '访问每条边恰好一次', right: '访问每个顶点恰好一次' },
-    { aspect: '复杂度', left: '多项式时间可解', right: 'NP完全' },
-    { aspect: '组装应用', left: 'de Bruijn graph的路径问题', right: 'OLC组装的路径问题' },
+    { aspect: '复杂度', left: '多项式时间可解', right: 'NP 完全' },
+    { aspect: '组装应用', left: 'de Bruijn graph 的路径问题', right: 'OLC 组装的路径问题' },
     { aspect: '判断条件', left: '基于顶点度数', right: '无简单判断条件' }
   ]}
 />
 
 ### 算法描述
 
-由于Hamiltonian path是NP完全问题，通常使用回溯或启发式方法：
+由于 Hamiltonian path 是 NP 完全问题，通常使用回溯或启发式方法：
 
-**算法3：回溯法寻找Hamiltonian path**
+**算法 3：回溯法寻找 Hamiltonian path**
 
 ```text
 输入：图 G = (V, E)
@@ -231,18 +231,18 @@ A -- B -- C
 D -------- E
 ```
 
-寻找Hamiltonian path：
+寻找 Hamiltonian path：
 
-1. 从A开始：A → B → C → E → D（成功）
+1. 从 A 开始：A → B → C → E → D（成功）
 2. 或者：D → A → B → C → E（成功）
 
-这个图存在Hamiltonian path。
+这个图存在 Hamiltonian path。
 
 ## 贪心路径延伸
 
-由于Hamiltonian path太复杂，实际组装器使用贪心策略：
+由于 Hamiltonian path 太复杂，实际组装器使用贪心策略：
 
-**算法4：贪心路径延伸**
+**算法 4：贪心路径延伸**
 
 ```text
 输入：图 G = (V, E)，边权重 w（coverage）
@@ -273,11 +273,11 @@ D -------- E
 
 ## 图清理中的遍历策略
 
-### Tip检测与清理
+### Tip 检测与清理
 
-Tips是图中的短分支，通常由测序错误引起：
+Tips 是图中的短分支，通常由测序错误引起：
 
-**算法5：Tip检测**
+**算法 5：Tip 检测**
 
 ```text
 输入：图 G = (V, E)，最小路径长度 L，最大路径长度 U
@@ -300,11 +300,11 @@ Tips是图中的短分支，通常由测序错误引起：
 3. return tips
 ```
 
-### Bubble检测与清理
+### Bubble 检测与清理
 
-Bubbles是图中的平行路径，通常由重复序列或变异引起：
+Bubbles 是图中的平行路径，通常由重复序列或变异引起：
 
-**算法6：Bubble检测**
+**算法 6：Bubble 检测**
 
 ```text
 输入：图 G = (V, E)，起点 s，终点 t
@@ -338,19 +338,19 @@ Bubbles是图中的平行路径，通常由重复序列或变异引起：
 
 图遍历算法在生物信息学中的核心应用：
 
-- **de Bruijn graph组装**：使用DFS/BFS进行路径延伸和图清理
-- **OLC组装**：Hamiltonian path问题的启发式求解
+- **de Bruijn graph 组装**：使用 DFS/BFS 进行路径延伸和图清理
+- **OLC 组装**：Hamiltonian path 问题的启发式求解
 - **错误检测**：通过遍历识别异常结构
 - **图简化**：使用遍历策略简化复杂图结构
 
 <NoteCard variant="pitfalls"
   items={[
-    'Hamiltonian path是组装的唯一解：',
-    '不是。由于NP难性质，实际组装器使用启发式方法，不一定找到Hamiltonian path，而是找到"足够好"的路径。',
-    'DFS总是比BFS好：',
-    '不是。DFS和BFS各有优势：',
-    'DFS适合寻找路径和检测环',
-    'BFS适合寻找最短路径和层次分析'
+    'Hamiltonian path 是组装的唯一解：',
+    '不是。由于 NP 难性质，实际组装器使用启发式方法，不一定找到 Hamiltonian path，而是找到"足够好"的路径。',
+    'DFS 总是比 BFS 好：',
+    '不是。DFS 和 BFS 各有优势：',
+    'DFS 适合寻找路径和检测环',
+    'BFS 适合寻找最短路径和层次分析'
   ]}
 />
 
@@ -383,7 +383,7 @@ SBH 揭示了"问题转化的重要性"：同一生物问题，哈密顿建模 N
 
 ## 相关页面
 
-- [de Bruijn graph组装](./de-bruijn/)
+- [de Bruijn graph 组装](./de-bruijn/)
 - [OLC：Overlap-Layout-Consensus](./olc/)
 - [重复序列、分叉与图清理](./repeats-and-graph-cleaning/)
 - [概率、图与动态规划预备](../../foundations/probability-and-graphs/)

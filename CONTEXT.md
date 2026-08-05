@@ -52,7 +52,7 @@
 - **Concept Page**：概念页，围绕"是什么 → 为什么重要 → 核心概念 → 相关页面"展开
 - **Algorithm Page**：算法页，围绕"问题定义 → 数学模型 → 递推/伪代码 → Worked example → 相关页面"展开
 - **Workflow Page**：流程页，围绕"任务目标 → 步骤总览 → 每步说明 → 相关页面"展开
-- **Landing Page**：板块入口页，使用 PageHeaderMeta、LinkGrid（variant="navigation"）等结构
+- **Landing Page**：板块入口页。顶级板块入口页使用 PageHeaderMeta（audience/startWith 导读）+ LinkGrid（variant="navigation"）；子板块入口页 LinkGrid 必用、PageHeaderMeta 可选
 
 ### 文档组件
 
@@ -73,6 +73,13 @@
 - **组件 `to:` 字段**：用无前缀绝对路径（`/core-methods/alignment/edit-distance`），由 `link-utils.ts` 的 `buildHref()` 统一拼接 `BASE_URL`。不要硬编码 `/wiki-bioinfo/` 前缀。
 - **markdown 链接**：用相对路径（`./edit-distance`、`../models/hmm`），由 Astro 原生解析。
 - **链接检查**：`scripts/checks/check-links.sh` 校验 markdown 相对路径 + 组件 `to:` 无前缀路径。
+- **目录页链接**：统一写 `.../` 形式（如 `../models/hmm/` 或组件 `to: '/core-methods/models/'`），不要写 `/index` 或 `/index/` 后缀——GitHub Pages 对 `/index/` 返回 404，check-links.sh 会拦截两种写法。
+
+### 资产约定
+
+- **logo**：`src/assets/bioinfo-logo.svg` 是唯一 logo 源（Starlight logo 与首页 hero，走 assets 导入）；社交分享用的 OG 图是 `public/img/og-image.png`（1200×630，由 logo 经 sharp 栅格化生成——社交平台不渲染 SVG 的 og:image），更换 logo 后需重新生成。
+- **favicon**：`public/favicon.svg`（Starlight 默认 favicon 路径），旧 `public/icons/favicon.ico` 已下线。
+- **正文插图**：放 `public/img/illustrations/`（示意图）或 `public/img/figures/`（成品图），引用时用 `` `${import.meta.env.BASE_URL}img/...` `` 拼接 base。
 
 ## 参考文档
 

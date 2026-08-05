@@ -9,7 +9,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="单细胞多模态数据（multiome）的技术原理与分析框架，涵盖 RNA+ATAC、CITE-seq 等联合测量方法。"
+  summary="Multiome 的价值不在于多测了一种模态，而在于同一细胞内可直接观测调控-表达关联。本页讲清 RNA+ATAC、RNA+Protein 等技术的测量原理，以及 WNN 与 MultiVI 两条整合路线的取舍。"
+  items={[
+    '与分别测量后整合的本质区别：天然共享细胞索引、真正的单细胞分辨率，无需计算匹配对齐',
+    '两条主流整合路线：Seurat WNN（各模态独立降维 → 联合最近邻图 → 自动学习模态权重）与 MultiVI 深度生成模型（可处理缺失模态并给出不确定性估计）',
+    '核心难点是模态异步与噪声差异：ATAC 比 RNA 更稀疏（~95% 零值），且染色质开放往往先于转录激活',
+  ]}
 />
 
 ## 问题定义
@@ -31,9 +36,9 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '单细胞组学', href: '/applications-omics/single-cell/index' },
+    { label: '单细胞组学', href: '/applications-omics/single-cell/' },
     { label: '多组学整合策略', href: '/applications-omics/multi-omics/integration-strategies' },
-    { label: '表观基因组学', href: '/applications-omics/epigenomics/index' },
+    { label: '表观基因组学', href: '/applications-omics/epigenomics/' },
   ]}
 />
 
@@ -157,8 +162,8 @@ Seurat 的 WNN 方法：
 
 <LinkGrid
   items={[
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '单细胞分析基础' },
-    { title: '表观基因组学', to: '/applications-omics/epigenomics/index', description: 'ATAC-seq 等表观遗传技术原理' },
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '单细胞分析基础' },
+    { title: '表观基因组学', to: '/applications-omics/epigenomics/', description: 'ATAC-seq 等表观遗传技术原理' },
     { title: '多组学整合策略', to: '/applications-omics/multi-omics/integration-strategies', description: 'Multiome 整合的策略选择' },
     { title: '整合算法', to: '/applications-omics/multi-omics/integration-algorithms', description: 'MOFA+ 等贝叶斯多组学因子分析方法' }
   ]}

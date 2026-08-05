@@ -3,6 +3,8 @@ title: "如何贡献"
 description: BioInfo Wiki 的贡献方式与开发流程
 ---
 
+import LinkGrid from '@/components/docs/LinkGrid.astro';
+
 BioInfo Wiki 欢迎内容修订、结构优化、链接修复和高质量的新页面建议。
 
 ## 哪些贡献最有价值
@@ -49,6 +51,10 @@ npm run check
 
 ## 相关页面
 
-- [导论](./)
-- [学习路线](./roadmap/)
-- [写作规范](./style-guide/)
+<LinkGrid
+  items={[
+    { title: '导论', to: '/intro/', description: '项目定位、学习路线与贡献入口' },
+    { title: '学习路线', to: '/intro/roadmap', description: '按背景选择推荐阅读路径' },
+    { title: '写作规范', to: '/intro/style-guide', description: '排版格式与内容标准' },
+  ]}
+/>

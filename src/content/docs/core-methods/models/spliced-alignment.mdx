@@ -9,7 +9,7 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
+  summary="剪接比对利用已知蛋白序列指导基因结构预测：在候选外显子（Exon）集合中寻找与目标蛋白最匹配的链，通过动态规划同时解决外显子选择和序列比对。"
   items={[
     '结合候选外显子生成与全局比对约束',
     '三维动态规划同时考虑基因组位置、蛋白位置和当前外显子',
@@ -191,7 +191,7 @@ It was brill + iant thril + ling morning + ...
 
 ### 复杂基因识别
 
-- 大内含子基因（>100 kb）
+- 大内含子基因（Intron，>100 kb）
 - 可变剪接异构体预测
 - 假基因与功能基因区分
 

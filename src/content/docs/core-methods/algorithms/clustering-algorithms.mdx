@@ -102,7 +102,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 ### 与 UPGMA 的联系
 
-UPGMA（Unweighted Pair Group Method with Arithmetic Mean）就是**采用平均链接的凝聚式层次聚类**在系统发育重建中的特例：它额外假设分子钟（恒定进化速率），用合并高度估计分歧时间。因此 UPGMA 可视为层次聚类的一个带生物学约束的版本，详见 [UPGMA 算法](/applications-omics/phylogeny/upgma)。
+UPGMA（Unweighted Pair Group Method with Arithmetic Mean）就是**采用平均链接的凝聚式层次聚类**在系统发育重建中的特例：它额外假设分子钟（恒定进化速率），用合并高度估计分歧时间。因此 UPGMA 可视为层次聚类的一个带生物学约束的版本，详见 [UPGMA 算法](../../applications-omics/phylogeny/upgma)。
 
 ### 层次聚类树 vs 系统发育树
 
@@ -168,7 +168,7 @@ $$\mathrm{Cost}(C_1,\dots,C_k)=\sum_{i=1}^{k}\sum_{x \in C_i}\|x-\mu_i\|^2, \qqu
 
 ## CAST 噪声聚类
 
-**CAST（聚类亲和力搜索技术, Cluster Affinity Search Technique）** 针对含噪声基因表达数据设计，弥补 k-means 在噪声鲁棒性上的不足。它基于图论框架：把基因视作顶点，距离小于阈值 $\theta$ 的基因对连边，理想聚类对应**团图（Clique Graph）**（每个连通分量是完全图，分量间无边）。噪声会破坏团图结构，而用最少边增删恢复团图的 **Corrupted Cliques 问题**已被证明 NP 完全，因此需启发式求解。
+**CAST（聚类亲和力搜索技术，Cluster Affinity Search Technique）** 针对含噪声基因表达数据设计，弥补 k-means 在噪声鲁棒性上的不足。它基于图论框架：把基因视作顶点，距离小于阈值 $\theta$ 的基因对连边，理想聚类对应**团图（Clique Graph）**（每个连通分量是完全图，分量间无边）。噪声会破坏团图结构，而用最少边增删恢复团图的 **Corrupted Cliques 问题**已被证明 NP 完全，因此需启发式求解。
 
 基因 $i$ 对簇 $C$ 的亲和力定义为它与簇成员的平均距离：
 

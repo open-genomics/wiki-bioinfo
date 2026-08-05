@@ -9,6 +9,10 @@ import { siteConfig } from './src/data/site-config';
 export default defineConfig({
   site: siteConfig.site,
   base: siteConfig.base,
+  // 注意：Astro 6 已将顶层 remarkPlugins/rehypePlugins 标记为废弃，
+  // 但迁移到 unified() processor 后 @astrojs/mdx 不再对 MDX 应用 remark-math，
+  // 会把 $...$ 公式误当 JSX 表达式解析导致构建失败；
+  // 待 Starlight/@astrojs/mdx 适配新 API 后再迁移。
   markdown: {
     remarkPlugins: [remarkMath],
     rehypePlugins: [rehypeKatex],

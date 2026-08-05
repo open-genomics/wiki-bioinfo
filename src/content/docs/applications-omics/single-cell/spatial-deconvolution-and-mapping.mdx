@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="空间去卷积（deconvolution）的数学模型、算法实现与单细胞参考整合策略"
+  summary="去卷积把 spot 的混合表达信号拆解为各细胞类型的贡献比例：以 scRNA-seq 为参考，在线性混合模型约束下反推组成矩阵。本页覆盖模型、算法与工具选型。"
+  items={[
+    '核心是线性混合模型 Y = M·W + E：在每 spot 比例非负且求和为 1 的约束下，求解细胞类型比例矩阵 W',
+    '工具差异在统计扩展：SPOTlight 用 NMF，RCTD 用泊松模型 + EM，cell2location 用贝叶斯层次模型 + 变分推断（建模 spot 特异总 mRNA 丰度 γ_s），Tangram 做深度学习映射',
+    '输出比例是相对贡献估计而非精确细胞数；贝叶斯方法给后验置信区间，区间过宽常提示参考中缺失细胞类型',
+  ]}
 />
 
 ## 是什么
@@ -19,7 +24,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
   items={[
     { label: '空间转录组总览', href: '/applications-omics/single-cell/spatial-transcriptomics-overview' },
     { label: 'spot 与单细胞', href: '/applications-omics/single-cell/spatial-spot-vs-single-cell' },
-    { label: '单细胞组学', href: '/applications-omics/single-cell/index' },
+    { label: '单细胞组学', href: '/applications-omics/single-cell/' },
   ]}
 />
 
@@ -274,7 +279,7 @@ scRNA-seq 参考数据
   items={[
     { title: '空间转录组总览', to: '/applications-omics/single-cell/spatial-transcriptomics-overview', description: '理解空间数据的产生与技术背景' },
     { title: 'spot 与单细胞', to: '/applications-omics/single-cell/spatial-spot-vs-single-cell', description: '理解为什么要进行去卷积' },
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '构建去卷积所需的参考图谱' },
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '构建去卷积所需的参考图谱' },
     { title: '整合算法', to: '/applications-omics/multi-omics/integration-algorithms', description: 'NMF 去卷积的数学原理' }
   ]}
 />

@@ -10,7 +10,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="贝叶斯推断提供了一种系统化的方法来处理不确定性，通过先验、似然和后验的关系，在生物信息学中广泛应用于参数估计、模型选择和预测。"
+  summary="贝叶斯推断提供了一种系统化的方法来处理不确定性，通过先验（Prior）、似然和后验（Posterior）的关系，在生物信息学中广泛应用于参数估计、模型选择和预测。"
   items={[
     '重点理解贝叶斯定理的核心思想和先验、似然、后验的关系',
     '贝叶斯方法在生物信息学中用于处理小样本、不确定性和模型选择',
@@ -54,11 +54,11 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
     },
     {
       term: '似然函数 P(D|θ)',
-      definition: '给定参数θ，观测到数据D的概率。',
+      definition: '给定参数θ，观测到数据 D 的概率。',
     },
     {
       term: '后验分布 P(θ|D)',
-      definition: '在观测数据D后，对参数θ的更新信念。',
+      definition: '在观测数据 D 后，对参数θ的更新信念。',
     },
     {
       term: '边际似然 P(D)',
@@ -95,7 +95,7 @@ $$
 
 **先验**：假设对硬币没有先验知识，使用均匀先验 $\theta \sim \text{Uniform}(0, 1)$
 
-**数据**：抛掷10次，7次正面，3次反面
+**数据**：抛掷 10 次，7 次正面，3 次反面
 
 **似然**：$P(D | \theta) = \theta^7 (1-\theta)^3$
 
@@ -121,15 +121,15 @@ $$
 
 ## 在生物信息学中的应用
 
-### Motif发现中的贝叶斯方法
+### Motif 发现中的贝叶斯方法
 
-在motif discovery中，贝叶斯方法可以：
+在 motif discovery 中，贝叶斯方法可以：
 
-- 设定motif位置的先验分布（如偏好某些位置）
-- 通过数据更新motif参数的后验分布
+- 设定 motif 位置的先验分布（如偏好某些位置）
+- 通过数据更新 motif 参数的后验分布
 - 自动处理模型复杂度（通过边际似然）
 
-**算法1：贝叶斯motif发现**
+**算法 1：贝叶斯 motif 发现**
 
 ```text
 输入：序列集合 S，motif长度 L
@@ -146,13 +146,13 @@ $$
 
 ### 变异检测中的贝叶斯方法
 
-在variant calling中，贝叶斯方法用于：
+在 variant calling 中，贝叶斯方法用于：
 
 - 计算变异位点的后验概率
 - 区分真实变异和测序错误
 - 提供变异置信度
 
-**算法2：贝叶斯variant calling**
+**算法 2：贝叶斯 variant calling**
 
 ```text
 输入：比对数据，参考基因组
@@ -171,7 +171,7 @@ $$
 
 ### 基因表达分析中的贝叶斯方法
 
-在RNA-seq分析中，贝叶斯方法用于：
+在 RNA-seq 分析中，贝叶斯方法用于：
 
 - 估计基因表达量的不确定性
 - 进行差异表达分析
@@ -183,9 +183,9 @@ $$
 
 对于简单的共轭先验情况，可以计算解析解：
 
-- Beta-Binomial模型
-- Gamma-Poisson模型
-- Normal-Normal模型
+- Beta-Binomial 模型
+- Gamma-Poisson 模型
+- Normal-Normal 模型
 
 ### 数值积分
 
@@ -195,11 +195,11 @@ $$
 - 拉普拉斯近似
 - 变分推断
 
-### MCMC采样
+### MCMC 采样
 
 对于复杂模型，使用马尔可夫链蒙特卡洛（MCMC）：
 
-**算法3：Metropolis-Hastings算法**
+**算法 3：Metropolis-Hastings 算法**
 
 ```text
 输入：目标分布 P(θ)，初始值 θ^(0)，提议分布 Q(θ' | θ)
@@ -219,7 +219,7 @@ $$
 3. 返回 \{θ^(0), θ^(1), ..., θ^(T)\}
 ```
 
-**算法4：Gibbs采样**
+**算法 4：Gibbs 采样**
 
 ```text
 输入：联合分布 P(θ₁, θ₂, ..., θ_k)，初始值
@@ -260,7 +260,7 @@ $$
 ### 无信息先验
 
 - 均匀先验：$\theta \sim \text{Uniform}(a, b)$
-- Jeffreys先验：$p(\theta) \propto \sqrt{I(\theta)}$，其中 $I(\theta)$ 是Fisher信息
+- Jeffreys 先验：$p(\theta) \propto \sqrt{I(\theta)}$，其中 $I(\theta)$ 是 Fisher 信息
 
 ### 有信息先验
 

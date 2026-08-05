@@ -8,7 +8,12 @@ import PrerequisitesBox from '@/components/docs/PrerequisitesBox.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="空间转录组学的技术原理、数据结构与标准分析流程"
+  summary="空间转录组靠 spatial barcode 把每个测量单位锚定到组织物理位置，使表达结果能投影回切片图像。本页是理解各平台原理、数据结构与分析流程的入口。"
+  items={[
+    '核心思想三步：捕获玻片上每个 spot 带唯一空间条码 → mRNA 原位捕获并逆转录 → 测序后按 barcode 分组还原坐标，得到 gene × location 矩阵',
+    '分辨率与稀疏性的权衡：Visium（55 μm spot、含 1–10 个细胞）是当前主流；Stereo-seq、MERFISH 等分辨率越高，单位内 mRNA 越少、数据越稀疏',
+    '数据由三层关联构成：gene × spot 表达矩阵、spot 空间坐标、组织图像；下游关键任务含空间可变基因（SVG）、邻域富集与区域注释',
+  ]}
 />
 
 ## 是什么
@@ -17,7 +22,7 @@ import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <PrerequisitesBox
   items={[
-    { label: '单细胞组学', href: '/applications-omics/single-cell/index' },
+    { label: '单细胞组学', href: '/applications-omics/single-cell/' },
     { label: 'RNA-seq 工作流', href: '/applications-omics/workflows/rna-seq' },
     { label: '常见文件格式概览', href: '/data-references/formats/common-file-formats' },
   ]}
@@ -201,7 +206,7 @@ UMI 计数 → gene × spot 矩阵
   items={[
     { title: 'spot 与单细胞', to: '/applications-omics/single-cell/spatial-spot-vs-single-cell', description: '空间数据与单细胞数据的差异与互补性' },
     { title: '去卷积与细胞映射', to: '/applications-omics/single-cell/spatial-deconvolution-and-mapping', description: '从混合 spot 解析细胞组成的方法' },
-    { title: '单细胞组学', to: '/applications-omics/single-cell/index', description: '建立单细胞分析基础' },
+    { title: '单细胞组学', to: '/applications-omics/single-cell/', description: '建立单细胞分析基础' },
     { title: 'RNA-seq 工作流', to: '/applications-omics/workflows/rna-seq', description: '转录组测序的基础流程' }
   ]}
 />

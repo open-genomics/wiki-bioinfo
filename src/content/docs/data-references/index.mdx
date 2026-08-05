@@ -3,8 +3,14 @@ description: 数据、注释与资源板块入口。参考基因组版本如何�
 title: "数据、注释与资源"
 ---
 
+import PageHeaderMeta from '@/components/docs/PageHeaderMeta.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
+
+<PageHeaderMeta
+  audience="需要为分析流程选择参考版本、注释与数据格式，或理解结果可比性来源的读者"
+  startWith="先建立参考基因组与坐标系统概念，再理解版本差异与 liftover，最后进入数据库与文件格式"
+/>
 
 生物信息学分析的结果不仅取决于算法本身，更取决于分析所依赖的数据基础。当你拿到一组变异检测结果或基因表达矩阵时，一个核心问题浮出水面：**这些结果基于哪个参考背景？它们能否与其他研究或公共数据库进行有效整合？**
 

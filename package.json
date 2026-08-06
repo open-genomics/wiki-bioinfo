@@ -8,12 +8,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/LessUp/wiki-bioinfo.git"
+    "url": "https://github.com/open-genomics/wiki-bioinfo.git"
   },
   "bugs": {
-    "url": "https://github.com/LessUp/wiki-bioinfo/issues"
+    "url": "https://github.com/open-genomics/wiki-bioinfo/issues"
   },
-  "homepage": "https://lessup.github.io/wiki-bioinfo/",
+  "homepage": "https://open-genomics.github.io/wiki-bioinfo/",
   "keywords": [
     "bioinformatics",
     "wiki",

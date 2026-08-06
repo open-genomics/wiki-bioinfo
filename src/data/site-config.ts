@@ -22,7 +22,7 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: 'BioInfo Wiki',
   description: '面向中文社区的生物信息学体系化知识库',
-  site: 'https://lessup.github.io',
+  site: 'https://open-genomics.github.io',
   base: '/wiki-bioinfo/',
   locale: 'zh-CN',
   ogImage: 'img/og-image.png',

@@ -42,11 +42,11 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/LessUp/wiki-bioinfo',
+          href: 'https://github.com/open-genomics/wiki-bioinfo',
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/LessUp/wiki-bioinfo/tree/master/',
+        baseUrl: 'https://github.com/open-genomics/wiki-bioinfo/tree/master/',
       },
       lastUpdated: true,
       components: {

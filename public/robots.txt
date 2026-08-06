@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://lessup.github.io/wiki-bioinfo/sitemap-index.xml
+Sitemap: https://open-genomics.github.io/wiki-bioinfo/sitemap-index.xml

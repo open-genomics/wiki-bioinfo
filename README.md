@@ -2,13 +2,13 @@
 
 面向中文社区的生物信息学体系化知识库。项目尝试把**生物学对象、计算模型、核心算法、分析流程和数据资源**连接成一张可连续阅读的知识地图，而不是只提供零散的工具教程。
 
-- **在线访问**：https://lessup.github.io/wiki-bioinfo/
+- **在线访问**：https://open-genomics.github.io/wiki-bioinfo/
 - **核心定位**：从“为什么需要这个方法”出发，再进入算法、流程和资源
 - **技术栈**：Astro 6.x + Starlight + TypeScript
 
 ## 这个项目提供什么
 
-围绕序列、比对、组装、概率模型、工作流等核心主题组织知识主干，提供从导论到真实分析场景的连续阅读路径，并强调概念、算法、数据格式与流程之间的交叉引用。详细的设计理念与内容边界见[导论](https://lessup.github.io/wiki-bioinfo/intro/)。
+围绕序列、比对、组装、概率模型、工作流等核心主题组织知识主干，提供从导论到真实分析场景的连续阅读路径，并强调概念、算法、数据格式与流程之间的交叉引用。详细的设计理念与内容边界见[导论](https://open-genomics.github.io/wiki-bioinfo/intro/)。
 
 ## 七个入口
 
@@ -24,10 +24,10 @@
 
 ## 开始阅读
 
-- 从 [导论](https://lessup.github.io/wiki-bioinfo/intro/) 了解整体结构
-- 从 [基础与数学](https://lessup.github.io/wiki-bioinfo/foundations/) 建立对象与模型框架
-- 从 [核心方法](https://lessup.github.io/wiki-bioinfo/core-methods/) 进入主要算法主线
-- 从 [组学应用](https://lessup.github.io/wiki-bioinfo/applications-omics/) 或 [临床应用](https://lessup.github.io/wiki-bioinfo/applications-clinical/) 带着问题回溯方法
+- 从 [导论](https://open-genomics.github.io/wiki-bioinfo/intro/) 了解整体结构
+- 从 [基础与数学](https://open-genomics.github.io/wiki-bioinfo/foundations/) 建立对象与模型框架
+- 从 [核心方法](https://open-genomics.github.io/wiki-bioinfo/core-methods/) 进入主要算法主线
+- 从 [组学应用](https://open-genomics.github.io/wiki-bioinfo/applications-omics/) 或 [临床应用](https://open-genomics.github.io/wiki-bioinfo/applications-clinical/) 带着问题回溯方法
 
 ## 本地开发
 
@@ -47,7 +47,7 @@ npm run check
 ## 贡献
 
 - 贡献入口：[`CONTRIBUTING.md`](./CONTRIBUTING.md)
-- 写作规范与项目设计：站点内 [导论](https://lessup.github.io/wiki-bioinfo/intro/)
+- 写作规范与项目设计：站点内 [导论](https://open-genomics.github.io/wiki-bioinfo/intro/)
 - Agent 指令：[`AGENTS.md`](./AGENTS.md)
 
 欢迎提交内容修订、结构改进、链接修复和高质量的新页面建议。

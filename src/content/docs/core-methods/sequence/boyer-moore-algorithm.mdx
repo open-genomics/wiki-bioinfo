@@ -9,7 +9,7 @@ import DefinitionList from '@/components/docs/DefinitionList.astro';
 import LinkGrid from '@/components/docs/LinkGrid.astro';
 
 <NoteCard variant="summary"
-  summary="Boyer-Moore 算法通过从右向左匹配和智能跳跃规则，在实际应用中往往是最快的字符串匹配算法，平均时间复杂度接近 O(n/m)。"
+  summary="Boyer-Moore 算法通过从右向左匹配和智能跳跃规则，在单次查询、模式串较长、字母表较大的场景下，实践中往往是最快的字符串匹配算法，平均时间复杂度接近 O(n/m)。"
   items={[
     '核心思想：从右向左匹配，利用失配信息实现大跨度跳跃',
     'Bad Character Rule：根据失配字符决定跳跃距离',
@@ -57,7 +57,7 @@ Boyer-Moore 解决与 KMP 相同的精确字符串匹配问题：
 
 在生物信息学中，Boyer-Moore 的价值体现在：
 
-- **实际性能**：在实践中往往比 KMP 更快，特别是在模式串较长时
+- **实际性能**：在单次查询、模式串较长、字母表较大的场景下，实践中往往比 KMP 更快
 - **启发式思想**：展示了如何利用"坏字符"和"好后缀"信息进行优化
 - **工具影响**：现代 read mapper 的 seed-and-extend 策略中，跳跃思想有类似之处
 
@@ -135,7 +135,7 @@ P:             X Y Z D E F
 **算法 1：构建 bad character table**
 
 ```text
-输入：模式串 P = p_0p_1...p_\{m-1\}，字母表 Σ
+输入：模式串 P = p_0p_1...p_\\{m-1\\}，字母表 Σ
 输出：bad character table BC[|Σ| × m]
 
 1. 初始化 BC 为全 -1
@@ -144,9 +144,9 @@ P:             X Y Z D E F
 3. return BC
 ```
 
-**时间复杂度**：$O(m + |\Sigma|)$
+**时间复杂度**：$O(m + |\\Sigma|)$
 
-**空间复杂度**：$O(|\Sigma| \times m)$
+**空间复杂度**：$O(|\\Sigma| \\times m)$
 
 ## Good Suffix Rule
 
@@ -194,7 +194,7 @@ P:     X Y Z D E F
 **算法 2：构建 good suffix table**
 
 ```text
-输入：模式串 P = p_0p_1...p_\{m-1\}
+输入：模式串 P = p_0p_1...p_\\{m-1\\}
 输出：good suffix table GS[0:m]
 
 1. 初始化 GS 为全 m
@@ -218,7 +218,7 @@ P:     X Y Z D E F
 **算法 3：Boyer-Moore 字符串匹配**
 
 ```text
-输入：文本 T = t_0t_1...t_\{n-1\}，模式串 P = p_0p_1...p_\{m-1\}
+输入：文本 T = t_0t_1...t_\\{n-1\\}，模式串 P = p_0p_1...p_\\{m-1\\}
 输出：所有匹配位置
 
 1. 预处理：构建bad character table BC和good suffix table GS
@@ -240,7 +240,7 @@ P:     X Y Z D E F
 
 **时间复杂度**：最坏情况 $O(nm)$，平均情况 $O(n/m)$ 到 $O(n)$
 
-**空间复杂度**：$O(|\Sigma| \times m)$
+**空间复杂度**：$O(|\\Sigma| \\times m)$
 
 ## 复杂度分析
 
@@ -248,7 +248,7 @@ P:     X Y Z D E F
 
 | 阶段 | 时间复杂度 | 空间复杂度 |
 |------|-----------|-----------|
-| 预处理（Bad Character） | $O(m + |\Sigma|)$ | $O(|\Sigma|)$ |
+| 预处理（Bad Character） | $O(m + |\\Sigma|)$ | $O(|\\Sigma|)$ |
 | 预处理（Good Suffix） | $O(m)$ | $O(m)$ |
 | 匹配（最坏情况） | $O(nm)$ | $O(1)$ 额外 |
 | 匹配（平均情况） | $O(n/m)$ | $O(1)$ 额外 |
@@ -256,7 +256,7 @@ P:     X Y Z D E F
 
 ### 为什么实际中很快
 
-Boyer-Moore 在实践中通常是最快的字符串匹配算法：
+Boyer-Moore 在**单次查询、模式串较长、字母表较大**的场景下，实践中通常是最快的字符串匹配算法：
 
 1. **从右向左匹配**：大部分情况下末尾字符就会失配，避免检查模式串其余部分
 2. **大跨度跳跃**：Bad Character Rule 在大型字母表上经常能跳过整个模式串长度
@@ -300,7 +300,7 @@ P:                       E X A M P L E
 |------|-----------|----------------|----------------|------|------|
 | 朴素扫描 | $O(1)$ | $O(mn)$ | $O(mn)$ | $O(1)$ | 简单但慢 |
 | KMP | $O(m)$ | $O(n+m)$ | $O(n+m)$ | $O(m)$ | 最坏情况线性 |
-| Boyer-Moore | $O(m+|\Sigma|)$ | $O(nm)$ | $O(n/m)$ | $O(|\Sigma|m)$ | 实际中通常最快 |
+| Boyer-Moore | $O(m+|\\Sigma|)$ | $O(nm)$ | $O(n/m)$ | $O(|\\Sigma|m)$ | 单次查询、长模式、大字母表时通常最快 |
 | Rabin-Karp | $O(m)$ | $O(n+m)$ | $O(n+m)$ | $O(1)$ | 哈希方法 |
 
 ## 在生物信息学中的位置
@@ -319,7 +319,7 @@ Boyer-Moore 本身在现代生物信息学工具中不常直接使用，但：
 <NoteCard variant="pitfalls"
   items={[
     'Boyer-Moore 总是比 KMP 快：',
-    '不一定。Boyer-Moore 在最坏情况下可能比 KMP 慢，但在实际应用中往往更快。选择哪种算法取决于具体场景。',
+    '不一定。Boyer-Moore 在最坏情况下可能比 KMP 慢，但在单次查询、模式串较长、字母表较大的场景下，实践中往往更快。选择哪种算法取决于具体场景。',
     'Boyer-Moore 需要两个规则都实现：',
     '实际上，简化版的 Boyer-Moore 可以只实现 bad character rule，在很多情况下已经足够快。完整的 Boyer-Moore 同时使用两个规则以获得更好的性能。',
     'Boyer-Moore 适合小字母表：',
@@ -331,7 +331,7 @@ Boyer-Moore 本身在现代生物信息学工具中不常直接使用，但：
 
 Boyer-Moore 算法的发表标志着字符串算法从"最坏情况优化"向"实际性能优化"的转变。与 KMP 追求最坏情况线性时间不同，Boyer-Moore 追求平均情况下的亚线性时间。
 
-有趣的是，原始论文只描述了 Bad Character Rule。Good Suffix Rule 是后来在改进版本中（Boyer-Moore-Horspool）加入的。现在通常将两者结合称为"完整 Boyer-Moore 算法"。
+原始论文只描述了 Bad Character Rule。Good Suffix Rule 是后来在改进版本中（Boyer-Moore-Horspool）加入的。现在通常将两者结合称为"完整 Boyer-Moore 算法"。
 
 **Horspool 变体**：Nigel Horspool 于 1980 年提出了简化版本，只使用 Bad Character Rule 的简化形式，实现更简单，在许多场景下性能接近完整算法。
 

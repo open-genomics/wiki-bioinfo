@@ -10,8 +10,6 @@ interface Props {
   steps: WorkflowStep[];
 }
 
-import { Icon } from '@astrojs/starlight/components';
-
 const { steps } = Astro.props;
 ---
 
@@ -19,7 +17,6 @@ const { steps } = Astro.props;
   {steps.map((step, index) => (
     <div class="workflow-card">
       <div class="step-index">
-        <Icon name="right-caret" size="1.5rem" />
         <span class="step-number">{index + 1}</span>
       </div>
       <div class="workflow-content">

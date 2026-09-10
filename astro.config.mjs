@@ -18,12 +18,6 @@ export default defineConfig({
     rehypePlugins: [rehypeKatex],
   },
 
-  image: {
-    service: {
-      entrypoint: 'astro/assets/services/sharp',
-    },
-  },
-
   integrations: [
     starlight({
       title: siteConfig.title,
@@ -42,11 +36,11 @@ export default defineConfig({
         {
           icon: 'github',
           label: 'GitHub',
-          href: 'https://github.com/open-genomics/wiki-bioinfo',
+          href: siteConfig.repoUrl,
         },
       ],
       editLink: {
-        baseUrl: 'https://github.com/open-genomics/wiki-bioinfo/tree/master/',
+        baseUrl: `${siteConfig.repoUrl}/tree/${siteConfig.contentBranch}/`,
       },
       lastUpdated: true,
       components: {

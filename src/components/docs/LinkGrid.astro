@@ -24,7 +24,6 @@ const containerClass = isNavigation ? 'section-nav-grid' : 'related-grid';
 const cardClass = isNavigation ? 'section-nav-card' : 'related-card';
 const headerClass = isNavigation ? 'section-nav-topline' : 'related-header';
 const actionText = isNavigation ? '进入子主题' : '延伸阅读';
-const actionClass = isNavigation ? 'primary-action' : 'secondary-action';
 ---
 
 <div class={containerClass}>
@@ -43,7 +42,7 @@ const actionClass = isNavigation ? 'primary-action' : 'secondary-action';
       </div>
       <h3>{item.title}</h3>
       <p>{item.description}</p>
-      <span class={actionClass}>
+      <span>
         {actionText}
         <Icon name="right-arrow" size={isNavigation ? '1rem' : '0.9rem'} />
       </span>

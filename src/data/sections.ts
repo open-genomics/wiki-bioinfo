@@ -10,8 +10,6 @@
  */
 
 export interface SectionMeta {
-  /** 板块标识，与 sections 对象的 key 同名（运行时通过对象 key 查找，不读取此字段） */
-  id: string;
   /** 板块标题（用于 sidebar 和组件显示） */
   label: string;
   /** 板块描述（用于 PageHeaderMeta） */
@@ -34,7 +32,6 @@ export interface SidebarItem {
  */
 export const sections: Record<string, SectionMeta> = {
   intro: {
-    id: 'intro',
     label: '导论',
     description: '帮助你快速判断本页所属知识层级与在全站中的位置。',
     items: [
@@ -45,7 +42,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   foundations: {
-    id: 'foundations',
     label: '基础与数学',
     description: '对象层、坐标系统、coverage 与概率图模型的共同语言。',
     items: [
@@ -59,7 +55,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   'core-methods': {
-    id: 'core-methods',
     label: '核心方法',
     description: '索引、比对、组装与概率模型构成的核心算法主轴。',
     items: [
@@ -154,7 +149,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   'applications-omics': {
-    id: 'applications-omics',
     label: '组学应用',
     description: '把核心方法放回 RNA-seq、单细胞、表观组、长读长、空间组学、蛋白质组学、多组学、系统发育与机器学习等真实任务。',
     items: [
@@ -284,7 +278,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   'applications-clinical': {
-    id: 'applications-clinical',
     label: '临床应用',
     description: '围绕变异检测、临床变异解释与结构生物信息学等偏临床解释的分析方向。',
     items: [
@@ -327,7 +320,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   'data-references': {
-    id: 'data-references',
     label: '数据、注释与资源',
     description: '参考版本、注释体系、数据格式与数据库的统一入口。',
     items: [
@@ -365,7 +357,6 @@ export const sections: Record<string, SectionMeta> = {
     ],
   },
   appendix: {
-    id: 'appendix',
     label: '附录',
     description: '术语、索引与参考资料入口，帮助快速定位相关主题。',
     collapsed: true,

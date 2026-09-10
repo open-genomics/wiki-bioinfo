@@ -1,6 +1,7 @@
 ---
 import StarlightHead from '@astrojs/starlight/components/Head.astro';
 import { siteConfig, siteUrl, ogImageUrl } from '@/data/site-config';
+import { stripBase } from '@/components/docs/link-utils';
 
 const { title, description } = Astro.props;
 const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
@@ -8,10 +9,7 @@ const pageDescription = description || siteConfig.description;
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
 
 // 仅首页注入 WebSite 结构化数据；内容页由 Starlight 自身处理 head
-const slug = Astro.url.pathname
-  .replace(import.meta.env.BASE_URL, '')
-  .replace(/\/$/, '')
-  .replace(/^\//, '');
+const slug = stripBase(Astro.url.pathname, import.meta.env.BASE_URL);
 const isHomePage = slug === '';
 
 const structuredData = isHomePage

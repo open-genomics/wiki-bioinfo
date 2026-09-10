@@ -43,7 +43,17 @@ export function buildHref(to: string, baseUrl: string): string {
 
   const normalizedPath = normalizeInternalPath(to);
 
-  return `${normalizedBase}${normalizedPath}` || '/';
+  return `${normalizedBase}${normalizedPath}`;
+}
+
+/**
+ * 剥离路径中的 base 前缀，返回无前导/尾斜杠的 slug（首页为空字符串）
+ */
+export function stripBase(pathname: string, baseUrl: string): string {
+  return pathname
+    .replace(baseUrl, '')
+    .replace(/\/$/, '')
+    .replace(/^\//, '');
 }
 
 /**

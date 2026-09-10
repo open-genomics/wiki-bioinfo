@@ -17,6 +17,10 @@ export interface SiteConfig {
   ogImage: string;
   themeColor: string;
   keywords: string;
+  /** GitHub 仓库地址（供 social 链接、editLink、首页 hero 等消费） */
+  repoUrl: string;
+  /** 内容分支名（供 editLink 拼接源码路径） */
+  contentBranch: string;
 }
 
 export const siteConfig: SiteConfig = {
@@ -28,14 +32,23 @@ export const siteConfig: SiteConfig = {
   ogImage: 'img/og-image.png',
   themeColor: '#4f46e5',
   keywords: 'bioinformatics, 生物信息学, sequence analysis, genomics, algorithms, RNA-seq',
+  repoUrl: 'https://github.com/open-genomics/wiki-bioinfo',
+  contentBranch: 'master',
 };
+
+/**
+ * 拼接 URL 片段，容忍任一侧多余的首尾斜杠
+ */
+function joinUrl(a: string, b: string): string {
+  return `${a.replace(/\/$/, '')}/${b.replace(/^\//, '')}`;
+}
 
 /**
  * 拼接完整的站点 URL（site + base）
  */
-export const siteUrl = siteConfig.site + siteConfig.base;
+export const siteUrl = joinUrl(siteConfig.site, siteConfig.base);
 
 /**
  * 拼接完整的 OG 图片 URL
  */
-export const ogImageUrl = siteUrl + siteConfig.ogImage;
+export const ogImageUrl = joinUrl(siteUrl, siteConfig.ogImage);

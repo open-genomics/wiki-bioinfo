@@ -11,7 +11,7 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PROJECT_ROOT="$(cd "$SCRIPT_DIR/../.." && pwd)"
 DOCS_BASE="$PROJECT_ROOT/src/content/docs"
 # 从 site-config.ts 单源读取 base，去掉首尾斜杠后用于匹配带前缀的绝对路径
-SITE_BASE="$(node --input-type=module -e "import('$PROJECT_ROOT/src/data/site-config.ts').then(m => console.log(m.siteConfig.base.replace(/^\//,'').replace(/\/$/,'')))" 2>/dev/null)"
+SITE_BASE="$(grep -m1 -oP "^\s*base:\s*'\K[^']+" "$PROJECT_ROOT/src/data/site-config.ts" 2>/dev/null | sed 's#^/##; s#/$##')"
 if [[ -z "$SITE_BASE" ]]; then
   echo "ERROR: 无法从 site-config.ts 读取 base 配置" >&2
   exit 2
@@ -99,11 +99,16 @@ while IFS=: read -r filepath linenum match; do
     continue
   fi
 
-  slug="$path"
-  if [[ "$slug" == "$SITE_BASE/"* ]]; then
-    slug="${slug#"$SITE_BASE"/}"
+  # 组件 prop 约定使用无 base 前缀的路径（由 link-utils 统一拼接），
+  # 带 /wiki-bioinfo/ 前缀属于规范违规，与 AGENTS.md 的链接规则保持一致
+  if [[ -n "$SITE_BASE" && "$path" == "$SITE_BASE/"* ]]; then
+    relsrc="${filepath#"$DOCS_BASE"/}"
+    echo "BROKEN: $relsrc:$linenum -> $path (组件 prop 不应携带 base 前缀，请去掉 $SITE_BASE/ 后重试)"
+    broken=1
+    continue
   fi
-  slug="${slug#/}"
+
+  slug="${path#/}"
   [[ "$slug" == img/* ]] && continue
 
   if ! check_slug "$slug"; then

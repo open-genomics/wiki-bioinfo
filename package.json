@@ -4,7 +4,7 @@
   "description": "面向中文社区的生物信息学体系化知识库",
   "private": true,
   "type": "module",
-  "author": "LessUp",
+  "author": "holtwood",
   "license": "MIT",
   "repository": {
     "type": "git",

@@ -1,10 +1,10 @@
 # Global owners
-* @LessUp
+* @holtwood
 
 # Infrastructure and configuration
-/.github/ @LessUp
-/astro.config.mjs @LessUp
-/package.json @LessUp
+/.github/ @holtwood
+/astro.config.mjs @holtwood
+/package.json @holtwood
 
 # Scripts
-/scripts/ @LessUp
+/scripts/ @holtwood

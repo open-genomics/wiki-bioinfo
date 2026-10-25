@@ -1,0 +1,15 @@
+version: 2
+updates:
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    # 站点为静态构建产物，运行时无 Node 暴露面；
+    # Astro 大版本升级被 math-on-MDX 兼容性阻塞，见 astro.config.mjs 注释。
+    allow:
+      - dependency-type: direct
+      - dependency-type: indirect
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

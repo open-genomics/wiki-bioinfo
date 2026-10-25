@@ -2,6 +2,8 @@
 
 面向中文社区的生物信息学体系化知识库。项目尝试把**生物学对象、计算模型、核心算法、分析流程和数据资源**连接成一张可连续阅读的知识地图，而不是只提供零散的工具教程。
 
+*A structured Chinese knowledge base connecting biological objects, computational models, algorithms, pipelines and data resources.*
+
 - **在线访问**：https://open-genomics.github.io/wiki-bioinfo/
 - **核心定位**：从“为什么需要这个方法”出发，再进入算法、流程和资源
 - **技术栈**：Astro 6.x + Starlight + TypeScript
@@ -51,3 +53,14 @@ npm run check
 - Agent 指令：[`AGENTS.md`](./AGENTS.md)
 
 欢迎提交内容修订、结构改进、链接修复和高质量的新页面建议。
+
+## 相关项目
+
+- [awesome-bioinfo-algorithms](https://github.com/open-genomics/awesome-bioinfo-algorithms) — 精选生物信息学算法知识库
+- [micos-2024](https://github.com/open-genomics/micos-2024) — 宏基因组学端到端分析流程
+
+<div align="center">
+
+本仓库属于 [**Open Genomics**](https://github.com/open-genomics) · 高性能生物信息学系统软件与中文知识库
+
+</div>

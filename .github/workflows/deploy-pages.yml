@@ -26,7 +26,7 @@ jobs:
       contents: read
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           # 部署本次 CI 实际验证过的提交，而不是默认分支最新提交。
           ref: ${{ github.event.workflow_run.head_sha || github.ref }}

@@ -82,7 +82,7 @@ $$
 
 ## Minimap：Minimizer 采样策略
 
-Minimap 的核心洞察是：**不需要索引所有 k-mer，只需索引具有代表性的子集（minimizer）**。minimizer 是窗口内哈希值最小的 k-mer，相邻窗口往往共享同一个 minimizer，因此序列发生小突变时它相对稳定。minimizer 的形式化定义与性质见 [Minimap2 比对算法](./minimap2-alignment/#seeding-阶段-降维索引)，此处只关注它如何用于重叠候选筛选：
+Minimap 的核心洞察是：**不需要索引所有 k-mer，只需索引具有代表性的子集（minimizer）**。minimizer 是窗口内哈希值最小的 k-mer，相邻窗口往往共享同一个 minimizer，因此序列发生小突变时它相对稳定。minimizer 的形式化定义与性质见 [Minimap2 比对算法](./minimap2-alignment/#seeding-阶段降维索引)，此处只关注它如何用于重叠候选筛选：
 
 1. **索引构建**：对每条 read 提取所有 minimizer，构建倒排索引 minimizer → [(read_id, position), ...]
 2. **候选识别**：共享足够多 minimizer 的 read 对进入候选

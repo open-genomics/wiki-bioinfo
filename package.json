@@ -28,13 +28,14 @@
     "build": "astro build",
     "preview": "astro preview",
     "fonts:subset": "python3 scripts/subset-fonts.py",
-    "check": "npm run check:fonts && astro check && astro build && npm run check:head && npm run check:rendered",
+    "check": "npm run check:fonts && npm run check:tables && astro check && astro build && npm run check:head && npm run check:rendered",
     "check:fonts": "node scripts/checks/check-font-coverage.mjs",
     "check:links": "bash scripts/checks/check-links.sh",
     "check:head": "node scripts/checks/check-head-meta.mjs",
     "check:rendered": "node scripts/checks/check-rendered-links.mjs",
     "clean": "rm -rf dist .astro",
-    "astro": "astro"
+    "astro": "astro",
+    "check:tables": "node scripts/checks/check-data-tables.mjs"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.2.0",

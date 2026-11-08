@@ -116,19 +116,19 @@ import DataTable from '@/components/docs/DataTable.astro';
 <DataTable variant="comparison"
   rows={[
     {
-      feature: 'SIFT / PolyPhen-2',
-      variant_a: '基于序列保守性和简单结构特征',
-      variant_b: '经典工具，但假阳性率较高，仅作为参考'
+      aspect: 'SIFT / PolyPhen-2',
+      left: '基于序列保守性和简单结构特征',
+      right: '经典工具，但假阳性率较高，仅作为参考'
     },
     {
-      feature: 'CADD / REVEL',
-      variant_a: '集成学习方法，整合多维特征',
-      variant_b: '当前临床常用的共识得分，性能相对稳定'
+      aspect: 'CADD / REVEL',
+      left: '集成学习方法，整合多维特征',
+      right: '当前临床常用的共识得分，性能相对稳定'
     },
     {
-      feature: 'AlphaMissense',
-      variant_a: '基于蛋白质结构预测（AlphaFold）的深度学习',
-      variant_b: '在错义变异预测上具有极高的空间分辨率和准确度'
+      aspect: 'AlphaMissense',
+      left: '基于蛋白质结构预测（AlphaFold）的深度学习',
+      right: '在错义变异预测上具有极高的空间分辨率和准确度'
     }
   ]}
 />

@@ -70,6 +70,23 @@ function resolveTarget(pathname) {
 
 const broken = [];
 let checked = 0;
+const anchorCache = new Map();
+
+function pageAnchors(file) {
+  if (!anchorCache.has(file)) {
+    const html = fs.readFileSync(file, 'utf8');
+    anchorCache.set(file, new Set([...html.matchAll(/\bid="([^"]+)"/g)].map((m) => m[1])));
+  }
+  return anchorCache.get(file);
+}
+
+function decodeFragment(hash) {
+  try {
+    return decodeURIComponent(hash.slice(1));
+  } catch {
+    return hash.slice(1);
+  }
+}
 
 for (const file of walkHtml(distDir)) {
   const html = fs.readFileSync(file, 'utf8');
@@ -93,6 +110,13 @@ for (const file of walkHtml(distDir)) {
     const target = resolveTarget(url.pathname.slice(SITE_BASE.length - 1));
     if (!fs.existsSync(target)) {
       broken.push({ page: from, href, reason: '目标文件不存在' });
+      continue;
+    }
+    if (url.hash && target.endsWith('.html')) {
+      const fragment = decodeFragment(url.hash);
+      if (fragment && !fragment.startsWith(':~:') && !pageAnchors(target).has(fragment)) {
+        broken.push({ page: from, href, reason: `锚点不存在: #${fragment}` });
+      }
     }
   }
 }

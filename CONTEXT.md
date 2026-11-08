@@ -71,8 +71,8 @@
 ### 链接约定
 
 - **组件 `to:` 字段**：用无前缀绝对路径（`/core-methods/alignment/edit-distance`），由 `link-utils.ts` 的 `buildHref()` 统一拼接 `BASE_URL`。不要硬编码 `/wiki-bioinfo/` 前缀。
-- **markdown 链接**：用相对路径（`./edit-distance`、`../models/hmm`），由 Astro 原生解析。
-- **链接检查**：`scripts/checks/check-links.sh` 校验 markdown 相对路径 + 组件 `to:` 无前缀路径。
+- **markdown 链接**：用相对路径（`./edit-distance`、`../models/hmm`）；Astro 不会重写 MDX 相对链接，构建期由 `scripts/plugins/rehype-resolve-relative-links.mjs` 按源文件位置解析为带 `BASE_URL` 的站点路径。
+- **链接检查**：`scripts/checks/check-links.sh` 校验源码级链接（markdown 相对路径 + 组件 `to:` 无前缀路径）；`scripts/checks/check-rendered-links.mjs` 校验 `dist` 渲染后的站内 `<a href>` 是否真实存在，已纳入 `npm run check`。
 - **目录页链接**：统一写 `.../` 形式（如 `../models/hmm/` 或组件 `to: '/core-methods/models/'`），不要写 `/index` 或 `/index/` 后缀——GitHub Pages 对 `/index/` 返回 404，check-links.sh 会拦截两种写法。
 
 ### 资产约定

@@ -3,12 +3,12 @@ import StarlightHead from '@astrojs/starlight/components/Head.astro';
 import { siteConfig, siteUrl, ogImageUrl } from '@/data/site-config';
 import { stripBase } from '@/components/docs/link-utils';
 
-const { title, description } = Astro.props;
-const pageTitle = title ? `${title} | ${siteConfig.title}` : siteConfig.title;
-const pageDescription = description || siteConfig.description;
-const canonicalUrl = new URL(Astro.url.pathname, siteUrl).toString();
+// Page.astro 渲染 <Head /> 时不传 props，页面级数据需从 Starlight 路由上下文读取
+const { entry } = Astro.locals.starlightRoute;
+const pageTitle = entry.data.title;
+const pageDescription = entry.data.description || siteConfig.description;
 
-// 仅首页注入 WebSite 结构化数据；内容页由 Starlight 自身处理 head
+// 仅首页注入 WebSite 结构化数据；通用 meta 由 Starlight 自身输出，这里只补它没有的标签
 const slug = stripBase(Astro.url.pathname, import.meta.env.BASE_URL);
 const isHomePage = slug === '';
 
@@ -28,18 +28,11 @@ const structuredData = isHomePage
   <slot />
 </StarlightHead>
 
-<link rel="canonical" href={canonicalUrl} />
-
-<meta property="og:site_name" content={siteConfig.title} />
-<meta property="og:title" content={pageTitle} />
-<meta property="og:description" content={pageDescription} />
-<meta property="og:url" content={canonicalUrl} />
-<meta property="og:type" content="website" />
-<meta property="og:locale" content={siteConfig.locale.replace('-', '_')} />
 <meta property="og:image" content={ogImageUrl} />
 <meta property="og:image:alt" content={siteConfig.title} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
 
-<meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content={pageTitle} />
 <meta name="twitter:description" content={pageDescription} />
 <meta name="twitter:image" content={ogImageUrl} />
@@ -52,5 +45,9 @@ const structuredData = isHomePage
 <meta name="theme-color" content={siteConfig.themeColor} />
 
 {structuredData && (
-  <script type="application/ld+json" is:inline set:html={JSON.stringify(structuredData)} />
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(structuredData).replace(/</g, '\\u003c')}
+  />
 )}

@@ -3,6 +3,7 @@ import starlight from '@astrojs/starlight';
 import sitemap from '@astrojs/sitemap';
 import remarkMath from 'remark-math';
 import rehypeKatex from 'rehype-katex';
+import rehypeResolveRelativeLinks from './scripts/plugins/rehype-resolve-relative-links.mjs';
 import { getSidebarConfig } from './src/data/sections';
 import { siteConfig } from './src/data/site-config';
 
@@ -20,7 +21,11 @@ export default defineConfig({
   // 结论：维持 Astro 6.x + 非破坏性安全修复，待上游适配后再评估升级。
   markdown: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex],
+    rehypePlugins: [
+      rehypeKatex,
+      // MDX 相对链接按源文件位置解析为带 base 的站点路径，避免渲染后 404
+      [rehypeResolveRelativeLinks, { base: siteConfig.base }],
+    ],
   },
 
   integrations: [

@@ -6,7 +6,7 @@
 
 - **在线访问**：https://open-genomics.github.io/wiki-bioinfo/
 - **核心定位**：从“为什么需要这个方法”出发，再进入算法、流程和资源
-- **技术栈**：Astro 6.x + Starlight + TypeScript
+- **技术栈**：Astro 7.x + Starlight + TypeScript + KaTeX
 
 ## 这个项目提供什么
 

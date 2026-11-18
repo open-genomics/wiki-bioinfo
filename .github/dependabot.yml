@@ -4,8 +4,7 @@ updates:
     directory: /
     schedule:
       interval: weekly
-    # 站点为静态构建产物，运行时无 Node 暴露面；
-    # Astro 大版本升级被 math-on-MDX 兼容性阻塞，见 astro.config.mjs 注释。
+    # 站点为静态构建产物，运行时无 Node 暴露面；依赖升级以 npm audit 与 CI 构建为准。
     allow:
       - dependency-type: direct
       - dependency-type: indirect

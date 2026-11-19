@@ -26,13 +26,13 @@ export interface SiteConfig {
 export const siteConfig: SiteConfig = {
   title: 'BioInfo Wiki',
   description: '面向中文社区的生物信息学体系化知识库',
-  site: 'https://open-genomics.github.io',
+  site: 'https://holtwood-genomics.github.io',
   base: '/wiki-bioinfo/',
   locale: 'zh-CN',
   ogImage: 'img/og-image.png',
   themeColor: '#4f46e5',
   keywords: 'bioinformatics, 生物信息学, sequence analysis, genomics, algorithms, RNA-seq',
-  repoUrl: 'https://github.com/open-genomics/wiki-bioinfo',
+  repoUrl: 'https://github.com/holtwood-genomics/wiki-bioinfo',
   contentBranch: 'master',
 };
 
